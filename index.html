@@ -1,283 +1,468 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NexPOS PRO</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#0b1120;color:#edf2ff;font-family:Arial,sans-serif}
-button,input,select{font:inherit}
-button{cursor:pointer;border:0;border-radius:9px;padding:11px 16px;background:#3978f6;color:white;font-weight:bold}
-button.danger{background:#d94755}
-button.secondary{background:#293750}
-input,select{width:100%;padding:12px;margin:7px 0 13px;background:#111c30;border:1px solid #33445e;border-radius:9px;color:white}
-label{color:#aebbd1;font-size:13px}
-h1,h2,h3{margin-top:0}
-header{padding:17px 20px;background:#111c30;border-bottom:1px solid #263650;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:23px;font-weight:bold;color:#72a5ff}
-.logo span{color:white}
-.container{max-width:1200px;margin:auto;padding:20px}
-.panel{background:#142139;border:1px solid #293c59;border-radius:14px;padding:18px;margin-bottom:17px}
-.login{max-width:400px;margin:12vh auto}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:13px}
-.stat{background:#1b2b47;padding:18px;border-radius:12px}
-.stat strong{display:block;font-size:27px;color:#82adff;margin-top:8px}
-.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
-.nav button{background:#263854}
-.nav button.active{background:#3978f6}
-table{width:100%;border-collapse:collapse;min-width:550px}
-th,td{text-align:right;padding:12px;border-bottom:1px solid #2c3c55}
-.tablewrap{overflow-x:auto}
-.muted{color:#a7b5ca;font-size:13px}
-.hidden{display:none!important}
-.badge{padding:5px 9px;border-radius:20px;background:#1d664d;color:#9bffce;font-size:12px}
-.badge.off{background:#67313c;color:#ffc0c8}
-.actions{display:flex;gap:7px;flex-wrap:wrap}
-.product{background:#1c2d49;padding:14px;border-radius:10px}
-.product button{margin-top:9px}
-.notice{padding:12px;background:#392f18;color:#ffdf91;border-radius:9px;margin-bottom:15px;font-size:13px}
-footer{text-align:center;padding:25px;color:#8292aa}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام NexPOS PRO - كاشير ومبيعات</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Firebase SDKs (Compat Version) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <style>
+    @media print {
+      body * { visibility: hidden; }
+      #printable-receipt, #printable-receipt * { visibility: visible; }
+      #printable-receipt { position: absolute; left: 0; top: 0; width: 100%; }
+    }
+  </style>
 </head>
-<body>
-<header>
- <div class="logo">NexPOS <span>PRO</span></div>
- <div id="userInfo" class="muted">نظام إدارة المبيعات</div>
-</header>
+<body class="bg-gray-100 font-sans text-gray-800 antialiased">
 
-<div id="loginPage" class="container">
- <div class="panel login">
-  <h2>تسجيل الدخول</h2>
-  <p class="muted">مرحباً بك في NexPOS PRO</p>
-  <label>اسم المستخدم</label>
-  <input id="loginUser" placeholder="اسم المستخدم">
-  <label>كلمة المرور</label>
-  <input id="loginPass" type="password" placeholder="كلمة المرور">
-  <button style="width:100%" onclick="login()">دخول النظام</button>
-  <p id="loginError" style="color:#ff8793"></p>
-  <p class="muted">نسخة تجريبية: حساب المالك الافتراضي مخصص للاختبار فقط.</p>
- </div>
-</div>
-
-<div id="app" class="container hidden">
- <div class="nav" id="navigation"></div>
- <div id="content"></div>
-</div>
-
-<footer>NexPOS PRO © 2026 | تطوير محمد الصلاحي</footer>
-
-<script>
-const OWNER_USER="elsalahy";
-const OWNER_PASS="Ma01060600";
-
-let db=JSON.parse(localStorage.getItem("nexpos_db")||'{"clients":[],"products":[],"sales":[]}');
-let current=null;
-let cart=[];
-let page="home";
-
-function save(){
- localStorage.setItem("nexpos_db",JSON.stringify(db));
-}
-function esc(s){
- return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function money(n){return Number(n||0).toLocaleString("ar-EG")+" ج.م";}
-function login(){
- const u=document.getElementById("loginUser").value.trim();
- const p=document.getElementById("loginPass").value;
- if(u===OWNER_USER&&p===OWNER_PASS){
-  current={role:"owner",name:"محمد الصلاحي"};
- }else{
-  const client=db.clients.find(x=>x.username===u&&x.password===p&&x.enabled);
-  if(!client){document.getElementById("loginError").textContent="بيانات الدخول غير صحيحة";return;}
-  if(client.plan!=="lifetime"&&new Date(client.endDate)<new Date()){
-   document.getElementById("loginError").textContent="انتهى الاشتراك، يرجى التواصل مع الإدارة";return;
-  }
-  current={role:"cashier",shopId:client.id,name:client.shop};
- }
- document.getElementById("loginPage").classList.add("hidden");
- document.getElementById("app").classList.remove("hidden");
- document.getElementById("userInfo").textContent=current.name;
- render();
-}
-function logout(){
- current=null;cart=[];
- document.getElementById("app").classList.add("hidden");
- document.getElementById("loginPage").classList.remove("hidden");
- document.getElementById("loginPass").value="";
-}
-function nav(){
- let items=current.role==="owner"?
- [["home","الرئيسية"],["clients","العملاء والاشتراكات"],["newclient","إضافة عميل"],["reports","التقارير"]]:
- [["home","الكاشير"],["products","المنتجات"],["sales","المبيعات"]];
- document.getElementById("navigation").innerHTML=
- items.map(([id,t])=>`<button class="${page===id?'active':''}" onclick="go('${id}')">${t}</button>`).join("")+
- `<button class="secondary" onclick="logout()">تسجيل خروج</button>`;
-}
-function go(p){page=p;render();}
-function render(){
- nav();
- if(current.role==="owner") ownerPage();
- else cashierPage();
-}
-function ownerPage(){
- const c=document.getElementById("content");
- if(page==="home"){
-  c.innerHTML=`
-  <h2>لوحة المالك</h2>
-  <div class="notice">هذه نسخة تجريبية محلية. لا تعتمد عليها لتخزين بيانات عملاء حقيقية أو كلمات مرور.</div>
-  <div class="grid">
-   <div class="stat">إجمالي العملاء<strong>${db.clients.length}</strong></div>
-   <div class="stat">الاشتراكات النشطة<strong>${db.clients.filter(active).length}</strong></div>
-   <div class="stat">الاشتراكات المنتهية<strong>${db.clients.filter(x=>!active(x)).length}</strong></div>
-   <div class="stat">إجمالي المبيعات<strong>${money(db.sales.reduce((a,x)=>a+x.total,0))}</strong></div>
+  <!-- شاشة الدخول -->
+  <div id="auth-screen" class="fixed inset-0 bg-gray-900 bg-opacity-95 flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md border border-gray-200">
+      <div class="text-center mb-6">
+        <h1 class="text-3xl font-extrabold text-blue-600"><i class="fa-solid font-bold fa-cash-register ml-2"></i>NexPOS PRO</h1>
+        <p class="text-gray-500 text-sm mt-1">تسجيل الدخول للنظام</p>
+      </div>
+      <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold mb-1">البريد الإلكتروني</label>
+          <input type="email" id="login-email" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="admin@system.com">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">كلمة المرور</label>
+          <input type="password" id="login-pass" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="******">
+        </div>
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition duration-200">دخول للنظام</button>
+      </form>
+    </div>
   </div>
-  <div class="panel" style="margin-top:17px">
-   <h3>إدارة النظام</h3>
-   <p class="muted">أنشئ حسابات العملاء وتابع اشتراكاتهم من لوحة المالك.</p>
-   <button onclick="go('newclient')">إضافة عميل جديد</button>
-   <button class="secondary" onclick="go('clients')">عرض العملاء</button>
-  </div>`;
- }else if(page==="newclient"){
-  c.innerHTML=`
-  <div class="panel">
-   <h2>إنشاء حساب كاشير لعميل</h2>
-   <label>اسم المحل</label><input id="shopName" placeholder="اسم المحل">
-   <label>اسم المستخدم</label><input id="shopUser" placeholder="اسم دخول العميل">
-   <label>كلمة المرور</label><input id="shopPass" placeholder="كلمة مرور مؤقتة">
-   <label>نوع الاشتراك</label>
-   <select id="shopPlan">
-    <option value="monthly">شهري - 100 جنيه</option>
-    <option value="yearly">سنوي - 1000 جنيه</option>
-    <option value="lifetime">شراء كامل - 3000 جنيه</option>
-   </select>
-   <button onclick="createClient()">إنشاء الحساب</button>
-  </div>`;
- }else if(page==="clients"){
-  c.innerHTML=`<h2>العملاء والاشتراكات</h2>
-  <div class="panel tablewrap"><table><thead><tr><th>المحل</th><th>المستخدم</th><th>الاشتراك</th><th>الانتهاء</th><th>الحالة</th><th>إجراءات</th></tr></thead>
-  <tbody>${db.clients.map(x=>`<tr>
-   <td>${esc(x.shop)}</td><td>${esc(x.username)}</td>
-   <td>${planName(x.plan)}</td>
-   <td>${x.plan==="lifetime"?"دائم":new Date(x.endDate).toLocaleDateString("ar-EG")}</td>
-   <td><span class="badge ${active(x)?"":"off"}">${active(x)?"نشط":"منتهي / موقوف"}</span></td>
-   <td><div class="actions">
-   <button onclick="renew('${x.id}')">تجديد</button>
-   <button class="secondary" onclick="toggleClient('${x.id}')">${x.enabled?"إيقاف":"تفعيل"}</button>
-   <button class="danger" onclick="deleteClient('${x.id}')">حذف</button>
-   </div></td></tr>`).join("")}</tbody></table></div>`;
- }else if(page==="reports"){
-  c.innerHTML=`<h2>تقارير النظام</h2><div class="grid">
-  <div class="stat">عدد العملاء<strong>${db.clients.length}</strong></div>
-  <div class="stat">عدد عمليات البيع<strong>${db.sales.length}</strong></div>
-  <div class="stat">إجمالي المبيعات<strong>${money(db.sales.reduce((a,x)=>a+x.total,0))}</strong></div></div>`;
- }
-}
-function planName(p){return {monthly:"شهري",yearly:"سنوي",lifetime:"شراء كامل"}[p]||p;}
-function active(x){
- return !!x.enabled&&(x.plan==="lifetime"||new Date(x.endDate)>=new Date());
-}
-function createClient(){
- const shop=document.getElementById("shopName").value.trim();
- const username=document.getElementById("shopUser").value.trim();
- const password=document.getElementById("shopPass").value;
- const plan=document.getElementById("shopPlan").value;
- if(!shop||!username||!password){alert("أكمل جميع البيانات");return;}
- if(username===OWNER_USER||db.clients.some(x=>x.username===username)){alert("اسم المستخدم مستخدم بالفعل");return;}
- const end=new Date();
- if(plan==="monthly")end.setMonth(end.getMonth()+1);
- if(plan==="yearly")end.setFullYear(end.getFullYear()+1);
- db.clients.push({id:crypto.randomUUID(),shop,username,password,plan,endDate:end.toISOString(),enabled:true});
- save();alert("تم إنشاء حساب العميل");go("clients");
-}
-function renew(id){
- const x=db.clients.find(a=>a.id===id);if(!x)return;
- if(x.plan==="lifetime"){alert("هذا الحساب شراء كامل");return;}
- const d=new Date(Math.max(Date.now(),new Date(x.endDate).getTime()));
- if(x.plan==="monthly")d.setMonth(d.getMonth()+1);
- else d.setFullYear(d.getFullYear()+1);
- x.endDate=d.toISOString();x.enabled=true;save();render();
-}
-function toggleClient(id){
- const x=db.clients.find(a=>a.id===id);if(!x)return;
- x.enabled=!x.enabled;save();render();
-}
-function deleteClient(id){
- if(!confirm("هل تريد حذف حساب العميل؟"))return;
- db.clients=db.clients.filter(x=>x.id!==id);save();render();
-}
-function shopProducts(){
- return db.products.filter(x=>x.shopId===current.shopId);
-}
-function cashierPage(){
- const c=document.getElementById("content");
- if(page==="home"||page==="products"){
-  const products=shopProducts();
-  c.innerHTML=`<h2>الكاشير - ${esc(current.name)}</h2>
-  <div class="grid">
-  ${products.map(x=>`<div class="product">
-   <h3>${esc(x.name)}</h3><p>${money(x.price)}</p><p class="muted">المخزون: ${x.stock}</p>
-   <button onclick="addCart('${x.id}')" ${x.stock<=0?"disabled":""}>إضافة للسلة</button>
-  </div>`).join("")||"<p>لا توجد منتجات. أضف أول منتج.</p>"}</div>
-  <div class="panel" style="margin-top:18px">
-   <h3>إضافة منتج</h3>
-   <label>اسم المنتج</label><input id="prodName" placeholder="اسم المنتج">
-   <label>السعر</label><input id="prodPrice" type="number" min="0" placeholder="السعر">
-   <label>الكمية</label><input id="prodStock" type="number" min="0" placeholder="الكمية">
-   <button onclick="addProduct()">حفظ المنتج</button>
+
+  <!-- الواجهة الرئيسية -->
+  <div id="app" class="hidden min-h-screen flex flex-col md:flex-row">
+    
+    <!-- الشريط الجانبي / Navigation -->
+    <aside class="bg-slate-900 text-white w-full md:w-64 p-4 flex flex-col justify-between shadow-xl">
+      <div>
+        <div class="text-xl font-black mb-8 text-blue-400 flex items-center justify-between">
+          <span><i class="fa-solid fa-store ml-2"></i>NexPOS</span>
+          <span id="user-role-badge" class="text-xs bg-blue-900 text-blue-200 px-2 py-1 rounded">...</span>
+        </div>
+        <nav class="space-y-2">
+          <button onclick="switchTab('pos')" class="nav-btn w-full text-right py-3 px-4 rounded-lg bg-blue-600 text-white flex items-center"><i class="fa-solid fa-calculator w-6"></i> نقطة البيع</button>
+          <button onclick="switchTab('inventory')" id="nav-inventory" class="nav-btn w-full text-right py-3 px-4 rounded-lg hover:bg-slate-800 text-gray-300 flex items-center"><i class="fa-solid fa-boxes-stacked w-6"></i> المخزن والمنتجات</button>
+          <button onclick="switchTab('reports')" id="nav-reports" class="nav-btn w-full text-right py-3 px-4 rounded-lg hover:bg-slate-800 text-gray-300 flex items-center"><i class="fa-solid fa-chart-line w-6"></i> التقارير والآرباح</button>
+        </nav>
+      </div>
+      <div class="pt-4 border-t border-slate-800">
+        <div class="text-sm text-gray-400 mb-2" id="user-email-display">user@app.com</div>
+        <button onclick="handleLogout()" class="w-full bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white py-2 rounded-lg transition"><i class="fa-solid fa-right-from-bracket ml-2"></i>خروج</button>
+      </div>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-1 p-4 md:p-6 overflow-y-auto">
+
+      <!-- تبويب الكاشير (POS) -->
+      <section id="tab-pos" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- المنتجات والبحث -->
+        <div class="lg:col-span-2 space-y-4">
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex gap-2">
+            <input type="text" id="pos-search" oninput="filterPosProducts()" placeholder="ابحث باسم المنتج أو الباركود..." class="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div id="pos-products-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-[75vh] overflow-y-auto p-1">
+            <!-- المنتجات تتولد هنا عبر JS -->
+          </div>
+        </div>
+
+        <!-- السلة والفاتورة -->
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex flex-col justify-between h-[80vh]">
+          <div>
+            <h2 class="text-lg font-bold pb-3 border-b border-gray-100 flex justify-between items-center">
+              <span>الفاتورة الحالية</span>
+              <button onclick="clearCart()" class="text-xs text-red-500 hover:underline">تفريغ</button>
+            </h2>
+            <div id="cart-items" class="divide-y divide-gray-100 max-h-[45vh] overflow-y-auto my-2">
+              <!-- أجزاء السلة -->
+            </div>
+          </div>
+          <div class="border-t border-gray-100 pt-4 space-y-3">
+            <div class="flex justify-between text-lg font-black">
+              <span>الإجمالي:</span>
+              <span id="cart-total" class="text-blue-600">0.00 ج.م</span>
+            </div>
+            <button onclick="checkout()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl shadow-lg transition">إتمام البيع والطباعة <i class="fa-solid fa-print mr-2"></i></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- تبويب المخزن (Admin Only) -->
+      <section id="tab-inventory" class="hidden space-y-6">
+        <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border">
+          <h2 class="text-xl font-bold">إدارة المنتجات والمخزن</h2>
+          <button onclick="openProductModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700">+ إضافة منتج</button>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border overflow-x-auto">
+          <table class="w-full text-right border-collapse">
+            <thead class="bg-gray-50 border-b">
+              <tr>
+                <th class="p-4">المنتج</th>
+                <th class="p-4">سعر التكلفة</th>
+                <th class="p-4">سعر البيع</th>
+                <th class="p-4">الكمية</th>
+                <th class="p-4">تحكم</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-table-body" class="divide-y">
+              <!-- صفوف المخزون -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- تبويب التقارير (Admin Only) -->
+      <section id="tab-reports" class="hidden space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-white p-5 rounded-xl border shadow-sm">
+            <div class="text-gray-500 text-sm font-semibold">إجمالي المبيعات</div>
+            <div id="report-total-sales" class="text-2xl font-black text-blue-600 mt-2">0.00 ج.م</div>
+          </div>
+          <div class="bg-white p-5 rounded-xl border shadow-sm">
+            <div class="text-gray-500 text-sm font-semibold">إجمالي الأرباح</div>
+            <div id="report-total-profit" class="text-2xl font-black text-green-600 mt-2">0.00 ج.م</div>
+          </div>
+          <div class="bg-white p-5 rounded-xl border shadow-sm">
+            <div class="text-gray-500 text-sm font-semibold">عدد العمليات</div>
+            <div id="report-total-orders" class="text-2xl font-black text-purple-600 mt-2">0</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
   </div>
-  <div class="panel"><h3>سلة البيع</h3><div id="cartView"></div>
-  <button onclick="checkout()">تأكيد البيع</button></div>`;
-  showCart();
- }else if(page==="sales"){
-  const sales=db.sales.filter(x=>x.shopId===current.shopId);
-  c.innerHTML=`<h2>سجل المبيعات</h2><div class="panel tablewrap"><table>
-  <tr><th>التاريخ</th><th>عدد المنتجات</th><th>الإجمالي</th></tr>
-  ${sales.map(x=>`<tr><td>${new Date(x.date).toLocaleString("ar-EG")}</td><td>${x.items.length}</td><td>${money(x.total)}</td></tr>`).join("")}
-  </table></div>`;
- }
-}
-function addProduct(){
- const name=document.getElementById("prodName").value.trim();
- const price=Number(document.getElementById("prodPrice").value);
- const stock=Number(document.getElementById("prodStock").value);
- if(!name||price<0||!Number.isFinite(price)||!Number.isInteger(stock)||stock<0){alert("راجع بيانات المنتج");return;}
- db.products.push({id:crypto.randomUUID(),shopId:current.shopId,name,price,stock});
- save();render();
-}
-function addCart(id){
- const p=shopProducts().find(x=>x.id===id);
- if(!p||p.stock<=0)return;
- const item=cart.find(x=>x.id===id);
- if(item){if(item.qty>=p.stock){alert("الكمية غير متوفرة");return;}item.qty++;}
- else cart.push({id,qty:1});
- showCart();
-}
-function showCart(){
- const el=document.getElementById("cartView");if(!el)return;
- let total=0;
- el.innerHTML=cart.map(i=>{
-  const p=shopProducts().find(x=>x.id===i.id);if(!p)return "";
-  total+=p.price*i.qty;
-  return `<p>${esc(p.name)} × ${i.qty} — ${money(p.price*i.qty)}
-  <button class="secondary" onclick="removeCart('${i.id}')">حذف</button></p>`;
- }).join("")+`<h3>الإجمالي: ${money(total)}</h3>`;
-}
-function removeCart(id){cart=cart.filter(x=>x.id!==id);showCart();}
-function checkout(){
- if(!cart.length){alert("السلة فارغة");return;}
- let total=0,items=[];
- for(const i of cart){
-  const p=shopProducts().find(x=>x.id===i.id);
-  if(!p||p.stock<i.qty){alert("المخزون غير كافٍ");return;}
-  p.stock-=i.qty;total+=p.price*i.qty;
-  items.push({name:p.name,qty:i.qty,price:p.price});
- }
- db.sales.push({id:crypto.randomUUID(),shopId:current.shopId,date:new Date().toISOString(),items,total});
- cart=[];save();alert("تم تسجيل البيع: "+money(total));render();
-}
-</script>
+
+  <!-- Modal إضافة/تعديل منتج -->
+  <div id="product-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4">
+      <h3 class="text-lg font-bold border-b pb-2" id="modal-title">إضافة منتج جديد</h3>
+      <input type="hidden" id="prod-id">
+      <div>
+        <label class="block text-sm font-semibold mb-1">اسم المنتج</label>
+        <input type="text" id="prod-name" class="w-full p-2 border rounded-lg">
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block text-sm font-semibold mb-1">سعر التكلفة</label>
+          <input type="number" id="prod-cost" class="w-full p-2 border rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">سعر البيع</label>
+          <input type="number" id="prod-price" class="w-full p-2 border rounded-lg">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold mb-1">الكمية بالمخزن</label>
+        <input type="number" id="prod-qty" class="w-full p-2 border rounded-lg">
+      </div>
+      <div class="flex justify-end gap-2 border-t pt-3">
+        <button onclick="closeProductModal()" class="px-4 py-2 border rounded-lg">إلغاء</button>
+        <button onclick="saveProduct()" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-bold">حفظ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- الفاتورة للطباعة -->
+  <div id="printable-receipt" class="hidden p-4 text-center space-y-2">
+    <h2 class="font-bold text-xl">فاتورة مبيعات</h2>
+    <div class="text-xs text-gray-500" id="receipt-date"></div>
+    <hr class="my-2 border-black">
+    <div id="receipt-items" class="text-sm space-y-1 text-right"></div>
+    <hr class="my-2 border-black">
+    <div class="flex justify-between font-bold text-base">
+      <span>الإجمالي:</span>
+      <span id="receipt-total"></span>
+    </div>
+    <div class="text-xs mt-4">شكراً لزيارتكم!</div>
+  </div>
+
+  <!-- التطبيق البرمجي JavaScript -->
+  <script>
+    // 1. إعدادات Firebase
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      databaseURL: "YOUR_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // حالة التطبيق
+    let currentUser = null;
+    let userRole = 'cashier'; 
+    let products = [];
+    let cart = [];
+
+    // 2. إدارة المصادقة وصلاحيات النظام
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        currentUser = user;
+        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+        document.getElementById('user-email-display').innerText = user.email;
+
+        // جلب الصلاحيات من Firebase Realtime Database
+        db.ref('users/' + user.uid).once('value').then(snapshot => {
+          const val = snapshot.val();
+          userRole = (val && val.role) ? val.role : 'admin'; // افتراضي Admin للتجربة
+          document.getElementById('user-role-badge').innerText = userRole.toUpperCase();
+          applyRolePermissions();
+          listenToData();
+        });
+      } else {
+        document.getElementById('auth-screen').classList.remove('hidden');
+        document.getElementById('app').classList.add('hidden');
+      }
+    });
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const pass = document.getElementById('login-pass').value;
+      auth.signInWithEmailAndPassword(email, pass).catch(err => alert("خطأ في الدخول: " + err.message));
+    }
+
+    function handleLogout() { auth.signOut(); }
+
+    function applyRolePermissions() {
+      if (userRole !== 'admin') {
+        document.getElementById('nav-inventory').classList.add('hidden');
+        document.getElementById('nav-reports').classList.add('hidden');
+      } else {
+        document.getElementById('nav-inventory').classList.remove('hidden');
+        document.getElementById('nav-reports').classList.remove('hidden');
+      }
+    }
+
+    // 3. مزامنة البيانات من Firebase
+    function listenToData() {
+      db.ref('products').on('value', snapshot => {
+        const data = snapshot.val() || {};
+        products = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+        renderPosProducts();
+        renderInventoryTable();
+      });
+
+      if (userRole === 'admin') {
+        db.ref('sales').on('value', snapshot => {
+          const sales = snapshot.val() || {};
+          calculateReports(sales);
+        });
+      }
+    }
+
+    // 4. منطق شاشة نقطة البيع (POS)
+    function renderPosProducts(filtered = null) {
+      const list = filtered || products;
+      const grid = document.getElementById('pos-products-grid');
+      grid.innerHTML = list.map(p => `
+        <div onclick="addToCart('${p.id}')" class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm cursor-pointer hover:border-blue-500 transition">
+          <div class="font-bold text-gray-800">${p.name}</div>
+          <div class="text-sm text-gray-500 mt-1">${p.price} ج.م</div>
+          <div class="text-xs ${p.qty > 0 ? 'text-green-600' : 'text-red-600'} font-semibold mt-2">المتاح: ${p.qty}</div>
+        </div>
+      `).join('');
+    }
+
+    function filterPosProducts() {
+      const q = document.getElementById('pos-search').value.toLowerCase();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(q));
+      renderPosProducts(filtered);
+    }
+
+    function addToCart(id) {
+      const p = products.find(prod => prod.id === id);
+      if (!p || p.qty <= 0) return alert('المنتج غير متوفر بالكمية المطلوبة');
+      
+      const item = cart.find(c => c.id === id);
+      if (item) {
+        if (item.qty + 1 > p.qty) return alert('تجاوزت الكمية المتاحة');
+        item.qty++;
+      } else {
+        cart.push({ id: p.id, name: p.name, price: p.price, cost: p.cost, qty: 1 });
+      }
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const container = document.getElementById('cart-items');
+      let total = 0;
+      container.innerHTML = cart.map(item => {
+        total += item.price * item.qty;
+        return `
+          <div class="flex justify-between items-center py-2">
+            <div>
+              <div class="font-bold text-sm">${item.name}</div>
+              <div class="text-xs text-gray-500">${item.price} × ${item.qty}</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-sm">${(item.price * item.qty).toFixed(2)}</span>
+              <button onclick="removeFromCart('${item.id}')" class="text-red-500 text-xs px-1">✕</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('cart-total').innerText = total.toFixed(2) + ' ج.م';
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(c => c.id !== id);
+      updateCartUI();
+    }
+
+    function clearCart() { cart = []; updateCartUI(); }
+
+    function checkout() {
+      if (cart.length === 0) return alert('السلة فارغة!');
+
+      const totalAmount = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+      const totalProfit = cart.reduce((acc, item) => acc + ((item.price - (item.cost || 0)) * item.qty), 0);
+
+      const saleData = {
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        items: cart,
+        total: totalAmount,
+        profit: totalProfit,
+        cashier: currentUser.email
+      };
+
+      // حفظ عملية البيع في Firebase وتحديث كمية المخزون
+      const newSaleKey = db.ref('sales').push().key;
+      let updates = {};
+      updates['/sales/' + newSaleKey] = saleData;
+
+      cart.forEach(item => {
+        const prod = products.find(p => p.id === item.id);
+        if (prod) {
+          updates['/products/' + item.id + '/qty'] = prod.qty - item.qty;
+        }
+      });
+
+      db.ref().update(updates).then(() => {
+        printReceipt(saleData);
+        clearCart();
+      }).catch(err => alert("حدث خطأ أثناء حفظ العملية: " + err.message));
+    }
+
+    function printReceipt(sale) {
+      document.getElementById('receipt-date').innerText = new Date().toLocaleString('ar-EG');
+      document.getElementById('receipt-items').innerHTML = sale.items.map(i => `
+        <div class="flex justify-between">
+          <span>${i.name} (×${i.qty})</span>
+          <span>${(i.price * i.qty).toFixed(2)}</span>
+        </div>
+      `).join('');
+      document.getElementById('receipt-total').innerText = sale.total.toFixed(2) + ' ج.م';
+      window.print();
+    }
+
+    // 5. إدارة المخزن والمنتجات
+    function renderInventoryTable() {
+      const tbody = document.getElementById('inventory-table-body');
+      tbody.innerHTML = products.map(p => `
+        <tr>
+          <td class="p-4 font-bold">${p.name}</td>
+          <td class="p-4 text-gray-600">${p.cost || 0} ج.م</td>
+          <td class="p-4 text-blue-600 font-semibold">${p.price} ج.م</td>
+          <td class="p-4">${p.qty}</td>
+          <td class="p-4">
+            <button onclick="editProduct('${p.id}')" class="text-blue-500 font-bold ml-2">تعديل</button>
+            <button onclick="deleteProduct('${p.id}')" class="text-red-500 font-bold">حذف</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openProductModal() {
+      document.getElementById('prod-id').value = '';
+      document.getElementById('prod-name').value = '';
+      document.getElementById('prod-cost').value = '';
+      document.getElementById('prod-price').value = '';
+      document.getElementById('prod-qty').value = '';
+      document.getElementById('modal-title').innerText = 'إضافة منتج جديد';
+      document.getElementById('product-modal').classList.remove('hidden');
+    }
+
+    function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
+
+    function saveProduct() {
+      const id = document.getElementById('prod-id').value;
+      const name = document.getElementById('prod-name').value;
+      const cost = parseFloat(document.getElementById('prod-cost').value) || 0;
+      const price = parseFloat(document.getElementById('prod-price').value) || 0;
+      const qty = parseInt(document.getElementById('prod-qty').value) || 0;
+
+      if (!name || price <= 0) return alert('برجاء كتابة البيانات بشكل صحيح');
+
+      const data = { name, cost, price, qty };
+      if (id) {
+        db.ref('products/' + id).update(data);
+      } else {
+        db.ref('products').push(data);
+      }
+      closeProductModal();
+    }
+
+    function editProduct(id) {
+      const p = products.find(prod => prod.id === id);
+      if (!p) return;
+      document.getElementById('prod-id').value = p.id;
+      document.getElementById('prod-name').value = p.name;
+      document.getElementById('prod-cost').value = p.cost || 0;
+      document.getElementById('prod-price').value = p.price;
+      document.getElementById('prod-qty').value = p.qty;
+      document.getElementById('modal-title').innerText = 'تعديل منتج';
+      document.getElementById('product-modal').classList.remove('hidden');
+    }
+
+    function deleteProduct(id) {
+      if (confirm('هل أنت تأكد من حذف هذا المنتج؟')) {
+        db.ref('products/' + id).remove();
+      }
+    }
+
+    // 6. الحسابات والتقارير
+    function calculateReports(sales) {
+      let totalSales = 0;
+      let totalProfit = 0;
+      let count = 0;
+
+      Object.values(sales).forEach(s => {
+        totalSales += s.total || 0;
+        totalProfit += s.profit || 0;
+        count++;
+      });
+
+      document.getElementById('report-total-sales').innerText = totalSales.toFixed(2) + ' ج.م';
+      document.getElementById('report-total-profit').innerText = totalProfit.toFixed(2) + ' ج.م';
+      document.getElementById('report-total-orders').innerText = count;
+    }
+
+    // التنقل بين التبويبات
+    function switchTab(tab) {
+      document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+      document.getElementById('tab-' + tab).classList.remove('hidden');
+    }
+  </script>
 </body>
 </html>

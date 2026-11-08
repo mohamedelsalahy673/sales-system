@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيستم محمد الصلاحي - إدارة الاشتراكات ونقطة البيع</title>
+    <title>سيستم محمد الصلاحي - إدارة الاشتراكات الآمنة</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -18,25 +18,25 @@
 </head>
 <body class="text-slate-800">
 
-    <!-- 1. شاشة تسجيل الدخول (للعميل أو المالك) -->
+    <!-- 1. شاشة تسجيل الدخول الرئيسية للعملاء -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full border border-slate-100 text-center">
             <div class="w-20 h-20 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-blue-500/30 mb-5 text-white text-3xl font-bold">
                 ⚡
             </div>
             <h2 class="text-2xl font-bold text-slate-800 mb-1">سيستم محمد الصلاحي</h2>
-            <p class="text-slate-400 text-xs mb-6">نظام المبيعات المحمي باشتراكات</p>
+            <p class="text-slate-400 text-xs mb-6">نظام المبيعات المؤمن للاشتراكات</p>
             
             <form onsubmit="handleLogin(event)" class="space-y-4 text-right">
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">اسم المستخدم</label>
-                    <input type="text" id="username" required placeholder="admin أو اسم محلك" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    <label class="block text-xs font-bold text-slate-600 mb-1">اسم المستخدم (المزود لك)</label>
+                    <input type="text" id="username" required placeholder="أدخل اسم المستخدم" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">كلمة المرور</label>
                     <input type="password" id="password" required placeholder="••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
-                <p id="login-error" class="text-red-500 text-xs hidden text-center font-bold">بيانات الدخول غير صحيحة أو الحساب غير مفعل!</p>
+                <p id="login-error" class="text-red-500 text-xs hidden text-center font-bold">عذراً، البيانات غير صحيحة أو انتهى اشتراكك!</p>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-sm">
                     تسجيل الدخول للسيستم
                 </button>
@@ -48,27 +48,27 @@
         </div>
     </div>
 
-    <!-- 2. نافذة طلب اشتراك جديد للزبون -->
+    <!-- 2. نافذة طلب اشتراك جديد للزبون (توجيه طلبك لواتسابك مباشرة) -->
     <div id="register-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border text-right space-y-4">
             <div class="text-center">
-                <h3 class="text-xl font-bold text-slate-800">اشتراك جديد في السيستم</h3>
-                <p class="text-xs text-slate-500 mt-1">اختر الباقة المناسبة لمحلك وسيتم توجيهك للمطور للتفعيل</p>
+                <h3 class="text-xl font-bold text-slate-800">اشتراك جديد في سيستم المبيعات</h3>
+                <p class="text-xs text-slate-500 mt-1">اختر الباقة المناسبة وادفع لتفعيل حسابك من قِبل المطور</p>
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">اسم المحل / النشاط</label>
-                <input type="text" id="reg-shop" placeholder="مثال: محطة الشحن والتبريد" class="w-full px-4 py-2.5 border rounded-xl text-sm">
+                <label class="block text-xs font-bold text-slate-600 mb-1">اسم المحل / النشاط التجاري</label>
+                <input type="text" id="reg-shop" placeholder="مثال: محل النور للإكسسوارات" class="w-full px-4 py-2.5 border rounded-xl text-sm">
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">رقم الهاتف (واتساب)</label>
+                <label class="block text-xs font-bold text-slate-600 mb-1">رقم الهاتف (واتساب الخاص بك)</label>
                 <input type="text" id="reg-phone" placeholder="010xxxxxxxx" class="w-full px-4 py-2.5 border rounded-xl text-sm">
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">اختر الباقة:</label>
+                <label class="block text-xs font-bold text-slate-600 mb-1">الباقة المطلوبة:</label>
                 <select id="reg-plan" class="w-full px-4 py-2.5 border rounded-xl text-sm bg-white">
-                    <option value="month">اشتراك شهري (100 ج.م)</option>
-                    <option value="year">اشتراك سنوي (1000 ج.م)</option>
-                    <option value="lifetime">شراء نهائي دائم (3000 ج.م)</option>
+                    <option value="اشتراك شهري (100 ج.م)">اشتراك شهري - 100 ج.م</option>
+                    <option value="اشتراك سنوي (1000 ج.م)">اشتراك سنوي - 1000 ج.م</option>
+                    <option value="شراء نهائي دائم (3000 ج.م)">شراء نهائي دائم - 3000 ج.م</option>
                 </select>
             </div>
             <button onclick="submitRegistration()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2">
@@ -78,7 +78,7 @@
         </div>
     </div>
 
-    <!-- 3. لوحة تحكم المالك (محمد الصلاحي) -->
+    <!-- 3. شاشة دخول لوحة المالك الحصري -->
     <div id="owner-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border text-right space-y-4">
             <div class="text-center">
@@ -88,39 +88,56 @@
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-600 mb-1">كلمة مرور المالك</label>
-                <input type="password" id="owner-pass" placeholder="أدخل باسورد المالك" class="w-full px-4 py-2.5 border rounded-xl text-sm">
+                <input type="password" id="owner-pass" placeholder="أدخل كلمة المرور السرية" class="w-full px-4 py-2.5 border rounded-xl text-sm">
             </div>
-            <button onclick="verifyOwner()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 rounded-xl text-sm">دخول لوحة التحكم وتوليد الاكواد</button>
+            <button onclick="verifyOwner()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 rounded-xl text-sm">دخول للوحة الإدارة</button>
             <button onclick="closeOwnerLogin()" class="w-full text-center text-xs text-slate-400 hover:underline">العودة للرئيسية</button>
         </div>
     </div>
 
-    <!-- واجهة إدارة الاشتراكات للمالك (بعد الدخول كمالك) -->
+    <!-- 4. لوحة تحكم المالك الكاملة (إدارة العملاء وتغيير الباسورد) -->
     <div id="owner-dashboard" class="fixed inset-0 bg-slate-900 z-50 p-6 overflow-y-auto hidden">
         <div class="max-w-4xl mx-auto bg-white rounded-3xl p-6 space-y-6">
             <div class="flex justify-between items-center border-b pb-4">
-                <h2 class="text-xl font-bold text-slate-900">👑 لوحة تحكم المالك - توليد أكواد تفعيل العملاء</h2>
+                <h2 class="text-xl font-bold text-slate-900">👑 لوحة تحكم المالك - إدارة الاشتراكات والأمان</h2>
                 <button onclick="closeOwnerDashboard()" class="bg-red-500 text-white px-4 py-2 rounded-xl text-xs font-bold">إغلاق اللوحة</button>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-2xl border">
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">اسم العميل / المحل</label>
-                    <input type="text" id="client-name-gen" placeholder="محل النور" class="w-full px-3 py-2 border rounded-xl text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">مدة الاشتراك</label>
-                    <select id="client-duration" class="w-full px-3 py-2 border rounded-xl text-sm bg-white">
-                        <option value="30">شهر (100 ج.م)</option>
-                        <option value="365">سنة (1000 ج.م)</option>
-                        <option value="9999">شراء نهائي (3000 ج.م)</option>
-                    </select>
-                </div>
-                <div class="flex items-end">
-                    <button onclick="generateClientLicense()" class="w-full bg-blue-600 text-white font-bold py-2 rounded-xl text-sm">إنشاء حساب وكود</button>
+
+            <!-- قسم تغيير كلمة مرور المالك -->
+            <div class="bg-slate-50 p-4 rounded-2xl border space-y-3">
+                <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-lock text-blue-600 ml-1"></i> تغيير كلمة مرور لوحة المالك</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <input type="password" id="new-owner-pass" placeholder="كلمة المرور الجديدة للمالك" class="px-3 py-2 border rounded-xl text-sm">
+                    <div class="flex items-end">
+                        <button onclick="updateOwnerPassword()" class="w-full bg-blue-600 text-white font-bold py-2 rounded-xl text-sm">حفظ الباسورد الجديد</button>
+                    </div>
                 </div>
             </div>
+
+            <!-- قسم توليد حسابات العملاء -->
+            <div class="bg-slate-50 p-4 rounded-2xl border space-y-3">
+                <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-user-plus text-emerald-600 ml-1"></i> إضافة عميل جديد وتفعيل حسابه</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">اسم المحل</label>
+                        <input type="text" id="client-name-gen" placeholder="محل النور" class="w-full px-3 py-2 border rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">مدة الاشتراك</label>
+                        <select id="client-duration" class="w-full px-3 py-2 border rounded-xl text-sm bg-white">
+                            <option value="30">شهر (100 ج.م)</option>
+                            <option value="365">سنة (1000 ج.م)</option>
+                            <option value="9999">شراء نهائي دائم (3000 ج.م)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="generateClientLicense()" class="w-full bg-emerald-600 text-white font-bold py-2 rounded-xl text-sm">إصدار حساب للعميل</button>
+                    </div>
+                </div>
+            </div>
+
             <div>
-                <h3 class="font-bold text-sm mb-3">قائمة العملاء المفعلين وأكوادهم:</h3>
+                <h3 class="font-bold text-sm mb-3">قائمة العملاء المشتركين حالياً:</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right text-sm border">
                         <thead class="bg-slate-100">
@@ -128,8 +145,8 @@
                                 <th class="p-3">اسم المحل</th>
                                 <th class="p-3">اسم المستخدم</th>
                                 <th class="p-3">كلمة المرور</th>
-                                <th class="p-3">الانتهاء</th>
-                                <th class="p-3 text-center">حذف</th>
+                                <th class="p-3">تاريخ الانتهاء</th>
+                                <th class="p-3 text-center">إجراء</th>
                             </tr>
                         </thead>
                         <tbody id="clients-table-body" class="divide-y"></tbody>
@@ -139,7 +156,7 @@
         </div>
     </div>
 
-    <!-- التطبيق الرئيسي (POS) -->
+    <!-- التطبيق الرئيسي (POS) للعملاء أو المالك -->
     <div id="app-screen" class="hidden min-h-screen flex flex-col">
         <header class="bg-slate-900 text-white shadow-md">
             <div class="max-w-7xl mx-auto px-4 py-3.5 flex justify-between items-center">
@@ -289,7 +306,10 @@
     </div>
 
     <script>
-        // حسابات العملاء والمالك المخزنة محلياً
+        // إعدادات الباسورد الخاص بلوحة المالك
+        let ownerAuth = JSON.parse(localStorage.getItem('al_salahy_owner_auth')) || { pass: '0106' };
+        
+        // حسابات العملاء المشتركين
         let registeredClients = JSON.parse(localStorage.getItem('al_salahy_clients')) || [
             { name: 'محمد الصلاحي (المالك)', user: 'admin', pass: '1243', expire: Date.now() + (99999 * 86400000) }
         ];
@@ -316,7 +336,7 @@
             } catch (e) {}
         }
 
-        // واجهات التسجيل والمالك
+        // واجهات التسجيل وطلب الاشتراك
         function showRegisterModal() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('register-screen').classList.remove('hidden');
@@ -332,11 +352,13 @@
 
             if(!shop || !phone) return alert('الرجاء إدخال اسم المحل ورقم الهاتف');
 
-            const text = `مرحباً محمد الصلاحي، أرغب في الاشتراك في سيستم المبيعات.\nاسم المحل: ${shop}\nرقم الهاتف: ${phone}\nالباقة المختارة: ${plan}`;
+            // إرسال الطلب مباشرة لواتسابك من غير ظهور أي كود عشوائي للعميل
+            const text = `مرحباً محمد الصلاحي، أرغب في الاشتراك في سيستم المبيعات.\nاسم المحل: ${shop}\nرقم الهاتف: ${phone}\nالباقة المختارة: ${plan}\n(أرجو إرسال بيانات الدخول بعد تأكيد الدفع).`;
             const whatsappUrl = `https://wa.me/201062883414?text=${encodeURIComponent(text)}`;
             window.open(whatsappUrl, '_blank');
         }
 
+        // لوحة تحكم المالك
         function showOwnerLogin() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('owner-screen').classList.remove('hidden');
@@ -347,7 +369,7 @@
         }
         function verifyOwner() {
             const pass = document.getElementById('owner-pass').value;
-            if(pass === '0106' || pass === '1243') { // باسورد المالك الخاص
+            if(pass === ownerAuth.pass) {
                 document.getElementById('owner-screen').classList.add('hidden');
                 document.getElementById('owner-dashboard').classList.remove('hidden');
                 renderClientsTable();
@@ -360,19 +382,28 @@
             document.getElementById('login-screen').classList.remove('hidden');
         }
 
+        function updateOwnerPassword() {
+            const newP = document.getElementById('new-owner-pass').value.trim();
+            if(!newP) return alert('أدخل كلمة المرور الجديدة');
+            ownerAuth.pass = newP;
+            localStorage.setItem('al_salahy_owner_auth', JSON.stringify(ownerAuth));
+            alert('تم تغيير كلمة مرور لوحة المالك بنجاح!');
+            document.getElementById('new-owner-pass').value = '';
+        }
+
         function generateClientLicense() {
             const name = document.getElementById('client-name-gen').value.trim();
             const durationDays = parseInt(document.getElementById('client-duration').value);
             if(!name) return alert('أدخل اسم المحل');
 
-            const randomUser = 'user_' + Math.floor(100 + Math.random() * 900);
+            const randomUser = 'client_' + Math.floor(1000 + Math.random() * 9000);
             const randomPass = Math.floor(1000 + Math.random() * 9000).toString();
             const expireDate = Date.now() + (durationDays * 86400000);
 
             registeredClients.push({ name, user: randomUser, pass: randomPass, expire: expireDate });
             localStorage.setItem('al_salahy_clients', JSON.stringify(registeredClients));
             renderClientsTable();
-            alert(`تم إنشاء الحساب بنجاح!\nالمستخدم: ${randomUser}\nالباسورد: ${randomPass}`);
+            alert(`تم إنشاء الحساب بنجاح!\nأعطِ هذه البيانات للعميل يدوياً:\nالمستخدم: ${randomUser}\nالباسورد: ${randomPass}`);
         }
 
         function deleteClient(user) {
@@ -399,7 +430,7 @@
             `).join('');
         }
 
-        // تسجيل الدخول للسيستم
+        // تسجيل الدخول للسيستم (للعملاء أو المالك)
         function handleLogin(e) {
             e.preventDefault();
             const u = document.getElementById('username').value.trim();
@@ -606,7 +637,7 @@
             cart = [];
             renderCart();
             renderPOSProducts();
-            document.getElementById('pos-barcode-input').focus();
+            document.getElementById('pos-barcode-input'].focus();
         }
 
         function deleteSale(orderId) {

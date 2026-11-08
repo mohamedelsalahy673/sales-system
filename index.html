@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سيستم الصلاحي للمبيعات المتكامل</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -38,7 +37,7 @@
                     <label class="block text-sm font-medium text-slate-700 mb-1">كلمة السر</label>
                     <input type="password" id="password" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                 </div>
-                <p id="login-error" class="text-red-500 text-sm hidden">بيانات الدخول غير صحيحة! (الافتراضي: admin / 1243)</p>
+                <p id="login-error" class="text-red-500 text-sm hidden">بيانات الدخول غير صحيحة! (admin / 1243)</p>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-500/30 transition duration-200">
                     دخول للسيستم
                 </button>
@@ -48,7 +47,6 @@
 
     <!-- السيستم الرئيسي -->
     <div id="app-screen" class="hidden min-h-screen flex flex-col">
-        <!-- الهيدر العلوي -->
         <header class="bg-slate-900 text-white shadow-md">
             <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -60,7 +58,7 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <span class="text-sm bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300">
-                        <i class="fa-solid fa-user-circle text-blue-400 ml-1"></i> الأدمن (admin)
+                        <i class="fa-solid fa-user-circle text-blue-400 ml-1"></i> (admin)
                     </span>
                     <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white px-3 py-1.5 rounded-lg text-sm border border-red-500/20 transition">
                         <i class="fa-solid fa-sign-out-alt"></i> خروج
@@ -69,7 +67,6 @@
             </div>
         </header>
 
-        <!-- التنقل والتخويب -->
         <div class="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 flex gap-2 overflow-x-auto">
                 <button onclick="switchTab('pos')" id="tab-pos" class="tab-btn py-4 px-6 font-bold border-b-2 border-blue-600 text-blue-600 flex items-center gap-2">
@@ -84,13 +81,278 @@
             </div>
         </div>
 
-        <!-- المحتوى الرئيسي -->
         <main class="max-w-7xl mx-auto p-4 md:p-6 flex-1 w-full">
-            
-            <!-- 1. شاشة الكاشير -->
+            <!-- 1. الكاشير -->
             <div id="sec-pos" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- قائمة المنتجات للبيع -->
                 <div class="lg:col-span-2 space-y-4">
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex gap-3">
-                        <input type="text" id="pos-search" oninput="renderPOSProducts()" placeholder="ابحث عن منتج بالاسم..." class="flex-1 px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                        <input type="text" id="pos-search" oninput="renderPOSProducts()" placeholder="ابحث عن منتج..." class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div id="pos-products-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[600px]">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex justify-between items-center">
+                        <span><i class="fa-solid fa-receipt text-blue-600"></i> الفاتورة الحالية</span>
+                        <button onclick="clearCart()" class="text-xs text-red-500 hover:underline">تفريغ السلة</button>
+                    </h2>
+                    <div id="cart-items" class="flex-1 overflow-y-auto space-y-3 pr-1"></div>
+                    <div class="border-t pt-4 mt-4 space-y-3">
+                        <div class="flex justify-between text-slate-600">
+                            <span>عدد المواد:</span>
+                            <span id="cart-count" class="font-bold">0</span>
+                        </div>
+                        <div class="flex justify-between text-xl font-extrabold text-slate-900 border-t pt-2">
+                            <span>الإجمالي النهائي:</span>
+                            <span class="text-blue-600"><span id="cart-total">0</span> ج.م</span>
+                        </div>
+                        <button onclick="checkout()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-lg">
+                            <i class="fa-solid fa-check-circle ml-1"></i> إتمام البيع وطباعة الفاتورة
+                        </button>
+                    </div>
+                </div>
+            </div>
 
+            <!-- 2. المخزون -->
+            <div id="sec-products" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-lg font-bold mb-4"><i class="fa-solid fa-plus-circle text-blue-600"></i> إضافة منتج جديد</h2>
+                    <form onsubmit="addProduct(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <input type="text" id="p-name" placeholder="اسم المنتج" required class="px-4 py-2.5 rounded-xl border border-slate-200">
+                        <input type="number" id="p-price" placeholder="سعر البيع (ج.م)" required min="0" step="0.01" class="px-4 py-2.5 rounded-xl border border-slate-200">
+                        <input type="number" id="p-stock" placeholder="الكمية المتاحة" required min="0" class="px-4 py-2.5 rounded-xl border border-slate-200">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl shadow-md transition">حفظ المنتج</button>
+                    </form>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <table class="w-full text-right border-collapse">
+                        <thead class="bg-slate-50 border-b text-slate-600 text-sm">
+                            <tr>
+                                <th class="p-4">اسم المنتج</th>
+                                <th class="p-4">السعر</th>
+                                <th class="p-4">المخزون الحالي</th>
+                                <th class="p-4">الحالة</th>
+                                <th class="p-4 text-center">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table-body" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3. التقارير -->
+            <div id="sec-sales" class="hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <p class="text-sm text-slate-500 font-medium">إجمالي المبيعات</p>
+                        <h3 class="text-3xl font-extrabold text-emerald-600 mt-2"><span id="stat-total-revenue">0</span> ج.م</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <p class="text-sm text-slate-500 font-medium">عدد الفواتير</p>
+                        <h3 class="text-3xl font-extrabold text-blue-600 mt-2" id="stat-total-orders">0</h3>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="text-lg font-bold mb-4">سجل الفواتير</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right">
+                            <thead class="bg-slate-50 border-b text-slate-600 text-sm">
+                                <tr>
+                                    <th class="p-3">رقم الفاتورة</th>
+                                    <th class="p-3">التاريخ والوقت</th>
+                                    <th class="p-3">عدد المواد</th>
+                                    <th class="p-3">الإجمالي</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sales-history-body" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- الفاتورة للطباعة -->
+    <div id="printable-invoice" class="hidden p-8 max-w-sm mx-auto text-slate-900 border">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold">الصلاحي للمبيعات</h2>
+            <p class="text-xs text-slate-500 mt-1">فاتورة مبيعات</p>
+            <p class="text-xs text-slate-400" id="inv-date"></p>
+        </div>
+        <div class="border-b border-t py-2 mb-4 text-xs space-y-1" id="inv-items"></div>
+        <div class="flex justify-between font-bold text-lg">
+            <span>الإجمالي:</span>
+            <span id="inv-total"></span> ج.م
+        </div>
+    </div>
+
+    <script>
+        let products = JSON.parse(localStorage.getItem('al_salahy_products')) || [
+            { id: 1, name: 'شاحن ايفون سريع', price: 250, stock: 15 },
+            { id: 2, name: 'جراب حماية', price: 80, stock: 30 }
+        ];
+        let cart = [];
+        let salesHistory = JSON.parse(localStorage.getItem('al_salahy_sales')) || [];
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            if (u === 'admin' && p === '1243') {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('app-screen').classList.remove('hidden');
+                initApp();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        }
+
+        function logout() {
+            document.getElementById('app-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        function switchTab(tab) {
+            ['pos', 'products', 'sales'].forEach(t => {
+                document.getElementById(`sec-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).className = "tab-btn py-4 px-6 font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2";
+            });
+            document.getElementById(`sec-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).className = "tab-btn py-4 px-6 font-bold border-b-2 border-blue-600 text-blue-600 flex items-center gap-2";
+            if (tab === 'products') renderProductsTable();
+            if (tab === 'sales') renderSalesHistory();
+        }
+
+        function initApp() {
+            renderPOSProducts();
+            renderCart();
+        }
+
+        function saveProducts() {
+            localStorage.setItem('al_salahy_products', JSON.stringify(products));
+        }
+
+        function addProduct(e) {
+            e.preventDefault();
+            const name = document.getElementById('p-name').value;
+            const price = parseFloat(document.getElementById('p-price').value);
+            const stock = parseInt(document.getElementById('p-stock').value);
+            products.push({ id: Date.now(), name, price, stock });
+            saveProducts();
+            e.target.reset();
+            alert('تمت الإضافة بنجاح!');
+            renderProductsTable();
+            renderPOSProducts();
+        }
+
+        function deleteProduct(id) {
+            if (confirm('هل أنت متأكد من الحذف؟')) {
+                products = products.filter(p => p.id !== id);
+                saveProducts();
+                renderProductsTable();
+                renderPOSProducts();
+            }
+        }
+
+        function renderProductsTable() {
+            const body = document.getElementById('products-table-body');
+            body.innerHTML = products.map(p => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-4 font-bold">${p.name}</td>
+                    <td class="p-4">${p.price} ج.م</td>
+                    <td class="p-4">${p.stock} قطعة</td>
+                    <td class="p-4">${p.stock > 5 ? '<span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-bold">متوفر</span>' : '<span class="bg-red-100 text-red-700 px-2.5 py-1 rounded-full text-xs font-bold">منخفض</span>'}</td>
+                    <td class="p-4 text-center"><button onclick="deleteProduct(${p.id})" class="text-red-500 font-bold text-sm">حذف</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPOSProducts() {
+            const search = document.getElementById('pos-search').value.toLowerCase();
+            const grid = document.getElementById('pos-products-grid');
+            const filtered = products.filter(p => p.name.toLowerCase().includes(search));
+            grid.innerHTML = filtered.map(p => `
+                <div onclick="addToCart(${p.id})" class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 hover:border-blue-500 cursor-pointer transition flex flex-col justify-between">
+                    <div><h4 class="font-bold text-slate-800">${p.name}</h4><p class="text-xs text-slate-400 mt-1">المتبقي: ${p.stock}</p></div>
+                    <div class="mt-4 flex justify-between items-center"><span class="font-extrabold text-blue-600">${p.price} ج.م</span><span class="w-8 h-8 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold">+</span></div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            const p = products.find(x => x.id === id);
+            if (!p || p.stock <= 0) return alert('المنتج غير متوفر!');
+            const item = cart.find(x => x.id === id);
+            if (item) {
+                if (item.qty < p.stock) item.qty++;
+                else alert('وصلت للحد الأقصى للمخزون!');
+            } else {
+                cart.push({ ...p, qty: 1 });
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            if (cart.length === 0) {
+                container.innerHTML = `<div class="text-center text-slate-400 py-12"><i class="fa-solid fa-basket-shopping text-4xl mb-2"></i><p>السلة فارغة</p></div>`;
+            } else {
+                container.innerHTML = cart.map(item => `
+                    <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl">
+                        <div><h5 class="font-bold text-sm text-slate-800">${item.name}</h5><p class="text-xs text-slate-500">${item.price} ج.م × ${item.qty}</p></div>
+                        <div class="flex items-center gap-2"><span class="font-bold text-blue-600 text-sm">${item.price * item.qty}</span><button onclick="removeFromCart(${item.id})" class="text-red-500 px-2 font-bold">×</button></div>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+            document.getElementById('cart-count').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(x => x.id !== id);
+            renderCart();
+        }
+
+        function clearCart() {
+            cart = [];
+            renderCart();
+        }
+
+        function checkout() {
+            if (cart.length === 0) return alert('السلة فارغة!');
+            cart.forEach(cItem => {
+                const p = products.find(x => x.id === cItem.id);
+                if (p) p.stock -= cItem.qty;
+            });
+            saveProducts();
+            const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+            const order = { id: 'INV-' + Date.now().toString().slice(-5), date: new Date().toLocaleString('ar-EG'), items: [...cart], total };
+            salesHistory.push(order);
+            localStorage.setItem('al_salahy_sales', JSON.stringify(salesHistory));
+
+            document.getElementById('inv-date').innerText = order.date;
+            document.getElementById('inv-total').innerText = total;
+            document.getElementById('inv-items').innerHTML = cart.map(i => `<div class="flex justify-between"><span>${i.name} (x${i.qty})</span><span>${i.price * i.qty} ج.م</span></div>`).join('');
+            
+            window.print();
+            cart = [];
+            renderCart();
+            renderPOSProducts();
+            alert('تم تسجيل البيع بنجاح!');
+        }
+
+        function renderSalesHistory() {
+            const body = document.getElementById('sales-history-body');
+            document.getElementById('stat-total-revenue').innerText = salesHistory.reduce((sum, s) => sum + s.total, 0);
+            document.getElementById('stat-total-orders').innerText = salesHistory.length;
+            body.innerHTML = salesHistory.slice().reverse().map(s => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-bold text-blue-600">${s.id}</td>
+                    <td class="p-3 text-sm text-slate-500">${s.date}</td>
+                    <td class="p-3 text-sm">${s.items.length} منتجات</td>
+                    <td class="p-3 font-bold text-slate-800">${s.total} ج.م</td>
+                </tr>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

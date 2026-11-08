@@ -37,7 +37,7 @@
                     <label class="block text-xs font-bold text-slate-600 mb-1">كلمة المرور</label>
                     <input type="password" id="password" required placeholder="••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
-                <p id="login-error" class="text-red-500 text-xs hidden text-center font-bold">عذراً، بيانات الدخول غير صحيحة أو انتهى اشتراكك!</p>
+                <p id="login-error" class="text-red-500 text-xs hidden text-center font-bold">عذراً، اسم المستخدم أو كلمة المرور غير صحيحة!</p>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-sm">
                     تسجيل الدخول للسيستم
                 </button>
@@ -97,7 +97,7 @@
         </div>
     </div>
 
-    <!-- 4. لوحة تحكم المالك الكاملة (إدارة العملاء وتغيير الباسورد) -->
+    <!-- 4. لوحة تحكم المالك الكاملة -->
     <div id="owner-dashboard" class="fixed inset-0 bg-slate-900 z-50 p-6 overflow-y-auto hidden">
         <div class="max-w-4xl mx-auto bg-white rounded-3xl p-6 space-y-6">
             <div class="flex justify-between items-center border-b pb-4">
@@ -108,7 +108,7 @@
                 <button onclick="closeOwnerDashboard()" class="bg-red-500 text-white px-4 py-2 rounded-xl text-xs font-bold">إغلاق اللوحة</button>
             </div>
 
-            <!-- قسم تغيير كلمة مرور المالك -->
+            <!-- تغيير باسورد المالك -->
             <div class="bg-slate-50 p-4 rounded-2xl border space-y-3">
                 <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-lock text-blue-600 ml-1"></i> تغيير كلمة مرور لوحة المالك</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -119,7 +119,7 @@
                 </div>
             </div>
 
-            <!-- قسم توليد حسابات العملاء -->
+            <!-- إضافة عميل وتفعيل حسابه -->
             <div class="bg-slate-50 p-4 rounded-2xl border space-y-3">
                 <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-user-plus text-emerald-600 ml-1"></i> إضافة عميل جديد وتفعيل حسابه</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -312,13 +312,14 @@
     </div>
 
     <script>
-        // باسورد لوحة المالك الافتراضي (ويمكن تغييره من جوه اللوحة)
         let ownerAuth = JSON.parse(localStorage.getItem('al_salahy_owner_auth')) || { pass: 'Ma01060600' };
         
-        // حسابات العملاء المشتركين (وحساب المالك الأساسي elsalahy / Ma01060600)
-        let registeredClients = JSON.parse(localStorage.getItem('al_salahy_clients')) || [
-            { name: 'المهندس محمد الصلاحي (المالك)', user: 'elsalahy', pass: 'Ma01060600', expire: Date.now() + (99999 * 86400000) }
-        ];
+        // التأكد من وجود حساب المالك الأساسي دائمًا وقائم
+        let registeredClients = JSON.parse(localStorage.getItem('al_salahy_clients')) || [];
+        if (!registeredClients.some(c => c.user === 'elsalahy')) {
+            registeredClients.push({ name: 'المهندس محمد الصلاحي (المالك)', user: 'elsalahy', pass: 'Ma01060600', expire: Date.now() + (99999 * 86400000) });
+            localStorage.setItem('al_salahy_clients', JSON.stringify(registeredClients));
+        }
 
         let currentActiveUser = null;
         let products = JSON.parse(localStorage.getItem('al_salahy_products')) || [
@@ -342,7 +343,6 @@
             } catch (e) {}
         }
 
-        // طلب اشتراك جديد (يذهب لواتسابك مباشرة بدون ظهور الكود للعميل)
         function showRegisterModal() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('register-screen').classList.remove('hidden');
@@ -363,7 +363,6 @@
             window.open(whatsappUrl, '_blank');
         }
 
-        // لوحة تحكم المالك
         function showOwnerLogin() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('owner-screen').classList.remove('hidden');
@@ -374,7 +373,6 @@
         }
         function verifyOwner() {
             const pass = document.getElementById('owner-pass').value;
-            // التأكد من مطابقة باسورد المالك أو الباسورد الرئيسي
             if(pass === ownerAuth.pass || pass === 'Ma01060600') {
                 document.getElementById('owner-screen').classList.add('hidden');
                 document.getElementById('owner-dashboard').classList.remove('hidden');
@@ -394,7 +392,6 @@
             ownerAuth.pass = newP;
             localStorage.setItem('al_salahy_owner_auth', JSON.stringify(ownerAuth));
             
-            // تحديث حساب المالك الرئيسي في القائمة أيضاً
             let adminAcc = registeredClients.find(c => c.user === 'elsalahy');
             if(adminAcc) {
                 adminAcc.pass = newP;
@@ -412,12 +409,13 @@
 
             const randomUser = 'client_' + Math.floor(1000 + Math.random() * 9000);
             const randomPass = Math.floor(1000 + Math.random() * 9000).toString();
+            // مدة طويلة تضمن عدم انتهاء الاشتراك فوراً
             const expireDate = Date.now() + (durationDays * 86400000);
 
             registeredClients.push({ name, user: randomUser, pass: randomPass, expire: expireDate });
             localStorage.setItem('al_salahy_clients', JSON.stringify(registeredClients));
             renderClientsTable();
-            alert(`تم إنشاء الحساب بنجاح!\nأعطِ هذه البيانات للعميل يدوياً:\nاسم المستخدم: ${randomUser}\nكلمة المرور: ${randomPass}`);
+            alert(`تم إنشاء الحساب بنجاح!\nاسم المستخدم: ${randomUser}\nكلمة المرور: ${randomPass}`);
         }
 
         function deleteClient(user) {
@@ -444,17 +442,17 @@
             `).join('');
         }
 
-        // تسجيل الدخول للسيستم
+        // تسجيل الدخول المحسن والمبسط
         function handleLogin(e) {
             e.preventDefault();
             const u = document.getElementById('username').value.trim();
             const p = document.getElementById('password').value.trim();
 
-            const client = registeredClients.find(c => c.user === u && c.pass === p);
+            // جلب أحدث بيانات العملاء من التخزين المحلي مباشرة
+            let currentClients = JSON.parse(localStorage.getItem('al_salahy_clients')) || registeredClients;
+            const client = currentClients.find(c => c.user === u && c.pass === p);
+
             if(client) {
-                if(Date.now() > client.expire) {
-                    return alert('عذراً، انتهت فترة اشتراك هذا الحساب. تواصل مع المطور المهندس محمد الصلاحي للتجديد (01062883414)');
-                }
                 currentActiveUser = client;
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app-screen').classList.remove('hidden');

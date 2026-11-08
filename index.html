@@ -1,705 +1,539 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexPOS - نظام إدارة المبيعات والمخازن الذكي</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .glass-input { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; }
-        .glass-input:focus { border-color: #6366f1; outline: none; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); }
-        @media print {
-            body * { visibility: hidden; }
-            #printable-invoice, #printable-invoice * { visibility: visible; }
-            #printable-invoice { position: absolute; left: 0; top: 0; width: 100%; display: block !important; background: white !important; color: black !important; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NexPOS PRO</title>
+
+<style>
+:root{
+--bg:#0b1220;
+--panel:#111c30;
+--panel2:#17243b;
+--line:#263650;
+--text:#eef4ff;
+--muted:#9aabc5;
+--blue:#3b82f6;
+}
+*{box-sizing:border-box}
+body{
+margin:0;background:var(--bg);color:var(--text);
+font-family:Tahoma,Arial,sans-serif
+}
+header{
+display:flex;justify-content:space-between;align-items:center;
+padding:16px 22px;background:#0e1728;
+border-bottom:1px solid var(--line)
+}
+.brand{font-size:25px;font-weight:bold}
+.brand span{color:#60a5fa}
+.sub{font-size:12px;color:var(--muted);margin-top:5px}
+button{
+cursor:pointer;border:0;border-radius:9px;padding:10px 14px;
+background:var(--blue);color:white;font-weight:bold
+}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:90vh}
+nav{padding:15px;background:#0e1728;border-left:1px solid var(--line)}
+nav button{
+display:block;width:100%;text-align:right;margin:5px 0;
+background:transparent;color:var(--muted)
+}
+nav button.active,nav button:hover{background:var(--panel2);color:white}
+main{padding:22px;max-width:1500px;width:100%;margin:auto}
+.page{display:none}
+.page.active{display:block}
+.heading{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:23px;margin:0}
+h2{font-size:17px;margin:0 0 15px}
+.muted{color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
+.card,.box{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:17px}
+.metric{font-size:24px;font-weight:bold;margin-top:10px}
+.metric small{font-size:12px;color:var(--muted)}
+.split{display:grid;grid-template-columns:1.2fr .8fr;gap:15px}
+.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}
+.product{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:13px;cursor:pointer;text-align:center}
+.product:hover{border-color:var(--blue)}
+.product strong{display:block;margin:8px 0}
+.price{color:#60a5fa;font-weight:bold}
+input{
+width:100%;background:#0b1424;color:white;border:1px solid var(--line);
+border-radius:9px;padding:11px;margin:6px 0;font:inherit
+}
+label{font-size:13px;color:var(--muted)}
+.formrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn2{background:var(--panel2);border:1px solid var(--line);color:white}
+.danger{background:#401d2a;color:#fecaca}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:11px 8px;border-bottom:1px solid var(--line);text-align:right}
+th{color:var(--muted);font-weight:normal}
+.cartline{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.notice{padding:13px;border-radius:10px;background:#132a47;color:#bfdbfe;margin-bottom:14px}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.plan{border:1px solid var(--line);border-radius:15px;padding:20px;background:var(--panel)}
+.footer{margin-top:25px;padding:15px;text-align:center;color:var(--muted);border-top:1px solid var(--line);font-size:12px}
+@media(max-width:850px){
+.layout{grid-template-columns:1fr}
+nav{display:flex;overflow:auto;gap:4px}
+nav button{white-space:nowrap;width:auto}
+.cards{grid-template-columns:repeat(2,1fr)}
+.split{grid-template-columns:1fr}
+.plans{grid-template-columns:1fr}
+main{padding:14px}
+}
+</style>
 </head>
 
-<body class="min-h-screen flex flex-col">
+<body>
 
-    <!-- 1. شاشة تسجيل الدخول -->
-    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
-        <div class="glass-card rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative overflow-hidden">
-            <div class="absolute -top-10 -left-10 w-32 h-32 bg-indigo-600/30 rounded-full blur-3xl"></div>
-            <div class="w-20 h-20 bg-indigo-600/20 border border-indigo-500/30 rounded-2xl mx-auto flex items-center justify-center mb-4 text-indigo-400 text-3xl font-black shadow-lg">
-                ⚡
-            </div>
-            <h2 class="text-3xl font-black text-white tracking-wide">NexPOS</h2>
-            <p class="text-xs text-indigo-400 font-bold mt-1">تطوير المهندس: محمد الصلاحي</p>
-            <p class="text-slate-400 text-[11px] mb-6">للدعم والتواصل: 01062883414</p>
-            
-            <form onsubmit="handleLogin(event)" class="space-y-4 text-right">
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">اسم المستخدم</label>
-                    <input type="text" id="username" required placeholder="أدخل اسم المستخدم" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">كلمة المرور</label>
-                    <input type="password" id="password" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
-                </div>
-                <p id="login-error" class="text-red-400 text-xs hidden text-center font-bold bg-red-500/10 py-2 rounded-lg border border-red-500/20">اسم المستخدم أو كلمة المرور غير صحيحة!</p>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-xl shadow-lg transition duration-200 text-sm flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول
-                </button>
-            </form>
+<header>
+<div>
+<div class="brand">Nex<span>POS</span> PRO</div>
+<div class="sub">نظام الكاشير والمبيعات • محمد الصلاحي</div>
+</div>
+<button onclick="showPage('plans')">الباقات والأسعار</button>
+</header>
 
-            <div class="mt-6 border-t border-slate-700/50 pt-4 flex justify-between items-center text-xs">
-                <button onclick="showRegisterModal()" class="text-indigo-400 font-bold hover:underline">طلب اشتراك جديد؟</button>
-                <button onclick="showOwnerLogin()" class="text-slate-400 hover:text-white transition">لوحة المالك 👑</button>
-            </div>
-        </div>
-    </div>
+<div class="layout">
 
-    <!-- 2. نافذة طلب اشتراك (توجيه لواتساب) -->
-    <div id="register-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 hidden">
-        <div class="glass-card rounded-3xl p-8 max-w-md w-full text-right space-y-4">
-            <div class="text-center">
-                <h3 class="text-xl font-bold text-white">طلب اشتراك في NexPOS</h3>
-                <p class="text-xs text-slate-400 mt-1">تواصل مباشرة مع المهندس محمد الصلاحي للتفعيل</p>
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">اسم المحل / النشاط</label>
-                <input type="text" id="reg-shop" placeholder="مثال: محل الصلاحي للإلكترونيات" class="w-full px-4 py-2.5 rounded-xl glass-input text-sm">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">رقم الهاتف (واتساب)</label>
-                <input type="text" id="reg-phone" placeholder="010xxxxxxxx" class="w-full px-4 py-2.5 rounded-xl glass-input text-sm">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">اختر الباقة المناسبة:</label>
-                <select id="reg-plan" class="w-full px-4 py-2.5 rounded-xl glass-input text-sm bg-slate-900">
-                    <option value="اشتراك شهري (100 ج.م)">اشتراك شهري - 100 ج.م</option>
-                    <option value="اشتراك سنوي (1000 ج.م)">اشتراك سنوي - 1000 ج.م</option>
-                    <option value="شراء نهائي دائم (3000 ج.م)">شراء نهائي دائم - 3000 ج.م</option>
-                </select>
-            </div>
-            <button onclick="submitRegistration()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg">
-                <i class="fa-brands fa-whatsapp text-lg"></i> إرسال الطلب عبر واتساب
-            </button>
-            <button onclick="closeRegisterModal()" class="w-full text-center text-xs text-slate-400 hover:underline pt-2">إلغاء والعودة</button>
-        </div>
-    </div>
+<nav>
+<button class="active" onclick="showPage('home',this)">الرئيسية</button>
+<button onclick="showPage('cashier',this)">الكاشير</button>
+<button onclick="showPage('products',this)">المنتجات والمخزون</button>
+<button onclick="showPage('sales',this)">سجل المبيعات</button>
+<button onclick="showPage('expenses',this)">المصروفات</button>
+<button onclick="showPage('reports',this)">التقارير</button>
+<button onclick="showPage('plans',this)">الاشتراكات</button>
+<button onclick="showPage('settings',this)">الإعدادات</button>
+</nav>
 
-    <!-- 3. شاشة دخول المالك -->
-    <div id="owner-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 hidden">
-        <div class="glass-card rounded-3xl p-8 max-w-md w-full text-right space-y-4 border border-amber-500/20">
-            <div class="text-center">
-                <div class="w-14 h-14 bg-amber-500/10 border border-amber-500/30 rounded-2xl mx-auto flex items-center justify-center text-amber-400 text-2xl font-bold mb-2">👑</div>
-                <h3 class="text-xl font-bold text-white">لوحة تحكم المالك الحصري</h3>
-                <p class="text-xs text-amber-400 font-bold">المهندس: محمد الصلاحي</p>
-                <p class="text-xs text-slate-400">01062883414</p>
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">كلمة مرور لوحة المالك</label>
-                <input type="password" id="owner-pass" placeholder="أدخل كلمة المرور" class="w-full px-4 py-2.5 rounded-xl glass-input text-sm">
-            </div>
-            <button onclick="verifyOwner()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl text-sm transition">دخول لوحة التحكّم</button>
-            <button onclick="closeOwnerLogin()" class="w-full text-center text-xs text-slate-400 hover:underline">إلغاء</button>
-        </div>
-    </div>
+<main>
 
-    <!-- 4. لوحة تحكم المالك الكاملة -->
-    <div id="owner-dashboard" class="fixed inset-0 z-50 p-6 bg-slate-950 overflow-y-auto hidden">
-        <div class="max-w-5xl mx-auto glass-card rounded-3xl p-6 space-y-6 border border-indigo-500/20">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-xl font-black text-white">👑 إدارة نظام NexPOS - المهندس محمد الصلاحي</h2>
-                    <p class="text-xs text-slate-400">إشراف التحكم والاشتراكات الحصرية (01062883414)</p>
-                </div>
-                <button onclick="closeOwnerDashboard()" class="bg-red-500/20 text-red-400 border border-red-500/30 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-500 hover:text-white transition">إغلاق اللوحة</button>
-            </div>
+<!-- الرئيسية -->
+<section id="home" class="page active">
+<div class="heading">
+<h1>لوحة التحكم</h1>
+<span class="muted" id="today"></span>
+</div>
 
-            <!-- تغيير باسورد المالك -->
-            <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 space-y-3">
-                <h3 class="font-bold text-sm text-slate-200"><i class="fa-solid fa-key text-indigo-400 ml-1"></i> تغيير كلمة مرور لوحة المالك</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <input type="password" id="new-owner-pass" placeholder="كلمة المرور الجديدة" class="px-4 py-2.5 rounded-xl glass-input text-sm">
-                    <div class="flex items-end">
-                        <button onclick="updateOwnerPassword()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-sm transition">حفظ التغيير</button>
-                    </div>
-                </div>
-            </div>
+<div class="cards">
+<div class="card"><div class="muted">مبيعات اليوم</div><div class="metric" id="todaySales">0</div></div>
+<div class="card"><div class="muted">فواتير اليوم</div><div class="metric" id="todayCount">0</div></div>
+<div class="card"><div class="muted">قيمة المخزون</div><div class="metric" id="stockValue">0</div></div>
+<div class="card"><div class="muted">مصروفات اليوم</div><div class="metric" id="todayExpense">0</div></div>
+</div>
 
-            <!-- إنشاء حساب عميل جديد -->
-            <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 space-y-3">
-                <h3 class="font-bold text-sm text-slate-200"><i class="fa-solid fa-user-plus text-emerald-400 ml-1"></i> إضافة عميل وإصدار ترخيص</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1">اسم المحل / المشترك</label>
-                        <input type="text" id="client-name-gen" placeholder="محل النور" class="w-full px-4 py-2.5 rounded-xl glass-input text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1">مدة الاشتراك</label>
-                        <select id="client-duration" class="w-full px-4 py-2.5 rounded-xl glass-input text-sm bg-slate-900">
-                            <option value="30">شهر (100 ج.م)</option>
-                            <option value="365">سنة (1000 ج.م)</option>
-                            <option value="9999">شراء نهائي (3000 ج.م)</option>
-                        </select>
-                    </div>
-                    <div class="flex items-end">
-                        <button onclick="generateClientLicense()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-sm transition">إصدار وتفعيل الحساب</button>
-                    </div>
-                </div>
-            </div>
+<div class="box">
+<h2>ابدأ بسرعة</h2>
+<div class="notice">أضف المنتجات ثم افتح الكاشير وسجل أول عملية بيع.</div>
+<button onclick="showPage('cashier')">فتح الكاشير</button>
+<button class="btn2" onclick="showPage('products')">إدارة المنتجات</button>
+</div>
+</section>
 
-            <!-- جدول العملاء -->
-            <div>
-                <h3 class="font-bold text-sm text-slate-300 mb-3">قائمة العملاء والتراخيص المفعلة:</h3>
-                <div class="overflow-x-auto rounded-xl border border-slate-800">
-                    <table class="w-full text-right text-sm">
-                        <thead class="bg-slate-900 text-slate-400 border-b border-slate-800">
-                            <tr>
-                                <th class="p-3">اسم المحل</th>
-                                <th class="p-3">اسم المستخدم</th>
-                                <th class="p-3">كلمة المرور</th>
-                                <th class="p-3">تاريخ الانتهاء</th>
-                                <th class="p-3 text-center">إجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="clients-table-body" class="divide-y divide-slate-800/50"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- الكاشير -->
+<section id="cashier" class="page">
+<div class="heading">
+<h1>الكاشير</h1>
+<button class="btn2" onclick="clearCart()">تفريغ السلة</button>
+</div>
 
-    <!-- 5. التطبيق الرئيسي (POS) -->
-    <div id="app-screen" class="hidden min-h-screen flex flex-col">
-        <header class="bg-slate-900/80 border-b border-slate-800 backdrop-blur-md sticky top-0 z-30">
-            <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <span class="w-10 h-10 bg-indigo-600/20 border border-indigo-500/30 rounded-xl flex items-center justify-center text-indigo-400 font-black text-lg">⚡</span>
-                    <div>
-                        <h1 id="app-header-title" class="font-black text-lg text-white">NexPOS</h1>
-                        <p class="text-[10px] text-slate-400">تطوير: المهندس محمد الصلاحي | 01062883414</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-lg font-bold">حساب مفعل ✅</span>
-                    <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-red-500/20 transition">
-                        <i class="fa-solid fa-power-off"></i> خروج
-                    </button>
-                </div>
-            </div>
-        </header>
+<div class="split">
+<div class="box">
+<input id="searchProduct" placeholder="ابحث عن منتج..." oninput="renderProducts()">
+<div class="products" id="productGrid"></div>
+</div>
 
-        <!-- التبويبات -->
-        <div class="bg-slate-900/40 border-b border-slate-800">
-            <div class="max-w-7xl mx-auto px-4 flex gap-4 overflow-x-auto">
-                <button onclick="switchTab('pos')" id="tab-pos" class="py-3 px-5 font-bold text-sm border-b-2 border-indigo-500 text-indigo-400 flex items-center gap-2 whitespace-nowrap transition">
-                    <i class="fa-solid fa-barcode"></i> الكاشير والباركود
-                </button>
-                <button onclick="switchTab('products')" id="tab-products" class="py-3 px-5 font-bold text-sm border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap transition">
-                    <i class="fa-solid fa-boxes-stacked"></i> المخزون والمنتجات
-                </button>
-                <button onclick="switchTab('sales')" id="tab-sales" class="py-3 px-5 font-bold text-sm border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap transition">
-                    <i class="fa-solid fa-file-invoice-dollar"></i> الفواتير والمبيعات
-                </button>
-            </div>
-        </div>
+<div class="box">
+<h2>سلة البيع</h2>
+<div id="cartBox"></div>
 
-        <!-- المحتوى الرئيسي -->
-        <main class="max-w-7xl mx-auto p-4 md:p-6 flex-1 w-full">
-            
-            <!-- 1. شاشة الكاشير والباركود -->
-            <div id="sec-pos" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 space-y-4">
-                    <div class="glass-card p-4 rounded-2xl flex gap-3 items-center border border-slate-800">
-                        <div class="text-indigo-400 text-xl pl-1"><i class="fa-solid fa-barcode"></i></div>
-                        <input type="text" id="pos-barcode-input" onkeydown="handleBarcodeScan(event)" placeholder="امسح الباركود بالمسدس أو اكتب اسم المنتج..." autofocus class="w-full px-4 py-3 rounded-xl glass-input text-sm font-semibold">
-                    </div>
-                    <div id="pos-products-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
-                </div>
+<label>الخصم بالجنيه</label>
+<input type="number" id="discount" value="0" min="0" oninput="renderCart()">
 
-                <!-- سلة المشتريات -->
-                <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col h-[570px]">
-                    <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
-                        <h2 class="font-bold text-slate-200 text-sm"><i class="fa-solid fa-cart-shopping text-indigo-400"></i> سلة الفاتورة الحالية</h2>
-                        <button onclick="clearCart()" class="text-xs text-red-400 font-bold hover:underline">إفراغ السلة</button>
-                    </div>
-                    <div id="cart-items" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
-                    <div class="border-t border-slate-800 pt-3 mt-3 space-y-3">
-                        <div class="flex justify-between text-xs text-slate-400">
-                            <span>إجمالي الأصناف:</span>
-                            <span id="cart-count" class="font-bold text-white">0</span>
-                        </div>
-                        <div class="flex justify-between text-xl font-black text-white border-t border-slate-800 pt-2">
-                            <span>المبلغ الإجمالي:</span>
-                            <span class="text-indigo-400"><span id="cart-total">0</span> ج.م</span>
-                        </div>
-                        <button onclick="checkout()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-sm flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-print"></i> إتمام البيع وطباعة الفاتورة
-                        </button>
-                    </div>
-                </div>
-            </div>
+<div class="cartline"><strong>الإجمالي</strong><strong id="cartTotal">0</strong></div>
 
-            <!-- 2. المخزون -->
-            <div id="sec-products" class="hidden space-y-6">
-                <div class="glass-card p-5 rounded-2xl border border-slate-800">
-                    <h2 class="font-bold text-slate-200 mb-3 text-sm"><i class="fa-solid fa-plus-circle text-indigo-400"></i> إضافة صنف جديد للمخزن</h2>
-                    <form onsubmit="addProduct(event)" class="grid grid-cols-1 sm:grid-cols-5 gap-3">
-                        <input type="text" id="p-barcode" placeholder="الباركود (بالماسح الضوئي)" class="px-4 py-2.5 rounded-xl glass-input text-sm font-mono">
-                        <input type="text" id="p-name" placeholder="اسم المنتج" required class="px-4 py-2.5 rounded-xl glass-input text-sm">
-                        <input type="number" id="p-price" placeholder="سعر البيع (ج.م)" required min="0" step="0.01" class="px-4 py-2.5 rounded-xl glass-input text-sm">
-                        <input type="number" id="p-stock" placeholder="الكمية المتاحة" required min="0" class="px-4 py-2.5 rounded-xl glass-input text-sm">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-sm shadow transition">حفظ الصنف</button>
-                    </form>
-                </div>
-                <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden">
-                    <table class="w-full text-right text-sm">
-                        <thead class="bg-slate-900 text-slate-400 border-b border-slate-800">
-                            <tr>
-                                <th class="p-3">الباركود</th>
-                                <th class="p-3">اسم المنتج</th>
-                                <th class="p-3">السعر</th>
-                                <th class="p-3">المخزون</th>
-                                <th class="p-3">الحالة</th>
-                                <th class="p-3 text-center">حذف</th>
-                            </tr>
-                        </thead>
-                        <tbody id="products-table-body" class="divide-y divide-slate-800/50"></tbody>
-                    </table>
-                </div>
-            </div>
+<label>المبلغ المدفوع</label>
+<input type="number" id="paid" placeholder="المبلغ المدفوع" oninput="renderCart()">
 
-            <!-- 3. المبيعات -->
-            <div id="sec-sales" class="hidden space-y-6">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="glass-card p-5 rounded-2xl border border-slate-800">
-                        <p class="text-xs text-slate-400 font-bold">إجمالي إيراد المبيعات</p>
-                        <h3 class="text-2xl font-black text-emerald-400 mt-1"><span id="stat-total-revenue">0</span> ج.م</h3>
-                    </div>
-                    <div class="glass-card p-5 rounded-2xl border border-slate-800">
-                        <p class="text-xs text-slate-400 font-bold">عدد الفواتير الصادرة</p>
-                        <h3 class="text-2xl font-black text-indigo-400 mt-1" id="stat-total-orders">0</h3>
-                    </div>
-                </div>
-                <div class="glass-card rounded-2xl border border-slate-800 p-5">
-                    <h2 class="font-bold mb-3 text-sm text-slate-200">سجل الفواتير والمبيعات</h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-right text-sm">
-                            <thead class="bg-slate-900 text-slate-400 border-b border-slate-800">
-                                <tr>
-                                    <th class="p-3">رقم الفاتورة</th>
-                                    <th class="p-3">التاريخ والوقت</th>
-                                    <th class="p-3">الأصناف المباعة</th>
-                                    <th class="p-3">الإجمالي</th>
-                                    <th class="p-3 text-center">إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="sales-history-body" class="divide-y divide-slate-800/50"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+<div class="cartline"><span>الباقي</span><strong id="change">0</strong></div>
 
-        </main>
-    </div>
+<button style="width:100%;margin-top:10px" onclick="checkout()">إتمام البيع</button>
+</div>
+</div>
+</section>
 
-    <!-- طباعة الفاتورة الحرارية -->
-    <div id="printable-invoice" class="hidden p-4 max-w-[300px] mx-auto font-mono text-xs text-black bg-white">
-        <div class="text-center mb-3 border-b border-black pb-2">
-            <h2 id="inv-shop-name" class="text-base font-bold">NexPOS</h2>
-            <p class="text-[10px]">تطوير المطور: المهندس محمد الصلاحي</p>
-            <p class="text-[10px]">تواصل: 01062883414</p>
-            <p id="inv-id" class="font-bold mt-1"></p>
-            <p id="inv-date" class="text-[10px]"></p>
-        </div>
-        <div class="border-b border-black pb-2 mb-2 space-y-1" id="inv-items"></div>
-        <div class="flex justify-between font-bold text-sm border-t border-black pt-2">
-            <span>الإجمالي:</span>
-            <span><span id="inv-total"></span> ج.م</span>
-        </div>
-        <div class="text-center text-[10px] mt-4 border-t border-black pt-2">
-            شكراً لزيارتكم ❤️
-        </div>
-    </div>
+<!-- المنتجات -->
+<section id="products" class="page">
+<div class="heading"><h1>المنتجات والمخزون</h1></div>
 
-    <script>
-        // قواعد البيانات والتخزين المحلي الحصري
-        let ownerAuth = JSON.parse(localStorage.getItem('nexpos_owner_auth')) || { pass: 'Ma01060600' };
+<div class="split">
+<div class="box">
+<h2>إضافة منتج</h2>
 
-        let registeredClients = JSON.parse(localStorage.getItem('nexpos_clients')) || [
-            { name: 'المهندس محمد الصلاحي (المالك)', user: 'elsalahy', pass: 'Ma01060600', expire: 9999999999999 }
-        ];
+<label>اسم المنتج</label>
+<input id="pname" placeholder="مثال: كيبورد">
 
-        let currentActiveUser = null;
-        let products = [];
-        let cart = [];
-        let salesHistory = [];
+<label>السعر</label>
+<input id="pprice" type="number" placeholder="0">
 
-        function playBeepSound() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(1000, ctx.currentTime);
-                gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.08);
-            } catch (e) {}
-        }
+<label>الكمية</label>
+<input id="pqty" type="number" placeholder="0">
 
-        function showRegisterModal() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('register-screen').classList.remove('hidden');
-        }
-        function closeRegisterModal() {
-            document.getElementById('register-screen').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
-        }
-        function submitRegistration() {
-            const shop = document.getElementById('reg-shop').value.trim();
-            const phone = document.getElementById('reg-phone').value.trim();
-            const plan = document.getElementById('reg-plan').value;
+<label>التكلفة</label>
+<input id="pcost" type="number" placeholder="0">
 
-            if(!shop || !phone) return alert('الرجاء إدخال كافة البيانات المطلوب إدخالها');
+<button onclick="addProduct()">حفظ المنتج</button>
+</div>
 
-            const text = `مرحباً مهندس محمد الصلاحي، أرغب في الاشتراك بنظام NexPOS.\nاسم المحل: ${shop}\nرقم الهاتف: ${phone}\nالباقة: ${plan}`;
-            window.open(`https://wa.me/201062883414?text=${encodeURIComponent(text)}`, '_blank');
-        }
+<div class="box">
+<h2>ملخص المخزون</h2>
+<div class="metric" id="productCount">0 منتج</div>
+<p class="muted">قيمة المخزون محسوبة بسعر البيع.</p>
+</div>
+</div>
 
-        function showOwnerLogin() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('owner-screen').classList.remove('hidden');
-        }
-        function closeOwnerLogin() {
-            document.getElementById('owner-screen').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
-        }
-        function verifyOwner() {
-            const pass = document.getElementById('owner-pass').value;
-            if(pass === ownerAuth.pass || pass === 'Ma01060600') {
-                document.getElementById('owner-screen').classList.add('hidden');
-                document.getElementById('owner-dashboard').classList.remove('hidden');
-                renderClientsTable();
-            } else {
-                alert('كلمة مرور المالك غير صحيحة!');
-            }
-        }
-        function closeOwnerDashboard() {
-            document.getElementById('owner-dashboard').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
-        }
+<div class="box" style="margin-top:15px;overflow:auto">
+<h2>قائمة المنتجات</h2>
+<table>
+<thead><tr><th>المنتج</th><th>السعر</th><th>الكمية</th><th>التكلفة</th><th>إجراء</th></tr></thead>
+<tbody id="productsTable"></tbody>
+</table>
+</div>
+</section>
 
-        function updateOwnerPassword() {
-            const newP = document.getElementById('new-owner-pass').value.trim();
-            if(!newP) return alert('أدخل كلمة المرور الجديدة');
-            ownerAuth.pass = newP;
-            localStorage.setItem('nexpos_owner_auth', JSON.stringify(ownerAuth));
+<!-- المبيعات -->
+<section id="sales" class="page">
+<div class="heading">
+<h1>سجل المبيعات</h1>
+<button class="btn2" onclick="exportSales()">تصدير CSV</button>
+</div>
+<div class="box" style="overflow:auto">
+<table>
+<thead><tr><th>الفاتورة</th><th>التاريخ</th><th>الأصناف</th><th>الإجمالي</th><th>المدفوع</th></tr></thead>
+<tbody id="salesTable"></tbody>
+</table>
+</div>
+</section>
 
-            let adminAcc = registeredClients.find(c => c.user === 'elsalahy');
-            if(adminAcc) {
-                adminAcc.pass = newP;
-                localStorage.setItem('nexpos_clients', JSON.stringify(registeredClients));
-            }
+<!-- المصروفات -->
+<section id="expenses" class="page">
+<div class="heading"><h1>المصروفات</h1></div>
+<div class="box">
+<label>وصف المصروف</label>
+<input id="expname" placeholder="إيجار / كهرباء">
 
-            alert('تم تغيير كلمة المرور بنجاح!');
-            document.getElementById('new-owner-pass').value = '';
-        }
+<label>القيمة</label>
+<input id="expvalue" type="number" placeholder="0">
 
-        function generateClientLicense() {
-            const name = document.getElementById('client-name-gen').value.trim();
-            const durationDays = parseInt(document.getElementById('client-duration').value);
-            if(!name) return alert('أدخل اسم المحل');
+<button onclick="addExpense()">تسجيل المصروف</button>
+</div>
 
-            const randomUser = 'user_' + Math.floor(1000 + Math.random() * 9000);
-            const randomPass = Math.floor(1000 + Math.random() * 9000).toString();
-            const expireDate = Date.now() + (durationDays * 86400000);
+<div class="box" style="margin-top:15px;overflow:auto">
+<table>
+<thead><tr><th>التاريخ</th><th>الوصف</th><th>القيمة</th></tr></thead>
+<tbody id="expensesTable"></tbody>
+</table>
+</div>
+</section>
 
-            registeredClients.push({ name, user: randomUser, pass: randomPass, expire: expireDate });
-            localStorage.setItem('nexpos_clients', JSON.stringify(registeredClients));
-            renderClientsTable();
-            alert(`تم إنشاء وتفعيل الحساب بنجاح!\nاسم المستخدم: ${randomUser}\nكلمة المرور: ${randomPass}`);
-        }
+<!-- التقارير -->
+<section id="reports" class="page">
+<div class="heading"><h1>التقارير</h1></div>
+<div class="cards">
+<div class="card"><div class="muted">إجمالي المبيعات</div><div class="metric" id="allSales">0</div></div>
+<div class="card"><div class="muted">المصروفات</div><div class="metric" id="allExpenses">0</div></div>
+<div class="card"><div class="muted">صافي المبيعات بعد المصروفات</div><div class="metric" id="net">0</div></div>
+<div class="card"><div class="muted">عدد عمليات البيع</div><div class="metric" id="allCount">0</div></div>
+</div>
+<div class="notice">الأرقام محسوبة من البيانات المسجلة على هذا المتصفح.</div>
+</section>
 
-        function deleteClient(user) {
-            if(user === 'elsalahy') return alert('لا يمكن حذف المالك الأساسي!');
-            if(confirm('هل أنت متأكد من حذف هذا العميل؟')) {
-                registeredClients = registeredClients.filter(c => c.user !== user);
-                localStorage.setItem('nexpos_clients', JSON.stringify(registeredClients));
-                renderClientsTable();
-            }
-        }
+<!-- الاشتراكات -->
+<section id="plans" class="page">
+<div class="heading"><h1>باقات NexPOS</h1></div>
+<div class="notice">اختر الباقة وتواصل مع المطور لتفعيلها. الدفع غير آلي.</div>
 
-        function renderClientsTable() {
-            const body = document.getElementById('clients-table-body');
-            body.innerHTML = registeredClients.map(c => `
-                <tr class="hover:bg-slate-900/50">
-                    <td class="p-3 font-bold text-white">${c.name}</td>
-                    <td class="p-3 font-mono text-indigo-400">${c.user}</td>
-                    <td class="p-3 font-mono text-emerald-400">${c.pass}</td>
-                    <td class="p-3 text-xs text-slate-400">${new Date(c.expire).toLocaleDateString('ar-EG')}</td>
-                    <td class="p-3 text-center">
-                        ${c.user !== 'elsalahy' ? `<button onclick="deleteClient('${c.user}')" class="bg-red-500/10 text-red-400 px-2.5 py-1 rounded-lg text-xs font-bold hover:bg-red-500 hover:text-white transition">حذف</button>` : '<span class="text-amber-400 font-bold">المالك</span>'}
-                    </td>
-                </tr>
-            `).join('');
-        }
+<div class="plans">
+<div class="plan">
+<h2>اشتراك شهري</h2>
+<div class="metric">100 <small>جنيه</small></div>
+<p class="muted">اشتراك لمدة شهر</p>
+<button onclick="contact('اشتراك شهري 100 جنيه')">اطلب الاشتراك</button>
+</div>
 
-        // تسجيل الدخول وتحميل بيانات العميل المحددة
-        function handleLogin(e) {
-            e.preventDefault();
-            const u = document.getElementById('username').value.trim();
-            const p = document.getElementById('password').value.trim();
+<div class="plan">
+<h2>اشتراك سنوي</h2>
+<div class="metric">1,000 <small>جنيه</small></div>
+<p class="muted">اشتراك لمدة سنة</p>
+<button onclick="contact('اشتراك سنوي 1000 جنيه')">اطلب الاشتراك</button>
+</div>
 
-            const client = registeredClients.find(c => c.user === u && c.pass === p);
+<div class="plan">
+<h2>شراء كامل</h2>
+<div class="metric">3,000 <small>جنيه</small></div>
+<p class="muted">شراء كامل حسب الاتفاق</p>
+<button onclick="contact('شراء كامل 3000 جنيه')">اطلب الشراء</button>
+</div>
+</div>
+</section>
 
-            if(client) {
-                if(Date.now() > client.expire) {
-                    return alert('انتهت مدة اشتراك هذا الحساب! يرجى التواصل مع المهندس محمد الصلاحي للتجديد (01062883414)');
-                }
-                currentActiveUser = client;
-                
-                // تحميل مخزون ومبيعات هذا العميل بشكل منفصل تماماً
-                products = JSON.parse(localStorage.getItem(`nexpos_prod_${client.user}`)) || [
-                    { id: 1, barcode: '1001', name: 'منتج تجريبي 1', price: 100, stock: 20 }
-                ];
-                salesHistory = JSON.parse(localStorage.getItem(`nexpos_sales_${client.user}`)) || [];
+<!-- الإعدادات -->
+<section id="settings" class="page">
+<div class="heading"><h1>الإعدادات</h1></div>
 
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('app-screen').classList.remove('hidden');
-                document.getElementById('app-header-title').innerText = `NexPOS: ${client.name}`;
-                initApp();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        }
+<div class="box">
+<h2>بيانات النظام</h2>
+<p>اسم النظام: <b>NexPOS PRO</b></p>
+<p>المطور والمالك: <b>محمد الصلاحي</b></p>
+<p>الدعم: <b dir="ltr">01062883414</b></p>
 
-        function logout() {
-            document.getElementById('app-screen').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
-            currentActiveUser = null;
-        }
+<button onclick="contact('استفسار دعم NexPOS')">تواصل مع الدعم</button>
 
-        function switchTab(tab) {
-            ['pos', 'products', 'sales'].forEach(t => {
-                document.getElementById(`sec-${t}`).classList.add('hidden');
-                document.getElementById(`tab-${t}`).className = "py-3 px-5 font-bold text-sm border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap transition";
-            });
-            document.getElementById(`sec-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-${tab}`).className = "py-3 px-5 font-bold text-sm border-b-2 border-indigo-500 text-indigo-400 flex items-center gap-2 whitespace-nowrap transition";
-            if (tab === 'pos') setTimeout(() => document.getElementById('pos-barcode-input').focus(), 100);
-            if (tab === 'products') renderProductsTable();
-            if (tab === 'sales') renderSalesHistory();
-        }
+<hr style="border-color:var(--line);margin:20px 0">
 
-        function initApp() {
-            renderPOSProducts();
-            renderCart();
-            setTimeout(() => document.getElementById('pos-barcode-input').focus(), 100);
-        }
+<button class="danger" onclick="resetData()">مسح بيانات المتصفح</button>
+<p class="muted">تنبيه: مسح البيانات لا يمكن التراجع عنه.</p>
+</div>
+</section>
 
-        function handleBarcodeScan(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const query = e.target.value.trim();
-                if (!query) return;
+<div class="footer">
+NexPOS PRO © <span id="year"></span>
+— المطور والمالك: محمد الصلاحي
+— الدعم: 01062883414
+</div>
 
-                const productByBarcode = products.find(p => p.barcode && p.barcode === query);
-                if (productByBarcode) {
-                    addToCart(productByBarcode.id);
-                    playBeepSound();
-                    e.target.value = '';
-                    return;
-                }
+</main>
+</div>
 
-                const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
-                if (filtered.length === 1) {
-                    addToCart(filtered[0].id);
-                    playBeepSound();
-                    e.target.value = '';
-                } else {
-                    renderPOSProducts(query);
-                }
-            } else {
-                renderPOSProducts(e.target.value);
-            }
-        }
+<script>
+const KEY = "nexpos_pro_v1";
 
-        function saveProducts() {
-            if(currentActiveUser) {
-                localStorage.setItem(`nexpos_prod_${currentActiveUser.user}`, JSON.stringify(products));
-            }
-        }
+let db = JSON.parse(localStorage.getItem(KEY) || '{"products":[],"sales":[],"expenses":[]}');
+let cart = [];
 
-        function addProduct(e) {
-            e.preventDefault();
-            const barcode = document.getElementById('p-barcode').value.trim() || Math.floor(100000 + Math.random() * 900000).toString();
-            const name = document.getElementById('p-name').value;
-            const price = parseFloat(document.getElementById('p-price').value);
-            const stock = parseInt(document.getElementById('p-stock').value);
+const money = n => (Number(n)||0).toLocaleString("ar-EG",{maximumFractionDigits:2})+" ج.م";
+const dateNow = () => new Date().toLocaleString("ar-EG");
 
-            products.push({ id: Date.now(), barcode, name, price, stock });
-            saveProducts();
-            e.target.reset();
-            renderProductsTable();
-            renderPOSProducts();
-            alert('تم تسجيل المنتج بالمخزن بنجاح!');
-        }
+function save(){
+localStorage.setItem(KEY,JSON.stringify(db));
+refresh();
+}
 
-        function deleteProduct(id) {
-            if (confirm('هل ترغب في حذف هذا المنتج من المخزون؟')) {
-                products = products.filter(p => p.id !== id);
-                saveProducts();
-                renderProductsTable();
-                renderPOSProducts();
-            }
-        }
+function showPage(id,btn){
+document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+if(btn)btn.classList.add("active");
+refresh();
+if(id==="cashier")renderProducts();
+}
 
-        function renderProductsTable() {
-            const body = document.getElementById('products-table-body');
-            body.innerHTML = products.map(p => `
-                <tr class="hover:bg-slate-900/50">
-                    <td class="p-3 font-mono font-bold text-indigo-400">${p.barcode || '-'}</td>
-                    <td class="p-3 font-bold text-white">${p.name}</td>
-                    <td class="p-3 text-emerald-400 font-bold">${p.price} ج.م</td>
-                    <td class="p-3">${p.stock} قطعة</td>
-                    <td class="p-3">${p.stock > 3 ? '<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full text-xs font-bold">متوفر</span>' : '<span class="bg-red-500/10 text-red-400 border border-red-500/20 px-2.5 py-0.5 rounded-full text-xs font-bold">منخفض</span>'}</td>
-                    <td class="p-3 text-center"><button onclick="deleteProduct(${p.id})" class="text-red-400 font-bold hover:underline">حذف</button></td>
-                </tr>
-            `).join('');
-        }
+function addProduct(){
+let name=document.getElementById("pname").value.trim();
+let price=+document.getElementById("pprice").value;
+let qty=+document.getElementById("pqty").value;
+let cost=+document.getElementById("pcost").value;
 
-        function renderPOSProducts(searchVal = '') {
-            const grid = document.getElementById('pos-products-grid');
-            const filtered = products.filter(p => p.name.toLowerCase().includes(searchVal.toLowerCase()) || (p.barcode && p.barcode.includes(searchVal)));
-            grid.innerHTML = filtered.map(p => `
-                <div onclick="addToCart(${p.id})" class="glass-card p-3.5 rounded-2xl border border-slate-800 hover:border-indigo-500/50 cursor-pointer transition flex flex-col justify-between">
-                    <div>
-                        <h4 class="font-bold text-xs text-slate-100 line-clamp-1">${p.name}</h4>
-                        <p class="text-[10px] text-slate-400 mt-1">كود: ${p.barcode || 'بدون'} | بالمخزن: ${p.stock}</p>
-                    </div>
-                    <div class="mt-3 flex justify-between items-center">
-                        <span class="font-black text-indigo-400 text-xs">${p.price} ج.م</span>
-                        <span class="w-7 h-7 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-lg flex items-center justify-center font-bold text-xs">+</span>
-                    </div>
-                </div>
-            `).join('');
-        }
+if(!name||price<=0||qty<0)return alert("أدخل اسم المنتج وسعر وكمية صحيحة.");
 
-        function addToCart(id) {
-            const p = products.find(x => x.id === id);
-            if (!p || p.stock <= 0) return alert('المنتج غبر متوفر بالمخزن!');
-            const item = cart.find(x => x.id === id);
-            if (item) {
-                if (item.qty < p.stock) item.qty++;
-                else alert('تجاوزت الكمية المتاحة بالمخزن!');
-            } else {
-                cart.push({ ...p, qty: 1 });
-            }
-            renderCart();
-        }
+db.products.push({id:Date.now(),name,price,qty,cost});
 
-        function renderCart() {
-            const container = document.getElementById('cart-items');
-            if (cart.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-500 py-20"><i class="fa-solid fa-basket-shopping text-4xl mb-2 text-slate-600"></i><p class="text-xs">سلة المبيعات فارغة</p></div>`;
-            } else {
-                container.innerHTML = cart.map(item => `
-                    <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
-                        <div>
-                            <h5 class="font-bold text-xs text-white">${item.name}</h5>
-                            <p class="text-[10px] text-slate-400">${item.price} ج.م × ${item.qty}</p>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold text-indigo-400 text-xs">${item.price * item.qty}</span>
-                            <button onclick="removeFromCart(${item.id})" class="text-red-400 font-bold px-1 text-sm hover:text-red-300">×</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            document.getElementById('cart-total').innerText = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-            document.getElementById('cart-count').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
-        }
+document.getElementById("pname").value="";
+document.getElementById("pprice").value="";
+document.getElementById("pqty").value="";
+document.getElementById("pcost").value="";
 
-        function removeFromCart(id) {
-            cart = cart.filter(x => x.id !== id);
-            renderCart();
-        }
+save();
+alert("تم حفظ المنتج");
+}
 
-        function clearCart() {
-            cart = [];
-            renderCart();
-            document.getElementById('pos-barcode-input').focus();
-        }
+function renderProducts(){
+let q=document.getElementById("searchProduct").value.toLowerCase();
 
-        function checkout() {
-            if (cart.length === 0) return alert('السلة فارغة!');
-            cart.forEach(cItem => {
-                const p = products.find(x => x.id === cItem.id);
-                if (p) p.stock -= cItem.qty;
-            });
-            saveProducts();
-            
-            const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-            const orderId = 'INV-' + Math.floor(10000 + Math.random() * 90000);
-            const orderDate = new Date().toLocaleString('ar-EG');
-            
-            salesHistory.push({ id: orderId, date: orderDate, items: [...cart], total });
-            if(currentActiveUser) {
-                localStorage.setItem(`nexpos_sales_${currentActiveUser.user}`, JSON.stringify(salesHistory));
-            }
+document.getElementById("productGrid").innerHTML=
+db.products.filter(p=>p.name.toLowerCase().includes(q)).map(p=>`
+<div class="product" onclick="addCart(${p.id})">
+<strong>${esc(p.name)}</strong>
+<span class="price">${money(p.price)}</span>
+<small class="muted">المتاح: ${p.qty}</small>
+</div>`).join("") ||
+'<p class="muted">لا توجد منتجات.</p>';
 
-            document.getElementById('inv-shop-name').innerText = currentActiveUser ? currentActiveUser.name : 'NexPOS';
-            document.getElementById('inv-id').innerText = `فاتورة رقم: ${orderId}`;
-            document.getElementById('inv-date').innerText = orderDate;
-            document.getElementById('inv-total').innerText = total;
-            document.getElementById('inv-items').innerHTML = cart.map(i => `
-                <div class="flex justify-between text-xs">
-                    <span>${i.name} (x${i.qty})</span>
-                    <span>${i.price * i.qty} ج.م</span>
-                </div>
-            `).join('');
+document.getElementById("productsTable").innerHTML=
+db.products.map(p=>`
+<tr>
+<td>${esc(p.name)}</td>
+<td>${money(p.price)}</td>
+<td>${p.qty}</td>
+<td>${money(p.cost)}</td>
+<td><button class="danger" onclick="delProduct(${p.id})">حذف</button></td>
+</tr>`).join("");
+}
 
-            window.print();
-            cart = [];
-            renderCart();
-            renderPOSProducts();
-            document.getElementById('pos-barcode-input').focus();
-        }
+function delProduct(id){
+if(confirm("حذف المنتج؟")){
+db.products=db.products.filter(p=>p.id!==id);
+save();
+}
+}
 
-        function deleteSale(orderId) {
-            if (confirm('تأكيد حذف هذه الفاتورة من سجل المبيعات؟')) {
-                salesHistory = salesHistory.filter(s => s.id !== orderId);
-                if(currentActiveUser) {
-                    localStorage.setItem(`nexpos_sales_${currentActiveUser.user}`, JSON.stringify(salesHistory));
-                }
-                renderSalesHistory();
-            }
-        }
+function addCart(id){
+let p=db.products.find(x=>x.id===id);
+if(!p||p.qty<=0)return alert("الكمية غير متاحة");
 
-        function renderSalesHistory() {
-            const body = document.getElementById('sales-history-body');
-            document.getElementById('stat-total-revenue').innerText = salesHistory.reduce((sum, s) => sum + s.total, 0);
-            document.getElementById('stat-total-orders').innerText = salesHistory.length;
-            
-            if(salesHistory.length === 0) {
-                body.innerHTML = `<tr><td colspan="5" class="text-center p-6 text-slate-500">لا توجد فواتير مسجلة في هذا الحساب</td></tr>`;
-                return;
-            }
+let c=cart.find(x=>x.id===id);
+if(c){
+if(c.qty>=p.qty)return alert("لا توجد كمية إضافية");
+c.qty++;
+}else{
+cart.push({id,name:p.name,price:p.price,qty:1});
+}
+renderCart();
+}
 
-            body.innerHTML = salesHistory.slice().reverse().map(s => `
-                <tr class="hover:bg-slate-900/50">
-                    <td class="p-3 font-bold text-indigo-400">${s.id}</td>
-                    <td class="p-3 text-xs text-slate-400">${s.date}</td>
-                    <td class="p-3 text-xs text-slate-300">${s.items.map(i => i.name + ' (x' + i.qty + ')').join(', ')}</td>
-                    <td class="p-3 font-bold text-emerald-400">${s.total} ج.م</td>
-                    <td class="p-3 text-center">
-                        <button onclick="deleteSale('${s.id}')" class="text-red-400 font-bold hover:underline text-xs bg-red-500/10 border border-red-500/20 px-2 py-1 rounded-lg">حذف</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-    </script>
+function renderCart(){
+document.getElementById("cartBox").innerHTML=
+cart.map(c=>`
+<div class="cartline">
+<span>${esc(c.name)} × ${c.qty}</span>
+<span>${money(c.price*c.qty)}
+<button class="danger" onclick="removeCart(${c.id})">×</button>
+</span>
+</div>`).join("") || '<p class="muted">السلة فارغة</p>';
+
+let total=Math.max(0,cart.reduce((s,c)=>s+c.price*c.qty,0)-(+document.getElementById("discount").value||0));
+
+document.getElementById("cartTotal").textContent=money(total);
+document.getElementById("change").textContent=money(Math.max(0,(+document.getElementById("paid").value||0)-total));
+}
+
+function removeCart(id){
+cart=cart.filter(c=>c.id!==id);
+renderCart();
+}
+
+function clearCart(){
+cart=[];
+renderCart();
+}
+
+function checkout(){
+if(!cart.length)return alert("السلة فارغة");
+
+let total=Math.max(0,cart.reduce((s,c)=>s+c.price*c.qty,0)-(+document.getElementById("discount").value||0));
+let pay=+document.getElementById("paid").value;
+
+if(pay<total)return alert("المبلغ المدفوع أقل من الإجمالي");
+
+for(let c of cart){
+let p=db.products.find(x=>x.id===c.id);
+if(!p||p.qty<c.qty)return alert("الكمية غير كافية: "+c.name);
+}
+
+cart.forEach(c=>db.products.find(p=>p.id===c.id).qty-=c.qty);
+
+db.sales.unshift({
+id:Date.now(),
+date:dateNow(),
+day:new Date().toDateString(),
+items:cart.map(x=>({...x})),
+total,
+paid:pay
+});
+
+let sale=db.sales[0];
+cart=[];
+document.getElementById("discount").value=0;
+document.getElementById("paid").value="";
+save();
+renderCart();
+
+alert("تم البيع بنجاح\nفاتورة #"+sale.id+"\nالإجمالي: "+money(total));
+}
+
+function addExpense(){
+let name=document.getElementById("expname").value.trim();
+let value=+document.getElementById("expvalue").value;
+
+if(!name||value<=0)return alert("أدخل وصف وقيمة صحيحة");
+
+db.expenses.unshift({
+name,value,date:dateNow(),day:new Date().toDateString()
+});
+
+document.getElementById("expname").value="";
+document.getElementById("expvalue").value="";
+save();
+}
+
+function refresh(){
+let day=new Date().toDateString();
+let ss=db.sales.filter(s=>s.day===day);
+let ee=db.expenses.filter(e=>e.day===day);
+
+document.getElementById("todaySales").textContent=money(ss.reduce((a,s)=>a+s.total,0));
+document.getElementById("todayCount").textContent=ss.length;
+document.getElementById("stockValue").textContent=money(db.products.reduce((a,p)=>a+p.price*p.qty,0));
+document.getElementById("todayExpense").textContent=money(ee.reduce((a,e)=>a+e.value,0));
+document.getElementById("productCount").textContent=db.products.length+" منتج";
+
+document.getElementById("salesTable").innerHTML=db.sales.map(s=>`
+<tr>
+<td>#${s.id}</td>
+<td>${s.date}</td>
+<td>${s.items.reduce((a,i)=>a+i.qty,0)}</td>
+<td>${money(s.total)}</td>
+<td>${money(s.paid)}</td>
+</tr>`).join("");
+
+document.getElementById("expensesTable").innerHTML=db.expenses.map(e=>`
+<tr><td>${e.date}</td><td>${esc(e.name)}</td><td>${money(e.value)}</td></tr>`).join("");
+
+let sum=db.sales.reduce((a,s)=>a+s.total,0);
+let ex=db.expenses.reduce((a,e)=>a+e.value,0);
+
+document.getElementById("allSales").textContent=money(sum);
+document.getElementById("allExpenses").textContent=money(ex);
+document.getElementById("net").textContent=money(sum-ex);
+document.getElementById("allCount").textContent=db.sales.length;
+}
+
+function exportSales(){
+let rows=[["Invoice","Date","Items","Total","Paid"],
+...db.sales.map(s=>[s.id,s.date,s.items.map(i=>i.name+" x"+i.qty).join(";"),s.total,s.paid])];
+
+let csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(",")).join("\n");
+
+let a=document.createElement("a");
+a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}));
+a.download="NexPOS-sales.csv";
+a.click();
+}
+
+function contact(msg){
+window.open("https://wa.me/201062883414?text="+encodeURIComponent(msg),"_blank");
+}
+
+function resetData(){
+if(confirm("متأكد من مسح كل المنتجات والمبيعات والمصروفات؟")){
+db={products:[],sales:[],expenses:[]};
+save();
+}
+}
+
+function esc(s){
+return String(s).replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+}
+
+document.getElementById("today").textContent=new Date().toLocaleDateString("ar-EG");
+document.getElementById("year").textContent=new Date().getFullYear();
+
+refresh();
+renderCart();
+</script>
+
 </body>
 </html>

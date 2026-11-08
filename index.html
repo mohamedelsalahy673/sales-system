@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيستم محمد الصلاحي - نقطة البيع الذكية</title>
+    <title>سيستم محمد الصلاحي - نقطة البيع الذكية (مدعوم بالاشتراكات)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -25,7 +25,8 @@
                 ⚡
             </div>
             <h2 class="text-2xl font-bold text-slate-800 mb-1">سيستم محمد الصلاحي</h2>
-            <p class="text-slate-400 text-xs mb-6">نظام المبيعات والكاشير الاحترافي للمحلات</p>
+            <p class="text-slate-400 text-xs mb-6">نظام المبيعات والكاشير المؤمن</p>
+            
             <form onsubmit="handleLogin(event)" class="space-y-4 text-right">
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">اسم المستخدم</label>
@@ -35,11 +36,31 @@
                     <label class="block text-xs font-bold text-slate-600 mb-1">كلمة المرور</label>
                     <input type="password" id="password" required placeholder="1243" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
-                <p id="login-error" class="text-red-500 text-xs hidden text-center font-bold">خطأ في البيانات الافتراضية! (admin / 1243)</p>
+                <p id="login-error" class="text-red-500 text-xs hidden text-center font-bold">خطأ في بيانات الدخول!</p>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-sm">
                     دخول للسيستم
                 </button>
             </form>
+            <div class="mt-4 text-center">
+                <button onclick="showForgotPassword()" class="text-xs text-blue-600 font-bold hover:underline">نسيت كلمة المرور؟ (اطلب كود من الصلاحي)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشة استعادة كلمة المرور عبر واتساب -->
+    <div id="forgot-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full border text-center">
+            <h3 class="text-xl font-bold mb-2">استعادة الباسورد</h3>
+            <p class="text-xs text-slate-500 mb-4">اضغط للحصول على كود عبر واتساب المطور (محمد الصلاحي)</p>
+            <button onclick="requestWhatsAppCode()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl mb-3 text-sm flex items-center justify-center gap-2">
+                <i class="fa-brands fa-whatsapp text-lg"></i> طلب كود عبر واتساب
+            </button>
+            <div class="space-y-3 text-right">
+                <input type="text" id="otp-input" placeholder="أدخل الكود المُستلم" class="w-full px-4 py-2.5 border rounded-xl text-sm">
+                <input type="password" id="new-reset-pass" placeholder="كلمة المرور الجديدة" class="w-full px-4 py-2.5 border rounded-xl text-sm">
+                <button onclick="verifyAndResetPass()" class="w-full bg-blue-600 text-white font-bold py-2.5 rounded-xl text-sm">تأكيد وتغيير الباسورد</button>
+            </div>
+            <button onclick="closeForgot()" class="mt-4 text-xs text-slate-400 hover:underline">إلغاء والعودة للدخول</button>
         </div>
     </div>
 
@@ -52,12 +73,12 @@
                     <span class="bg-blue-600 text-white p-2.5 rounded-xl text-base font-bold shadow">💼</span>
                     <div>
                         <h1 class="font-extrabold text-base md:text-lg">سيستم محمد الصلاحي</h1>
-                        <p class="text-[11px] text-slate-400">إدارة المبيعات، المخازن، والبارکود</p>
+                        <p class="text-[11px] text-slate-400">إدارة مبيعات - دعم فني واتساب: 01062883414</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="text-xs bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300 hidden sm:inline-block">
-                        <i class="fa-solid fa-user-shield text-blue-400 ml-1"></i> مدير النظام
+                    <span id="subscription-badge" class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-lg border border-emerald-500/30 font-bold">
+                        نشط ✅
                     </span>
                     <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition border border-red-500/20">
                         <i class="fa-solid fa-power-off"></i> خروج
@@ -66,7 +87,7 @@
             </div>
         </header>
 
-        <!-- التبويبات الرئيسية -->
+        <!-- التبويبات -->
         <div class="bg-white border-b shadow-sm sticky top-0 z-10">
             <div class="max-w-7xl mx-auto px-4 flex gap-2 overflow-x-auto">
                 <button onclick="switchTab('pos')" id="tab-pos" class="tab-btn py-3.5 px-4 font-bold text-xs md:text-sm border-b-2 border-blue-600 text-blue-600 flex items-center gap-2 whitespace-nowrap">
@@ -76,10 +97,10 @@
                     <i class="fa-solid fa-boxes-stacked"></i> المخزون والمنتجات
                 </button>
                 <button onclick="switchTab('sales')" id="tab-sales" class="tab-btn py-3.5 px-4 font-bold text-xs md:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-file-invoice-dollar"></i> الفواتير والمبيعات (تعديل وحذف)
+                    <i class="fa-solid fa-file-invoice-dollar"></i> الفواتير والمبيعات
                 </button>
                 <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn py-3.5 px-4 font-bold text-xs md:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-gear"></i> إعدادات الأمان
+                    <i class="fa-solid fa-gear"></i> إعدادات والاشتراكات
                 </button>
             </div>
         </div>
@@ -87,7 +108,7 @@
         <!-- المحتوى -->
         <main class="max-w-7xl mx-auto p-4 md:p-6 flex-1 w-full">
             
-            <!-- 1. شاشة الكاشير والباركود -->
+            <!-- 1. شاشة الكاشير -->
             <div id="sec-pos" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 space-y-4">
                     <div class="bg-white p-4 rounded-2xl shadow-sm border flex gap-3 items-center">
@@ -97,10 +118,10 @@
                     <div id="pos-products-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
                 </div>
 
-                <!-- سلة المشتريات -->
+                <!-- السلة -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col h-[570px]">
                     <div class="flex justify-between items-center mb-3 border-b pb-2">
-                        <h2 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-cart-shopping text-blue-600"></i> سلة المبيعات الحالية</h2>
+                        <h2 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-cart-shopping text-blue-600"></i> سلة المبيعات</h2>
                         <button onclick="clearCart()" class="text-xs text-red-500 font-bold hover:underline">إفراغ السلة</button>
                     </div>
                     <div id="cart-items" class="flex-1 overflow-y-auto space-y-2.5 pr-1"></div>
@@ -120,7 +141,7 @@
                 </div>
             </div>
 
-            <!-- 2. شاشة المخزون والمنتجات -->
+            <!-- 2. المخزون -->
             <div id="sec-products" class="hidden space-y-6">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border">
                     <h2 class="font-bold text-slate-800 mb-3 text-sm"><i class="fa-solid fa-plus-circle text-blue-600"></i> إضافة صنف جديد للمخزن</h2>
@@ -149,7 +170,7 @@
                 </div>
             </div>
 
-            <!-- 3. شاشة المبيعات والفواتير (تعديل وحذف) -->
+            <!-- 3. المبيعات -->
             <div id="sec-sales" class="hidden space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border">
@@ -162,9 +183,7 @@
                     </div>
                 </div>
                 <div class="bg-white rounded-2xl shadow-sm border p-5">
-                    <h2 class="font-bold mb-3 text-sm flex justify-between items-center">
-                        <span>سجل فواتير المبيعات (مع إمكانية الحذف والمراجعة)</span>
-                    </h2>
+                    <h2 class="font-bold mb-3 text-sm">سجل فواتير المبيعات</h2>
                     <div class="overflow-x-auto">
                         <table class="w-full text-right text-sm">
                             <thead class="bg-slate-50 border-b text-slate-600">
@@ -182,36 +201,43 @@
                 </div>
             </div>
 
-            <!-- 4. إعدادات الأمان وتغيير الباسورد -->
-            <div id="sec-settings" class="hidden max-w-lg mx-auto space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border">
-                    <h2 class="font-bold text-slate-800 mb-4 text-base"><i class="fa-solid fa-lock text-blue-600 ml-2"></i> تغيير كلمة مرور مدير النظام</h2>
-                    <form onsubmit="changePassword(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 mb-1">كلمة المرور الحالية</label>
-                            <input type="password" id="current-pass" required class="w-full px-4 py-2.5 rounded-xl border text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 mb-1">كلمة المرور الجديدة</label>
-                            <input type="password" id="new-pass" required class="w-full px-4 py-2.5 rounded-xl border text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 mb-1">تأكيد كلمة المرور الجديدة</label>
-                            <input type="password" id="confirm-pass" required class="w-full px-4 py-2.5 rounded-xl border text-sm">
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow text-sm transition">حفظ كلمة المرور الجديدة</button>
+            <!-- 4. إعدادات والاشتراكات (التحكم الكامل) -->
+            <div id="sec-settings" class="hidden max-w-xl mx-auto space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border space-y-4">
+                    <h2 class="font-bold text-slate-800 text-base border-b pb-2"><i class="fa-solid fa-lock text-blue-600 ml-2"></i> تغيير كلمة المرور</h2>
+                    <form onsubmit="changePassword(event)" class="space-y-3">
+                        <input type="password" id="current-pass" placeholder="كلمة المرور الحالية" required class="w-full px-4 py-2 rounded-xl border text-sm">
+                        <input type="password" id="new-pass" placeholder="كلمة المرور الجديدة" required class="w-full px-4 py-2 rounded-xl border text-sm">
+                        <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl text-sm">حفظ الباسورد</button>
                     </form>
+                </div>
+
+                <!-- لوحة تحكم المالك (الاشتراكات) -->
+                <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-xl space-y-4">
+                    <h2 class="font-bold text-base border-b border-slate-800 pb-2"><i class="fa-solid fa-crown text-amber-400 ml-2"></i> إدارة حالة الاشتراك (تحكم المالك)</h2>
+                    <p class="text-xs text-slate-400">حالة ترخيص السيستم الحالي للمحل:</p>
+                    <div class="flex justify-between items-center bg-slate-800 p-3 rounded-xl">
+                        <span id="sub-status-text" class="font-bold text-sm text-emerald-400">نشط وصالح</span>
+                        <span id="sub-expiry-date" class="text-xs text-slate-400"></span>
+                    </div>
+                    <div class="space-y-2 pt-2">
+                        <label class="block text-xs text-slate-300">تفعيل كود اشتراك جديد (أدخله لتمديد الفترة):</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="activation-code" placeholder="أدخل كود التفعيل" class="w-full px-4 py-2 rounded-xl bg-slate-800 border border-slate-700 text-sm text-white">
+                            <button onclick="activateSubscription()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm whitespace-nowrap">تفعيل</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
         </main>
     </div>
 
-    <!-- طباعة الفاتورة الحرارية باسم محمد الصلاحي -->
+    <!-- طباعة الفاتورة -->
     <div id="printable-invoice" class="hidden p-4 max-w-[300px] mx-auto text-slate-900 bg-white font-mono text-xs">
         <div class="text-center mb-3 border-b pb-2">
             <h2 class="text-base font-bold">سيستم محمد الصلاحي</h2>
-            <p class="text-[10px] text-slate-500">إكسسوارات وصيانة المحمول</p>
+            <p class="text-[10px] text-slate-500">للاتصال والدعم: 01062883414</p>
             <p id="inv-id" class="font-bold mt-1"></p>
             <p id="inv-date" class="text-[10px] text-slate-500"></p>
         </div>
@@ -221,7 +247,7 @@
             <span><span id="inv-total"></span> ج.م</span>
         </div>
         <div class="text-center text-[10px] text-slate-400 mt-4 border-t pt-2">
-            شكراً لتعاملكم مع محل محمد الصلاحي ❤️
+            شكراً لتعاملكم معنا ❤️
         </div>
     </div>
 
@@ -229,11 +255,42 @@
         let adminCredentials = JSON.parse(localStorage.getItem('al_salahy_auth')) || { user: 'admin', pass: '1243' };
         let products = JSON.parse(localStorage.getItem('al_salahy_products')) || [
             { id: 1, barcode: '1001', name: 'شاحن ايفون سريع أصلي', price: 250, stock: 15 },
-            { id: 2, barcode: '1002', name: 'جراب سيليكون حماية', price: 80, stock: 25 },
-            { id: 3, barcode: '1003', name: 'سماعة بلوتوث ايربودز', price: 350, stock: 10 }
+            { id: 2, barcode: '1002', name: 'جراب سيليكون حماية', price: 80, stock: 25 }
         ];
         let cart = [];
         let salesHistory = JSON.parse(localStorage.getItem('al_salahy_sales')) || [];
+        
+        // نظام الاشتراكات (افتراضي 30 يوم أو مدخل مسبقاً)
+        let subscription = JSON.parse(localStorage.getItem('al_salahy_sub')) || { expireDate: Date.now() + (30 * 24 * 60 * 60 * 1000) };
+        localStorage.setItem('al_salahy_sub', JSON.stringify(subscription));
+
+        let generatedOtp = null;
+
+        function checkSubscription() {
+            if (Date.now() > subscription.expireDate) {
+                alert('انتهت فترة اشتراك السيستم! تواصل مع المطور محمد الصلاحي لتجديد الاشتراك (01062883414)');
+                document.getElementById('subscription-badge').className = "text-xs bg-red-500/20 text-red-400 px-3 py-1 rounded-lg border border-red-500/30 font-bold";
+                document.getElementById('subscription-badge').innerText = "منتهي ❌";
+                document.getElementById('sub-status-text').innerText = "منتهي (يتطلب تجديد)";
+                document.getElementById('sub-status-text').className = "font-bold text-sm text-red-400";
+            } else {
+                const daysLeft = Math.ceil((subscription.expireDate - Date.now()) / (1000 * 60 * 60 * 24));
+                document.getElementById('sub-expiry-date').innerText = `متبقي ${daysLeft} يوم`;
+            }
+        }
+
+        function activateSubscription() {
+            const code = document.getElementById('activation-code').value.trim();
+            // كود سري للمالك لتجديد شهر كامل مثلاً: SALAHY-30D
+            if (code === 'SALAHY-30D' || code === '0106') {
+                subscription.expireDate = Date.now() + (30 * 24 * 60 * 60 * 1000);
+                localStorage.setItem('al_salahy_sub', JSON.stringify(subscription));
+                alert('تم تجديد اشتراك السيستم بنجاح لمدة 30 يوم!');
+                location.reload();
+            } else {
+                alert('كود التفعيل غير صحيح! اطلبه من المطور محمد الصلاحي.');
+            }
+        }
 
         function playBeepSound() {
             try {
@@ -268,6 +325,41 @@
             document.getElementById('login-screen').classList.remove('hidden');
         }
 
+        function showForgotPassword() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('forgot-screen').classList.remove('hidden');
+        }
+
+        function closeForgot() {
+            document.getElementById('forgot-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        function requestWhatsAppCode() {
+            generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+            const text = `مرحباً محمد الصلاحي، أود استعادة كلمة المرور لسيستم المبيعات الخاص بي. كود التأكيد الخاص بي هو: ${generatedOtp}`;
+            const whatsappUrl = `https://wa.me/201062883414?text=${encodeURIComponent(text)}`;
+            window.open(whatsappUrl, '_blank');
+            alert('تم توجيهك لواتساب المطور. الكود المؤقت تم توليهه، أدخله هنا بعد استلامه.');
+        }
+
+        function verifyAndResetPass() {
+            const enteredOtp = document.getElementById('otp-input').value.trim();
+            const newPass = document.getElementById('new-reset-pass').value.trim();
+
+            if (!enteredOtp || enteredOtp !== generatedOtp) {
+                return alert('الكود غير صحيح أو لم تقم بطلبه!');
+            }
+            if (!newPass) {
+                return alert('الرجاء إدخال كلمة المرور الجديدة');
+            }
+
+            adminCredentials.pass = newPass;
+            localStorage.setItem('al_salahy_auth', JSON.stringify(adminCredentials));
+            alert('تم تغير كلمة المرور بنجاح! سجل دخولك الآن بالباسورد الجديد.');
+            closeForgot();
+        }
+
         function switchTab(tab) {
             ['pos', 'products', 'sales', 'settings'].forEach(t => {
                 document.getElementById(`sec-${t}`).classList.add('hidden');
@@ -278,11 +370,13 @@
             if (tab === 'pos') setTimeout(() => document.getElementById('pos-barcode-input').focus(), 100);
             if (tab === 'products') renderProductsTable();
             if (tab === 'sales') renderSalesHistory();
+            if (tab === 'settings') checkSubscription();
         }
 
         function initApp() {
             renderPOSProducts();
             renderCart();
+            checkSubscription();
             setTimeout(() => document.getElementById('pos-barcode-input').focus(), 100);
         }
 
@@ -419,6 +513,9 @@
         }
 
         function checkout() {
+            if (Date.now() > subscription.expireDate) {
+                return alert('عذراً، انتهى اشتراك النظام. لا يمكن إتمام البيع قبل التجديد مع المطور محمد الصلاحي.');
+            }
             if (cart.length === 0) return alert('السلة فارغة!');
             cart.forEach(cItem => {
                 const p = products.find(x => x.id === cItem.id);
@@ -476,7 +573,7 @@
                     <td class="p-3 text-xs">${s.items.map(i => i.name + ' (x' + i.qty + ')').join(', ')}</td>
                     <td class="p-3 font-bold text-slate-800">${s.total} ج.م</td>
                     <td class="p-3 text-center">
-                        <button onclick="deleteSale('${s.id}')" class="text-red-500 font-bold hover:underline text-xs bg-red-50 px-2 py-1 rounded">حذف الفاتورة</button>
+                        <button onclick="deleteSale('${s.id}')" class="text-red-500 font-bold hover:underline text-xs bg-red-50 px-2 py-1 rounded">حذف</button>
                     </td>
                 </tr>
             `).join('');
@@ -486,19 +583,15 @@
             e.preventDefault();
             const current = document.getElementById('current-pass').value;
             const newP = document.getElementById('new-pass').value;
-            const confirmP = document.getElementById('confirm-pass').value;
 
             if (current !== adminCredentials.pass) {
                 return alert('كلمة المرور الحالية غير صحيحة!');
-            }
-            if (newP !== confirmP) {
-                return alert('كلمة المرور الجديدة غير مطابقة للتأكيد!');
             }
 
             adminCredentials.pass = newP;
             localStorage.setItem('al_salahy_auth', JSON.stringify(adminCredentials));
             e.target.reset();
-            alert('تم تغيير كلمة المرور بنجاح! استخدمها في المرة القادمة.');
+            alert('تم تغيير كلمة المرور بنجاح!');
         }
     </script>
 </body>

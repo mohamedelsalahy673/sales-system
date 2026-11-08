@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيستم الصلاحي - نظام مبيعات الكاشير والمخازن</title>
+    <title>سيستم الصلاحي - نظام الكاشير وقارئ الباركود</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -22,10 +22,10 @@
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full border border-slate-100 text-center">
             <div class="w-20 h-20 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-blue-500/30 mb-5 text-white text-3xl font-bold">
-                🛒
+                📱
             </div>
             <h2 class="text-2xl font-bold text-slate-800 mb-1">سيستم الصلاحي</h2>
-            <p class="text-slate-400 text-xs mb-6">نظام المبيعات السريع (على خطى سهل)</p>
+            <p class="text-slate-400 text-xs mb-6">نظام المبيعات يدعم الباركود (مطور)</p>
             <form onsubmit="handleLogin(event)" class="space-y-4 text-right">
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">اسم المستخدم</label>
@@ -51,8 +51,8 @@
                 <div class="flex items-center gap-3">
                     <span class="bg-blue-600 text-white p-2 rounded-xl text-lg font-bold">⚡</span>
                     <div>
-                        <h1 class="font-extrabold text-lg">الصلاحي - نقطة البيع</h1>
-                        <p class="text-xs text-slate-400">إدارة مبيعات ومخازن سريعة</p>
+                        <h1 class="font-extrabold text-lg">الصلاحي - الكاشير والباركود</h1>
+                        <p class="text-xs text-slate-400">نظام محلات المحمول والإكسسوارات</p>
                     </div>
                 </div>
                 <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition border border-red-500/20">
@@ -65,7 +65,7 @@
         <div class="bg-white border-b shadow-sm sticky top-0 z-10">
             <div class="max-w-7xl mx-auto px-4 flex gap-4">
                 <button onclick="switchTab('pos')" id="tab-pos" class="tab-btn py-3.5 px-5 font-bold text-sm border-b-2 border-blue-600 text-blue-600 flex items-center gap-2">
-                    <i class="fa-solid fa-cash-register"></i> الكاشير (البيع)
+                    <i class="fa-solid fa-barcode"></i> الكاشير والباركود
                 </button>
                 <button onclick="switchTab('products')" id="tab-products" class="tab-btn py-3.5 px-5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
                     <i class="fa-solid fa-boxes-stacked"></i> المخزون والأصناف
@@ -76,21 +76,22 @@
             </div>
         </div>
 
-        <!-- المحتوى -->
+        <!-- المحتوى الرئيسي -->
         <main class="max-w-7xl mx-auto p-4 md:p-6 flex-1 w-full">
             
-            <!-- 1. شاشة الكاشير -->
+            <!-- 1. شاشة الكاشير والباركود -->
             <div id="sec-pos" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- المنتجات المتاحة -->
+                <!-- قائمة المنتجات والبحث بالباركود -->
                 <div class="lg:col-span-2 space-y-4">
-                    <div class="bg-white p-3 rounded-2xl shadow-sm border">
-                        <input type="text" id="pos-search" oninput="renderPOSProducts()" placeholder="🔍 ابحث عن اسم المنتج للبيع السريع..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border flex gap-2 items-center">
+                        <div class="text-blue-600 text-xl pl-2"><i class="fa-solid fa-barcode"></i></div>
+                        <input type="text" id="pos-barcode-input" onkeydown="handleBarcodeScan(event)" placeholder="امسح الباركود هنا بالمسدس أو اكتب اسم المنتج للبحث..." autofocus class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold">
                     </div>
                     <div id="pos-products-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
                 </div>
 
                 <!-- سلة المشتريات وفاتورة البيع -->
-                <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col h-[550px]">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col h-[560px]">
                     <div class="flex justify-between items-center mb-3 border-b pb-2">
                         <h2 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-cart-shopping text-blue-600"></i> الفاتورة الحالية</h2>
                         <button onclick="clearCart()" class="text-xs text-red-500 font-bold hover:underline">إفراغ السلة</button>
@@ -105,18 +106,19 @@
                             <span>الإجمالي:</span>
                             <span class="text-blue-600"><span id="cart-total">0</span> ج.م</span>
                         </div>
-                        <button onclick="checkout()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition text-sm">
-                            <i class="fa-solid fa-print ml-1"></i> إتمام البيع وطباعة الفاتورة
+                        <button onclick="checkout()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-print"></i> إتمام البيع وطباعة الفاتورة
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. شاشة المخزون والأصناف -->
+            <!-- 2. شاشة إضافة المنتجات والباركود -->
             <div id="sec-products" class="hidden space-y-6">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border">
-                    <h2 class="font-bold text-slate-800 mb-3 text-sm"><i class="fa-solid fa-plus-circle text-blue-600"></i> إضافة صنف جديد للمخزن</h2>
-                    <form onsubmit="addProduct(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                    <h2 class="font-bold text-slate-800 mb-3 text-sm"><i class="fa-solid fa-plus-circle text-blue-600"></i> إضافة صنف باركود جديد</h2>
+                    <form onsubmit="addProduct(event)" class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+                        <input type="text" id="p-barcode" placeholder="الباركود (اقرأه بالمسدس)" class="px-4 py-2 rounded-xl border text-sm font-mono">
                         <input type="text" id="p-name" placeholder="اسم المنتج" required class="px-4 py-2 rounded-xl border text-sm">
                         <input type="number" id="p-price" placeholder="سعر البيع (ج.م)" required min="0" step="0.01" class="px-4 py-2 rounded-xl border text-sm">
                         <input type="number" id="p-stock" placeholder="الكمية بالمخزن" required min="0" class="px-4 py-2 rounded-xl border text-sm">
@@ -127,6 +129,7 @@
                     <table class="w-full text-right border-collapse text-sm">
                         <thead class="bg-slate-50 border-b text-slate-600">
                             <tr>
+                                <th class="p-3">الباركود</th>
                                 <th class="p-3">اسم المنتج</th>
                                 <th class="p-3">السعر</th>
                                 <th class="p-3">المخزون</th>
@@ -139,20 +142,20 @@
                 </div>
             </div>
 
-            <!-- 3. شاشة التقارير -->
+            <!-- 3. شاشة التقارير والمبيعات -->
             <div id="sec-sales" class="hidden space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border">
-                        <p class="text-xs text-slate-400 font-bold">إجمالي مبيعات الفترة</p>
+                        <p class="text-xs text-slate-400 font-bold">إجمالي المبيعات</p>
                         <h3 class="text-2xl font-extrabold text-emerald-600 mt-1"><span id="stat-total-revenue">0</span> ج.م</h3>
                     </div>
                     <div class="bg-white p-5 rounded-2xl shadow-sm border">
-                        <p class="text-xs text-slate-400 font-bold">عدد الفواتير المسجلة</p>
+                        <p class="text-xs text-slate-400 font-bold">عدد الفواتير</p>
                         <h3 class="text-2xl font-extrabold text-blue-600 mt-1" id="stat-total-orders">0</h3>
                     </div>
                 </div>
                 <div class="bg-white rounded-2xl shadow-sm border p-5">
-                    <h2 class="font-bold mb-3 text-sm">سجل الفواتير السابقة</h2>
+                    <h2 class="font-bold mb-3 text-sm">سجل الفواتير</h2>
                     <div class="overflow-x-auto">
                         <table class="w-full text-right text-sm">
                             <thead class="bg-slate-50 border-b text-slate-600">
@@ -172,11 +175,11 @@
         </main>
     </div>
 
-    <!-- قالب الفاتورة للطباعة الحرارية -->
+    <!-- طباعة الفاتورة الحرارية -->
     <div id="printable-invoice" class="hidden p-4 max-w-[300px] mx-auto text-slate-900 bg-white font-mono text-xs">
         <div class="text-center mb-3 border-b pb-2">
             <h2 class="text-base font-bold">سيستم الصلاحي للمبيعات</h2>
-            <p class="text-[10px] text-slate-500">محل الهواتف والإكسسوارات</p>
+            <p class="text-[10px] text-slate-500">خدمات وإكسسوارات المحمول</p>
             <p id="inv-id" class="font-bold mt-1"></p>
             <p id="inv-date" class="text-[10px] text-slate-500"></p>
         </div>
@@ -186,18 +189,33 @@
             <span><span id="inv-total"></span> ج.م</span>
         </div>
         <div class="text-center text-[10px] text-slate-400 mt-4 border-t pt-2">
-            شكرا لتعاملكم معنا ❤️
+            شكراً لزيارتكم ❤️
         </div>
     </div>
 
     <script>
         let products = JSON.parse(localStorage.getItem('al_salahy_products')) || [
-            { id: 1, name: 'شاحن ايفون سريع أصلي', price: 250, stock: 15 },
-            { id: 2, name: 'جراب سيليكون حماية', price: 80, stock: 25 },
-            { id: 3, name: 'سماعة بلوتوث ايربودز', price: 350, stock: 10 }
+            { id: 1, barcode: '1001', name: 'شاحن ايفون سريع أصلي', price: 250, stock: 15 },
+            { id: 2, barcode: '1002', name: 'جراب سيليكون حماية', price: 80, stock: 25 },
+            { id: 3, barcode: '1003', name: 'سماعة بلوتوث ايربودز', price: 350, stock: 10 }
         ];
         let cart = [];
         let salesHistory = JSON.parse(localStorage.getItem('al_salahy_sales')) || [];
+
+        function playBeepSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1000, ctx.currentTime);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.08);
+            } catch (e) {}
+        }
 
         function handleLogin(e) {
             e.preventDefault();
@@ -224,6 +242,7 @@
             });
             document.getElementById(`sec-${tab}`).classList.remove('hidden');
             document.getElementById(`tab-${tab}`).className = "tab-btn py-3.5 px-5 font-bold text-sm border-b-2 border-blue-600 text-blue-600 flex items-center gap-2";
+            if (tab === 'pos') setTimeout(() => document.getElementById('pos-barcode-input').focus(), 100);
             if (tab === 'products') renderProductsTable();
             if (tab === 'sales') renderSalesHistory();
         }
@@ -231,6 +250,36 @@
         function initApp() {
             renderPOSProducts();
             renderCart();
+            setTimeout(() => document.getElementById('pos-barcode-input').focus(), 100);
+        }
+
+        function handleBarcodeScan(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const query = e.target.value.trim();
+                if (!query) return;
+
+                // البحث برقم الباركود أولاً
+                const productByBarcode = products.find(p => p.barcode && p.barcode === query);
+                if (productByBarcode) {
+                    addToCart(productByBarcode.id);
+                    playBeepSound();
+                    e.target.value = '';
+                    return;
+                }
+
+                // البحث بالاسم
+                const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+                if (filtered.length === 1) {
+                    addToCart(filtered[0].id);
+                    playBeepSound();
+                    e.target.value = '';
+                } else {
+                    renderPOSProducts(query);
+                }
+            } else {
+                renderPOSProducts(e.target.value);
+            }
         }
 
         function saveProducts() {
@@ -239,15 +288,17 @@
 
         function addProduct(e) {
             e.preventDefault();
+            const barcode = document.getElementById('p-barcode').value.trim() || Math.floor(100000 + Math.random() * 900000).toString();
             const name = document.getElementById('p-name').value;
             const price = parseFloat(document.getElementById('p-price').value);
             const stock = parseInt(document.getElementById('p-stock').value);
-            products.push({ id: Date.now(), name, price, stock });
+
+            products.push({ id: Date.now(), barcode, name, price, stock });
             saveProducts();
             e.target.reset();
             renderProductsTable();
             renderPOSProducts();
-            alert('تمت إضافة المنتج بنجاح!');
+            alert('تم حفظ المنتج والباركود بنجاح!');
         }
 
         function deleteProduct(id) {
@@ -263,6 +314,7 @@
             const body = document.getElementById('products-table-body');
             body.innerHTML = products.map(p => `
                 <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-mono font-bold text-blue-600">${p.barcode || '-'}</td>
                     <td class="p-3 font-bold">${p.name}</td>
                     <td class="p-3">${p.price} ج.م</td>
                     <td class="p-3">${p.stock} قطعة</td>
@@ -272,15 +324,16 @@
             `).join('');
         }
 
-        function renderPOSProducts() {
-            const search = document.getElementById('pos-search').value.toLowerCase();
+        function renderPOSProducts(searchVal = '') {
             const grid = document.getElementById('pos-products-grid');
-            const filtered = products.filter(p => p.name.toLowerCase().includes(search));
+            const filtered = products.filter(p => p.name.toLowerCase().includes(searchVal.toLowerCase()) || (p.barcode && p.barcode.includes(searchVal)));
             grid.innerHTML = filtered.map(p => `
                 <div onclick="addToCart(${p.id})" class="bg-white p-3 rounded-xl shadow-sm border hover:border-blue-500 cursor-pointer transition flex flex-col justify-between">
                     <div>
-                        <h4 class="font-bold text-xs text-slate-800 line-clamp-1">${p.name}</h4>
-                        <p class="text-[10px] text-slate-400 mt-0.5">مخزن: ${p.stock}</p>
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-xs text-slate-800 line-clamp-1">${p.name}</h4>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-0.5">باركود: ${p.barcode || 'بدون'} | مخزن: ${p.stock}</p>
                     </div>
                     <div class="mt-3 flex justify-between items-center">
                         <span class="font-extrabold text-blue-600 text-xs">${p.price} ج.م</span>
@@ -333,6 +386,7 @@
         function clearCart() {
             cart = [];
             renderCart();
+            document.getElementById('pos-barcode-input').focus();
         }
 
         function checkout() {
@@ -364,7 +418,7 @@
             cart = [];
             renderCart();
             renderPOSProducts();
-            alert('تم إتمام البيع بنجاح وتحديث المخزن!');
+            document.getElementById('pos-barcode-input').focus();
         }
 
         function renderSalesHistory() {
@@ -383,4 +437,3 @@
     </script>
 </body>
 </html>
-

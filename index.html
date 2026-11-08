@@ -1,1134 +1,283 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NexPOS PRO</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0b1220;color:#eef4ff;font-family:Arial,sans-serif}
-header{background:#111c31;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-h1{color:#6ee7c8;margin:0}
-main{max-width:1150px;margin:auto;padding:18px}
-.panel,.stat{background:#121d31;border:1px solid #263550;border-radius:14px;padding:16px;margin:12px 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
-.stat strong{display:block;color:#6ee7c8;font-size:25px;margin-top:8px}
-input,select,button{width:100%;padding:12px;margin:5px 0;border:1px solid #34445f;border-radius:9px;background:#0b1426;color:white;font:inherit}
-button{background:#0e9f82;border:0;font-weight:bold;cursor:pointer}
-.secondary{background:#34445f}
+body{margin:0;background:#0b1120;color:#edf2ff;font-family:Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0;border-radius:9px;padding:11px 16px;background:#3978f6;color:white;font-weight:bold}
+button.danger{background:#d94755}
+button.secondary{background:#293750}
+input,select{width:100%;padding:12px;margin:7px 0 13px;background:#111c30;border:1px solid #33445e;border-radius:9px;color:white}
+label{color:#aebbd1;font-size:13px}
+h1,h2,h3{margin-top:0}
+header{padding:17px 20px;background:#111c30;border-bottom:1px solid #263650;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:23px;font-weight:bold;color:#72a5ff}
+.logo span{color:white}
+.container{max-width:1200px;margin:auto;padding:20px}
+.panel{background:#142139;border:1px solid #293c59;border-radius:14px;padding:18px;margin-bottom:17px}
+.login{max-width:400px;margin:12vh auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:13px}
+.stat{background:#1b2b47;padding:18px;border-radius:12px}
+.stat strong{display:block;font-size:27px;color:#82adff;margin-top:8px}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.nav button{background:#263854}
+.nav button.active{background:#3978f6}
+table{width:100%;border-collapse:collapse;min-width:550px}
+th,td{text-align:right;padding:12px;border-bottom:1px solid #2c3c55}
+.tablewrap{overflow-x:auto}
+.muted{color:#a7b5ca;font-size:13px}
 .hidden{display:none!important}
-.muted{color:#9eacc4;font-size:13px}
-.row{display:flex;gap:8px;flex-wrap:wrap}
-.row>*{flex:1;min-width:150px}
-.scroll{overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:650px}
-td,th{text-align:right;padding:10px;border-bottom:1px solid #263550}
-th{color:#6ee7c8}
-.item{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #263550;padding:10px 0}
-.small{width:auto;padding:8px 12px}
+.badge{padding:5px 9px;border-radius:20px;background:#1d664d;color:#9bffce;font-size:12px}
+.badge.off{background:#67313c;color:#ffc0c8}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.product{background:#1c2d49;padding:14px;border-radius:10px}
+.product button{margin-top:9px}
+.notice{padding:12px;background:#392f18;color:#ffdf91;border-radius:9px;margin-bottom:15px;font-size:13px}
+footer{text-align:center;padding:25px;color:#8292aa}
 </style>
 </head>
 <body>
-
 <header>
-<div>
-<h1>NexPOS PRO</h1>
-<div class="muted">نظام نقاط البيع — محمد الصلاحي</div>
-</div>
-<button id="logout" class="secondary hidden small">تسجيل الخروج</button>
+ <div class="logo">NexPOS <span>PRO</span></div>
+ <div id="userInfo" class="muted">نظام إدارة المبيعات</div>
 </header>
 
-<main>
-
-<section id="auth" class="panel">
-<h2>تسجيل الدخول</h2>
-<input id="email" type="email" autocomplete="username" placeholder="البريد الإلكتروني">
-<input id="password" type="password" autocomplete="current-password" placeholder="كلمة المرور">
-<button id="loginBtn">دخول</button>
-<button id="resetBtn" class="secondary">هل نسيت كلمة السر؟</button>
-<p id="authMsg" class="muted"></p>
-</section>
-
-<section id="ownerView" class="hidden">
-<h2>لوحة المالك</h2>
-
-<div class="grid">
-<div class="stat">إجمالي المحلات<strong id="totalShops">0</strong></div>
-<div class="stat">الاشتراكات النشطة<strong id="activeShops">0</strong></div>
-<div class="stat">المنتهية / الموقوفة<strong id="expiredShops">0</strong></div>
-<div class="stat">قيمة الخطط المسجلة<strong id="revenue">0 ج.م</strong></div>
+<div id="loginPage" class="container">
+ <div class="panel login">
+  <h2>تسجيل الدخول</h2>
+  <p class="muted">مرحباً بك في NexPOS PRO</p>
+  <label>اسم المستخدم</label>
+  <input id="loginUser" placeholder="اسم المستخدم">
+  <label>كلمة المرور</label>
+  <input id="loginPass" type="password" placeholder="كلمة المرور">
+  <button style="width:100%" onclick="login()">دخول النظام</button>
+  <p id="loginError" style="color:#ff8793"></p>
+  <p class="muted">نسخة تجريبية: حساب المالك الافتراضي مخصص للاختبار فقط.</p>
+ </div>
 </div>
 
-<div class="panel">
-<h3>إنشاء حساب محل</h3>
-<div class="row">
-<input id="shopName" placeholder="اسم المحل">
-<input id="username" placeholder="اسم المستخدم">
-</div>
-<div class="row">
-<input id="customerEmail" type="email" placeholder="بريد العميل">
-<input id="tempPassword" type="password" placeholder="كلمة مرور مؤقتة (12 حرفًا على الأقل)">
-</div>
-<select id="newPlan">
-<option value="monthly">شهري — 100 جنيه</option>
-<option value="yearly">سنوي — 1000 جنيه</option>
-<option value="lifetime">شراء كامل — 3000 جنيه</option>
-</select>
-<button id="createShopBtn">إنشاء حساب العميل</button>
-<p class="muted">أرسل للعميل البريد وكلمة المرور المؤقتة بشكل خاص، واطلب منه تغييرها بعد الدخول.</p>
+<div id="app" class="container hidden">
+ <div class="nav" id="navigation"></div>
+ <div id="content"></div>
 </div>
 
-<div class="panel">
-<h3>إدارة الاشتراكات</h3>
-<div class="scroll">
-<table>
-<thead>
-<tr>
-<th>المحل</th><th>اسم المستخدم</th><th>الخطة</th>
-<th>الانتهاء</th><th>الحالة</th><th>الإجراءات</th>
-</tr>
-</thead>
-<tbody id="shopRows"></tbody>
-</table>
-</div>
-</div>
-</section>
+<footer>NexPOS PRO © 2026 | تطوير محمد الصلاحي</footer>
 
-<section id="cashierView" class="hidden">
-<h2 id="cashierTitle">الكاشير</h2>
+<script>
+const OWNER_USER="elsalahy";
+const OWNER_PASS="Ma01060600";
 
-<div class="panel">
-<h3>إضافة منتج للمخزون</h3>
-<div class="row">
-<input id="pName" placeholder="اسم المنتج">
-<input id="pSku" placeholder="كود المنتج">
-<input id="pPrice" type="number" min="0" step="0.01" placeholder="السعر">
-<input id="pStock" type="number" min="0" step="1" placeholder="الكمية">
-</div>
-<button id="addProductBtn">حفظ المنتج</button>
-</div>
-
-<div class="panel">
-<h3>المنتجات</h3>
-<div id="products"></div>
-</div>
-
-<div class="panel">
-<h3>سلة البيع</h3>
-<div id="cart"></div>
-<h3 id="cartTotal">الإجمالي: 0 ج.م</h3>
-<button id="checkoutBtn">إتمام البيع</button>
-<p id="saleMsg" class="muted"></p>
-</div>
-
-<div class="panel">
-<h3>آخر المبيعات</h3>
-<div class="scroll">
-<table>
-<thead>
-<tr><th>التاريخ</th><th>الأصناف</th><th>الإجمالي</th></tr>
-</thead>
-<tbody id="salesRows"></tbody>
-</table>
-</div>
-</div>
-</section>
-
-</main>
-
-<script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-
-import {
-getAuth,onAuthStateChanged,signInWithEmailAndPassword,
-sendPasswordResetEmail,signOut
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-
-import {
-getFirestore,collection,addDoc,getDocs,doc,getDoc,
-query,orderBy,Timestamp
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
-import {getFunctions,httpsCallable}
-from "https://www.gstatic.com/firebasejs/10.14.1/firebase-functions.js";
-
-/* ضع إعدادات Firebase Web App هنا */
-const firebaseConfig={
- apiKey:"YOUR_API_KEY",
- authDomain:"YOUR_PROJECT_ID.firebaseapp.com",
- projectId:"YOUR_PROJECT_ID",
- appId:"YOUR_APP_ID"
-};
-
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-const functions=getFunctions(app);
-
-const $=id=>document.getElementById(id);
-const call=(name,data)=>httpsCallable(functions,name)(data);
-
-let shopId=null;
+let db=JSON.parse(localStorage.getItem("nexpos_db")||'{"clients":[],"products":[],"sales":[]}');
+let current=null;
 let cart=[];
-let productCache=[];
+let page="home";
 
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({
- "&":"&amp;",
- "<":"&lt;",
- ">":"&gt;",
- '"':"&quot;",
- "'":"&#39;"
-}[c]));
-
-$("loginBtn").onclick=async()=>{
- try{
-  await signInWithEmailAndPassword(
-   auth,
-   $("email").value.trim(),
-   $("password").value
-  );
-  $("authMsg").textContent="تم تسجيل الدخول";
- }catch(e){
-  $("authMsg").textContent=authError(e);
- }
-};
-
-$("resetBtn").onclick=async()=>{
- const email=$("email").value.trim();
-
- if(!email){
-  $("authMsg").textContent="اكتب بريدك الإلكتروني أولًا";
-  return;
- }
-
- try{
-  await sendPasswordResetEmail(auth,email);
-  $("authMsg").textContent=
-   "إذا كان البريد مسجلًا، سيصلك رابط استعادة كلمة المرور.";
- }catch(e){
-  $("authMsg").textContent=authError(e);
- }
-};
-
-$("logout").onclick=()=>signOut(auth);
-
-function authError(e){
- return ({
-  "auth/invalid-credential":"بيانات الدخول غير صحيحة",
-  "auth/too-many-requests":"محاولات كثيرة؛ حاول لاحقًا",
-  "auth/invalid-email":"البريد الإلكتروني غير صحيح"
- })[e.code]||"تعذر إتمام العملية. راجع البيانات أو إعدادات Firebase.";
+function save(){
+ localStorage.setItem("nexpos_db",JSON.stringify(db));
 }
-
-function hideViews(){
- ["ownerView","cashierView"].forEach(x=>
-  $(x).classList.add("hidden")
- );
+function esc(s){
+ return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-
-onAuthStateChanged(auth,async user=>{
- $("auth").classList.toggle("hidden",!!user);
- $("logout").classList.toggle("hidden",!user);
- hideViews();
-
- if(!user)return;
-
- try{
-  const token=await user.getIdTokenResult(true);
-
-  if(token.claims.owner===true){
-   $("ownerView").classList.remove("hidden");
-   await loadOwner();
-   return;
+function money(n){return Number(n||0).toLocaleString("ar-EG")+" ج.م";}
+function login(){
+ const u=document.getElementById("loginUser").value.trim();
+ const p=document.getElementById("loginPass").value;
+ if(u===OWNER_USER&&p===OWNER_PASS){
+  current={role:"owner",name:"محمد الصلاحي"};
+ }else{
+  const client=db.clients.find(x=>x.username===u&&x.password===p&&x.enabled);
+  if(!client){document.getElementById("loginError").textContent="بيانات الدخول غير صحيحة";return;}
+  if(client.plan!=="lifetime"&&new Date(client.endDate)<new Date()){
+   document.getElementById("loginError").textContent="انتهى الاشتراك، يرجى التواصل مع الإدارة";return;
   }
-
-  shopId=token.claims.shopId;
-
-  if(token.claims.role!=="cashier"||!shopId){
-   throw Error("الحساب ليس حساب كاشير صالحًا.");
-  }
-
-  const snap=await getDoc(doc(db,"shops",shopId));
-
-  if(!snap.exists())throw Error("المحل غير موجود.");
-
-  const s=snap.data();
-
-  const active=s.enabled&&(
-   s.plan==="lifetime"||
-   (s.endDate&&s.endDate.toMillis()>Date.now())
-  );
-
-  if(!active){
-   throw Error("الاشتراك منتهي أو موقوف. تواصل مع إدارة NexPOS.");
-  }
-
-  $("cashierTitle").textContent="كاشير — "+s.name;
-  $("cashierView").classList.remove("hidden");
-
-  await loadProducts();
-  await loadSales();
-
- }catch(e){
-  $("authMsg").textContent=e.message;
-  await signOut(auth);
+  current={role:"cashier",shopId:client.id,name:client.shop};
  }
-});
-
-async function loadOwner(){
- const snap=await getDocs(collection(db,"shops"));
- const list=snap.docs.map(d=>({id:d.id,...d.data()}));
- const now=Date.now();
-
- const active=list.filter(s=>
-  s.enabled&&(
-   s.plan==="lifetime"||
-   (s.endDate&&s.endDate.toMillis()>now)
-  )
- ).length;
-
- $("totalShops").textContent=list.length;
- $("activeShops").textContent=active;
- $("expiredShops").textContent=list.length-active;
-
- $("revenue").textContent=list.reduce(
-  (a,s)=>a+(s.price||0),0
- ).toLocaleString("en-US")+" ج.م";
-
- $("shopRows").innerHTML=list.map(s=>`
- <tr>
-  <td>${esc(s.name)}</td>
-  <td>${esc(s.username)}</td>
-  <td>${esc(s.plan)}</td>
-  <td>${s.endDate?s.endDate.toDate().toLocaleDateString("ar-EG"):"مدى الحياة"}</td>
-  <td>${s.enabled?"مفعل":"موقوف"}</td>
-  <td>
-   <button class="small secondary"
-    data-toggle="${s.id}"
-    data-enabled="${!s.enabled}">
-    ${s.enabled?"إيقاف":"تفعيل"}
-   </button>
-   <button class="small"
-    data-renew="${s.id}"
-    data-plan="${s.plan}">
-    تجديد
-   </button>
-  </td>
- </tr>
- `).join("");
-
- document.querySelectorAll("[data-toggle]").forEach(b=>{
-  b.onclick=async()=>{
-   try{
-    await call("setShopEnabled",{
-     shopId:b.dataset.toggle,
-     enabled:b.dataset.enabled==="true"
-    });
-    await loadOwner();
-   }catch(e){alert(e.message);}
-  };
- });
-
- document.querySelectorAll("[data-renew]").forEach(b=>{
-  b.onclick=async()=>{
-   try{
-    await call("updateSubscription",{
-     shopId:b.dataset.renew,
-     plan:b.dataset.plan,
-     enabled:true
-    });
-    await loadOwner();
-   }catch(e){alert(e.message);}
-  };
- });
+ document.getElementById("loginPage").classList.add("hidden");
+ document.getElementById("app").classList.remove("hidden");
+ document.getElementById("userInfo").textContent=current.name;
+ render();
 }
-
-$("createShopBtn").onclick=async()=>{
- try{
-  await call("createShop",{
-   shopName:$("shopName").value,
-   username:$("username").value,
-   email:$("customerEmail").value,
-   password:$("tempPassword").value,
-   plan:$("newPlan").value
-  });
-
-  alert("تم إنشاء حساب العميل. أرسل له بيانات الدخول المؤقتة بشكل خاص.");
-
-  ["shopName","username","customerEmail","tempPassword"].forEach(id=>{
-   $(id).value="";
-  });
-
-  await loadOwner();
-
- }catch(e){
-  alert(e.message);
- }
-};
-
-$("addProductBtn").onclick=async()=>{
- try{
-  const name=$("pName").value.trim();
-  const price=Number($("pPrice").value);
-  const stock=Number($("pStock").value);
-
-  if(!name||!Number.isFinite(price)||price<0||
-     !Number.isInteger(stock)||stock<0){
-   throw Error("أدخل بيانات منتج صحيحة.");
-  }
-
-  await addDoc(collection(db,"shops",shopId,"products"),{
-   name,
-   sku:$("pSku").value.trim(),
-   price,
-   stock,
-   updatedAt:Timestamp.now()
-  });
-
-  ["pName","pSku","pPrice","pStock"].forEach(id=>{
-   $(id).value="";
-  });
-
-  await loadProducts();
-
- }catch(e){
-  alert(e.message);
- }
-};
-
-async function loadProducts(){
- const snap=await getDocs(
-  collection(db,"shops",shopId,"products")
- );
-
- productCache=snap.docs.map(d=>({
-  id:d.id,...d.data()
- }));
-
- $("products").innerHTML=productCache.map(p=>`
-  <div class="item">
-   <span>${esc(p.name)} — ${p.price} ج.م — المخزون ${p.stock}</span>
-   <button class="small" data-add="${p.id}">إضافة للسلة</button>
+function logout(){
+ current=null;cart=[];
+ document.getElementById("app").classList.add("hidden");
+ document.getElementById("loginPage").classList.remove("hidden");
+ document.getElementById("loginPass").value="";
+}
+function nav(){
+ let items=current.role==="owner"?
+ [["home","الرئيسية"],["clients","العملاء والاشتراكات"],["newclient","إضافة عميل"],["reports","التقارير"]]:
+ [["home","الكاشير"],["products","المنتجات"],["sales","المبيعات"]];
+ document.getElementById("navigation").innerHTML=
+ items.map(([id,t])=>`<button class="${page===id?'active':''}" onclick="go('${id}')">${t}</button>`).join("")+
+ `<button class="secondary" onclick="logout()">تسجيل خروج</button>`;
+}
+function go(p){page=p;render();}
+function render(){
+ nav();
+ if(current.role==="owner") ownerPage();
+ else cashierPage();
+}
+function ownerPage(){
+ const c=document.getElementById("content");
+ if(page==="home"){
+  c.innerHTML=`
+  <h2>لوحة المالك</h2>
+  <div class="notice">هذه نسخة تجريبية محلية. لا تعتمد عليها لتخزين بيانات عملاء حقيقية أو كلمات مرور.</div>
+  <div class="grid">
+   <div class="stat">إجمالي العملاء<strong>${db.clients.length}</strong></div>
+   <div class="stat">الاشتراكات النشطة<strong>${db.clients.filter(active).length}</strong></div>
+   <div class="stat">الاشتراكات المنتهية<strong>${db.clients.filter(x=>!active(x)).length}</strong></div>
+   <div class="stat">إجمالي المبيعات<strong>${money(db.sales.reduce((a,x)=>a+x.total,0))}</strong></div>
   </div>
- `).join("");
-
- document.querySelectorAll("[data-add]").forEach(b=>{
-  b.onclick=()=>{
-   const p=productCache.find(x=>x.id===b.dataset.add);
-
-   if(!p||p.stock<=0){
-    alert("المنتج غير متاح بالمخزون");
-    return;
-   }
-
-   const item=cart.find(x=>x.productId===p.id);
-
-   if(item){
-    if(item.qty>=p.stock){
-     alert("الكمية غير كافية");
-     return;
-    }
-    item.qty++;
-   }else{
-    cart.push({productId:p.id,qty:1});
-   }
-
-   renderCart();
-  };
- });
-}
-
-function renderCart(){
- const total=cart.reduce((sum,x)=>{
-  const p=productCache.find(p=>p.id===x.productId);
-  return sum+(p?p.price*x.qty:0);
- },0);
-
- $("cart").innerHTML=cart.map(x=>{
-  const p=productCache.find(p=>p.id===x.productId);
-  return `<div>${esc(p?.name)} × ${x.qty}</div>`;
- }).join("");
-
- $("cartTotal").textContent=
-  "الإجمالي: "+total.toFixed(2)+" ج.م";
-}
-
-$("checkoutBtn").onclick=async()=>{
- try{
-  if(!cart.length)throw Error("السلة فارغة");
-
-  await call("createSale",{items:cart});
-
-  cart=[];
-  renderCart();
-
-  $("saleMsg").textContent="تم تسجيل البيع وتحديث المخزون.";
-
-  await loadProducts();
-  await loadSales();
-
- }catch(e){
-  $("saleMsg").textContent=e.message;
+  <div class="panel" style="margin-top:17px">
+   <h3>إدارة النظام</h3>
+   <p class="muted">أنشئ حسابات العملاء وتابع اشتراكاتهم من لوحة المالك.</p>
+   <button onclick="go('newclient')">إضافة عميل جديد</button>
+   <button class="secondary" onclick="go('clients')">عرض العملاء</button>
+  </div>`;
+ }else if(page==="newclient"){
+  c.innerHTML=`
+  <div class="panel">
+   <h2>إنشاء حساب كاشير لعميل</h2>
+   <label>اسم المحل</label><input id="shopName" placeholder="اسم المحل">
+   <label>اسم المستخدم</label><input id="shopUser" placeholder="اسم دخول العميل">
+   <label>كلمة المرور</label><input id="shopPass" placeholder="كلمة مرور مؤقتة">
+   <label>نوع الاشتراك</label>
+   <select id="shopPlan">
+    <option value="monthly">شهري - 100 جنيه</option>
+    <option value="yearly">سنوي - 1000 جنيه</option>
+    <option value="lifetime">شراء كامل - 3000 جنيه</option>
+   </select>
+   <button onclick="createClient()">إنشاء الحساب</button>
+  </div>`;
+ }else if(page==="clients"){
+  c.innerHTML=`<h2>العملاء والاشتراكات</h2>
+  <div class="panel tablewrap"><table><thead><tr><th>المحل</th><th>المستخدم</th><th>الاشتراك</th><th>الانتهاء</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+  <tbody>${db.clients.map(x=>`<tr>
+   <td>${esc(x.shop)}</td><td>${esc(x.username)}</td>
+   <td>${planName(x.plan)}</td>
+   <td>${x.plan==="lifetime"?"دائم":new Date(x.endDate).toLocaleDateString("ar-EG")}</td>
+   <td><span class="badge ${active(x)?"":"off"}">${active(x)?"نشط":"منتهي / موقوف"}</span></td>
+   <td><div class="actions">
+   <button onclick="renew('${x.id}')">تجديد</button>
+   <button class="secondary" onclick="toggleClient('${x.id}')">${x.enabled?"إيقاف":"تفعيل"}</button>
+   <button class="danger" onclick="deleteClient('${x.id}')">حذف</button>
+   </div></td></tr>`).join("")}</tbody></table></div>`;
+ }else if(page==="reports"){
+  c.innerHTML=`<h2>تقارير النظام</h2><div class="grid">
+  <div class="stat">عدد العملاء<strong>${db.clients.length}</strong></div>
+  <div class="stat">عدد عمليات البيع<strong>${db.sales.length}</strong></div>
+  <div class="stat">إجمالي المبيعات<strong>${money(db.sales.reduce((a,x)=>a+x.total,0))}</strong></div></div>`;
  }
-};
-
-async function loadSales(){
- const snap=await getDocs(query(
-  collection(db,"shops",shopId,"sales"),
-  orderBy("createdAt","desc")
- ));
-
- $("salesRows").innerHTML=snap.docs.slice(0,30).map(d=>{
-  const s=d.data();
-
-  return `
-  <tr>
-   <td>${s.createdAt?.toDate().toLocaleString("ar-EG")||""}</td>
-   <td>${s.items.map(i=>esc(i.name)+" × "+i.qty).join("، ")}</td>
-   <td>${Number(s.total).toFixed(2)} ج.م</td>
-  </tr>`;
- }).join("");
+}
+function planName(p){return {monthly:"شهري",yearly:"سنوي",lifetime:"شراء كامل"}[p]||p;}
+function active(x){
+ return !!x.enabled&&(x.plan==="lifetime"||new Date(x.endDate)>=new Date());
+}
+function createClient(){
+ const shop=document.getElementById("shopName").value.trim();
+ const username=document.getElementById("shopUser").value.trim();
+ const password=document.getElementById("shopPass").value;
+ const plan=document.getElementById("shopPlan").value;
+ if(!shop||!username||!password){alert("أكمل جميع البيانات");return;}
+ if(username===OWNER_USER||db.clients.some(x=>x.username===username)){alert("اسم المستخدم مستخدم بالفعل");return;}
+ const end=new Date();
+ if(plan==="monthly")end.setMonth(end.getMonth()+1);
+ if(plan==="yearly")end.setFullYear(end.getFullYear()+1);
+ db.clients.push({id:crypto.randomUUID(),shop,username,password,plan,endDate:end.toISOString(),enabled:true});
+ save();alert("تم إنشاء حساب العميل");go("clients");
+}
+function renew(id){
+ const x=db.clients.find(a=>a.id===id);if(!x)return;
+ if(x.plan==="lifetime"){alert("هذا الحساب شراء كامل");return;}
+ const d=new Date(Math.max(Date.now(),new Date(x.endDate).getTime()));
+ if(x.plan==="monthly")d.setMonth(d.getMonth()+1);
+ else d.setFullYear(d.getFullYear()+1);
+ x.endDate=d.toISOString();x.enabled=true;save();render();
+}
+function toggleClient(id){
+ const x=db.clients.find(a=>a.id===id);if(!x)return;
+ x.enabled=!x.enabled;save();render();
+}
+function deleteClient(id){
+ if(!confirm("هل تريد حذف حساب العميل؟"))return;
+ db.clients=db.clients.filter(x=>x.id!==id);save();render();
+}
+function shopProducts(){
+ return db.products.filter(x=>x.shopId===current.shopId);
+}
+function cashierPage(){
+ const c=document.getElementById("content");
+ if(page==="home"||page==="products"){
+  const products=shopProducts();
+  c.innerHTML=`<h2>الكاشير - ${esc(current.name)}</h2>
+  <div class="grid">
+  ${products.map(x=>`<div class="product">
+   <h3>${esc(x.name)}</h3><p>${money(x.price)}</p><p class="muted">المخزون: ${x.stock}</p>
+   <button onclick="addCart('${x.id}')" ${x.stock<=0?"disabled":""}>إضافة للسلة</button>
+  </div>`).join("")||"<p>لا توجد منتجات. أضف أول منتج.</p>"}</div>
+  <div class="panel" style="margin-top:18px">
+   <h3>إضافة منتج</h3>
+   <label>اسم المنتج</label><input id="prodName" placeholder="اسم المنتج">
+   <label>السعر</label><input id="prodPrice" type="number" min="0" placeholder="السعر">
+   <label>الكمية</label><input id="prodStock" type="number" min="0" placeholder="الكمية">
+   <button onclick="addProduct()">حفظ المنتج</button>
+  </div>
+  <div class="panel"><h3>سلة البيع</h3><div id="cartView"></div>
+  <button onclick="checkout()">تأكيد البيع</button></div>`;
+  showCart();
+ }else if(page==="sales"){
+  const sales=db.sales.filter(x=>x.shopId===current.shopId);
+  c.innerHTML=`<h2>سجل المبيعات</h2><div class="panel tablewrap"><table>
+  <tr><th>التاريخ</th><th>عدد المنتجات</th><th>الإجمالي</th></tr>
+  ${sales.map(x=>`<tr><td>${new Date(x.date).toLocaleString("ar-EG")}</td><td>${x.items.length}</td><td>${money(x.total)}</td></tr>`).join("")}
+  </table></div>`;
+ }
+}
+function addProduct(){
+ const name=document.getElementById("prodName").value.trim();
+ const price=Number(document.getElementById("prodPrice").value);
+ const stock=Number(document.getElementById("prodStock").value);
+ if(!name||price<0||!Number.isFinite(price)||!Number.isInteger(stock)||stock<0){alert("راجع بيانات المنتج");return;}
+ db.products.push({id:crypto.randomUUID(),shopId:current.shopId,name,price,stock});
+ save();render();
+}
+function addCart(id){
+ const p=shopProducts().find(x=>x.id===id);
+ if(!p||p.stock<=0)return;
+ const item=cart.find(x=>x.id===id);
+ if(item){if(item.qty>=p.stock){alert("الكمية غير متوفرة");return;}item.qty++;}
+ else cart.push({id,qty:1});
+ showCart();
+}
+function showCart(){
+ const el=document.getElementById("cartView");if(!el)return;
+ let total=0;
+ el.innerHTML=cart.map(i=>{
+  const p=shopProducts().find(x=>x.id===i.id);if(!p)return "";
+  total+=p.price*i.qty;
+  return `<p>${esc(p.name)} × ${i.qty} — ${money(p.price*i.qty)}
+  <button class="secondary" onclick="removeCart('${i.id}')">حذف</button></p>`;
+ }).join("")+`<h3>الإجمالي: ${money(total)}</h3>`;
+}
+function removeCart(id){cart=cart.filter(x=>x.id!==id);showCart();}
+function checkout(){
+ if(!cart.length){alert("السلة فارغة");return;}
+ let total=0,items=[];
+ for(const i of cart){
+  const p=shopProducts().find(x=>x.id===i.id);
+  if(!p||p.stock<i.qty){alert("المخزون غير كافٍ");return;}
+  p.stock-=i.qty;total+=p.price*i.qty;
+  items.push({name:p.name,qty:i.qty,price:p.price});
+ }
+ db.sales.push({id:crypto.randomUUID(),shopId:current.shopId,date:new Date().toISOString(),items,total});
+ cart=[];save();alert("تم تسجيل البيع: "+money(total));render();
 }
 </script>
 </body>
 </html>
-const {onCall,HttpsError}=require("firebase-functions/v2/https");
-const {initializeApp}=require("firebase-admin/app");
-const {getAuth}=require("firebase-admin/auth");
-const {
-  getFirestore,
-  Timestamp,
-  FieldValue
-}=require("firebase-admin/firestore");
-
-initializeApp();
-
-const db=getFirestore();
-const adminAuth=getAuth();
-
-function ownerOnly(req){
-  if(!req.auth || req.auth.token.owner!==true){
-    throw new HttpsError(
-      "permission-denied",
-      "هذه العملية للمالك فقط."
-    );
-  }
-}
-
-function clean(v,max=120){
-  return String(v??"").trim().slice(0,max);
-}
-
-function price(plan){
-  return {
-    monthly:100,
-    yearly:1000,
-    lifetime:3000
-  }[plan]??null;
-}
-
-function expiry(plan,start){
-  if(plan==="lifetime")return null;
-
-  const d=new Date(start);
-
-  if(plan==="monthly"){
-    d.setMonth(d.getMonth()+1);
-  }else if(plan==="yearly"){
-    d.setFullYear(d.getFullYear()+1);
-  }else{
-    throw new HttpsError("invalid-argument","خطة غير صحيحة.");
-  }
-
-  return Timestamp.fromDate(d);
-}
-
-/* إنشاء حساب محل جديد */
-exports.createShop=onCall(async req=>{
-  ownerOnly(req);
-
-  const name=clean(req.data.shopName,80);
-  const username=clean(req.data.username,40).toLowerCase();
-  const email=clean(req.data.email,160).toLowerCase();
-  const password=String(req.data.password??"");
-  const plan=clean(req.data.plan,20);
-
-  if(
-    !name||
-    !username||
-    !email||
-    password.length<12||
-    !price(plan)
-  ){
-    throw new HttpsError(
-      "invalid-argument",
-      "تحقق من البيانات وكلمة المرور (12 حرفًا على الأقل)."
-    );
-  }
-
-  const start=new Date();
-  const shopRef=db.collection("shops").doc();
-  let user;
-
-  try{
-    user=await adminAuth.createUser({
-      email,
-      password,
-      displayName:username
-    });
-
-    await adminAuth.setCustomUserClaims(user.uid,{
-      role:"cashier",
-      shopId:shopRef.id
-    });
-
-    const batch=db.batch();
-
-    batch.set(shopRef,{
-      name,
-      username,
-      ownerUid:req.auth.uid,
-      plan,
-      price:price(plan),
-      startDate:Timestamp.fromDate(start),
-      endDate:expiry(plan,start),
-      enabled:true,
-      createdAt:FieldValue.serverTimestamp()
-    });
-
-    batch.set(db.collection("users").doc(user.uid),{
-      username,
-      shopId:shopRef.id,
-      role:"cashier",
-      email,
-      createdAt:FieldValue.serverTimestamp()
-    });
-
-    batch.set(db.collection("audit").doc(),{
-      action:"CREATE_SHOP",
-      shopId:shopRef.id,
-      by:req.auth.uid,
-      at:FieldValue.serverTimestamp()
-    });
-
-    await batch.commit();
-
-    return {
-      ok:true,
-      shopId:shopRef.id,
-      uid:user.uid
-    };
-
-  }catch(e){
-
-    if(user){
-      await adminAuth.deleteUser(user.uid).catch(()=>{});
-    }
-
-    if(e instanceof HttpsError)throw e;
-
-    throw new HttpsError(
-      "already-exists",
-      "تعذر إنشاء الحساب؛ تحقق من البريد الإلكتروني."
-    );
-  }
-});
-
-/* تفعيل أو إيقاف محل */
-exports.setShopEnabled=onCall(async req=>{
-  ownerOnly(req);
-
-  const shopId=clean(req.data.shopId,128);
-  const enabled=req.data.enabled;
-
-  if(!shopId||typeof enabled!=="boolean"){
-    throw new HttpsError(
-      "invalid-argument",
-      "بيانات غير صحيحة."
-    );
-  }
-
-  await db.collection("shops").doc(shopId).update({
-    enabled,
-    updatedAt:FieldValue.serverTimestamp()
-  });
-
-  await db.collection("audit").add({
-    action:enabled?"ENABLE_SHOP":"DISABLE_SHOP",
-    shopId,
-    by:req.auth.uid,
-    at:FieldValue.serverTimestamp()
-  });
-
-  return {ok:true};
-});
-
-/* تجديد أو تغيير الاشتراك */
-exports.updateSubscription=onCall(async req=>{
-  ownerOnly(req);
-
-  const shopId=clean(req.data.shopId,128);
-  const plan=clean(req.data.plan,20);
-  const enabled=req.data.enabled;
-
-  if(
-    !shopId||
-    !price(plan)||
-    typeof enabled!=="boolean"
-  ){
-    throw new HttpsError(
-      "invalid-argument",
-      "بيانات غير صحيحة."
-    );
-  }
-
-  const ref=db.collection("shops").doc(shopId);
-  const snap=await ref.get();
-
-  if(!snap.exists){
-    throw new HttpsError("not-found","المحل غير موجود.");
-  }
-
-  const start=new Date();
-
-  await ref.update({
-    plan,
-    price:price(plan),
-    enabled,
-    startDate:Timestamp.fromDate(start),
-    endDate:expiry(plan,start),
-    updatedAt:FieldValue.serverTimestamp()
-  });
-
-  await db.collection("audit").add({
-    action:"RENEW_SUBSCRIPTION",
-    shopId,
-    plan,
-    by:req.auth.uid,
-    at:FieldValue.serverTimestamp()
-  });
-
-  return {ok:true};
-});
-
-/* البيع وتحديث المخزون من الخادم */
-exports.createSale=onCall(async req=>{
-
-  if(
-    !req.auth||
-    req.auth.token.role!=="cashier"||
-    !req.auth.token.shopId
-  ){
-    throw new HttpsError(
-      "permission-denied",
-      "حساب كاشير مطلوب."
-    );
-  }
-
-  const shopId=req.auth.token.shopId;
-
-  const shopSnap=await db.collection("shops")
-    .doc(shopId).get();
-
-  if(!shopSnap.exists){
-    throw new HttpsError(
-      "permission-denied",
-      "المحل غير موجود."
-    );
-  }
-
-  const shop=shopSnap.data();
-
-  if(
-    !shop.enabled||
-    (
-      shop.plan!=="lifetime"&&
-      (
-        !shop.endDate||
-        shop.endDate.toMillis()<=Date.now()
-      )
-    )
-  ){
-    throw new HttpsError(
-      "permission-denied",
-      "الاشتراك منتهي أو موقوف."
-    );
-  }
-
-  const items=req.data.items;
-
-  if(
-    !Array.isArray(items)||
-    items.length<1||
-    items.length>100
-  ){
-    throw new HttpsError(
-      "invalid-argument",
-      "الفاتورة غير صحيحة."
-    );
-  }
-
-  const saleRef=db.collection("shops")
-    .doc(shopId)
-    .collection("sales")
-    .doc();
-
-  await db.runTransaction(async tx=>{
-
-    let total=0;
-    const normalized=[];
-
-    for(const item of items){
-
-      const productId=clean(item.productId,128);
-      const qty=Number(item.qty);
-
-      if(
-        !productId||
-        !Number.isInteger(qty)||
-        qty<1||
-        qty>10000
-      ){
-        throw new HttpsError(
-          "invalid-argument",
-          "كمية غير صحيحة."
-        );
-      }
-
-      const ref=db.collection("shops")
-        .doc(shopId)
-        .collection("products")
-        .doc(productId);
-
-      const snap=await tx.get(ref);
-
-      if(!snap.exists){
-        throw new HttpsError(
-          "not-found",
-          "منتج غير موجود."
-        );
-      }
-
-      const p=snap.data();
-
-      if(
-        !Number.isFinite(p.price)||
-        !Number.isInteger(p.stock)||
-        p.stock<qty
-      ){
-        throw new HttpsError(
-          "failed-precondition",
-          "المخزون غير كافٍ أو بيانات المنتج غير صحيحة."
-        );
-      }
-
-      total+=p.price*qty;
-
-      normalized.push({
-        ref,
-        stock:p.stock-qty,
-        name:p.name,
-        price:p.price,
-        qty
-      });
-    }
-
-    for(const p of normalized){
-      tx.update(p.ref,{
-        stock:p.stock,
-        updatedAt:FieldValue.serverTimestamp()
-      });
-    }
-
-    tx.set(saleRef,{
-      items:normalized.map(({name,price,qty})=>({
-        name,
-        price,
-        qty
-      })),
-      total,
-      createdAt:FieldValue.serverTimestamp(),
-      cashierUid:req.auth.uid
-    });
-
-  });
-
-  return {
-    ok:true,
-    saleId:saleRef.id
-  };
-});{
-  "name": "nexpos-functions",
-  "private": true,
-  "engines": {
-    "node": "20"
-  },
-  "main": "index.js",
-  "dependencies": {
-    "firebase-admin": "^13.0.0",
-    "firebase-functions": "^6.0.1"
-  }
-}rules_version = '2';
-
-service cloud.firestore {
-  match /databases/{database}/documents {
-
-    function signedIn(){
-      return request.auth != null;
-    }
-
-    function isOwner(){
-      return signedIn() &&
-        request.auth.token.owner == true;
-    }
-
-    function ownShop(id){
-      return signedIn() &&
-        request.auth.token.shopId == id;
-    }
-
-    function activeShop(id){
-      let s=get(
-        /databases/$(database)/documents/shops/$(id)
-      ).data;
-
-      return s.enabled == true &&
-        (
-          s.plan == 'lifetime' ||
-          (
-            s.endDate is timestamp &&
-            s.endDate > request.time
-          )
-        );
-    }
-
-    match /shops/{id} {
-
-      allow read: if isOwner() ||
-        (ownShop(id) && activeShop(id));
-
-      allow write: if false;
-
-      match /products/{productId} {
-
-        allow read: if isOwner() ||
-          (ownShop(id) && activeShop(id));
-
-        allow create,update: if
-          ownShop(id) &&
-          activeShop(id) &&
-          request.resource.data.keys().hasOnly([
-            'name',
-            'sku',
-            'price',
-            'stock',
-            'updatedAt'
-          ]) &&
-          request.resource.data.name is string &&
-          request.resource.data.price is number &&
-          request.resource.data.price >= 0 &&
-          request.resource.data.stock is int &&
-          request.resource.data.stock >= 0;
-
-        allow delete: if false;
-      }
-
-      match /sales/{saleId} {
-        allow read: if isOwner() ||
-          (ownShop(id) && activeShop(id));
-        allow write: if false;
-      }
-
-      match /expenses/{expenseId> {
-        allow read: if isOwner() ||
-          (ownShop(id) && activeShop(id));
-        allow write: if false;
-      }
-    }
-
-    match /users/{uid> {
-      allow read: if signedIn() &&
-        (request.auth.uid == uid || isOwner());
-      allow write: if false;
-    }
-
-    match /audit/{eventId> {
-      allow read: if isOwner();
-      allow write: if false;
-    }
-  }
-}rules_version = '2';
-
-service cloud.firestore {
-  match /databases/{database}/documents {
-
-    function signedIn() {
-      return request.auth != null;
-    }
-
-    function isOwner() {
-      return signedIn() &&
-        request.auth.token.owner == true;
-    }
-
-    function ownShop(id) {
-      return signedIn() &&
-        request.auth.token.shopId == id;
-    }
-
-    function activeShop(id) {
-      let s = get(
-        /databases/$(database)/documents/shops/$(id)
-      ).data;
-
-      return s.enabled == true &&
-        (
-          s.plan == 'lifetime' ||
-          (
-            s.endDate is timestamp &&
-            s.endDate > request.time
-          )
-        );
-    }
-
-    match /shops/{id} {
-      allow read: if isOwner() ||
-        (ownShop(id) && activeShop(id));
-
-      allow write: if false;
-
-      match /products/{productId} {
-        allow read: if isOwner() ||
-          (ownShop(id) && activeShop(id));
-
-        allow create, update: if
-          ownShop(id) &&
-          activeShop(id) &&
-          request.resource.data.keys().hasOnly([
-            'name',
-            'sku',
-            'price',
-            'stock',
-            'updatedAt'
-          ]) &&
-          request.resource.data.name is string &&
-          request.resource.data.price is number &&
-          request.resource.data.price >= 0 &&
-          request.resource.data.stock is int &&
-          request.resource.data.stock >= 0;
-
-        allow delete: if false;
-      }
-
-      match /sales/{saleId} {
-        allow read: if isOwner() ||
-          (ownShop(id) && activeShop(id));
-        allow write: if false;
-      }
-
-      match /expenses/{expenseId> {
-        allow read: if isOwner() ||
-          (ownShop(id) && activeShop(id));
-        allow write: if false;
-      }
-    }
-
-    match /users/{uid} {
-      allow read: if signedIn() &&
-        (request.auth.uid == uid || isOwner());
-      allow write: if false;
-    }
-
-    match /audit/{eventId} {
-      allow read: if isOwner();
-      allow write: if false;
-    }
-  }
-}match /expenses/{expenseId} {const admin = require("firebase-admin");
-
-const serviceAccount =
-  require("../service-account.json");
-
-const email = process.argv[2];
-
-if (!email) {
-  throw new Error(
-    "اكتب بريد المالك بعد الأمر"
-  );
-}
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
-(async () => {
-  const user = await admin.auth().getUserByEmail(email);
-
-  await admin.auth().setCustomUserClaims(user.uid, {
-    owner: true,
-    role: "owner"
-  });
-
-  console.log("تم تفعيل صلاحيات المالك:", email);
-
-  process.exit(0);
-})().catch(error => {
-  console.error(error);
-  process.exit(1);
-});{
-  "hosting": {
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  },
-  "functions": [
-    {
-      "source": "functions",
-      "codebase": "default",
-      "runtime": "nodejs20"
-    }
-  ],
-  "firestore": {
-    "rules": "firestore.rules"
-  }
-}node_modules/
-.firebase/
-service-account.json
-.envNexPOS/
-│
-├── public/
-│   └── index.html
-│
-├── functions/
-│   ├── index.js
-│   └── package.json
-│
-├── scripts/
-│   └── set-owner-claim.js
-│
-├── firestore.rules
-├── firebase.json
-└── .gitignorenpm install -g firebase-tools
-
-firebase login
-
-firebase use --add
-
-cd functions
-npm install
-cd ..
-
-npm install firebase-admin
-
-node scripts/set-owner-claim.js YOUR_OWNER_EMAIL
-
-firebase deploy --only firestore:rules,functions,hosting

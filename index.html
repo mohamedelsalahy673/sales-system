@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيستم محمد الصلاحي - إدارة الاشتراكات الآمنة</title>
+    <title>NexPOS - نظام المبيعات الاحترافي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -18,25 +18,26 @@
 </head>
 <body class="text-slate-800">
 
-    <!-- 1. شاشة تسجيل الدخول الرئيسية للعملاء -->
+    <!-- 1. شاشة تسجيل الدخول الرئيسية -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full border border-slate-100 text-center">
-            <div class="w-20 h-20 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-blue-500/30 mb-5 text-white text-3xl font-bold">
+            <div class="w-20 h-20 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-blue-500/30 mb-4 text-white text-3xl font-bold">
                 ⚡
             </div>
-            <h2 class="text-2xl font-bold text-slate-800 mb-1">سيستم محمد الصلاحي</h2>
-            <p class="text-slate-400 text-xs mb-6">نظام المبيعات المؤمن للاشتراكات</p>
+            <h2 class="text-2xl font-bold text-slate-800 mb-1">NexPOS</h2>
+            <p class="text-xs text-blue-600 font-bold mb-1">خاص بالمطور المهندس محمد الصلاحي</p>
+            <p class="text-slate-400 text-[11px] mb-5">رقم التواصل: 01062883414</p>
             
             <form onsubmit="handleLogin(event)" class="space-y-4 text-right">
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">اسم المستخدم (المزود لك)</label>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">اسم المستخدم</label>
                     <input type="text" id="username" required placeholder="أدخل اسم المستخدم" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">كلمة المرور</label>
                     <input type="password" id="password" required placeholder="••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
-                <p id="login-error" class="text-red-500 text-xs hidden text-center font-bold">عذراً، البيانات غير صحيحة أو انتهى اشتراكك!</p>
+                <p id="login-error" class="text-red-500 text-xs hidden text-center font-bold">عذراً، بيانات الدخول غير صحيحة أو انتهى اشتراكك!</p>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-sm">
                     تسجيل الدخول للسيستم
                 </button>
@@ -48,23 +49,23 @@
         </div>
     </div>
 
-    <!-- 2. نافذة طلب اشتراك جديد للزبون (توجيه طلبك لواتسابك مباشرة) -->
+    <!-- 2. طلب اشتراك جديد -->
     <div id="register-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border text-right space-y-4">
             <div class="text-center">
-                <h3 class="text-xl font-bold text-slate-800">اشتراك جديد في سيستم المبيعات</h3>
-                <p class="text-xs text-slate-500 mt-1">اختر الباقة المناسبة وادفع لتفعيل حسابك من قِبل المطور</p>
+                <h3 class="text-xl font-bold text-slate-800">اشتراك جديد في NexPOS</h3>
+                <p class="text-xs text-slate-500 mt-1">تواصل مع المطور المهندس محمد الصلاحي للتفعيل</p>
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-600 mb-1">اسم المحل / النشاط التجاري</label>
-                <input type="text" id="reg-shop" placeholder="مثال: محل النور للإكسسوارات" class="w-full px-4 py-2.5 border rounded-xl text-sm">
+                <input type="text" id="reg-shop" placeholder="مثال: محل النور" class="w-full px-4 py-2.5 border rounded-xl text-sm">
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">رقم الهاتف (واتساب الخاص بك)</label>
+                <label class="block text-xs font-bold text-slate-600 mb-1">رقم الهاتف (واتساب)</label>
                 <input type="text" id="reg-phone" placeholder="010xxxxxxxx" class="w-full px-4 py-2.5 border rounded-xl text-sm">
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">الباقة المطلوبة:</label>
+                <label class="block text-xs font-bold text-slate-600 mb-1">الباقة:</label>
                 <select id="reg-plan" class="w-full px-4 py-2.5 border rounded-xl text-sm bg-white">
                     <option value="اشتراك شهري (100 ج.م)">اشتراك شهري - 100 ج.م</option>
                     <option value="اشتراك سنوي (1000 ج.م)">اشتراك سنوي - 1000 ج.م</option>
@@ -72,23 +73,24 @@
                 </select>
             </div>
             <button onclick="submitRegistration()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2">
-                <i class="fa-brands fa-whatsapp text-lg"></i> إرسال طلب الاشتراك للمطور عبر واتساب
+                <i class="fa-brands fa-whatsapp text-lg"></i> إرسال الطلب للمطور عبر واتساب
             </button>
             <button onclick="closeRegisterModal()" class="w-full text-center text-xs text-slate-400 hover:underline pt-2">إلغاء والعودة</button>
         </div>
     </div>
 
-    <!-- 3. شاشة دخول لوحة المالك الحصري -->
+    <!-- 3. شاشة دخول لوحة المالك -->
     <div id="owner-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border text-right space-y-4">
             <div class="text-center">
                 <div class="w-12 h-12 bg-amber-500 rounded-xl mx-auto flex items-center justify-center text-white text-xl font-bold mb-2">👑</div>
                 <h3 class="text-xl font-bold text-slate-800">لوحة تحكم المالك الحصري</h3>
-                <p class="text-xs text-slate-500">خاصة بالمطور محمد الصلاحي (01062883414)</p>
+                <p class="text-xs text-blue-600 font-bold">المهندس محمد الصلاحي</p>
+                <p class="text-xs text-slate-500">رقم التواصل: 01062883414</p>
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">كلمة مرور المالك</label>
-                <input type="password" id="owner-pass" placeholder="أدخل كلمة المرور السرية" class="w-full px-4 py-2.5 border rounded-xl text-sm">
+                <label class="block text-xs font-bold text-slate-600 mb-1">كلمة مرور لوحة المالك</label>
+                <input type="password" id="owner-pass" placeholder="أدخل كلمة المرور" class="w-full px-4 py-2.5 border rounded-xl text-sm">
             </div>
             <button onclick="verifyOwner()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 rounded-xl text-sm">دخول للوحة الإدارة</button>
             <button onclick="closeOwnerLogin()" class="w-full text-center text-xs text-slate-400 hover:underline">العودة للرئيسية</button>
@@ -99,7 +101,10 @@
     <div id="owner-dashboard" class="fixed inset-0 bg-slate-900 z-50 p-6 overflow-y-auto hidden">
         <div class="max-w-4xl mx-auto bg-white rounded-3xl p-6 space-y-6">
             <div class="flex justify-between items-center border-b pb-4">
-                <h2 class="text-xl font-bold text-slate-900">👑 لوحة تحكم المالك - إدارة الاشتراكات والأمان</h2>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">👑 لوحة تحكم المالك - المهندس محمد الصلاحي</h2>
+                    <p class="text-xs text-slate-500">هاتف: 01062883414</p>
+                </div>
                 <button onclick="closeOwnerDashboard()" class="bg-red-500 text-white px-4 py-2 rounded-xl text-xs font-bold">إغلاق اللوحة</button>
             </div>
 
@@ -156,15 +161,15 @@
         </div>
     </div>
 
-    <!-- التطبيق الرئيسي (POS) للعملاء أو المالك -->
+    <!-- التطبيق الرئيسي (POS) -->
     <div id="app-screen" class="hidden min-h-screen flex flex-col">
         <header class="bg-slate-900 text-white shadow-md">
             <div class="max-w-7xl mx-auto px-4 py-3.5 flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <span class="bg-blue-600 text-white p-2.5 rounded-xl text-base font-bold shadow">💼</span>
+                    <span class="bg-blue-600 text-white p-2.5 rounded-xl text-base font-bold shadow">⚡</span>
                     <div>
-                        <h1 id="app-header-title" class="font-extrabold text-base md:text-lg">سيستم محمد الصلاحي</h1>
-                        <p class="text-[11px] text-slate-400">الدعم الفني: 01062883414</p>
+                        <h1 id="app-header-title" class="font-extrabold text-base md:text-lg">NexPOS</h1>
+                        <p class="text-[11px] text-slate-400">المطور: المهندس محمد الصلاحي | تواصل: 01062883414</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
@@ -290,8 +295,9 @@
     <!-- طباعة الفاتورة -->
     <div id="printable-invoice" class="hidden p-4 max-w-[300px] mx-auto text-slate-900 bg-white font-mono text-xs">
         <div class="text-center mb-3 border-b pb-2">
-            <h2 id="inv-shop-name" class="text-base font-bold">سيستم محمد الصلاحي</h2>
-            <p class="text-[10px] text-slate-500">للدعم الفني: 01062883414</p>
+            <h2 id="inv-shop-name" class="text-base font-bold">NexPOS</h2>
+            <p class="text-[10px] text-slate-500">المطور: المهندس محمد الصلاحي</p>
+            <p class="text-[10px] text-slate-500">للتواصل والدعم: 01062883414</p>
             <p id="inv-id" class="font-bold mt-1"></p>
             <p id="inv-date" class="text-[10px] text-slate-500"></p>
         </div>
@@ -306,12 +312,12 @@
     </div>
 
     <script>
-        // إعدادات الباسورد الخاص بلوحة المالك
-        let ownerAuth = JSON.parse(localStorage.getItem('al_salahy_owner_auth')) || { pass: '0106' };
+        // باسورد لوحة المالك الافتراضي (ويمكن تغييره من جوه اللوحة)
+        let ownerAuth = JSON.parse(localStorage.getItem('al_salahy_owner_auth')) || { pass: 'Ma01060600' };
         
-        // حسابات العملاء المشتركين
+        // حسابات العملاء المشتركين (وحساب المالك الأساسي elsalahy / Ma01060600)
         let registeredClients = JSON.parse(localStorage.getItem('al_salahy_clients')) || [
-            { name: 'محمد الصلاحي (المالك)', user: 'admin', pass: '1243', expire: Date.now() + (99999 * 86400000) }
+            { name: 'المهندس محمد الصلاحي (المالك)', user: 'elsalahy', pass: 'Ma01060600', expire: Date.now() + (99999 * 86400000) }
         ];
 
         let currentActiveUser = null;
@@ -336,7 +342,7 @@
             } catch (e) {}
         }
 
-        // واجهات التسجيل وطلب الاشتراك
+        // طلب اشتراك جديد (يذهب لواتسابك مباشرة بدون ظهور الكود للعميل)
         function showRegisterModal() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('register-screen').classList.remove('hidden');
@@ -352,8 +358,7 @@
 
             if(!shop || !phone) return alert('الرجاء إدخال اسم المحل ورقم الهاتف');
 
-            // إرسال الطلب مباشرة لواتسابك من غير ظهور أي كود عشوائي للعميل
-            const text = `مرحباً محمد الصلاحي، أرغب في الاشتراك في سيستم المبيعات.\nاسم المحل: ${shop}\nرقم الهاتف: ${phone}\nالباقة المختارة: ${plan}\n(أرجو إرسال بيانات الدخول بعد تأكيد الدفع).`;
+            const text = `مرحباً مهندس محمد الصلاحي، أرغب في الاشتراك بـ NexPOS.\nاسم المحل: ${shop}\nرقم الهاتف: ${phone}\nالباقة: ${plan}\n(أرجو إرسال بيانات الدخول بعد التحويل).`;
             const whatsappUrl = `https://wa.me/201062883414?text=${encodeURIComponent(text)}`;
             window.open(whatsappUrl, '_blank');
         }
@@ -369,7 +374,8 @@
         }
         function verifyOwner() {
             const pass = document.getElementById('owner-pass').value;
-            if(pass === ownerAuth.pass) {
+            // التأكد من مطابقة باسورد المالك أو الباسورد الرئيسي
+            if(pass === ownerAuth.pass || pass === 'Ma01060600') {
                 document.getElementById('owner-screen').classList.add('hidden');
                 document.getElementById('owner-dashboard').classList.remove('hidden');
                 renderClientsTable();
@@ -387,6 +393,14 @@
             if(!newP) return alert('أدخل كلمة المرور الجديدة');
             ownerAuth.pass = newP;
             localStorage.setItem('al_salahy_owner_auth', JSON.stringify(ownerAuth));
+            
+            // تحديث حساب المالك الرئيسي في القائمة أيضاً
+            let adminAcc = registeredClients.find(c => c.user === 'elsalahy');
+            if(adminAcc) {
+                adminAcc.pass = newP;
+                localStorage.setItem('al_salahy_clients', JSON.stringify(registeredClients));
+            }
+
             alert('تم تغيير كلمة مرور لوحة المالك بنجاح!');
             document.getElementById('new-owner-pass').value = '';
         }
@@ -403,11 +417,11 @@
             registeredClients.push({ name, user: randomUser, pass: randomPass, expire: expireDate });
             localStorage.setItem('al_salahy_clients', JSON.stringify(registeredClients));
             renderClientsTable();
-            alert(`تم إنشاء الحساب بنجاح!\nأعطِ هذه البيانات للعميل يدوياً:\nالمستخدم: ${randomUser}\nالباسورد: ${randomPass}`);
+            alert(`تم إنشاء الحساب بنجاح!\nأعطِ هذه البيانات للعميل يدوياً:\nاسم المستخدم: ${randomUser}\nكلمة المرور: ${randomPass}`);
         }
 
         function deleteClient(user) {
-            if(user === 'admin') return alert('لا يمكن حذف المالك الأساسي!');
+            if(user === 'elsalahy') return alert('لا يمكن حذف حساب المالك الأساسي!');
             if(confirm('هل أنت متأكد من حذف هذا العميل؟')) {
                 registeredClients = registeredClients.filter(c => c.user !== user);
                 localStorage.setItem('al_salahy_clients', JSON.stringify(registeredClients));
@@ -424,13 +438,13 @@
                     <td class="p-3 font-mono text-red-600">${c.pass}</td>
                     <td class="p-3 text-xs">${new Date(c.expire).toLocaleDateString('ar-EG')}</td>
                     <td class="p-3 text-center">
-                        ${c.user !== 'admin' ? `<button onclick="deleteClient('${c.user}')" class="bg-red-50 text-red-500 px-2 py-1 rounded text-xs font-bold">حذف</button>` : 'المالك'}
+                        ${c.user !== 'elsalahy' ? `<button onclick="deleteClient('${c.user}')" class="bg-red-50 text-red-500 px-2 py-1 rounded text-xs font-bold">حذف</button>` : 'المالك الأساسي'}
                     </td>
                 </tr>
             `).join('');
         }
 
-        // تسجيل الدخول للسيستم (للعملاء أو المالك)
+        // تسجيل الدخول للسيستم
         function handleLogin(e) {
             e.preventDefault();
             const u = document.getElementById('username').value.trim();
@@ -439,12 +453,12 @@
             const client = registeredClients.find(c => c.user === u && c.pass === p);
             if(client) {
                 if(Date.now() > client.expire) {
-                    return alert('عذراً، انتهت فترة اشتراك هذا الحساب. تواصل مع المطور محمد الصلاحي للتجديد (01062883414)');
+                    return alert('عذراً، انتهت فترة اشتراك هذا الحساب. تواصل مع المطور المهندس محمد الصلاحي للتجديد (01062883414)');
                 }
                 currentActiveUser = client;
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app-screen').classList.remove('hidden');
-                document.getElementById('app-header-title').innerText = `سيستم مبيعات: ${client.name}`;
+                document.getElementById('app-header-title').innerText = `NexPOS: ${client.name}`;
                 initApp();
             } else {
                 document.getElementById('login-error').classList.remove('hidden');
@@ -622,7 +636,7 @@
             salesHistory.push({ id: orderId, date: orderDate, items: [...cart], total });
             localStorage.setItem('al_salahy_sales', JSON.stringify(salesHistory));
 
-            document.getElementById('inv-shop-name').innerText = currentActiveUser ? currentActiveUser.name : 'سيستم محمد الصلاحي';
+            document.getElementById('inv-shop-name').innerText = currentActiveUser ? currentActiveUser.name : 'NexPOS';
             document.getElementById('inv-id').innerText = `فاتورة رقم: ${orderId}`;
             document.getElementById('inv-date').innerText = orderDate;
             document.getElementById('inv-total').innerText = total;
@@ -637,7 +651,7 @@
             cart = [];
             renderCart();
             renderPOSProducts();
-            document.getElementById('pos-barcode-input'].focus();
+            document.getElementById('pos-barcode-input').focus();
         }
 
         function deleteSale(orderId) {

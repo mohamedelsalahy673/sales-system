@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيستم محمد الصلاحي - نقطة البيع الذكية (مدعوم بالاشتراكات)</title>
+    <title>سيستم محمد الصلاحي - إدارة الاشتراكات ونقطة البيع</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -18,69 +18,141 @@
 </head>
 <body class="text-slate-800">
 
-    <!-- شاشة تسجيل الدخول -->
+    <!-- 1. شاشة تسجيل الدخول (للعميل أو المالك) -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full border border-slate-100 text-center">
             <div class="w-20 h-20 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-blue-500/30 mb-5 text-white text-3xl font-bold">
                 ⚡
             </div>
             <h2 class="text-2xl font-bold text-slate-800 mb-1">سيستم محمد الصلاحي</h2>
-            <p class="text-slate-400 text-xs mb-6">نظام المبيعات والكاشير المؤمن</p>
+            <p class="text-slate-400 text-xs mb-6">نظام المبيعات المحمي باشتراكات</p>
             
             <form onsubmit="handleLogin(event)" class="space-y-4 text-right">
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">اسم المستخدم</label>
-                    <input type="text" id="username" required placeholder="admin" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    <input type="text" id="username" required placeholder="admin أو اسم محلك" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">كلمة المرور</label>
-                    <input type="password" id="password" required placeholder="1243" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    <input type="password" id="password" required placeholder="••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
-                <p id="login-error" class="text-red-500 text-xs hidden text-center font-bold">خطأ في بيانات الدخول!</p>
+                <p id="login-error" class="text-red-500 text-xs hidden text-center font-bold">بيانات الدخول غير صحيحة أو الحساب غير مفعل!</p>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-sm">
-                    دخول للسيستم
+                    تسجيل الدخول للسيستم
                 </button>
             </form>
-            <div class="mt-4 text-center">
-                <button onclick="showForgotPassword()" class="text-xs text-blue-600 font-bold hover:underline">نسيت كلمة المرور؟ (اطلب كود من الصلاحي)</button>
+            <div class="mt-4 border-t pt-3 flex justify-between items-center text-xs">
+                <button onclick="showRegisterModal()" class="text-blue-600 font-bold hover:underline">طلب اشتراك جديد؟</button>
+                <button onclick="showOwnerLogin()" class="text-slate-500 hover:underline">دخول لوحة المالك</button>
             </div>
         </div>
     </div>
 
-    <!-- شاشة استعادة كلمة المرور عبر واتساب -->
-    <div id="forgot-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full border text-center">
-            <h3 class="text-xl font-bold mb-2">استعادة الباسورد</h3>
-            <p class="text-xs text-slate-500 mb-4">اضغط للحصول على كود عبر واتساب المطور (محمد الصلاحي)</p>
-            <button onclick="requestWhatsAppCode()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl mb-3 text-sm flex items-center justify-center gap-2">
-                <i class="fa-brands fa-whatsapp text-lg"></i> طلب كود عبر واتساب
+    <!-- 2. نافذة طلب اشتراك جديد للزبون -->
+    <div id="register-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border text-right space-y-4">
+            <div class="text-center">
+                <h3 class="text-xl font-bold text-slate-800">اشتراك جديد في السيستم</h3>
+                <p class="text-xs text-slate-500 mt-1">اختر الباقة المناسبة لمحلك وسيتم توجيهك للمطور للتفعيل</p>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">اسم المحل / النشاط</label>
+                <input type="text" id="reg-shop" placeholder="مثال: محطة الشحن والتبريد" class="w-full px-4 py-2.5 border rounded-xl text-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">رقم الهاتف (واتساب)</label>
+                <input type="text" id="reg-phone" placeholder="010xxxxxxxx" class="w-full px-4 py-2.5 border rounded-xl text-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">اختر الباقة:</label>
+                <select id="reg-plan" class="w-full px-4 py-2.5 border rounded-xl text-sm bg-white">
+                    <option value="month">اشتراك شهري (100 ج.م)</option>
+                    <option value="year">اشتراك سنوي (1000 ج.م)</option>
+                    <option value="lifetime">شراء نهائي دائم (3000 ج.م)</option>
+                </select>
+            </div>
+            <button onclick="submitRegistration()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2">
+                <i class="fa-brands fa-whatsapp text-lg"></i> إرسال طلب الاشتراك للمطور عبر واتساب
             </button>
-            <div class="space-y-3 text-right">
-                <input type="text" id="otp-input" placeholder="أدخل الكود المُستلم" class="w-full px-4 py-2.5 border rounded-xl text-sm">
-                <input type="password" id="new-reset-pass" placeholder="كلمة المرور الجديدة" class="w-full px-4 py-2.5 border rounded-xl text-sm">
-                <button onclick="verifyAndResetPass()" class="w-full bg-blue-600 text-white font-bold py-2.5 rounded-xl text-sm">تأكيد وتغيير الباسورد</button>
-            </div>
-            <button onclick="closeForgot()" class="mt-4 text-xs text-slate-400 hover:underline">إلغاء والعودة للدخول</button>
+            <button onclick="closeRegisterModal()" class="w-full text-center text-xs text-slate-400 hover:underline pt-2">إلغاء والعودة</button>
         </div>
     </div>
 
-    <!-- التطبيق الرئيسي -->
+    <!-- 3. لوحة تحكم المالك (محمد الصلاحي) -->
+    <div id="owner-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border text-right space-y-4">
+            <div class="text-center">
+                <div class="w-12 h-12 bg-amber-500 rounded-xl mx-auto flex items-center justify-center text-white text-xl font-bold mb-2">👑</div>
+                <h3 class="text-xl font-bold text-slate-800">لوحة تحكم المالك الحصري</h3>
+                <p class="text-xs text-slate-500">خاصة بالمطور محمد الصلاحي (01062883414)</p>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">كلمة مرور المالك</label>
+                <input type="password" id="owner-pass" placeholder="أدخل باسورد المالك" class="w-full px-4 py-2.5 border rounded-xl text-sm">
+            </div>
+            <button onclick="verifyOwner()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 rounded-xl text-sm">دخول لوحة التحكم وتوليد الاكواد</button>
+            <button onclick="closeOwnerLogin()" class="w-full text-center text-xs text-slate-400 hover:underline">العودة للرئيسية</button>
+        </div>
+    </div>
+
+    <!-- واجهة إدارة الاشتراكات للمالك (بعد الدخول كمالك) -->
+    <div id="owner-dashboard" class="fixed inset-0 bg-slate-900 z-50 p-6 overflow-y-auto hidden">
+        <div class="max-w-4xl mx-auto bg-white rounded-3xl p-6 space-y-6">
+            <div class="flex justify-between items-center border-b pb-4">
+                <h2 class="text-xl font-bold text-slate-900">👑 لوحة تحكم المالك - توليد أكواد تفعيل العملاء</h2>
+                <button onclick="closeOwnerDashboard()" class="bg-red-500 text-white px-4 py-2 rounded-xl text-xs font-bold">إغلاق اللوحة</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-2xl border">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">اسم العميل / المحل</label>
+                    <input type="text" id="client-name-gen" placeholder="محل النور" class="w-full px-3 py-2 border rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">مدة الاشتراك</label>
+                    <select id="client-duration" class="w-full px-3 py-2 border rounded-xl text-sm bg-white">
+                        <option value="30">شهر (100 ج.م)</option>
+                        <option value="365">سنة (1000 ج.م)</option>
+                        <option value="9999">شراء نهائي (3000 ج.م)</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button onclick="generateClientLicense()" class="w-full bg-blue-600 text-white font-bold py-2 rounded-xl text-sm">إنشاء حساب وكود</button>
+                </div>
+            </div>
+            <div>
+                <h3 class="font-bold text-sm mb-3">قائمة العملاء المفعلين وأكوادهم:</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm border">
+                        <thead class="bg-slate-100">
+                            <tr>
+                                <th class="p-3">اسم المحل</th>
+                                <th class="p-3">اسم المستخدم</th>
+                                <th class="p-3">كلمة المرور</th>
+                                <th class="p-3">الانتهاء</th>
+                                <th class="p-3 text-center">حذف</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clients-table-body" class="divide-y"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- التطبيق الرئيسي (POS) -->
     <div id="app-screen" class="hidden min-h-screen flex flex-col">
-        <!-- الشريط العلوي -->
         <header class="bg-slate-900 text-white shadow-md">
             <div class="max-w-7xl mx-auto px-4 py-3.5 flex justify-between items-center">
                 <div class="flex items-center gap-3">
                     <span class="bg-blue-600 text-white p-2.5 rounded-xl text-base font-bold shadow">💼</span>
                     <div>
-                        <h1 class="font-extrabold text-base md:text-lg">سيستم محمد الصلاحي</h1>
-                        <p class="text-[11px] text-slate-400">إدارة مبيعات - دعم فني واتساب: 01062883414</p>
+                        <h1 id="app-header-title" class="font-extrabold text-base md:text-lg">سيستم محمد الصلاحي</h1>
+                        <p class="text-[11px] text-slate-400">الدعم الفني: 01062883414</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span id="subscription-badge" class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-lg border border-emerald-500/30 font-bold">
-                        نشط ✅
-                    </span>
-                    <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition border border-red-500/20">
+                    <span id="sub-status-badge" class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-lg border font-bold">نشط ✅</span>
+                    <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition border">
                         <i class="fa-solid fa-power-off"></i> خروج
                     </button>
                 </div>
@@ -99,26 +171,21 @@
                 <button onclick="switchTab('sales')" id="tab-sales" class="tab-btn py-3.5 px-4 font-bold text-xs md:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-file-invoice-dollar"></i> الفواتير والمبيعات
                 </button>
-                <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn py-3.5 px-4 font-bold text-xs md:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-gear"></i> إعدادات والاشتراكات
-                </button>
             </div>
         </div>
 
         <!-- المحتوى -->
         <main class="max-w-7xl mx-auto p-4 md:p-6 flex-1 w-full">
-            
             <!-- 1. شاشة الكاشير -->
             <div id="sec-pos" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 space-y-4">
                     <div class="bg-white p-4 rounded-2xl shadow-sm border flex gap-3 items-center">
                         <div class="text-blue-600 text-xl pl-1"><i class="fa-solid fa-barcode"></i></div>
-                        <input type="text" id="pos-barcode-input" onkeydown="handleBarcodeScan(event)" placeholder="امسح الباركود بالمسدس أو اكتب اسم المنتج هنا..." autofocus class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold">
+                        <input type="text" id="pos-barcode-input" onkeydown="handleBarcodeScan(event)" placeholder="امسح الباركود بالمسدس أو اكتب اسم المنتج..." autofocus class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold">
                     </div>
                     <div id="pos-products-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
                 </div>
 
-                <!-- السلة -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col h-[570px]">
                     <div class="flex justify-between items-center mb-3 border-b pb-2">
                         <h2 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-cart-shopping text-blue-600"></i> سلة المبيعات</h2>
@@ -174,23 +241,23 @@
             <div id="sec-sales" class="hidden space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border">
-                        <p class="text-xs text-slate-400 font-bold">إجمالي مبيعات المحل</p>
+                        <p class="text-xs text-slate-400 font-bold">إجمالي المبيعات</p>
                         <h3 class="text-2xl font-extrabold text-emerald-600 mt-1"><span id="stat-total-revenue">0</span> ج.م</h3>
                     </div>
                     <div class="bg-white p-5 rounded-2xl shadow-sm border">
-                        <p class="text-xs text-slate-400 font-bold">إجمالي عدد الفواتير</p>
+                        <p class="text-xs text-slate-400 font-bold">إجمالي الفواتير</p>
                         <h3 class="text-2xl font-extrabold text-blue-600 mt-1" id="stat-total-orders">0</h3>
                     </div>
                 </div>
                 <div class="bg-white rounded-2xl shadow-sm border p-5">
-                    <h2 class="font-bold mb-3 text-sm">سجل فواتير المبيعات</h2>
+                    <h2 class="font-bold mb-3 text-sm">سجل الفواتير</h2>
                     <div class="overflow-x-auto">
                         <table class="w-full text-right text-sm">
                             <thead class="bg-slate-50 border-b text-slate-600">
                                 <tr>
                                     <th class="p-3">رقم الفاتورة</th>
                                     <th class="p-3">التاريخ والوقت</th>
-                                    <th class="p-3">الأصناف المباعة</th>
+                                    <th class="p-3">الأصناف</th>
                                     <th class="p-3">الإجمالي</th>
                                     <th class="p-3 text-center">إجراءات</th>
                                 </tr>
@@ -200,44 +267,14 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 4. إعدادات والاشتراكات (التحكم الكامل) -->
-            <div id="sec-settings" class="hidden max-w-xl mx-auto space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border space-y-4">
-                    <h2 class="font-bold text-slate-800 text-base border-b pb-2"><i class="fa-solid fa-lock text-blue-600 ml-2"></i> تغيير كلمة المرور</h2>
-                    <form onsubmit="changePassword(event)" class="space-y-3">
-                        <input type="password" id="current-pass" placeholder="كلمة المرور الحالية" required class="w-full px-4 py-2 rounded-xl border text-sm">
-                        <input type="password" id="new-pass" placeholder="كلمة المرور الجديدة" required class="w-full px-4 py-2 rounded-xl border text-sm">
-                        <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-xl text-sm">حفظ الباسورد</button>
-                    </form>
-                </div>
-
-                <!-- لوحة تحكم المالك (الاشتراكات) -->
-                <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-xl space-y-4">
-                    <h2 class="font-bold text-base border-b border-slate-800 pb-2"><i class="fa-solid fa-crown text-amber-400 ml-2"></i> إدارة حالة الاشتراك (تحكم المالك)</h2>
-                    <p class="text-xs text-slate-400">حالة ترخيص السيستم الحالي للمحل:</p>
-                    <div class="flex justify-between items-center bg-slate-800 p-3 rounded-xl">
-                        <span id="sub-status-text" class="font-bold text-sm text-emerald-400">نشط وصالح</span>
-                        <span id="sub-expiry-date" class="text-xs text-slate-400"></span>
-                    </div>
-                    <div class="space-y-2 pt-2">
-                        <label class="block text-xs text-slate-300">تفعيل كود اشتراك جديد (أدخله لتمديد الفترة):</label>
-                        <div class="flex gap-2">
-                            <input type="text" id="activation-code" placeholder="أدخل كود التفعيل" class="w-full px-4 py-2 rounded-xl bg-slate-800 border border-slate-700 text-sm text-white">
-                            <button onclick="activateSubscription()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm whitespace-nowrap">تفعيل</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </main>
     </div>
 
     <!-- طباعة الفاتورة -->
     <div id="printable-invoice" class="hidden p-4 max-w-[300px] mx-auto text-slate-900 bg-white font-mono text-xs">
         <div class="text-center mb-3 border-b pb-2">
-            <h2 class="text-base font-bold">سيستم محمد الصلاحي</h2>
-            <p class="text-[10px] text-slate-500">للاتصال والدعم: 01062883414</p>
+            <h2 id="inv-shop-name" class="text-base font-bold">سيستم محمد الصلاحي</h2>
+            <p class="text-[10px] text-slate-500">للدعم الفني: 01062883414</p>
             <p id="inv-id" class="font-bold mt-1"></p>
             <p id="inv-date" class="text-[10px] text-slate-500"></p>
         </div>
@@ -252,45 +289,17 @@
     </div>
 
     <script>
-        let adminCredentials = JSON.parse(localStorage.getItem('al_salahy_auth')) || { user: 'admin', pass: '1243' };
+        // حسابات العملاء والمالك المخزنة محلياً
+        let registeredClients = JSON.parse(localStorage.getItem('al_salahy_clients')) || [
+            { name: 'محمد الصلاحي (المالك)', user: 'admin', pass: '1243', expire: Date.now() + (99999 * 86400000) }
+        ];
+
+        let currentActiveUser = null;
         let products = JSON.parse(localStorage.getItem('al_salahy_products')) || [
-            { id: 1, barcode: '1001', name: 'شاحن ايفون سريع أصلي', price: 250, stock: 15 },
-            { id: 2, barcode: '1002', name: 'جراب سيليكون حماية', price: 80, stock: 25 }
+            { id: 1, barcode: '1001', name: 'شاحن ايفون أصلي', price: 250, stock: 15 }
         ];
         let cart = [];
         let salesHistory = JSON.parse(localStorage.getItem('al_salahy_sales')) || [];
-        
-        // نظام الاشتراكات (افتراضي 30 يوم أو مدخل مسبقاً)
-        let subscription = JSON.parse(localStorage.getItem('al_salahy_sub')) || { expireDate: Date.now() + (30 * 24 * 60 * 60 * 1000) };
-        localStorage.setItem('al_salahy_sub', JSON.stringify(subscription));
-
-        let generatedOtp = null;
-
-        function checkSubscription() {
-            if (Date.now() > subscription.expireDate) {
-                alert('انتهت فترة اشتراك السيستم! تواصل مع المطور محمد الصلاحي لتجديد الاشتراك (01062883414)');
-                document.getElementById('subscription-badge').className = "text-xs bg-red-500/20 text-red-400 px-3 py-1 rounded-lg border border-red-500/30 font-bold";
-                document.getElementById('subscription-badge').innerText = "منتهي ❌";
-                document.getElementById('sub-status-text').innerText = "منتهي (يتطلب تجديد)";
-                document.getElementById('sub-status-text').className = "font-bold text-sm text-red-400";
-            } else {
-                const daysLeft = Math.ceil((subscription.expireDate - Date.now()) / (1000 * 60 * 60 * 24));
-                document.getElementById('sub-expiry-date').innerText = `متبقي ${daysLeft} يوم`;
-            }
-        }
-
-        function activateSubscription() {
-            const code = document.getElementById('activation-code').value.trim();
-            // كود سري للمالك لتجديد شهر كامل مثلاً: SALAHY-30D
-            if (code === 'SALAHY-30D' || code === '0106') {
-                subscription.expireDate = Date.now() + (30 * 24 * 60 * 60 * 1000);
-                localStorage.setItem('al_salahy_sub', JSON.stringify(subscription));
-                alert('تم تجديد اشتراك السيستم بنجاح لمدة 30 يوم!');
-                location.reload();
-            } else {
-                alert('كود التفعيل غير صحيح! اطلبه من المطور محمد الصلاحي.');
-            }
-        }
 
         function playBeepSound() {
             try {
@@ -307,13 +316,104 @@
             } catch (e) {}
         }
 
+        // واجهات التسجيل والمالك
+        function showRegisterModal() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('register-screen').classList.remove('hidden');
+        }
+        function closeRegisterModal() {
+            document.getElementById('register-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+        function submitRegistration() {
+            const shop = document.getElementById('reg-shop').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const plan = document.getElementById('reg-plan').value;
+
+            if(!shop || !phone) return alert('الرجاء إدخال اسم المحل ورقم الهاتف');
+
+            const text = `مرحباً محمد الصلاحي، أرغب في الاشتراك في سيستم المبيعات.\nاسم المحل: ${shop}\nرقم الهاتف: ${phone}\nالباقة المختارة: ${plan}`;
+            const whatsappUrl = `https://wa.me/201062883414?text=${encodeURIComponent(text)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function showOwnerLogin() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('owner-screen').classList.remove('hidden');
+        }
+        function closeOwnerLogin() {
+            document.getElementById('owner-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+        function verifyOwner() {
+            const pass = document.getElementById('owner-pass').value;
+            if(pass === '0106' || pass === '1243') { // باسورد المالك الخاص
+                document.getElementById('owner-screen').classList.add('hidden');
+                document.getElementById('owner-dashboard').classList.remove('hidden');
+                renderClientsTable();
+            } else {
+                alert('كلمة مرور المالك غير صحيحة!');
+            }
+        }
+        function closeOwnerDashboard() {
+            document.getElementById('owner-dashboard').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        function generateClientLicense() {
+            const name = document.getElementById('client-name-gen').value.trim();
+            const durationDays = parseInt(document.getElementById('client-duration').value);
+            if(!name) return alert('أدخل اسم المحل');
+
+            const randomUser = 'user_' + Math.floor(100 + Math.random() * 900);
+            const randomPass = Math.floor(1000 + Math.random() * 9000).toString();
+            const expireDate = Date.now() + (durationDays * 86400000);
+
+            registeredClients.push({ name, user: randomUser, pass: randomPass, expire: expireDate });
+            localStorage.setItem('al_salahy_clients', JSON.stringify(registeredClients));
+            renderClientsTable();
+            alert(`تم إنشاء الحساب بنجاح!\nالمستخدم: ${randomUser}\nالباسورد: ${randomPass}`);
+        }
+
+        function deleteClient(user) {
+            if(user === 'admin') return alert('لا يمكن حذف المالك الأساسي!');
+            if(confirm('هل أنت متأكد من حذف هذا العميل؟')) {
+                registeredClients = registeredClients.filter(c => c.user !== user);
+                localStorage.setItem('al_salahy_clients', JSON.stringify(registeredClients));
+                renderClientsTable();
+            }
+        }
+
+        function renderClientsTable() {
+            const body = document.getElementById('clients-table-body');
+            body.innerHTML = registeredClients.map(c => `
+                <tr>
+                    <td class="p-3 font-bold">${c.name}</td>
+                    <td class="p-3 font-mono text-blue-600">${c.user}</td>
+                    <td class="p-3 font-mono text-red-600">${c.pass}</td>
+                    <td class="p-3 text-xs">${new Date(c.expire).toLocaleDateString('ar-EG')}</td>
+                    <td class="p-3 text-center">
+                        ${c.user !== 'admin' ? `<button onclick="deleteClient('${c.user}')" class="bg-red-50 text-red-500 px-2 py-1 rounded text-xs font-bold">حذف</button>` : 'المالك'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // تسجيل الدخول للسيستم
         function handleLogin(e) {
             e.preventDefault();
-            const u = document.getElementById('username').value;
-            const p = document.getElementById('password').value;
-            if (u === adminCredentials.user && p === adminCredentials.pass) {
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value.trim();
+
+            const client = registeredClients.find(c => c.user === u && c.pass === p);
+            if(client) {
+                if(Date.now() > client.expire) {
+                    return alert('عذراً، انتهت فترة اشتراك هذا الحساب. تواصل مع المطور محمد الصلاحي للتجديد (01062883414)');
+                }
+                currentActiveUser = client;
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app-screen').classList.remove('hidden');
+                document.getElementById('app-header-title').innerText = `سيستم مبيعات: ${client.name}`;
                 initApp();
             } else {
                 document.getElementById('login-error').classList.remove('hidden');
@@ -323,45 +423,11 @@
         function logout() {
             document.getElementById('app-screen').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
-        }
-
-        function showForgotPassword() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('forgot-screen').classList.remove('hidden');
-        }
-
-        function closeForgot() {
-            document.getElementById('forgot-screen').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
-        }
-
-        function requestWhatsAppCode() {
-            generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
-            const text = `مرحباً محمد الصلاحي، أود استعادة كلمة المرور لسيستم المبيعات الخاص بي. كود التأكيد الخاص بي هو: ${generatedOtp}`;
-            const whatsappUrl = `https://wa.me/201062883414?text=${encodeURIComponent(text)}`;
-            window.open(whatsappUrl, '_blank');
-            alert('تم توجيهك لواتساب المطور. الكود المؤقت تم توليهه، أدخله هنا بعد استلامه.');
-        }
-
-        function verifyAndResetPass() {
-            const enteredOtp = document.getElementById('otp-input').value.trim();
-            const newPass = document.getElementById('new-reset-pass').value.trim();
-
-            if (!enteredOtp || enteredOtp !== generatedOtp) {
-                return alert('الكود غير صحيح أو لم تقم بطلبه!');
-            }
-            if (!newPass) {
-                return alert('الرجاء إدخال كلمة المرور الجديدة');
-            }
-
-            adminCredentials.pass = newPass;
-            localStorage.setItem('al_salahy_auth', JSON.stringify(adminCredentials));
-            alert('تم تغير كلمة المرور بنجاح! سجل دخولك الآن بالباسورد الجديد.');
-            closeForgot();
+            currentActiveUser = null;
         }
 
         function switchTab(tab) {
-            ['pos', 'products', 'sales', 'settings'].forEach(t => {
+            ['pos', 'products', 'sales'].forEach(t => {
                 document.getElementById(`sec-${t}`).classList.add('hidden');
                 document.getElementById(`tab-${t}`).className = "tab-btn py-3.5 px-4 font-bold text-xs md:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap";
             });
@@ -370,13 +436,11 @@
             if (tab === 'pos') setTimeout(() => document.getElementById('pos-barcode-input').focus(), 100);
             if (tab === 'products') renderProductsTable();
             if (tab === 'sales') renderSalesHistory();
-            if (tab === 'settings') checkSubscription();
         }
 
         function initApp() {
             renderPOSProducts();
             renderCart();
-            checkSubscription();
             setTimeout(() => document.getElementById('pos-barcode-input').focus(), 100);
         }
 
@@ -423,11 +487,11 @@
             e.target.reset();
             renderProductsTable();
             renderPOSProducts();
-            alert('تم حفظ المنتج والباركود بنجاح!');
+            alert('تم حفظ المنتج بنجاح!');
         }
 
         function deleteProduct(id) {
-            if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+            if (confirm('حذف هذا المنتج؟')) {
                 products = products.filter(p => p.id !== id);
                 saveProducts();
                 renderProductsTable();
@@ -468,11 +532,11 @@
 
         function addToCart(id) {
             const p = products.find(x => x.id === id);
-            if (!p || p.stock <= 0) return alert('المنتج غير متوفر بالمخزن!');
+            if (!p || p.stock <= 0) return alert('المنتج غير متوفر!');
             const item = cart.find(x => x.id === id);
             if (item) {
                 if (item.qty < p.stock) item.qty++;
-                else alert('وصلت للحد الأقصى للكمية المتاحة!');
+                else alert('وصلت للحد الأقصى!');
             } else {
                 cart.push({ ...p, qty: 1 });
             }
@@ -513,9 +577,6 @@
         }
 
         function checkout() {
-            if (Date.now() > subscription.expireDate) {
-                return alert('عذراً، انتهى اشتراك النظام. لا يمكن إتمام البيع قبل التجديد مع المطور محمد الصلاحي.');
-            }
             if (cart.length === 0) return alert('السلة فارغة!');
             cart.forEach(cItem => {
                 const p = products.find(x => x.id === cItem.id);
@@ -530,6 +591,7 @@
             salesHistory.push({ id: orderId, date: orderDate, items: [...cart], total });
             localStorage.setItem('al_salahy_sales', JSON.stringify(salesHistory));
 
+            document.getElementById('inv-shop-name').innerText = currentActiveUser ? currentActiveUser.name : 'سيستم محمد الصلاحي';
             document.getElementById('inv-id').innerText = `فاتورة رقم: ${orderId}`;
             document.getElementById('inv-date').innerText = orderDate;
             document.getElementById('inv-total').innerText = total;
@@ -548,11 +610,10 @@
         }
 
         function deleteSale(orderId) {
-            if (confirm('هل أنت متأكد من حذف هذه الفاتورة من السجل؟')) {
+            if (confirm('حذف هذه الفاتورة؟')) {
                 salesHistory = salesHistory.filter(s => s.id !== orderId);
                 localStorage.setItem('al_salahy_sales', JSON.stringify(salesHistory));
                 renderSalesHistory();
-                alert('تم حذف الفاتورة بنجاح!');
             }
         }
 
@@ -562,7 +623,7 @@
             document.getElementById('stat-total-orders').innerText = salesHistory.length;
             
             if(salesHistory.length === 0) {
-                body.innerHTML = `<tr><td colspan="5" class="text-center p-6 text-slate-400">لا توجد فواتير مسجلة حتى الآن</td></tr>`;
+                body.innerHTML = `<tr><td colspan="5" class="text-center p-6 text-slate-400">لا توجد فواتير مسجلة</td></tr>`;
                 return;
             }
 
@@ -577,21 +638,6 @@
                     </td>
                 </tr>
             `).join('');
-        }
-
-        function changePassword(e) {
-            e.preventDefault();
-            const current = document.getElementById('current-pass').value;
-            const newP = document.getElementById('new-pass').value;
-
-            if (current !== adminCredentials.pass) {
-                return alert('كلمة المرور الحالية غير صحيحة!');
-            }
-
-            adminCredentials.pass = newP;
-            localStorage.setItem('al_salahy_auth', JSON.stringify(adminCredentials));
-            e.target.reset();
-            alert('تم تغيير كلمة المرور بنجاح!');
         }
     </script>
 </body>

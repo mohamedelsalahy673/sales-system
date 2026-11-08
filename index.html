@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيستم الصلاحي - نظام الكاشير وقارئ الباركود</title>
+    <title>سيستم محمد الصلاحي - نقطة البيع الذكية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
-        body { font-family: 'Cairo', sans-serif; background-color: #f1f5f9; }
+        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
         @media print {
             body * { visibility: hidden; }
             #printable-invoice, #printable-invoice * { visibility: visible; }
@@ -22,22 +22,22 @@
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full border border-slate-100 text-center">
             <div class="w-20 h-20 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-blue-500/30 mb-5 text-white text-3xl font-bold">
-                📱
+                ⚡
             </div>
-            <h2 class="text-2xl font-bold text-slate-800 mb-1">سيستم الصلاحي</h2>
-            <p class="text-slate-400 text-xs mb-6">نظام المبيعات يدعم الباركود (مطور)</p>
+            <h2 class="text-2xl font-bold text-slate-800 mb-1">سيستم محمد الصلاحي</h2>
+            <p class="text-slate-400 text-xs mb-6">نظام المبيعات والكاشير الاحترافي للمحلات</p>
             <form onsubmit="handleLogin(event)" class="space-y-4 text-right">
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">اسم المستخدم</label>
-                    <input type="text" id="username" required placeholder="admin" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="username" required placeholder="admin" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">كلمة المرور</label>
-                    <input type="password" id="password" required placeholder="1243" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="password" id="password" required placeholder="1243" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                 </div>
-                <p id="login-error" class="text-red-500 text-xs hidden text-center font-bold">خطأ في البيانات! (admin / 1243)</p>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition">
-                    تسجيل الدخول
+                <p id="login-error" class="text-red-500 text-xs hidden text-center font-bold">خطأ في البيانات الافتراضية! (admin / 1243)</p>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-sm">
+                    دخول للسيستم
                 </button>
             </form>
         </div>
@@ -46,79 +46,86 @@
     <!-- التطبيق الرئيسي -->
     <div id="app-screen" class="hidden min-h-screen flex flex-col">
         <!-- الشريط العلوي -->
-        <header class="bg-slate-900 text-white shadow">
-            <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        <header class="bg-slate-900 text-white shadow-md">
+            <div class="max-w-7xl mx-auto px-4 py-3.5 flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <span class="bg-blue-600 text-white p-2 rounded-xl text-lg font-bold">⚡</span>
+                    <span class="bg-blue-600 text-white p-2.5 rounded-xl text-base font-bold shadow">💼</span>
                     <div>
-                        <h1 class="font-extrabold text-lg">الصلاحي - الكاشير والباركود</h1>
-                        <p class="text-xs text-slate-400">نظام محلات المحمول والإكسسوارات</p>
+                        <h1 class="font-extrabold text-base md:text-lg">سيستم محمد الصلاحي</h1>
+                        <p class="text-[11px] text-slate-400">إدارة المبيعات، المخازن، والبارکود</p>
                     </div>
                 </div>
-                <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition border border-red-500/20">
-                    <i class="fa-solid fa-power-off"></i> خروج
-                </button>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300 hidden sm:inline-block">
+                        <i class="fa-solid fa-user-shield text-blue-400 ml-1"></i> مدير النظام
+                    </span>
+                    <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition border border-red-500/20">
+                        <i class="fa-solid fa-power-off"></i> خروج
+                    </button>
+                </div>
             </div>
         </header>
 
-        <!-- التبويبات -->
+        <!-- التبويبات الرئيسية -->
         <div class="bg-white border-b shadow-sm sticky top-0 z-10">
-            <div class="max-w-7xl mx-auto px-4 flex gap-4">
-                <button onclick="switchTab('pos')" id="tab-pos" class="tab-btn py-3.5 px-5 font-bold text-sm border-b-2 border-blue-600 text-blue-600 flex items-center gap-2">
+            <div class="max-w-7xl mx-auto px-4 flex gap-2 overflow-x-auto">
+                <button onclick="switchTab('pos')" id="tab-pos" class="tab-btn py-3.5 px-4 font-bold text-xs md:text-sm border-b-2 border-blue-600 text-blue-600 flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-barcode"></i> الكاشير والباركود
                 </button>
-                <button onclick="switchTab('products')" id="tab-products" class="tab-btn py-3.5 px-5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-boxes-stacked"></i> المخزون والأصناف
+                <button onclick="switchTab('products')" id="tab-products" class="tab-btn py-3.5 px-4 font-bold text-xs md:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-boxes-stacked"></i> المخزون والمنتجات
                 </button>
-                <button onclick="switchTab('sales')" id="tab-sales" class="tab-btn py-3.5 px-5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-chart-line"></i> تقارير المبيعات
+                <button onclick="switchTab('sales')" id="tab-sales" class="tab-btn py-3.5 px-4 font-bold text-xs md:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> الفواتير والمبيعات (تعديل وحذف)
+                </button>
+                <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn py-3.5 px-4 font-bold text-xs md:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-gear"></i> إعدادات الأمان
                 </button>
             </div>
         </div>
 
-        <!-- المحتوى الرئيسي -->
+        <!-- المحتوى -->
         <main class="max-w-7xl mx-auto p-4 md:p-6 flex-1 w-full">
             
             <!-- 1. شاشة الكاشير والباركود -->
             <div id="sec-pos" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- قائمة المنتجات والبحث بالباركود -->
                 <div class="lg:col-span-2 space-y-4">
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border flex gap-2 items-center">
-                        <div class="text-blue-600 text-xl pl-2"><i class="fa-solid fa-barcode"></i></div>
-                        <input type="text" id="pos-barcode-input" onkeydown="handleBarcodeScan(event)" placeholder="امسح الباركود هنا بالمسدس أو اكتب اسم المنتج للبحث..." autofocus class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border flex gap-3 items-center">
+                        <div class="text-blue-600 text-xl pl-1"><i class="fa-solid fa-barcode"></i></div>
+                        <input type="text" id="pos-barcode-input" onkeydown="handleBarcodeScan(event)" placeholder="امسح الباركود بالمسدس أو اكتب اسم المنتج هنا..." autofocus class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold">
                     </div>
                     <div id="pos-products-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
                 </div>
 
-                <!-- سلة المشتريات وفاتورة البيع -->
-                <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col h-[560px]">
+                <!-- سلة المشتريات -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col h-[570px]">
                     <div class="flex justify-between items-center mb-3 border-b pb-2">
-                        <h2 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-cart-shopping text-blue-600"></i> الفاتورة الحالية</h2>
+                        <h2 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-cart-shopping text-blue-600"></i> سلة المبيعات الحالية</h2>
                         <button onclick="clearCart()" class="text-xs text-red-500 font-bold hover:underline">إفراغ السلة</button>
                     </div>
-                    <div id="cart-items" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
-                    <div class="border-t pt-3 mt-3 space-y-2">
+                    <div id="cart-items" class="flex-1 overflow-y-auto space-y-2.5 pr-1"></div>
+                    <div class="border-t pt-3 mt-3 space-y-2.5">
                         <div class="flex justify-between text-xs text-slate-500">
-                            <span>عدد القطع:</span>
+                            <span>إجمالي القطع:</span>
                             <span id="cart-count" class="font-bold text-slate-800">0</span>
                         </div>
                         <div class="flex justify-between text-lg font-extrabold text-slate-900 border-t pt-2">
-                            <span>الإجمالي:</span>
+                            <span>الإجمالي النهائي:</span>
                             <span class="text-blue-600"><span id="cart-total">0</span> ج.م</span>
                         </div>
-                        <button onclick="checkout()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2">
+                        <button onclick="checkout()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-sm flex items-center justify-center gap-2">
                             <i class="fa-solid fa-print"></i> إتمام البيع وطباعة الفاتورة
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. شاشة إضافة المنتجات والباركود -->
+            <!-- 2. شاشة المخزون والمنتجات -->
             <div id="sec-products" class="hidden space-y-6">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border">
-                    <h2 class="font-bold text-slate-800 mb-3 text-sm"><i class="fa-solid fa-plus-circle text-blue-600"></i> إضافة صنف باركود جديد</h2>
+                    <h2 class="font-bold text-slate-800 mb-3 text-sm"><i class="fa-solid fa-plus-circle text-blue-600"></i> إضافة صنف جديد للمخزن</h2>
                     <form onsubmit="addProduct(event)" class="grid grid-cols-1 sm:grid-cols-5 gap-3">
-                        <input type="text" id="p-barcode" placeholder="الباركود (اقرأه بالمسدس)" class="px-4 py-2 rounded-xl border text-sm font-mono">
+                        <input type="text" id="p-barcode" placeholder="الباركود (بالماسح الضوئي)" class="px-4 py-2 rounded-xl border text-sm font-mono">
                         <input type="text" id="p-name" placeholder="اسم المنتج" required class="px-4 py-2 rounded-xl border text-sm">
                         <input type="number" id="p-price" placeholder="سعر البيع (ج.م)" required min="0" step="0.01" class="px-4 py-2 rounded-xl border text-sm">
                         <input type="number" id="p-stock" placeholder="الكمية بالمخزن" required min="0" class="px-4 py-2 rounded-xl border text-sm">
@@ -142,28 +149,31 @@
                 </div>
             </div>
 
-            <!-- 3. شاشة التقارير والمبيعات -->
+            <!-- 3. شاشة المبيعات والفواتير (تعديل وحذف) -->
             <div id="sec-sales" class="hidden space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border">
-                        <p class="text-xs text-slate-400 font-bold">إجمالي المبيعات</p>
+                        <p class="text-xs text-slate-400 font-bold">إجمالي مبيعات المحل</p>
                         <h3 class="text-2xl font-extrabold text-emerald-600 mt-1"><span id="stat-total-revenue">0</span> ج.م</h3>
                     </div>
                     <div class="bg-white p-5 rounded-2xl shadow-sm border">
-                        <p class="text-xs text-slate-400 font-bold">عدد الفواتير</p>
+                        <p class="text-xs text-slate-400 font-bold">إجمالي عدد الفواتير</p>
                         <h3 class="text-2xl font-extrabold text-blue-600 mt-1" id="stat-total-orders">0</h3>
                     </div>
                 </div>
                 <div class="bg-white rounded-2xl shadow-sm border p-5">
-                    <h2 class="font-bold mb-3 text-sm">سجل الفواتير</h2>
+                    <h2 class="font-bold mb-3 text-sm flex justify-between items-center">
+                        <span>سجل فواتير المبيعات (مع إمكانية الحذف والمراجعة)</span>
+                    </h2>
                     <div class="overflow-x-auto">
                         <table class="w-full text-right text-sm">
                             <thead class="bg-slate-50 border-b text-slate-600">
                                 <tr>
                                     <th class="p-3">رقم الفاتورة</th>
                                     <th class="p-3">التاريخ والوقت</th>
-                                    <th class="p-3">عدد الأصناف</th>
+                                    <th class="p-3">الأصناف المباعة</th>
                                     <th class="p-3">الإجمالي</th>
+                                    <th class="p-3 text-center">إجراءات</th>
                                 </tr>
                             </thead>
                             <tbody id="sales-history-body" class="divide-y divide-slate-100"></tbody>
@@ -172,14 +182,36 @@
                 </div>
             </div>
 
+            <!-- 4. إعدادات الأمان وتغيير الباسورد -->
+            <div id="sec-settings" class="hidden max-w-lg mx-auto space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border">
+                    <h2 class="font-bold text-slate-800 mb-4 text-base"><i class="fa-solid fa-lock text-blue-600 ml-2"></i> تغيير كلمة مرور مدير النظام</h2>
+                    <form onsubmit="changePassword(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">كلمة المرور الحالية</label>
+                            <input type="password" id="current-pass" required class="w-full px-4 py-2.5 rounded-xl border text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">كلمة المرور الجديدة</label>
+                            <input type="password" id="new-pass" required class="w-full px-4 py-2.5 rounded-xl border text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">تأكيد كلمة المرور الجديدة</label>
+                            <input type="password" id="confirm-pass" required class="w-full px-4 py-2.5 rounded-xl border text-sm">
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow text-sm transition">حفظ كلمة المرور الجديدة</button>
+                    </form>
+                </div>
+            </div>
+
         </main>
     </div>
 
-    <!-- طباعة الفاتورة الحرارية -->
+    <!-- طباعة الفاتورة الحرارية باسم محمد الصلاحي -->
     <div id="printable-invoice" class="hidden p-4 max-w-[300px] mx-auto text-slate-900 bg-white font-mono text-xs">
         <div class="text-center mb-3 border-b pb-2">
-            <h2 class="text-base font-bold">سيستم الصلاحي للمبيعات</h2>
-            <p class="text-[10px] text-slate-500">خدمات وإكسسوارات المحمول</p>
+            <h2 class="text-base font-bold">سيستم محمد الصلاحي</h2>
+            <p class="text-[10px] text-slate-500">إكسسوارات وصيانة المحمول</p>
             <p id="inv-id" class="font-bold mt-1"></p>
             <p id="inv-date" class="text-[10px] text-slate-500"></p>
         </div>
@@ -189,11 +221,12 @@
             <span><span id="inv-total"></span> ج.م</span>
         </div>
         <div class="text-center text-[10px] text-slate-400 mt-4 border-t pt-2">
-            شكراً لزيارتكم ❤️
+            شكراً لتعاملكم مع محل محمد الصلاحي ❤️
         </div>
     </div>
 
     <script>
+        let adminCredentials = JSON.parse(localStorage.getItem('al_salahy_auth')) || { user: 'admin', pass: '1243' };
         let products = JSON.parse(localStorage.getItem('al_salahy_products')) || [
             { id: 1, barcode: '1001', name: 'شاحن ايفون سريع أصلي', price: 250, stock: 15 },
             { id: 2, barcode: '1002', name: 'جراب سيليكون حماية', price: 80, stock: 25 },
@@ -221,7 +254,7 @@
             e.preventDefault();
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
-            if (u === 'admin' && p === '1243') {
+            if (u === adminCredentials.user && p === adminCredentials.pass) {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app-screen').classList.remove('hidden');
                 initApp();
@@ -236,12 +269,12 @@
         }
 
         function switchTab(tab) {
-            ['pos', 'products', 'sales'].forEach(t => {
+            ['pos', 'products', 'sales', 'settings'].forEach(t => {
                 document.getElementById(`sec-${t}`).classList.add('hidden');
-                document.getElementById(`tab-${t}`).className = "tab-btn py-3.5 px-5 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2";
+                document.getElementById(`tab-${t}`).className = "tab-btn py-3.5 px-4 font-bold text-xs md:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap";
             });
             document.getElementById(`sec-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-${tab}`).className = "tab-btn py-3.5 px-5 font-bold text-sm border-b-2 border-blue-600 text-blue-600 flex items-center gap-2";
+            document.getElementById(`tab-${tab}`).className = "tab-btn py-3.5 px-4 font-bold text-xs md:text-sm border-b-2 border-blue-600 text-blue-600 flex items-center gap-2 whitespace-nowrap";
             if (tab === 'pos') setTimeout(() => document.getElementById('pos-barcode-input').focus(), 100);
             if (tab === 'products') renderProductsTable();
             if (tab === 'sales') renderSalesHistory();
@@ -259,7 +292,6 @@
                 const query = e.target.value.trim();
                 if (!query) return;
 
-                // البحث برقم الباركود أولاً
                 const productByBarcode = products.find(p => p.barcode && p.barcode === query);
                 if (productByBarcode) {
                     addToCart(productByBarcode.id);
@@ -268,7 +300,6 @@
                     return;
                 }
 
-                // البحث بالاسم
                 const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
                 if (filtered.length === 1) {
                     addToCart(filtered[0].id);
@@ -330,9 +361,7 @@
             grid.innerHTML = filtered.map(p => `
                 <div onclick="addToCart(${p.id})" class="bg-white p-3 rounded-xl shadow-sm border hover:border-blue-500 cursor-pointer transition flex flex-col justify-between">
                     <div>
-                        <div class="flex justify-between items-start">
-                            <h4 class="font-bold text-xs text-slate-800 line-clamp-1">${p.name}</h4>
-                        </div>
+                        <h4 class="font-bold text-xs text-slate-800 line-clamp-1">${p.name}</h4>
                         <p class="text-[10px] text-slate-400 mt-0.5">باركود: ${p.barcode || 'بدون'} | مخزن: ${p.stock}</p>
                     </div>
                     <div class="mt-3 flex justify-between items-center">
@@ -421,18 +450,55 @@
             document.getElementById('pos-barcode-input').focus();
         }
 
+        function deleteSale(orderId) {
+            if (confirm('هل أنت متأكد من حذف هذه الفاتورة من السجل؟')) {
+                salesHistory = salesHistory.filter(s => s.id !== orderId);
+                localStorage.setItem('al_salahy_sales', JSON.stringify(salesHistory));
+                renderSalesHistory();
+                alert('تم حذف الفاتورة بنجاح!');
+            }
+        }
+
         function renderSalesHistory() {
             const body = document.getElementById('sales-history-body');
             document.getElementById('stat-total-revenue').innerText = salesHistory.reduce((sum, s) => sum + s.total, 0);
             document.getElementById('stat-total-orders').innerText = salesHistory.length;
+            
+            if(salesHistory.length === 0) {
+                body.innerHTML = `<tr><td colspan="5" class="text-center p-6 text-slate-400">لا توجد فواتير مسجلة حتى الآن</td></tr>`;
+                return;
+            }
+
             body.innerHTML = salesHistory.slice().reverse().map(s => `
                 <tr class="hover:bg-slate-50">
                     <td class="p-3 font-bold text-blue-600">${s.id}</td>
                     <td class="p-3 text-xs text-slate-500">${s.date}</td>
-                    <td class="p-3 text-xs">${s.items.length} أصناف</td>
+                    <td class="p-3 text-xs">${s.items.map(i => i.name + ' (x' + i.qty + ')').join(', ')}</td>
                     <td class="p-3 font-bold text-slate-800">${s.total} ج.م</td>
+                    <td class="p-3 text-center">
+                        <button onclick="deleteSale('${s.id}')" class="text-red-500 font-bold hover:underline text-xs bg-red-50 px-2 py-1 rounded">حذف الفاتورة</button>
+                    </td>
                 </tr>
             `).join('');
+        }
+
+        function changePassword(e) {
+            e.preventDefault();
+            const current = document.getElementById('current-pass').value;
+            const newP = document.getElementById('new-pass').value;
+            const confirmP = document.getElementById('confirm-pass').value;
+
+            if (current !== adminCredentials.pass) {
+                return alert('كلمة المرور الحالية غير صحيحة!');
+            }
+            if (newP !== confirmP) {
+                return alert('كلمة المرور الجديدة غير مطابقة للتأكيد!');
+            }
+
+            adminCredentials.pass = newP;
+            localStorage.setItem('al_salahy_auth', JSON.stringify(adminCredentials));
+            e.target.reset();
+            alert('تم تغيير كلمة المرور بنجاح! استخدمها في المرة القادمة.');
         }
     </script>
 </body>

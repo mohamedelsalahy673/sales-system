@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NexPOS PRO - ELSALAHY Edition</title>
+<title>NexPOS PRO - Tiles Interface</title>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
 *{box-sizing:border-box}
@@ -11,13 +11,14 @@ body{margin:0;background:#f3f5fa;color:#1c2940;font-family:Arial,sans-serif}
 button,input,select,textarea{font:inherit}
 button{border:0;border-radius:9px;padding:11px 15px;background:#2458d3;color:white;cursor:pointer}
 button:hover{opacity:.9}
-input,select,textarea{width:100%;padding:12px;border:1px solid #dce2ed;border-radius:9px;margin:8px 0 16px;background:white}
-label{font-size:13px;font-weight:bold;color:#1e293b;display:block;margin-bottom:3px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #dce2ed;border-radius:9px;margin:6px 0 13px;background:white}
+textarea{min-height:75px}
+label{font-size:13px;font-weight:bold}
 h2,h3{margin-top:0}
 .wrap{max-width:1350px;margin:auto;padding:15px}
-.card{background:white;padding:22px;border-radius:14px;margin:12px 0;box-shadow:0 3px 15px #1822380b}
+.card{background:white;padding:18px;border-radius:14px;margin:12px 0;box-shadow:0 3px 15px #1822380b}
 .brand{font-size:26px;font-weight:bold;color:#2458d3}
-.version{display:block;color:#fff;background:#2458d3;border-radius:5px;padding:3px 8px;font-size:10px;width:max-content;margin-top:5px;letter-spacing:1px;font-weight:bold;}
+.version{display:block;color:#fff;background:#2458d3;border-radius:5px;padding:3px 8px;font-size:10px;width:max-content;margin-top:5px;letter-spacing:1px}
 .muted{font-size:13px;color:#788397}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
@@ -39,11 +40,11 @@ td,th{padding:11px;border-bottom:1px solid #edf0f5;text-align:right;font-size:13
 .tag{border-radius:20px;padding:5px 9px;background:#fff0d3;color:#885900;font-size:12px}
 .tag.good{background:#e0f6e9;color:#167445}
 .rowbtn{padding:7px 10px;margin:2px;font-size:12px}
-.msg{padding:10px;border-radius:8px;background:#f8d7da;color:#721c24;margin-top:10px;font-size:13px}
+.msg{padding:10px;border-radius:8px;background:#f0f4fc;margin-top:10px;font-size:13px}
 hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .result{display:block;width:100%;text-align:right;margin:4px 0}
 
-/* تصميم المربعات الرئيسية (Tiles UI) */
+/* تصميم المربعات الرئيسية (Tiles UI) شبيه الصورة */
 .tiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:20px}
 .tile{padding:24px;border-radius:16px;color:white;cursor:pointer;transition:transform .2s,opacity .2s;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;justify-content:space-between;min-height:140px}
 .tile:hover{transform:translateY(-3px);opacity:.95}
@@ -59,8 +60,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
 @media print{
  body *{visibility:hidden!important}
- #thermalReceipt, #thermalReceipt *{visibility:visible!important}
- #thermalReceipt{display:block!important;position:absolute;inset:0;width:80mm;background:white;padding:10px;font-family:monospace;color:black;font-size:12px;direction:rtl;}
+ #printArea,#printArea *{visibility:visible!important}
+ #printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}
 }
 </style>
 </head>
@@ -69,8 +70,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <header class="top">
  <div>
   <div class="brand">NexPOS PRO</div>
-  <span class="version">ELSALAHY</span>
-  <div class="muted">نظام إدارة المبيعات والمخازن وبرنامج المحلات الشامل</div>
+  <span class="version">TILES INTERFACE V6</span>
+  <div class="muted">نظام إدارة المبيعات والمخازن والخزينة المتقدم</div>
  </div>
  <div>
   <span id="networkStatus" class="tag good" style="margin-left:10px;">متصل بالخادم</span>
@@ -78,44 +79,37 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  </div>
 </header>
 
-<!-- الواجهة الافتتاحية: إنشاء الحساب مباشرة -->
+<!-- الواجهة الرئيسية ودخول المستخدمين والمتاجر -->
 <section id="auth">
  <div class="card" style="max-width:500px;margin:30px auto">
-  <h2>إنشاء حساب جديد في النظام</h2>
-  <p class="muted">أدخل بيانات نشاطك بدقة لإنشاء الحساب والتواصل للتفعيل</p>
+  <h2>مرحبًا بك في NexPOS PRO</h2>
+  <p class="muted">سجل الدخول لإدارة نشاطك التجاري</p>
+  <nav>
+   <button id="tabLogin" class="active" onclick="showAuth('login')">تسجيل الدخول</button>
+   <button id="tabRegister" onclick="showAuth('register')">إنشاء حساب جديد</button>
+   <button id="tabOwner" onclick="showAuth('owner')">لوحة التحكم</button>
+  </nav>
 
-  <div id="registerBox">
+  <div id="loginBox">
+   <label>البريد الإلكتروني</label><input id="loginEmail" type="email">
+   <label>كلمة المرور</label><input id="loginPassword" type="password">
+   <button class="big" onclick="login()">دخول للنظام</button>
+  </div>
+
+  <div id="registerBox" class="hidden">
    <label>اسم النشاط التجاري</label><input id="regShop">
    <label>اسم المسؤول</label><input id="regName">
    <label>رقم الهاتف</label><input id="regPhone">
    <label>البريد الإلكتروني</label><input id="regEmail" type="email">
-   <label>كلمة المرور (6 أحرف على الأقل)</label><input id="regPassword" type="password">
+   <label>كلمة المرور</label><input id="regPassword" type="password">
    <button class="big green" onclick="register()">إنشاء الحساب وتواصل مع المطور للاستلام والدفع والتفعيل</button>
   </div>
 
-  <div style="margin-top:20px;text-align:center;display:flex;gap:10px;justify-content:center;">
-   <button class="secondary" onclick="toggleAuthMode('login')" style="font-size:12px;padding:8px 14px;">لديك حساب بالفعل؟ تسجيل الدخول</button>
-   <button class="dark" onclick="toggleAuthMode('owner')" style="font-size:12px;padding:8px 14px;">لوحة التحكم</button>
-  </div>
-
-  <!-- صندوق تسجيل الدخول المخفي افتراضياً -->
-  <div id="loginBox" class="hidden" style="margin-top:20px;border-top:1px solid #eee;padding-top:15px;">
-   <h3>تسجيل الدخول</h3>
-   <label>البريد الإلكتروني</label><input id="loginEmail" type="email">
-   <label>كلمة المرور</label><input id="loginPassword" type="password">
-   <button class="big" onclick="login()">دخول للنظام</button>
-   <button class="secondary big" onclick="toggleAuthMode('register')" style="margin-top:5px;">← العودة لإنشاء حساب</button>
-  </div>
-
-  <!-- صندوق دخول المالك المخفي افتراضياً -->
-  <div id="ownerBox" class="hidden" style="margin-top:20px;border-top:1px solid #eee;padding-top:15px;">
-   <h3>دخول لوحة التحكم</h3>
+  <div id="ownerBox" class="hidden">
    <label>اسم المستخدم الإداري</label><input id="ownerUsername">
    <label>كلمة المرور</label><input id="ownerPassword" type="password">
    <button class="big dark" onclick="ownerLogin()">دخول لوحة التحكم الشاملة</button>
-   <button class="secondary big" onclick="toggleAuthMode('register')" style="margin-top:5px;">← العودة لإنشاء حساب</button>
   </div>
-
   <p id="authMsg" class="msg hidden"></p>
  </div>
 </section>
@@ -126,7 +120,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <h2>تم إنشاء حسابك بنجاح! 🚀</h2>
   <p class="muted" style="line-height:1.8;">حسابك الآن قيد المراجعة وفي انتظار التفعيل. يرجى التواصل مع المطور (محمد الصلاحي) عبر واتساب لإتمام عملية الدفع والاستلام والتفعيل الفوري.</p>
   <button class="big green" onclick="sendWhatsAppActivation()" style="margin:15px 0;">💬 تواصل مع المطور للاستلام والدفع والتفعيل</button>
-  <button class="big secondary" onclick="location.reload()">العودة للرئيسية</button>
+  <button class="big secondary" onclick="location.reload()">العودة لتسجيل الدخول</button>
  </div>
 </section>
 
@@ -152,10 +146,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <section id="customerPanel" class="hidden">
  <div class="card">
   <div class="top">
-   <div>
-    <h2 id="shopTitle">نظام المبيعات والمخزون</h2>
-    <span id="userRoleBadge" class="tag good">صلاحية كاملة (مدير المتجر)</span>
-   </div>
+   <div><h2 id="shopTitle">نظام المبيعات والمخزون</h2><span class="muted">لوحة الإدارة الشاملة للمتجر</span></div>
    <button class="red" onclick="logout()">تسجيل الخروج</button>
   </div>
 
@@ -173,57 +164,53 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <div class="tiles-grid">
      <div class="tile t-blue" onclick="page('sales')">
       <h3>شاشة المبيعات (POS)</h3>
-      <p>إصدار الفواتير وقارئ الباركود السريع</p>
+      <p>إصدار الفواتير وبيع الأصناف بالباركود</p>
      </div>
-     <div class="tile t-green" id="tileProducts" onclick="page('products')">
+     <div class="tile t-green" onclick="page('products')">
       <h3>المنتجات والمخزون</h3>
       <p>إدارة الأصناف، الأسعار، والمخزون الحالي</p>
      </div>
-     <div class="tile t-orange" id="tileTreasury" onclick="page('treasury')">
+     <div class="tile t-orange" onclick="page('treasury')">
       <h3>الخزينة والحسابات</h3>
       <p>متابعة النقدية، الوارد، الصادر والأرباح</p>
      </div>
      <div class="tile t-purple" onclick="page('history')">
       <h3>الفواتير السابقة</h3>
-      <p>استعراض وطباعة الإيصالات الحرارية</p>
+      <p>استعراض وطباعة الفواتير والعمليات</p>
      </div>
-     <div class="tile t-dark" id="tileExpenses" onclick="page('expenses')">
+     <div class="tile t-dark" onclick="page('expenses')">
       <h3>المصروفات اليومية</h3>
       <p>تسجيل المصاريف النثرية والتشغيلية</p>
      </div>
-     <div class="tile t-teal" id="tileReports" onclick="page('reports')">
+     <div class="tile t-teal" onclick="page('reports')">
       <h3>التقارير المالية</h3>
       <p>تقارير الأرباح والمصاريف وصافي الدخل</p>
      </div>
      <div class="tile t-red" onclick="page('settings')">
       <h3>إعدادات الحساب والباسورد</h3>
-      <p>تغيير كلمة المرور وصلاحيات الموظفين</p>
+      <p>تغيير كلمة المرور وإعدادات المتجر</p>
      </div>
     </div>
    </div>
   </div>
 
-  <!-- صفحة المبيعات (مع دعم قارئ الباركود الفوري) -->
+  <!-- صفحة المبيعات -->
   <div id="salesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>شاشة نقاط البيع (POS) ودعم قارئ الباركود</h3>
+   <h3>شاشة نقاط البيع (المبيعات)</h3>
    <div class="grid">
-    <div>
-     <label>مرر الباركود أو ابحث عن الصنف</label>
-     <input id="barcodeInput" autofocus oninput="handleBarcodeScan(this.value)">
-     <div id="searchResults"></div>
-    </div>
+    <div><label>بحث بالاسم أو الباركود</label><input id="saleSearch" placeholder="ابحث عن منتج..." oninput="searchProducts()"><div id="searchResults"></div></div>
     <div>
      <label>الكمية</label><input id="saleQty" type="number" min="1" value="1">
      <label>سعر البيع</label><input id="salePrice" type="number" min="0">
-     <button class="big" onclick="addToCartByInput()">إضافة للسلة</button>
+     <button class="big" onclick="addToCart()">إضافة للسلة</button>
     </div>
    </div>
    <div class="card">
     <h3>سلة المبيعات الحالية</h3>
     <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead><tbody id="cartTable"></tbody></table></div>
     <h3>الإجمالي الكلي: <span id="cartTotal">0</span> جنيه</h3>
-    <button class="big green" onclick="completeSale()">إتمام البيع وطباعة الإيصال الحراري</button>
+    <button class="big green" onclick="completeSale()">إتمام البيع وطباعة الفاتورة</button>
    </div>
   </div>
 
@@ -232,16 +219,15 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إدارة المنتجات والمخزون</h3>
    <div class="card">
-    <label>كود الباركود</label><input id="pBarcode">
-    <label>اسم المنتج</label><input id="pName">
+    <input id="pName" placeholder="اسم المنتج">
     <div class="grid">
      <div><label>سعر الشراء</label><input id="pCost" type="number" min="0" value="0"></div>
      <div><label>سعر البيع</label><input id="pPrice" type="number" min="0" value="0"></div>
      <div><label>الكمية الحالية</label><input id="pQty" type="number" min="0" value="10"></div>
     </div>
-    <button onclick="saveProduct()">حفظ المنتج في المخزن</button>
+    <button onclick="saveProduct()">حفظ المنتج</button>
    </div>
-   <div class="tablewrap"><table><thead><tr><th>الباركود</th><th>المنتج</th><th>شراء</th><th>بيع</th><th>المخزون</th><th>الإجراءات</th></tr></thead><tbody id="productsTable"></tbody></table></div>
+   <div class="tablewrap"><table><thead><tr><th>المنتج</th><th>شراء</th><th>بيع</th><th>المخزون</th><th>الإجراءات</th></tr></thead><tbody id="productsTable"></tbody></table></div>
   </div>
 
   <!-- صفحة الخزينة -->
@@ -255,7 +241,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <h3>سند قبض أو صرف</h3>
     <label>نوع الحركة</label><select id="tType"><option value="in">وارد (إيداع نقدية)</option><option value="out">صادر (صرف نقدية)</option></select>
     <label>المبلغ</label><input id="tAmount" type="number" min="0">
-    <label>البيان</label><input id="tNote">
+    <label>البيان</label><input id="tNote" placeholder="تفاصيل الحركة">
     <button class="big green" onclick="addTreasuryTransaction()">تسجيل الحركة</button>
    </div>
    <div class="tablewrap"><table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
@@ -265,7 +251,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <div id="historyPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>سجل الفواتير السابقة</h3>
-   <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>الإجمالي</th><th>طباعة إيصال</th></tr></thead><tbody id="salesTable"></tbody></table></div>
+   <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>الإجمالي</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
   </div>
 
   <!-- صفحة المصروفات -->
@@ -287,48 +273,21 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- صفحة إعدادات الحساب وصلاحيات الموظفين -->
+  <!-- صفحة إعدادات الحساب وتغيير الباسورد للعميل -->
   <div id="settingsPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>إعدادات الحساب وصلاحيات الموظفين وتغيير الباسورد</h3>
-   
-   <div class="card" style="max-width:500px;margin-bottom:20px;">
-    <h3>تغيير كلمة المرور الخاصة بك</h3>
-    <label>كلمة المرور الجديدة</label><input id="newCustomerPassword" type="password">
-    <button class="big purple" onclick="updateCustomerPassword()">تحديث كلمة المرور</button>
-   </div>
-
+   <h3>إعدادات الحساب وتغيير كلمة المرور</h3>
    <div class="card" style="max-width:500px;">
-    <h3>إدارة صلاحيات موظفي الكاشير</h3>
-    <p class="muted">يمكنك إضافة موظف جديد بصلاحية "كاشير" (يستطيع البيع فقط ولا يمكنه تعديل المخزون أو الاطلاع على التقارير).</p>
-    <label>اسم الموظف</label><input id="staffName">
-    <label>البريد الإلكتروني للكاشير</label><input id="staffEmail" type="email">
-    <label>كلمة المرور</label><input id="staffPassword" type="password">
-    <button class="big green" onclick="createStaffAccount()">إنشاء حساب كاشير جديد</button>
+    <label>كلمة المرور الجديدة</label><input id="newCustomerPassword" type="password" placeholder="أدخل كلمة المرور الجديدة">
+    <button class="big purple" onclick="updateCustomerPassword()">تغيير كلمة المرور</button>
    </div>
   </div>
 
  </div>
 </section>
 
-<!-- قالب الإيصال الحراري المخصص للطباعة (Thermal Receipt) -->
-<div id="thermalReceipt" class="hidden">
- <div style="text-align:center;font-weight:bold;font-size:16px;margin-bottom:5px;" id="receiptShopName">متجرك التجاري</div>
- <div style="text-align:center;font-size:11px;margin-bottom:10px;">ELSALAHY POS SYSTEM</div>
- <div style="border-bottom:1px dashed #000;margin-bottom:8px;"></div>
- <div>رقم الفاتورة: <span id="receiptInvNo"></span></div>
- <div>التاريخ: <span id="receiptDate"></span></div>
- <div style="border-bottom:1px dashed #000;margin-top:8px;margin-bottom:8px;"></div>
- <table style="width:100%;font-size:11px;">
-  <thead><tr><th>الصنف</th><th>كمية</th><th>سعر</th><th>إجمالي</th></tr></thead>
-  <tbody id="receiptItemsBody"></tbody>
- </table>
- <div style="border-bottom:1px dashed #000;margin-top:8px;margin-bottom:8px;"></div>
- <div style="font-weight:bold;text-align:left;font-size:14px;">الإجمالي الكلي: <span id="receiptTotal"></span> جنيه</div>
- <div style="text-align:center;margin-top:15px;font-size:10px;">شكرًا لتعاملكم معنا ❤️</div>
-</div>
-
-<footer class="muted" style="text-align:center;padding:20px">NexPOS PRO ELSALAHY — تم التطوير بواسطة محمد صلاح الصلاحي</footer>
+<div id="printArea" class="hidden"></div>
+<footer class="muted" style="text-align:center;padding:20px">NexPOS PRO — تم التطوير بواسطة محمد صلاح الصلاحي</footer>
 </div>
 
 <script type="module">
@@ -358,20 +317,17 @@ let lastRegisteredUser=null;
 
 const $=id=>document.getElementById(id);
 const money=n=>(Number(n)||0).toLocaleString("ar-EG",{maximumFractionDigits:2});
-const shopRef=()=> profile?.role === 'staff' ? `shops/${profile.ownerUid}` : `shops/${currentUser.uid}`;
+const shopRef=()=>`shops/${currentUser.uid}`;
 const col=name=>collection(db,shopRef(),name);
 const docRef=(name,id)=>doc(db,shopRef(),name,id);
 
 function message(t){$("authMsg").textContent=t;$("authMsg").classList.remove("hidden")}
 
-window.toggleAuthMode=function(mode){
- $("registerBox").classList.add("hidden");
- $("loginBox").classList.add("hidden");
- $("ownerBox").classList.add("hidden");
- if(mode==='register') $("registerBox").classList.remove("hidden");
- if(mode==='login') $("loginBox").classList.remove("hidden");
- if(mode==='owner') $("ownerBox").classList.remove("hidden");
- $("authMsg").classList.add("hidden");
+window.showAuth=function(which){
+ ["loginBox","registerBox","ownerBox"].forEach(x=>$(x).classList.add("hidden"));
+ ["tabLogin","tabRegister","tabOwner"].forEach(x=>$(x).classList.remove("active"));
+ const m={login:["loginBox","tabLogin"],register:["registerBox","tabRegister"],owner:["ownerBox","tabOwner"]};
+ $(m[which][0]).classList.remove("hidden");$(m[which][1]).classList.add("active");$("authMsg").classList.add("hidden");
 };
 
 window.login=async()=>{
@@ -398,34 +354,23 @@ window.ownerLogin=async()=>{
 };
 
 window.register=async()=>{
- const shop=$("regShop").value.trim();
- const name=$("regName").value.trim();
- const phone=$("regPhone").value.trim();
- const email=$("regEmail").value.trim();
- const password=$("regPassword").value;
-
- if(!shop||!name||!phone||!email||!password) return message("أكمل جميع البيانات المطلوبة بدقة.");
- if(!email.includes("@") || !email.includes(".")) return message("صيغة البريد الإلكتروني غير صحيحة.");
- if(password.length < 6) return message("كلمة المرور يجب أن تكون 6 أحرف على الأقل.");
-
+ const shop=$("regShop").value.trim(), name=$("regName").value.trim(), phone=$("regPhone").value.trim(), email=$("regEmail").value.trim(), password=$("regPassword").value;
+ if(!shop||!name||!phone||!email||!password)return message("أكمل جميع البيانات المطلوبة.");
  try{
   const cred=await createUserWithEmailAndPassword(auth,email,password);
   await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",status:"pending",createdAt:serverTimestamp()});
   
-  lastRegisteredUser={name,shop,phone,email};
+  lastRegisteredUser={name,shop,email};
   await signOut(auth);
   
   $("auth").classList.add("hidden");
   $("pendingScreen").classList.remove("hidden");
-
-  sendWhatsAppActivation();
-
  }catch(e){message("تعذر التسجيل: "+e.message)}
 };
 
 window.sendWhatsAppActivation=()=>{
- const data=lastRegisteredUser||{name:"عميل",shop:"نشاط",phone:"",email:""};
- const msg=encodeURIComponent(`مرحبًا، أنا ${data.name} صاحب نشاط "${data.shop}"، رقم الهاتف: ${data.phone}، قمت بإنشاء حساب جديد وبريدي هو: ${data.email}، وأرغب في دفع الاشتراك وتفعيل الحساب والاستلام.`);
+ const data=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:""};
+ const msg=encodeURIComponent(`مرحبًا، أنا ${data.name} صاحب نشاط "${data.shop}"، قمت بإنشاء حساب جديد وبريدي هو: ${data.email}، وأرغب في دفع الاشتراك وتفعيل الحساب والاستلام.`);
  window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
 };
 
@@ -460,21 +405,6 @@ onAuthStateChanged(auth,async user=>{
   $("pendingScreen").classList.add("hidden");
   $("customerPanel").classList.remove("hidden");
   $("shopTitle").textContent=profile.shopName||"نظام المبيعات والمخزون";
-
-  if(profile.role === 'staff'){
-   $("userRoleBadge").textContent = "صلاحية كاشير (مبيعات فقط)";
-   $("tileProducts").classList.add("hidden");
-   $("tileTreasury").classList.add("hidden");
-   $("tileExpenses").classList.add("hidden");
-   $("tileReports").classList.add("hidden");
-  } else {
-   $("userRoleBadge").textContent = "صلاحية كاملة (مدير المتجر)";
-   $("tileProducts").classList.remove("hidden");
-   $("tileTreasury").classList.remove("hidden");
-   $("tileExpenses").classList.remove("hidden");
-   $("tileReports").classList.remove("hidden");
-  }
-
   await loadBusiness();
  }catch(e){}
 });
@@ -503,7 +433,7 @@ window.updateUserStatus=async(id,status)=>{
 window.adminChangePassword=async(email)=>{
  const newPass=prompt("أدخل كلمة المرور الجديدة للعميل:");
  if(!newPass)return;
- alert("تم تغيير كلمة المرور بنجاح.");
+ alert("تم طلب تغيير كلمة المرور. كلمة المرور الجديدة المدخلة: "+newPass);
 };
 
 window.updateCustomerPassword=async()=>{
@@ -513,22 +443,7 @@ window.updateCustomerPassword=async()=>{
   await updatePassword(auth.currentUser, newPass);
   $("newCustomerPassword").value="";
   alert("تم تحديث كلمة المرور بنجاح!");
- }catch(e){alert("خطأ: "+e.message+".");}
-};
-
-window.createStaffAccount=async()=>{
- const name=$("staffName").value.trim();
- const email=$("staffEmail").value.trim();
- const pass=$("staffPassword").value;
- if(!name || !email || !pass) return alert("أكمل بيانات الموظف.");
- try{
-  const cred = await createUserWithEmailAndPassword(auth, email, pass);
-  await setDoc(doc(db,"users",cred.user.uid),{
-   shopName: profile.shopName, customerName: name, phone: "", email, role: "staff", ownerUid: currentUser.uid, status: "active", createdAt: serverTimestamp()
-  });
-  alert("تم إنشاء حساب الكاشير بنجاح!");
-  $("staffName").value=""; $("staffEmail").value=""; $("staffPassword").value="";
- }catch(e){alert("خطأ: "+e.message);}
+ }catch(e){alert("خطأ: "+e.message+". (قد يتطلب الأمر إعادة تسجيل الدخول لتحديث كلمة المرور لأسباب أمنية)");}
 };
 
 window.deleteUser=async id=>{
@@ -539,7 +454,6 @@ window.deleteUser=async id=>{
 window.page=function(name){
  ["dashboard","sales","products","treasury","history","expenses","reports","settings"].forEach(p=>$(p+"Page").classList.add("hidden"));
  $(name+"Page").classList.remove("hidden");
- if(name==="sales"){setTimeout(()=>{$("barcodeInput")?.focus();},100);}
  if(name==="dashboard"||name==="reports")renderStats();
 };
 
@@ -555,86 +469,53 @@ async function loadTreasury(){const s=await getDocs(col("treasury"));treasury=s.
 
 window.saveProduct=async()=>{
  const name=$("pName").value.trim();
- const barcode=$("pBarcode").value.trim()||("BC-"+Math.floor(Math.random()*90000+10000));
  const cost=Number($("pCost").value)||0, price=Number($("pPrice").value)||0, qty=Number($("pQty").value)||0;
  if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع.");
- const data={name,barcode,cost,price,qty,updatedAt:serverTimestamp()};
+ const data={name,cost,price,qty,updatedAt:serverTimestamp()};
  try{
   await addDoc(col("products"),{...data,createdAt:serverTimestamp()});
-  $("pName").value=""; $("pBarcode").value=""; $("pCost").value=""; $("pPrice").value=""; $("pQty").value="10";
+  $("pName").value=""; $("pCost").value=""; $("pPrice").value=""; $("pQty").value="10";
   await loadProducts();renderStats();alert("تم حفظ المنتج بنجاح.");
  }catch(e){}
 };
 function renderProducts(){
- $("productsTable").innerHTML=products.map(p=>`<tr><td><span class="tag">${p.barcode||'بدون'}</span></td><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='6'>لا توجد منتجات</td></tr>";
+ $("productsTable").innerHTML=products.map(p=>`<tr><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
 }
 
-window.handleBarcodeScan=(val)=>{
- const q=val.trim().toLowerCase();
- if(!q) { $("searchResults").innerHTML=""; return; }
- const exactMatch = products.find(p => (p.barcode||"").toLowerCase() === q);
- if(exactMatch){
-  selectedProduct = exactMatch;
-  $("barcodeInput").value = exactMatch.name;
-  $("salePrice").value = exactMatch.price;
-  addToCartByInput();
-  $("barcodeInput").value = "";
-  $("searchResults").innerHTML = "";
-  return;
- }
- const matches=products.filter(p=>(p.name||"").toLowerCase().includes(q) || (p.barcode||"").toLowerCase().includes(q) && p.qty>0).slice(0,5);
- $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${p.name} (باركود: ${p.barcode||'--'}) — ${money(p.price)} ج (متاح: ${p.qty})</button>`).join("");
+window.searchProducts=()=>{
+ const q=$("saleSearch").value.trim().toLowerCase();
+ const matches=products.filter(p=>(p.name||"").toLowerCase().includes(q)&&p.qty>0).slice(0,5);
+ $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${p.name} — ${money(p.price)} ج (متاح: ${p.qty})</button>`).join("");
 };
-
 window.selectSaleProduct=id=>{
  selectedProduct=products.find(p=>p.id===id);if(!selectedProduct)return;
- $("barcodeInput").value=selectedProduct.name;$("salePrice").value=selectedProduct.price;$("searchResults").innerHTML="";
+ $("saleSearch").value=selectedProduct.name;$("salePrice").value=selectedProduct.price;$("searchResults").innerHTML="";
 };
-
-window.addToCartByInput=()=>{
- if(!selectedProduct) return alert("اختر منتجاً أو امسح الباركود الصحيح.");
+window.addToCart=()=>{
+ if(!selectedProduct)return alert("اختر منتجاً.");
  const qty=Number($("saleQty").value)||1, price=Number($("salePrice").value)||selectedProduct.price;
- if(qty>selectedProduct.qty)return alert("الكمية غير متوفرة في المخزن.");
+ if(qty>selectedProduct.qty)return alert("الكمية غير متوفرة.");
  const old=cart.find(x=>x.productId===selectedProduct.id);
  if(old)old.qty+=qty; else cart.push({productId:selectedProduct.id,name:selectedProduct.name,qty,price,cost:selectedProduct.cost||0});
- selectedProduct=null;$("barcodeInput").value="";$("saleQty").value=1;$("salePrice").value="";$("searchResults").innerHTML="";renderCart();
- $("barcodeInput")?.focus();
+ selectedProduct=null;$("saleSearch").value="";$("saleQty").value=1;$("salePrice").value="";renderCart();
 };
-
 function renderCart(){
  $("cartTable").innerHTML=cart.map((x,i)=>`<tr><td>${x.name}</td><td>${x.qty}</td><td>${money(x.price)} ج</td><td>${money(x.qty*x.price)} ج</td><td><button class="rowbtn red" onclick="cart.splice(${i},1);renderCart()">حذف</button></td></tr>`).join("");
  $("cartTotal").textContent=money(cart.reduce((s,x)=>s+x.qty*x.price,0));
 }
-
 window.completeSale=async()=>{
  if(!cart.length)return alert("السلة فارغة.");
  const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
- const invoiceNumber = "INV-"+Date.now().toString().slice(-6);
- const invoice={number:invoiceNumber,total,items:[...cart],date:new Date().toLocaleString("ar-EG")};
+ const invoice={number:"INV-"+Date.now().toString().slice(-6),total,items:[...cart],date:new Date().toLocaleString("ar-EG")};
  try{
   for(const item of cart){
    const p=products.find(x=>x.id===item.productId);
    if(p)await updateDoc(docRef("products",item.productId),{qty:p.qty-item.qty});
   }
   await addDoc(col("sales"),invoice);
-  await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoiceNumber}`,date:invoice.date});
-  printThermalReceipt(invoice);
-  cart=[];renderCart();await loadBusiness();
+  await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoice.number}`,date:invoice.date});
+  cart=[];renderCart();await loadBusiness();alert(`تمت عملية البيع بنجاح وتحصيل ${money(total)} جنيه!`);
  }catch(e){alert("خطأ: "+e.message)}
-};
-
-window.printThermalReceipt=(inv)=>{
- $("receiptShopName").textContent = profile?.shopName || "متجرك التجاري";
- $("receiptInvNo").textContent = inv.number;
- $("receiptDate").textContent = inv.date;
- $("receiptItemsBody").innerHTML = inv.items.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>${i.price}</td><td>${i.qty*i.price}</td></tr>`).join("");
- $("receiptTotal").textContent = money(inv.total);
- window.print();
-};
-
-window.printExistingReceipt=async(id)=>{
- const s = sales.find(x=>x.id===id);
- if(s) printThermalReceipt(s);
 };
 
 window.addTreasuryTransaction=async()=>{
@@ -670,7 +551,7 @@ function renderExpenses(){
 }
 
 function renderSales(){
- $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printExistingReceipt('${s.id}')">طباعة إيصال حراري</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
+ $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="alert('طباعة الفاتورة #${s.number}')">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
 }
 
 function renderStats(){

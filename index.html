@@ -18,8 +18,9 @@ h2,h3{margin-top:0}
 .wrap{max-width:1350px;margin:auto;padding:15px}
 .card{background:white;padding:18px;border-radius:14px;margin:12px 0;box-shadow:0 3px 15px #1822380b}
 .brand{font-size:26px;font-weight:bold;color:#2458d3}
-.sub-brand{font-size:18px;font-weight:800;color:#1e293b;letter-spacing:1px;margin-top:2px;text-transform:uppercase}
-.version{display:block;color:#fff;background:#2458d3;border-radius:5px;padding:3px 8px;font-size:10px;width:max-content;margin-top:5px;letter-spacing:1px}
+.sub-brand{font-size:22px;font-weight:900;color:#1e293b;letter-spacing:1.5px;margin-top:4px;text-transform:uppercase}
+.system-desc{font-size:15px;font-weight:bold;color:#334155;margin-top:4px}
+.version{display:block;color:#fff;background:#2458d3;border-radius:5px;padding:3px 8px;font-size:10px;width:max-content;margin-top:6px;letter-spacing:1px}
 .muted{font-size:13px;color:#788397}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
@@ -71,8 +72,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  <div>
   <div class="brand">NexPOS PRO</div>
   <div class="sub-brand">ELSALAHY</div>
+  <div class="system-desc">نظام إدارة المبيعات والمخازن</div>
   <span class="version">TILES INTERFACE V6</span>
-  <div class="muted">نظام إدارة المبيعات والمخازن والخزينة المتقدم</div>
  </div>
  <div>
   <span id="networkStatus" class="tag good" style="margin-left:10px;">متصل بالخادم</span>
@@ -570,11 +571,11 @@ function renderExpenses(){
  $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${e.name}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات مسجلة</td></tr>";
 }
 
-function renderSales(){
+window.renderSales=function(){
  $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="alert('تفاصيل الفاتورة #${s.number}')">عرض</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير سابقة</td></tr>";
-}
+};
 
-function renderStats(){
+window.renderStats=function(){
  const rev=sales.reduce((s,x)=>s+Number(x.total||0),0);
  const exp=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
  const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0);
@@ -586,7 +587,7 @@ function renderStats(){
  $("reportRevenue").textContent=money(rev)+" جنيه";
  $("reportExpenses").textContent=money(exp)+" جنيه";
  $("reportNet").textContent=money(rev-exp)+" جنيه";
-}
+};
 </script>
 </body>
 </html>

@@ -85,11 +85,11 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <p class="muted">أدخل بيانات نشاطك بدقة لإنشاء الحساب والتواصل للتفعيل</p>
 
   <div id="registerBox">
-   <label>اسم النشاط التجاري</label><input id="regShop" placeholder="مثال: هاي ستور">
-   <label>اسم المسؤول</label><input id="regName" placeholder="اسمك الكريم">
-   <label>رقم الهاتف</label><input id="regPhone" placeholder="010xxxxxxxx">
-   <label>البريد الإلكتروني</label><input id="regEmail" type="email" placeholder="example@gmail.com">
-   <label>كلمة المرور (6 أحرف على الأقل)</label><input id="regPassword" type="password" placeholder="********">
+   <label>اسم النشاط التجاري</label><input id="regShop">
+   <label>اسم المسؤول</label><input id="regName">
+   <label>رقم الهاتف</label><input id="regPhone">
+   <label>البريد الإلكتروني</label><input id="regEmail" type="email">
+   <label>كلمة المرور (6 أحرف على الأقل)</label><input id="regPassword" type="password">
    <button class="big green" onclick="register()">إنشاء الحساب وتواصل مع المطور للاستلام والدفع والتفعيل</button>
   </div>
 
@@ -101,8 +101,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <!-- صندوق تسجيل الدخول المخفي افتراضياً -->
   <div id="loginBox" class="hidden" style="margin-top:20px;border-top:1px solid #eee;padding-top:15px;">
    <h3>تسجيل الدخول</h3>
-   <label>البريد الإلكتروني</label><input id="loginEmail" type="email" placeholder="example@gmail.com">
-   <label>كلمة المرور</label><input id="loginPassword" type="password" placeholder="********">
+   <label>البريد الإلكتروني</label><input id="loginEmail" type="email">
+   <label>كلمة المرور</label><input id="loginPassword" type="password">
    <button class="big" onclick="login()">دخول للنظام</button>
    <button class="secondary big" onclick="toggleAuthMode('register')" style="margin-top:5px;">← العودة لإنشاء حساب</button>
   </div>
@@ -110,8 +110,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <!-- صندوق دخول المالك المخفي افتراضياً -->
   <div id="ownerBox" class="hidden" style="margin-top:20px;border-top:1px solid #eee;padding-top:15px;">
    <h3>دخول لوحة التحكم</h3>
-   <label>اسم المستخدم الإداري</label><input id="ownerUsername" placeholder="elsalahy">
-   <label>كلمة المرور</label><input id="ownerPassword" type="password" placeholder="********">
+   <label>اسم المستخدم الإداري</label><input id="ownerUsername">
+   <label>كلمة المرور</label><input id="ownerPassword" type="password">
    <button class="big dark" onclick="ownerLogin()">دخول لوحة التحكم الشاملة</button>
    <button class="secondary big" onclick="toggleAuthMode('register')" style="margin-top:5px;">← العودة لإنشاء حساب</button>
   </div>
@@ -210,7 +210,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="grid">
     <div>
      <label>مرر الباركود أو ابحث عن الصنف</label>
-     <input id="barcodeInput" placeholder="امسح الباركود هنا بالقارئ الضوئي..." autofocus oninput="handleBarcodeScan(this.value)">
+     <input id="barcodeInput" autofocus oninput="handleBarcodeScan(this.value)">
      <div id="searchResults"></div>
     </div>
     <div>
@@ -232,8 +232,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إدارة المنتجات والمخزون</h3>
    <div class="card">
-    <label>كود الباركود</label><input id="pBarcode" placeholder="رقم الباركود (اختياري أو بالماسح الضوئي)">
-    <label>اسم المنتج</label><input id="pName" placeholder="اسم المنتج">
+    <label>كود الباركود</label><input id="pBarcode">
+    <label>اسم المنتج</label><input id="pName">
     <div class="grid">
      <div><label>سعر الشراء</label><input id="pCost" type="number" min="0" value="0"></div>
      <div><label>سعر البيع</label><input id="pPrice" type="number" min="0" value="0"></div>
@@ -255,7 +255,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <h3>سند قبض أو صرف</h3>
     <label>نوع الحركة</label><select id="tType"><option value="in">وارد (إيداع نقدية)</option><option value="out">صادر (صرف نقدية)</option></select>
     <label>المبلغ</label><input id="tAmount" type="number" min="0">
-    <label>البيان</label><input id="tNote" placeholder="تفاصيل الحركة">
+    <label>البيان</label><input id="tNote">
     <button class="big green" onclick="addTreasuryTransaction()">تسجيل الحركة</button>
    </div>
    <div class="tablewrap"><table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
@@ -294,16 +294,16 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    
    <div class="card" style="max-width:500px;margin-bottom:20px;">
     <h3>تغيير كلمة المرور الخاصة بك</h3>
-    <label>كلمة المرور الجديدة</label><input id="newCustomerPassword" type="password" placeholder="أدخل كلمة المرور الجديدة">
+    <label>كلمة المرور الجديدة</label><input id="newCustomerPassword" type="password">
     <button class="big purple" onclick="updateCustomerPassword()">تحديث كلمة المرور</button>
    </div>
 
    <div class="card" style="max-width:500px;">
     <h3>إدارة صلاحيات موظفي الكاشير</h3>
     <p class="muted">يمكنك إضافة موظف جديد بصلاحية "كاشير" (يستطيع البيع فقط ولا يمكنه تعديل المخزون أو الاطلاع على التقارير).</p>
-    <label>اسم الموظف</label><input id="staffName" placeholder="اسم الكاشير">
-    <label>البريد الإلكتروني للكاشير</label><input id="staffEmail" type="email" placeholder="cashier@store.com">
-    <label>كلمة المرور</label><input id="staffPassword" type="password" placeholder="********">
+    <label>اسم الموظف</label><input id="staffName">
+    <label>البريد الإلكتروني للكاشير</label><input id="staffEmail" type="email">
+    <label>كلمة المرور</label><input id="staffPassword" type="password">
     <button class="big green" onclick="createStaffAccount()">إنشاء حساب كاشير جديد</button>
    </div>
   </div>
@@ -406,6 +406,7 @@ window.register=async()=>{
 
  if(!shop||!name||!phone||!email||!password) return message("أكمل جميع البيانات المطلوبة بدقة.");
  if(!email.includes("@") || !email.includes(".")) return message("صيغة البريد الإلكتروني غير صحيحة.");
+ if(password.length < 6) return message("كلمة المرور يجب أن تكون 6 أحرف على الأقل.");
 
  try{
   const cred=await createUserWithEmailAndPassword(auth,email,password);
@@ -417,7 +418,6 @@ window.register=async()=>{
   $("auth").classList.add("hidden");
   $("pendingScreen").classList.remove("hidden");
 
-  // فتح الواتساب تلقائياً بعد التسجيل بالبيانات
   sendWhatsAppActivation();
 
  }catch(e){message("تعذر التسجيل: "+e.message)}
@@ -575,7 +575,7 @@ window.handleBarcodeScan=(val)=>{
  const exactMatch = products.find(p => (p.barcode||"").toLowerCase() === q);
  if(exactMatch){
   selectedProduct = exactMatch;
-  $("saleSearch").value = exactMatch.name;
+  $("barcodeInput").value = exactMatch.name;
   $("salePrice").value = exactMatch.price;
   addToCartByInput();
   $("barcodeInput").value = "";

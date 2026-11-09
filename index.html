@@ -90,20 +90,23 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button id="tabRegister" onclick="showAuth('register')">حساب جديد</button>
    <button id="tabOwner" onclick="showAuth('owner')">لوحة المالك</button>
   </nav>
+
   <div id="loginBox">
    <label>البريد الإلكتروني</label><input id="loginEmail" type="email">
    <label>كلمة المرور</label><input id="loginPassword" type="password">
    <button class="big" onclick="login()">دخول للنظام</button>
    <button class="big secondary" onclick="forgot()">استعادة كلمة المرور</button>
   </div>
+
   <div id="registerBox" class="hidden">
-   <label>اسم النشاط التجاري</label><input id="regShop">
+   <label>اسم النشاط التجاري / صالة البلايستيشن</label><input id="regShop">
    <label>اسم المسؤول</label><input id="regName">
    <label>رقم الهاتف</label><input id="regPhone">
    <label>البريد الإلكتروني</label><input id="regEmail" type="email">
    <label>كلمة المرور</label><input id="regPassword" type="password">
-   <button class="big" onclick="register()">تسجيل وطلب التفعيل</button>
+   <button class="big green" onclick="register()">إنشاء الحساب وإرسال للتفعيل</button>
   </div>
+
   <div id="ownerBox" class="hidden">
    <label>اسم المستخدم الإداري</label><input id="ownerUsername">
    <label>كلمة المرور</label><input id="ownerPassword" type="password">
@@ -115,12 +118,12 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
 <section id="pending" class="hidden">
  <div class="card" style="text-align:center;margin-top:35px">
-  <h2>الحساب قيد المراجعة</h2>
-  <p>أتمم رسوم الاشتراك لتفعيل النظام فوراً.</p>
+  <h2>الحساب قيد المراجعة والانتظار</h2>
+  <p>تم إرسال طلب تفعيل حسابك لإدارة السيستم.</p>
   <div class="card">
    <p>فودافون كاش / إنستاباي: <b>01062883414</b></p>
    <p>قيمة الاشتراك: <b id="pendingPrice">جاري التحميل...</b></p>
-   <button class="green big" onclick="sendReceipt()">إرسال إيصال الدفع عبر واتساب</button>
+   <button class="green big" onclick="sendReceipt()">إرسال إيصال الدفع عبر واتساب للتفعيل</button>
   </div>
   <button onclick="logout()">تسجيل الخروج</button>
  </div>
@@ -136,21 +139,21 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
 <section id="ownerPanel" class="hidden">
  <div class="card">
-  <div class="top"><div><h2>لوحة تحكم المالك العام</h2></div><button class="red" onclick="logout()">خروج</button></div>
+  <div class="top"><div><h2>لوحة تحكم المالك العام (إدارة التفعيلات)</h2></div><button class="red" onclick="logout()">خروج</button></div>
   <div class="grid">
    <div class="stat">إجمالي المتاجر<strong id="totalUsers">0</strong></div>
    <div class="stat">الطلبات المعلقة<strong id="pendingUsers">0</strong></div>
    <div class="stat">المتاجر المفعلة<strong id="activeUsers">0</strong></div>
   </div>
   <div class="card">
-   <h3>إعدادات الاشتراك</h3>
+   <h3>إعدادات الاشتراك العامة</h3>
    <label>سعر الاشتراك (جنيه)</label><input id="ownerPrice" type="number" min="0">
    <label>مدة الاشتراك (أيام)</label><input id="ownerDays" type="number" min="1">
    <button onclick="saveSubscriptionSettings()">حفظ إعدادات الاشتراك</button>
   </div>
-  <h3>قائمة المتاجر</h3>
+  <h3>طلبات الحسابات المسجلة حديثاً</h3>
   <div class="tablewrap"><table>
-   <thead><tr><th>المتجر</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+   <thead><tr><th>المتجر / الصالة</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>مدة الاشتراك</th><th>إجراءات التفعيل</th></tr></thead>
    <tbody id="usersTable"></tbody>
   </table></div>
  </div>
@@ -163,7 +166,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button class="red" onclick="logout()">تسجيل الخروج</button>
   </div>
 
-  <!-- الصفحة الرئيسية (Tiles UI) -->
   <div id="dashboardPage">
    <div class="grid">
     <div class="stat">عدد الأجهزة النشطة<strong id="statPSActive">0</strong></div>
@@ -219,14 +221,13 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- واجهة البلايستيشن الشاملة -->
   <div id="playstationPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>صالة أجهزة وطاولات البلايستيشن (الإدارة المتكاملة)</h3>
+   <h3>صالة أجهزة وطاولات البلايستيشن</h3>
    <div class="card">
     <div class="grid">
      <div><label>اسم الجهاز / الغرفة</label><input id="psDevName" placeholder="مثال: جهاز 1 - PS5"></div>
-     <div><label>نوع اللعب الأساسي</label><select id="psMode"><option value="single">فردي (Single)</option><option value="multi">مزدوج / جماعي (Multi)</option></select></div>
+     <div><label>نوع اللعب</label><select id="psMode"><option value="single">فردي (Single)</option><option value="multi">مزدوج / جماعي (Multi)</option></select></div>
      <div><label>سعر الساعة فردي (جنيه)</label><input id="psPriceSingle" type="number" value="30"></div>
      <div><label>سعر الساعة جماعي (جنيه)</label><input id="psPriceMulti" type="number" value="40"></div>
     </div>
@@ -234,15 +235,14 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
 
    <div class="card">
-    <h3>متابعة عدادات الأجهزة والجلسات النشطة</h3>
+    <h3>الأجهزة الحالية (متابعة العدادات والوقت)</h3>
     <div id="psDevicesContainer" class="ps-grid"></div>
    </div>
   </div>
 
-  <!-- صفحة المبيعات -->
   <div id="salesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>شاشة نقاط البيع (المبيعات للمحل)</h3>
+   <h3>شاشة نقاط البيع (POS)</h3>
    <div class="grid">
     <div><label>بحث بالاسم أو الباركود</label><input id="saleSearch" placeholder="امسح الباركود أو اكتب اسم المنتج" oninput="searchProducts()"><div id="searchResults"></div></div>
     <div>
@@ -255,14 +255,10 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <h3>سلة المبيعات الحالية</h3>
     <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead><tbody id="cartTable"></tbody></table></div>
     <h3>الإجمالي الكلي: <span id="cartTotal">0</span> جنيه</h3>
-    <label>العميل</label><input id="saleCustomer" list="customerOptions" placeholder="اسم العميل (اختياري)">
-    <datalist id="customerOptions"></datalist>
-    <label>طريقة الدفع</label><select id="payment"><option>نقدي</option><option>بطاقة</option><option>تحويل بنكي</option><option>آجل</option></select>
     <button class="big green" onclick="completeSale()">إتمام البيع وطباعة الفاتورة</button>
    </div>
   </div>
 
-  <!-- صفحة المشتريات -->
   <div id="purchasesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إدارة المشتريات والموردين</h3>
@@ -278,7 +274,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="tablewrap"><table><thead><tr><th>الشحنة</th><th>المورد</th><th>الصنف</th><th>الكمية</th><th>الإجمالي</th><th>التاريخ</th></tr></thead><tbody id="purchasesTable"></tbody></table></div>
   </div>
 
-  <!-- صفحة المرتجعات -->
   <div id="returnsPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إدارة المرتجعات</h3>
@@ -293,7 +288,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- صفحة المنتجات -->
   <div id="productsPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إدارة المنتجات والمخزون والمشروبات</h3>
@@ -314,7 +308,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="tablewrap"><table><thead><tr><th>المنتج</th><th>الباركود</th><th>الشراء</th><th>البيع</th><th>المخزون</th><th>الإجراءات</th></tr></thead><tbody id="productsTable"></tbody></table></div>
   </div>
 
-  <!-- صفحة الخزينة -->
   <div id="treasuryPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>الخزينة والحسابات النقدية</h3>
@@ -334,7 +327,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="tablewrap"><table><thead><tr><th>النوع</th><th>التصنيف</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
   </div>
 
-  <!-- صفحة العملاء -->
   <div id="customersPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إدارة العملاء والديون</h3>
@@ -350,22 +342,19 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="tablewrap"><table><thead><tr><th>الاسم</th><th>الهاتف</th><th>المديونية</th><th>العنوان</th><th>الإجراءات</th></tr></thead><tbody id="customersTable"></tbody></table></div>
   </div>
 
-  <!-- صفحة الفواتير -->
   <div id="historyPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>سجل الفواتير وجلسات البلايستيشن</h3>
    <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>العميل / الجهاز</th><th>الإجمالي</th><th>طريقة الدفع</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
   </div>
 
-  <!-- صفحة المصروفات -->
   <div id="expensesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>المصروفات اليومية</h3>
    <div class="card"><label>بيان المصروف</label><input id="expenseName"><label>المبلغ</label><input id="expenseAmount" type="number" min="0"><button onclick="addExpense()">حفظ المصروف وصرفه من الخزينة</button></div>
-   <div class="tablewrap"><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div>
+   <div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div>
   </div>
 
-  <!-- صفحة التقارير -->
   <div id="reportsPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>التقارير المالية والمخزنية</h3>
@@ -378,7 +367,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="card"><h3>تنبيهات نواقص المخزون</h3><div id="stockAlerts"></div></div>
   </div>
 
-  <!-- صفحة الإعدادات -->
   <div id="settingsPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إعدادات المتجر والطباعة</h3>
@@ -482,8 +470,8 @@ window.register=async()=>{
  if(!shop||!name||!phone||!email||!password)return message("أكمل جميع البيانات.");
  try{
   const cred=await createUserWithEmailAndPassword(auth,email,password);
-  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",status:"active",subscriptionDays:30,createdAt:serverTimestamp()});
-  message("تم إنشاء وتفعيل الحساب بنجاح.");
+  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",status:"pending",subscriptionDays:0,createdAt:serverTimestamp()});
+  message("تم إنشاء الحساب بنجاح. تم إرساله للوحة المالك للتفعيل.");
  }catch(e){message("تعذر التسجيل: "+friendlyError(e))}
 };
 window.forgot=async()=>{
@@ -531,7 +519,7 @@ window.loadUsers=async()=>{
   if($("usersTable")) $("usersTable").innerHTML=list.map(u=>`<tr><td>${esc(u.shopName)}</td><td>${esc(u.customerName)}</td><td>${esc(u.email)}</td><td>${esc(u.phone)}</td><td><span class="tag ${u.status==="active"?"good":""}">${esc(u.status)}</span></td><td>${money(u.subscriptionDays||0)} يوم</td><td><button class="rowbtn green" onclick="activateUser('${u.id}',30)">تفعيل</button> <button class="rowbtn red" onclick="suspendUser('${u.id}')">إيقاف</button></td></tr>`).join("");
  }catch(e){}
 };
-window.activateUser=async(id,days)=>{try{await updateDoc(doc(db,"users",id),{status:"active",subscriptionDays:days});await loadUsers();}catch(e){}};
+window.activateUser=async(id,days)=>{try{await updateDoc(doc(db,"users",id),{status:"active",subscriptionDays:days});await loadUsers();alert("تم تفعيل الحساب بنجاح!");}catch(e){}};
 window.suspendUser=async id=>{if(!confirm("إيقاف الحساب؟"))return;try{await updateDoc(doc(db,"users",id),{status:"suspended"});await loadUsers();}catch(e){}};
 
 window.navTo=function(name){page(name);};

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NexPOS PRO - Sales & Inventory System</title>
+<title>NexPOS PRO - Tiles Interface</title>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
 *{box-sizing:border-box}
@@ -44,6 +44,20 @@ td,th{padding:11px;border-bottom:1px solid #edf0f5;text-align:right;font-size:13
 hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .result{display:block;width:100%;text-align:right;margin:4px 0}
 
+/* تصميم المربعات الرئيسية (Tiles UI) شبيه الصورة */
+.tiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:20px}
+.tile{padding:24px;border-radius:16px;color:white;cursor:pointer;transition:transform .2s,opacity .2s;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;justify-content:space-between;min-height:140px}
+.tile:hover{transform:translateY(-3px);opacity:.95}
+.tile h3{margin:0 0 8px 0;font-size:19px}
+.tile p{margin:0;font-size:13px;opacity:.9}
+.t-blue{background:linear-gradient(135deg,#2458d3,#3b71f3)}
+.t-green{background:linear-gradient(135deg,#178653,#22b070)}
+.t-orange{background:linear-gradient(135deg,#d97706,#f59e0b)}
+.t-purple{background:linear-gradient(135deg,#7c3aed,#9333ea)}
+.t-dark{background:linear-gradient(135deg,#1e293b,#334155)}
+.t-teal{background:linear-gradient(135deg,#0d9488,#14b8a6)}
+.t-red{background:linear-gradient(135deg,#b72f3b,#dc2626)}
+
 @media print{
  body *{visibility:hidden!important}
  #printArea,#printArea *{visibility:visible!important}
@@ -56,7 +70,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <header class="top">
  <div>
   <div class="brand">NexPOS PRO</div>
-  <span class="version">MANAGEMENT SYSTEM</span>
+  <span class="version">TILES INTERFACE V5</span>
   <div class="muted">نظام إدارة المبيعات والمخازن والخزينة المتقدم</div>
  </div>
  <div>
@@ -128,7 +142,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  </div>
 </section>
 
-<!-- لوحة العميل (نظام المبيعات والمخزن) -->
+<!-- لوحة العميل (نظام المبيعات والمخزن بتصميم المربعات Tiles UI) -->
 <section id="customerPanel" class="hidden">
  <div class="card">
   <div class="top">
@@ -136,18 +150,19 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button class="red" onclick="logout()">تسجيل الخروج</button>
   </div>
   
-  <nav id="mainNav">
-   <button class="active" onclick="page('dashboard',this)">الرئيسية</button>
-   <button onclick="page('sales',this)">المبيعات (POS)</button>
-   <button onclick="page('products',this)">المنتجات والمخزون</button>
-   <button onclick="page('treasury',this)">الخزينة والحسابات</button>
-   <button onclick="page('history',this)">الفواتير السابقة</button>
-   <button onclick="page('expenses',this)">المصروفات</button>
-   <button onclick="page('reports',this)">التقارير المالية</button>
-   <button onclick="page('settings',this)">إعدادات الحساب</button>
+  <!-- قائمة التنقل المخفية داخلياً للرجوع السريع -->
+  <nav id="mainNav" class="hidden">
+   <button class="active" onclick="page('dashboard')">الرئيسية</button>
+   <button onclick="page('sales')">المبيعات</button>
+   <button onclick="page('products')">المنتجات</button>
+   <button onclick="page('treasury')">الخزينة</button>
+   <button onclick="page('history')">الفواتير</button>
+   <button onclick="page('expenses')">المصروفات</button>
+   <button onclick="page('reports')">التقارير</button>
+   <button onclick="page('settings')">الإعدادات</button>
   </nav>
 
-  <!-- الصفحة الرئيسية -->
+  <!-- الصفحة الرئيسية بتصميم المربعات (Tiles UI) -->
   <div id="dashboardPage">
    <div class="grid">
     <div class="stat">إجمالي المنتجات<strong id="statProducts">0</strong></div>
@@ -155,10 +170,45 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <div class="stat">مبيعات اليوم<strong id="statRevenue">0 جنيه</strong></div>
     <div class="stat">رصيد الخزينة<strong id="statTreasuryBalance">0 جنيه</strong></div>
    </div>
+
+   <div class="card">
+    <h3>شاشة الإدارة السريعة (اختر القسم)</h3>
+    <div class="tiles-grid">
+     <div class="tile t-blue" onclick="page('sales')">
+      <h3>شاشة المبيعات (POS)</h3>
+      <p>إصدار الفواتير وبيع الأصناف بالباركود</p>
+     </div>
+     <div class="tile t-green" onclick="page('products')">
+      <h3>المنتجات والمخزون</h3>
+      <p>إدارة الأصناف، الأسعار، والمخزون الحالي</p>
+     </div>
+     <div class="tile t-orange" onclick="page('treasury')">
+      <h3>الخزينة والحسابات</h3>
+      <p>متابعة النقدية، الوارد، الصادر والأرباح</p>
+     </div>
+     <div class="tile t-purple" onclick="page('history')">
+      <h3>الفواتير السابقة</h3>
+      <p>استعراض وطباعة الفواتير والعمليات</p>
+     </div>
+     <div class="tile t-dark" onclick="page('expenses')">
+      <h3>المصروفات اليومية</h3>
+      <p>تسجيل المصاريف النثرية والتشغيلية</p>
+     </div>
+     <div class="tile t-teal" onclick="page('reports')">
+      <h3>التقارير المالية</h3>
+      <p>تقارير الأرباح والمصاريف وصافي الدخل</p>
+     </div>
+     <div class="tile t-red" onclick="page('settings')">
+      <h3>إعدادات الحساب والباسورد</h3>
+      <p>تغيير كلمة المرور وإعدادات المتجر</p>
+     </div>
+    </div>
+   </div>
   </div>
 
   <!-- صفحة المبيعات -->
   <div id="salesPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>شاشة نقاط البيع (المبيعات)</h3>
    <div class="grid">
     <div><label>بحث بالاسم أو الباركود</label><input id="saleSearch" placeholder="ابحث عن منتج..." oninput="searchProducts()"><div id="searchResults"></div></div>
@@ -178,6 +228,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
   <!-- صفحة المنتجات -->
   <div id="productsPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إدارة المنتجات والمخزون</h3>
    <div class="card">
     <input id="pName" placeholder="اسم المنتج">
@@ -193,6 +244,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
   <!-- صفحة الخزينة -->
   <div id="treasuryPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>الخزينة والحسابات النقدية</h3>
    <div class="grid">
     <div class="stat">رصيد الخزينة المتاح<strong id="treasuryBalanceDisplay">0 جنيه</strong></div>
@@ -209,12 +261,14 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
   <!-- صفحة الفواتير -->
   <div id="historyPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>سجل الفواتير السابقة</h3>
    <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>الإجمالي</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
   </div>
 
   <!-- صفحة المصروفات -->
   <div id="expensesPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>المصروفات اليومية</h3>
    <div class="card"><label>بيان المصروف</label><input id="expenseName"><label>المبلغ</label><input id="expenseAmount" type="number" min="0"><button onclick="addExpense()">حفظ المصروف وصرفه من الخزينة</button></div>
    <div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div>
@@ -222,6 +276,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
   <!-- صفحة التقارير -->
   <div id="reportsPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>التقارير المالية</h3>
    <div class="grid">
     <div class="stat">إجمالي المبيعات<strong id="reportRevenue">0 جنيه</strong></div>
@@ -232,6 +287,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
   <!-- صفحة إعدادات الحساب وتغيير الباسورد للعميل -->
   <div id="settingsPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إعدادات الحساب وتغيير كلمة المرور</h3>
    <div class="card" style="max-width:500px;">
     <label>كلمة المرور الجديدة</label><input id="newCustomerPassword" type="password" placeholder="أدخل كلمة المرور الجديدة">
@@ -389,7 +445,7 @@ window.updateUserStatus=async(id,status)=>{
 window.adminChangePassword=async(email)=>{
  const newPass=prompt("أدخل كلمة المرور الجديدة للعميل:");
  if(!newPass)return;
- alert("تم طلب تغيير كلمة المرور. (لتغييرها فوراً يمكن للعميل استخدام استعادة كلمة المرور أو التواصل التقني). كلمة المرور الجديدة المدخلة: "+newPass);
+ alert("تم طلب تغيير كلمة المرور. كلمة المرور الجديدة المدخلة: "+newPass);
 };
 
 window.updateCustomerPassword=async()=>{

@@ -43,7 +43,6 @@ td,th{padding:11px;border-bottom:1px solid #edf0f5;text-align:right;font-size:13
 hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .result{display:block;width:100%;text-align:right;margin:4px 0}
 
-/* مربعات الواجهة الرئيسية (Tiles UI) */
 .tiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px;margin-top:20px}
 .tile{padding:22px;border-radius:16px;color:white;cursor:pointer;transition:transform .2s,opacity .2s;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;justify-content:space-between;min-height:130px}
 .tile:hover{transform:translateY(-3px);opacity:.95}
@@ -57,7 +56,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .t-teal{background:linear-gradient(135deg,#0d9488,#14b8a6)}
 .t-red{background:linear-gradient(135deg,#b72f3b,#dc2626)}
 
-/* شبكة أجهزة البلايستيشن */
 .ps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:15px;margin-top:15px}
 .ps-card{background:white;border:1px solid #dce2ed;border-radius:12px;padding:15px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
 .ps-card.busy{border-color:#b72f3b;background:#fff5f5}
@@ -213,7 +211,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
       <p>تسجيل فواتير الشراء وإضافة البضائع</p>
      </div>
      <div class="tile t-teal" onclick="navTo('history')">
-      ### الفواتير السابقة
+      <h3>الفواتير السابقة</h3>
       <p>استعراض وطباعة الفواتير وحسابات الجلسات</p>
      </div>
      <div class="tile t-red" onclick="navTo('returns')">
@@ -252,9 +250,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
    <div class="card">
     <h3>الأجهزة الحالية (متابعة العدادات والوقت)</h3>
-    <div id="psDevicesContainer" class="ps-grid">
-     <!-- سيتم تعبئة الأجهزة هنا برمجياً -->
-    </div>
+    <div id="psDevicesContainer" class="ps-grid"></div>
    </div>
   </div>
 
@@ -317,7 +313,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إدارة المنتجات والمخزون والمشروبات</h3>
    <div class="card">
-    <input id="pName" placeholder="اسم المنتج (مثل: عبوة مياه، علبة كنز...)">
+    <input id="pName" placeholder="اسم المنتج">
     <div class="grid">
      <div><label>كود المنتج</label><input id="pCode"></div>
      <div><label>الباركود</label><input id="pBarcode"></div>
@@ -350,7 +346,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <label>البيان</label><input id="tNote" placeholder="تفاصيل الحركة">
     <button class="big green" onclick="addTreasuryTransaction()">تسجيل الحركة</button>
    </div>
-   <div class="tablewrap"><table><thead><tr><th>النوع</th><th>التصنيف</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
+   <div class="tablewrap"><thead><tr><th>النوع</th><th>التصنيف</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
   </div>
 
   <!-- صفحة العملاء -->
@@ -366,14 +362,14 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     </div>
     <button onclick="saveCustomer()">حفظ العميل</button>
    </div>
-   <div class="tablewrap"><table><thead><tr><th>الاسم</th><th>الهاتف</th><th>المديونية</th><th>العنوان</th><th>الإجراءات</th></tr></thead><tbody id="customersTable"></tbody></table></div>
+   <div class="tablewrap"><thead><tr><th>الاسم</th><th>الهاتف</th><th>المديونية</th><th>العنوان</th><th>الإجراءات</th></tr></thead><tbody id="customersTable"></tbody></table></div>
   </div>
 
   <!-- صفحة الفواتير -->
   <div id="historyPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>سجل الفواتير وجلسات البلايستيشن</h3>
-   <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>العميل / الجهاز</th><th>الإجمالي</th><th>طريقة الدفع</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
+   <div class="tablewrap"><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>العميل / الجهاز</th><th>الإجمالي</th><th>طريقة الدفع</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
   </div>
 
   <!-- صفحة المصروفات -->
@@ -381,7 +377,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>المصروفات اليومية</h3>
    <div class="card"><label>بيان المصروف</label><input id="expenseName"><label>المبلغ</label><input id="expenseAmount" type="number" min="0"><button onclick="addExpense()">حفظ المصروف وصرفه من الخزينة</button></div>
-   <div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div>
+   <div class="tablewrap"><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div>
   </div>
 
   <!-- صفحة التقارير -->
@@ -458,7 +454,7 @@ let returnFoundInvoice=null;
 const $=id=>document.getElementById(id);
 const money=n=>(Number(n)||0).toLocaleString("ar-EG",{maximumFractionDigits:2});
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const shopRef=()=>`shops/${currentUser.uid}`;
+const shopRef=()=>`shops/${currentUser?.uid}`;
 const col=name=>collection(db,shopRef(),name);
 const docRef=(name,id)=>doc(db,shopRef(),name,id);
 const systemSettingsRef=()=>doc(db,"systemSettings","subscription");
@@ -546,7 +542,7 @@ window.loadUsers=async()=>{
  try{
   const s=await getDocs(collection(db,"users"));const list=s.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
   $("totalUsers").textContent=list.length;$("pendingUsers").textContent=list.filter(u=>u.status==="pending").length;$("activeUsers").textContent=list.filter(u=>u.status==="active").length;
-  $("usersTable").innerHTML=list.map(u=>`<tr><td>${esc(u.shopName)}</td><td>${esc(u.customerName)}</td><td>${esc(u.email)}</td><td>${esc(u.phone)}</td><td><span class="tag ${u.status==="active"?"good":""}">${esc(u.status)}</span></td><td><button class="rowbtn green" onclick="activateUser('${u.id}',30)">تفعيل</button> <button class="rowbtn red" onclick="suspendUser('${u.id}')">إيقاف</button></td></tr>`).join("");
+  $("usersTable").innerHTML=list.map(u=>`<tr><td>${esc(u.shopName)}</td><td>${esc(u.customerName)}</td><td>${esc(u.email)}</td><td>${esc(u.phone)}</td><td><span class="tag ${u.status==="active"?"good":""}">${esc(u.status)}</span></td><td>${money(u.subscriptionDays||0)} يوم</td><td><button class="rowbtn green" onclick="activateUser('${u.id}',30)">تفعيل</button> <button class="rowbtn red" onclick="suspendUser('${u.id}')">إيقاف</button></td></tr>`).join("");
  }catch(e){}
 };
 window.activateUser=async(id,days)=>{try{await updateDoc(doc(db,"users",id),{status:"active",subscriptionDays:days});await loadUsers();}catch(e){}};
@@ -554,8 +550,8 @@ window.suspendUser=async id=>{if(!confirm("إيقاف الحساب؟"))return;tr
 
 window.navTo=function(name){page(name);};
 window.page=function(name,btn){
- ["dashboard","playstation","sales","purchases","returns","products","treasury","customers","history","expenses","reports","settings"].forEach(p=>$(p+"Page").classList.add("hidden"));
- $(name+"Page").classList.remove("hidden");
+ ["dashboard","playstation","sales","purchases","returns","products","treasury","customers","history","expenses","reports","settings"].forEach(p=>$(p+"Page")?.classList.add("hidden"));
+ $(name+"Page")?.classList.remove("hidden");
  if(name==="dashboard"||name==="reports")renderStats();
 };
 
@@ -573,15 +569,16 @@ async function loadCustomers(){const s=await getDocs(col("customers"));customers
 async function loadPlaystationDevices(){const s=await getDocs(col("psDevices"));psDevices=s.docs.map(d=>({id:d.id,...d.data()}));renderPlaystationDevices();}
 async function loadSettings(){
  const s=await getDoc(doc(db,shopRef(),"settings","main"));if(s.exists())shopSettings=s.data();
- $("setShop").value=shopSettings.shopName||profile.shopName||"";
- $("setPhone").value=shopSettings.phone||profile.phone||"";
- $("setAddress").value=shopSettings.address||"";
- $("setCurrency").value=shopSettings.currency||"جنيه";
- $("setTax").value=shopSettings.tax||0;$("setDiscount").value=shopSettings.discount||0;
- $("invoiceSize").value=shopSettings.invoiceSize||"80mm";$("invoiceFont").value=shopSettings.invoiceFont||14;
+ if($("setShop")) $("setShop").value=shopSettings.shopName||profile.shopName||"";
+ if($("setPhone")) $("setPhone").value=shopSettings.phone||profile.phone||"";
+ if($("setAddress")) $("setAddress").value=shopSettings.address||"";
+ if($("setCurrency")) $("setCurrency").value=shopSettings.currency||"جنيه";
+ if($("setTax")) $("setTax").value=shopSettings.tax||0;
+ if($("setDiscount")) $("setDiscount").value=shopSettings.discount||0;
+ if($("invoiceSize")) $("invoiceSize").value=shopSettings.invoiceSize||"80mm";
+ if($("invoiceFont")) $("invoiceFont").value=shopSettings.invoiceFont||14;
 }
 
-// إدارة أجهزة البلايستيشن
 window.addPlaystationDevice=async()=>{
  const name=$("psDevName").value.trim();
  const mode=$("psMode").value;
@@ -589,11 +586,7 @@ window.addPlaystationDevice=async()=>{
  const priceMulti=Number($("psPriceMulti").value)||40;
  if(!name)return alert("أدخل اسم الجهاز.");
  try{
-  await addDoc(col("psDevices"),{
-   name, mode, priceSingle, priceMulti,
-   status: "free", startTime: null, customer: "",
-   createdAt: serverTimestamp()
-  });
+  await addDoc(col("psDevices"),{name,mode,priceSingle,priceMulti,status:"free",startTime:null,customer:"",createdAt:serverTimestamp()});
   $("psDevName").value="";
   await loadPlaystationDevices();
   alert("تم إضافة الجهاز بنجاح.");
@@ -605,12 +598,7 @@ window.startPSDevice=async(id)=>{
  if(!dev)return;
  const custName=prompt("اسم العميل (اختياري):","")||"بلايستيشن";
  try{
-  await updateDoc(docRef("psDevices",id),{
-   status: "busy",
-   startTime: Date.now(),
-   customer: custName,
-   updatedAt: serverTimestamp()
-  });
+  await updateDoc(docRef("psDevices",id),{status:"busy",startTime:Date.now(),customer:custName,updatedAt:serverTimestamp()});
   await loadPlaystationDevices();
  }catch(e){alert(friendlyError(e))}
 };
@@ -621,16 +609,11 @@ window.endPSDevice=async(id)=>{
  const diffHours=(Date.now()-dev.startTime)/(1000*60*60);
  const hourlyRate=dev.mode==="single"?dev.priceSingle:dev.priceMulti;
  const totalCost=Math.max(5,Math.round(diffHours*hourlyRate));
- 
  if(!confirm(`هل تريد إنهاء جلسة ${dev.name}؟\nالمبلغ المستحق: ${totalCost} جنيه`))return;
 
  try{
   await runTransaction(db,async tx=>{
-   // تحديث حالة الجهاز ليكون متاحاً
-   tx.update(docRef("psDevices",id),{
-    status: "free", startTime: null, customer: "", updatedAt: serverTimestamp()
-   });
-   // تسجيل الفاتورة في المبيعات
+   tx.update(docRef("psDevices",id),{status:"free",startTime:null,customer:"",updatedAt:serverTimestamp()});
    const saleRef=doc(col("sales"));
    tx.set(saleRef,{
     number:"PS-"+Date.now().toString().slice(-6),
@@ -641,14 +624,10 @@ window.endPSDevice=async(id)=>{
     createdAt:serverTimestamp(),
     date:new Date().toLocaleString("ar-EG")
    });
-   // إضافة المبلغ للخزينة
    const tRef=doc(col("treasury"));
-   tx.set(tRef,{
-    type:"in", category:"إيراد بلايستيشن", amount:totalCost,
-    note:`جلسة لعب على ${dev.name}`, createdAt:serverTimestamp(), date:new Date().toLocaleString("ar-EG")
-   });
+   tx.set(tRef,{type:"in",category:"إيراد بلايستيشن",amount:totalCost,note:`جلسة لعب على ${dev.name}`,createdAt:serverTimestamp(),date:new Date().toLocaleString("ar-EG")});
   });
-  alert(`تم إغلاق الجلسة بنجاح وتحصيل ${totalCost} جنيه.`);
+  alert(`تم إغلاق الجلسة وتحصيل ${totalCost} جنيه.`);
   await loadBusiness();
  }catch(e){alert(friendlyError(e))}
 };
@@ -661,8 +640,7 @@ window.deletePSDevice=async(id)=>{
 function renderPlaystationDevices(){
  let activeCount=0;
  const html=psDevices.map(d=>{
-  let timeStr="متاح حالياً";
-  let costStr="0 جنيه";
+  let timeStr="متاح حالياً", costStr="0 جنيه";
   if(d.status==="busy"){
    activeCount++;
    const mins=Math.floor((Date.now()-d.startTime)/(1000*60));
@@ -685,17 +663,15 @@ function renderPlaystationDevices(){
   </div>`;
  }).join("");
 
- $("psDevicesContainer").innerHTML=html||"<p>لا توجد أجهزة مضافة حتى الآن.</p>";
- $("statPSActive").textContent=activeCount;
+ if($("psDevicesContainer")) $("psDevicesContainer").innerHTML=html||"<p>لا توجد أجهزة مضافة حتى الآن.</p>";
+ if($("statPSActive")) $("statPSActive").textContent=activeCount;
 }
 
-// مبيعات المحل
-function makeBarcode(){return "NX"+Date.now().toString().slice(-10);}
 window.saveProduct=async()=>{
  const name=$("pName").value.trim();let barcode=$("pBarcode").value.trim();
  const cost=Number($("pCost").value),price=Number($("pPrice").value),qty=Number($("pQty").value);
  if(!name||![cost,price,qty].every(Number.isFinite)||cost<0||price<0||qty<0)return alert("أدخل بيانات المنتج بدقة.");
- if(!barcode)barcode=makeBarcode();
+ if(!barcode)barcode="NX"+Date.now().toString().slice(-10);
  const data={name,barcode,code:$("pCode").value.trim(),category:$("pCategory").value.trim(),cost,price,qty,minQty:Number($("pMinQty").value)||0,updatedAt:serverTimestamp()};
  try{
   if(editingProduct)await updateDoc(docRef("products",editingProduct),data);
@@ -706,6 +682,7 @@ window.saveProduct=async()=>{
 window.clearProductForm=()=>{editingProduct=null;["pName","pBarcode","pCode","pCost","pPrice","pQty","pMinQty"].forEach(k=>$(k).value="");};
 window.deleteProduct=async id=>{if(!confirm("حذف المنتج؟"))return;try{await deleteDoc(docRef("products",id));await loadProducts();renderStats();}catch(e){}};
 function renderProducts(){
+ if(!$("productsTable"))return;
  $("productsTable").innerHTML=products.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.barcode)}</td><td>${money(p.cost)}</td><td>${money(p.price)}</td><td>${money(p.qty)}</td><td><button class="rowbtn secondary" onclick="editProduct('${p.id}')">تعديل</button> <button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||"<tr><td colspan='6'>لا توجد منتجات</td></tr>";
 }
 window.editProduct=id=>{
@@ -716,10 +693,11 @@ window.editProduct=id=>{
 };
 
 function populatePurProductSelect(){
+ if(!$("pPurProduct"))return;
  $("pPurProduct").innerHTML=products.map(p=>`<option value="${p.id}">${esc(p.name)} (متوفر: ${p.qty})</option>`).join("");
  fillPurCost();
 }
-window.fillPurCost=()=>{const p=products.find(x=>x.id===$("pPurProduct").value);if(p)$("pPurCost").value=p.cost||0;};
+window.fillPurCost=()=>{const p=products.find(x=>x.id===$("pPurProduct")?.value);if(p&&$("pPurCost"))$("pPurCost").value=p.cost||0;};
 window.completePurchase=async()=>{
  const prodId=$("pPurProduct").value, sup=$("pPurSupplier").value.trim(), qty=Number($("pPurQty").value), cost=Number($("pPurCost").value);
  const p=products.find(x=>x.id===prodId);
@@ -738,13 +716,14 @@ window.completePurchase=async()=>{
  }catch(e){alert(friendlyError(e))}
 };
 function renderPurchases(){
+ if(!$("purchasesTable"))return;
  $("purchasesTable").innerHTML=purchases.map(p=>`<tr><td>#${p.id.slice(-5)}</td><td>${esc(p.supplier)}</td><td>${esc(p.productName)}</td><td>${p.qty}</td><td>${money(p.total)}</td><td>${esc(p.date)}</td></tr>`).join("")||"<tr><td colspan='6'>لا توجد مشتريات</td></tr>";
 }
 
 window.searchProducts=()=>{
  const q=$("saleSearch").value.trim().toLowerCase();
  const matches=products.filter(p=>(p.name||"").toLowerCase().includes(q)||(p.barcode||"").toLowerCase().includes(q)).slice(0,10);
- $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${esc(p.name)} — ${money(p.price)} — متاح (${p.qty})</button>`).join("");
+ if($("searchResults")) $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${esc(p.name)} — ${money(p.price)} — متاح (${p.qty})</button>`).join("");
 };
 window.selectSaleProduct=id=>{
  selectedProduct=products.find(p=>p.id===id);if(!selectedProduct)return;
@@ -759,8 +738,9 @@ window.addToCart=()=>{
  selectedProduct=null;$("saleSearch").value="";$("saleQty").value=1;$("salePrice").value="";renderCart();
 };
 function renderCart(){
+ if(!$("cartTable"))return;
  $("cartTable").innerHTML=cart.map((x,i)=>`<tr><td>${esc(x.name)}</td><td>${x.qty}</td><td>${money(x.price)}</td><td>${money(x.qty*x.price)}</td><td><button class="rowbtn red" onclick="cart.splice(${i},1);renderCart()">حذف</button></td></tr>`).join("");
- $("cartTotal").textContent=money(cart.reduce((s,x)=>s+x.qty*x.price,0));
+ if($("cartTotal")) $("cartTotal").textContent=money(cart.reduce((s,x)=>s+x.qty*x.price,0));
 }
 window.completeSale=async()=>{
  if(!cart.length)return alert("السلة فارغة.");
@@ -788,7 +768,7 @@ window.completeSale=async()=>{
    }
   });
 
-  cart=[];renderCart();$("saleCustomer").value="";
+  cart=[];renderCart();if($("saleCustomer"))$("saleCustomer").value="";
   await loadBusiness();printInvoice(invoice);
  }catch(e){alert(friendlyError(e))}
 };
@@ -798,15 +778,16 @@ window.searchInvoiceForReturn=async()=>{
  const found=sales.find(s=>s.number===no);
  if(!found)return alert("لم يتم العثور على الفاتورة.");
  returnFoundInvoice=found;
- $("returnInvoiceDetails").classList.remove("hidden");
- $("retCust").textContent=found.customer; $("retDate").textContent=found.date;
- $("returnItemsTable").innerHTML=found.items.map((it,i)=>`<tr><td>${esc(it.name)}</td><td>${it.qty}</td><td><input type="number" id="retQty_${i}" min="0" max="${it.qty}" value="0" style="width:80px"></td><td><input type="checkbox" id="retCheck_${i}"></td></tr>`).join("");
+ if($("returnInvoiceDetails")) $("returnInvoiceDetails").classList.remove("hidden");
+ if($("retCust")) $("retCust").textContent=found.customer; 
+ if($("retDate")) $("retDate").textContent=found.date;
+ if($("returnItemsTable")) $("returnItemsTable").innerHTML=found.items.map((it,i)=>`<tr><td>${esc(it.name)}</td><td>${it.qty}</td><td><input type="number" id="retQty_${i}" min="0" max="${it.qty}" value="0" style="width:80px"></td><td><input type="checkbox" id="retCheck_${i}"></td></tr>`).join("");
 };
 window.executeReturn=async()=>{
  if(!returnFoundInvoice)return;
  let refundTotal=0; const returnedItems=[];
  returnFoundInvoice.items.forEach((it,i)=>{
-  if($(`retCheck_${i}`).checked){
+  if($(`retCheck_${i}`)?.checked){
    const q=Number($(`retQty_${i}`).value)||0;
    if(q>0){refundTotal+=q*it.price; returnedItems.push({...it,qty:q});}
   }
@@ -822,7 +803,7 @@ window.executeReturn=async()=>{
    tx.set(doc(col("treasury")),{type:"out",category:"مرتجعات مبيعات",amount:refundTotal,note:`مرتجع للفاتورة ${returnFoundInvoice.number}`,createdAt:serverTimestamp(),date:new Date().toLocaleString("ar-EG")});
   });
   alert("تم إرجاع البضاعة ورد المبلغ.");
-  $("returnInvoiceDetails").classList.add("hidden");
+  if($("returnInvoiceDetails")) $("returnInvoiceDetails").classList.add("hidden");
   await loadBusiness();
  }catch(e){alert(friendlyError(e))}
 };
@@ -832,7 +813,8 @@ window.addTreasuryTransaction=async()=>{
  if(!amount||amount<=0)return alert("أدخل مبلغاً صحيحاً.");
  try{
   await addDoc(col("treasury"),{type,category,amount,note:note||"حركة يدوية",createdAt:serverTimestamp(),date:new Date().toLocaleString("ar-EG")});
-  $("tAmount").value="";$("tNote").value="";
+  if($("tAmount")) $("tAmount").value="";
+  if($("tNote")) $("tNote").value="";
   await loadTreasury();renderStats();alert("تم التسجيل.");
  }catch(e){}
 };
@@ -843,10 +825,10 @@ function renderTreasury(){
   if(t.type==="in") tIn+=Number(t.amount)||0; else tOut+=Number(t.amount)||0;
   return `<tr><td><span class="tag ${t.type==="in"?"good":""}">${t.type==="in"?"وارد":"صادر"}</span></td><td>${esc(t.category)}</td><td>${money(t.amount)}</td><td>${esc(t.note)}</td><td>${esc(t.date)}</td><td><button class="rowbtn red" onclick="deleteTreasuryItem('${t.id}')">حذف</button></td></tr>`;
  }).join("");
- $("treasuryTable").innerHTML=rows||"<tr><td colspan='6'>لا توجد حركات</td></tr>";
- $("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" جنيه";
- $("treasuryTotalIn").textContent=money(tIn)+" جنيه";
- $("treasuryTotalOut").textContent=money(tOut)+" جنيه";
+ if($("treasuryTable")) $("treasuryTable").innerHTML=rows||"<tr><td colspan='6'>لا توجد حركات</td></tr>";
+ if($("treasuryBalanceDisplay")) $("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" جنيه";
+ if($("treasuryTotalIn")) $("treasuryTotalIn").textContent=money(tIn)+" جنيه";
+ if($("treasuryTotalOut")) $("treasuryTotalOut").textContent=money(tOut)+" جنيه";
 }
 
 window.addExpense=async()=>{
@@ -855,11 +837,13 @@ window.addExpense=async()=>{
  try{
   await addDoc(col("expenses"),{name,amount,date:new Date().toLocaleString("ar-EG"),createdAt:serverTimestamp()});
   await addDoc(col("treasury"),{type:"out",category:"مصاريف",amount,note:`مصروف: ${name}`,createdAt:serverTimestamp(),date:new Date().toLocaleString("ar-EG")});
-  $("expenseName").value="";$("expenseAmount").value="";
+  if($("expenseName")) $("expenseName").value="";
+  if($("expenseAmount")) $("expenseAmount").value="";
   await loadBusiness();alert("تم حفظ المصروف.");
  }catch(e){}
 };
 function renderExpenses(){
+ if(!$("expensesTable"))return;
  $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${esc(e.name)}</td><td>${money(e.amount)}</td><td>${esc(e.date)}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات</td></tr>";
 }
 
@@ -868,13 +852,14 @@ window.saveCustomer=async()=>{
  const data={name,phone:$("cPhone").value.trim(),balance:Number($("cBalance").value)||0,address:$("cAddress").value.trim(),updatedAt:serverTimestamp()};
  try{
   if(editingCustomer)await updateDoc(docRef("customers",editingCustomer),data); else await addDoc(col("customers"),{...data,createdAt:serverTimestamp()});
-  editingCustomer=null;["cName","cPhone","cBalance","cAddress"].forEach(k=>$(k).value="");
+  editingCustomer=null;["cName","cPhone","cBalance","cAddress"].forEach(k=>{if($(k))$(k).value="";});
   await loadCustomers();alert("تم حفظ العميل.");
  }catch(e){}
 };
 function renderCustomers(){
- $("customersTable").innerHTML=customers.map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.phone)}</td><td>${money(c.balance)}</td><td>${esc(c.address)}</td><td><button class="rowbtn secondary" onclick="editingCustomer='${c.id}';$('cName').value='${c.name}';$('cPhone').value='${c.phone}';$('cBalance').value='${c.balance}';$('cAddress').value='${c.address}';">تعديل</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد عملاء</td></tr>";
- $("customerOptions").innerHTML=customers.map(c=>`<option value="${esc(c.name)}">`).join("");
+ if(!$("customersTable"))return;
+ $("customersTable").innerHTML=customers.map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.phone)}</td><td>${money(c.balance)}</td><td>${esc(c.address)}</td><td><button class="rowbtn secondary" onclick="editingCustomer='${c.id}';if($('cName'))$('cName').value='${c.name}';if($('cPhone'))$('cPhone').value='${c.phone}';if($('cBalance'))$('cBalance').value='${c.balance}';if($('cAddress'))$('cAddress').value='${c.address}';">تعديل</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد عملاء</td></tr>";
+ if($("customerOptions")) $("customerOptions").innerHTML=customers.map(c=>`<option value="${esc(c.name)}">`).join("");
 }
 
 window.saveSettings=async()=>{
@@ -885,15 +870,17 @@ window.saveSettings=async()=>{
    invoiceSize:$("invoiceSize").value, invoiceFont:Number($("invoiceFont").value)||14
   };
   await setDoc(doc(db,shopRef(),"settings","main"),shopSettings,{merge:true});
-  $("shopTitle").textContent=shopSettings.shopName||"نظام المبيعات والبلايستيشن";alert("تم الحفظ بنجاح.");
+  if($("shopTitle")) $("shopTitle").textContent=shopSettings.shopName||"نظام المبيعات والبلايستيشن";
+  alert("تم الحفظ بنجاح.");
  }catch(e){}
 };
 
 function printInvoice(s){
  const st=shopSettings||{},font=Number(st.invoiceFont)||14;
+ if(!$("printArea"))return;
  $("printArea").style.fontSize=font+"px";
  $("printArea").innerHTML=`<div style="font-family:Arial;width:80mm;margin:auto;text-align:right">
- <div style="text-align:center"><h2>${esc(st.shopName||profile.shopName||"NexPOS PRO")}</h2><p>${esc(st.phone||"")}</p></div><hr>
+ <div style="text-align:center"><h2>${esc(st.shopName||profile?.shopName||"NexPOS PRO")}</h2><p>${esc(st.phone||"")}</p></div><hr>
  <p><b>رقم العملية:</b> ${esc(s.number)}</p><p><b>التاريخ:</b> ${esc(s.date)}</p><p><b>العميل / الجهاز:</b> ${esc(s.customer)}</p>
  <table style="width:100%;border-collapse:collapse"><thead><tr><th>الصنف / الوقت</th><th>كمية</th><th>سعر</th><th>إجمالي</th></tr></thead>
  <tbody>${(s.items||[]).map(x=>`<tr><td>${esc(x.name)}</td><td>${x.qty}</td><td>${money(x.price)}</td><td>${money(x.qty*x.price)}</td></tr>`).join("")}</tbody></table>
@@ -903,6 +890,7 @@ function printInvoice(s){
 }
 
 function renderSales(){
+ if(!$("salesTable"))return;
  $("salesTable").innerHTML=sales.map(s=>`<tr><td>${esc(s.number)}</td><td>${esc(s.date)}</td><td>${esc(s.customer)}</td><td>${money(s.total)}</td><td>${esc(s.payment)}</td><td><button class="rowbtn secondary" onclick="printInvoice(${JSON.stringify(s).replace(/"/g,'&quot;')})">طباعة</button></td></tr>`).join("")||"<tr><td colspan='6'>لا توجد فواتير</td></tr>";
 }
 
@@ -912,17 +900,18 @@ function renderStats(){
  const exp=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
  const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0);
  const tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(x.amount||0),0);
- $("statProducts").textContent=products.length;
- $("statSales").textContent=sales.length;
- $("statRevenue").textContent=money(rev);
- $("statStatsActive")?.setAttribute("text", psDevices.filter(d=>d.status==="busy").length);
- $("statTreasuryBalance").textContent=money(tIn-tOut);
- $("reportRevenue").textContent=money(rev);
- $("reportCost").textContent=money(cost);
- $("reportExpenses").textContent=money(exp);
- $("reportNet").textContent=money(rev-cost-exp);
+ 
+ if($("statProducts")) $("statProducts").textContent=products.length;
+ if($("statSales")) $("statSales").textContent=sales.length;
+ if($("statRevenue")) $("statRevenue").textContent=money(rev);
+ if($("statTreasuryBalance")) $("statTreasuryBalance").textContent=money(tIn-tOut);
+ if($("reportRevenue")) $("reportRevenue").textContent=money(rev);
+ if($("reportCost")) $("reportCost").textContent=money(cost);
+ if($("reportExpenses")) $("reportExpenses").textContent=money(exp);
+ if($("reportNet")) $("reportNet").textContent=money(rev-cost-exp);
+ 
  const alerts=products.filter(p=>Number(p.qty)<=Number(p.minQty||0));
- $("stockAlerts").innerHTML=alerts.map(p=>`<p>${esc(p.name)} — المتبقي: ${p.qty}</p>`).join("")||"<p>المخزون بحالة ممتازة.</p>";
+ if($("stockAlerts")) $("stockAlerts").innerHTML=alerts.map(p=>`<p>${esc(p.name)} — المتبقي: ${p.qty}</p>`).join("")||"<p>المخزون بحالة ممتازة.</p>";
 }
 </script>
 </body>

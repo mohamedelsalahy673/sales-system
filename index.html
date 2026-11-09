@@ -58,7 +58,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .t-teal{background:linear-gradient(135deg,#0d9488,#14b8a6)}
 .t-red{background:linear-gradient(135deg,#b72f3b,#dc2626)}
 
-/* تنسيق الإيصال الحراري عند الطباعة */
 @media print{
  body *{visibility:hidden!important}
  #thermalReceipt, #thermalReceipt *{visibility:visible!important}
@@ -80,24 +79,13 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  </div>
 </header>
 
-<!-- الواجهة الرئيسية ودخول المستخدمين والمتاجر -->
+<!-- الواجهة الافتتاحية: إنشاء الحساب مباشرة مع زر لدخول المالك أو تسجيل الدخول -->
 <section id="auth">
  <div class="card" style="max-width:500px;margin:30px auto">
-  <h2>مرحبًا بك في النظام</h2>
-  <p class="muted">سجل الدخول لإدارة نشاطك التجاري</p>
-  <nav>
-   <button id="tabLogin" class="active" onclick="showAuth('login')">تسجيل الدخول</button>
-   <button id="tabRegister" onclick="showAuth('register')">إنشاء حساب جديد</button>
-   <button id="tabOwner" onclick="showAuth('owner')">لوحة التحكم</button>
-  </nav>
+  <h2>إنشاء حساب جديد في النظام</h2>
+  <p class="muted">أدخل بيانات نشاطك لإنشاء الحساب والتواصل للتفعيل</p>
 
-  <div id="loginBox">
-   <label>البريد الإلكتروني</label><input id="loginEmail" type="email">
-   <label>كلمة المرور</label><input id="loginPassword" type="password">
-   <button class="big" onclick="login()">دخول للنظام</button>
-  </div>
-
-  <div id="registerBox" class="hidden">
+  <div id="registerBox">
    <label>اسم النشاط التجاري</label><input id="regShop">
    <label>اسم المسؤول</label><input id="regName">
    <label>رقم الهاتف</label><input id="regPhone">
@@ -106,11 +94,29 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button class="big green" onclick="register()">إنشاء الحساب وتواصل مع المطور للاستلام والدفع والتفعيل</button>
   </div>
 
-  <div id="ownerBox" class="hidden">
+  <div style="margin-top:15px;text-align:center;">
+   <button class="secondary" onclick="toggleAuthMode('login')" style="font-size:12px;padding:6px 12px;">لديك حساب بالفعل؟ تسجيل الدخول</button>
+   <button class="dark" onclick="toggleAuthMode('owner')" style="font-size:12px;padding:6px 12px;margin-right:5px;">لوحة التحكم</button>
+  </div>
+
+  <!-- صندوق تسجيل الدخول المخفي افتراضياً -->
+  <div id="loginBox" class="hidden" style="margin-top:15px;border-top:1px solid #eee;padding-top:15px;">
+   <h3>تسجيل الدخول</h3>
+   <label>البريد الإلكتروني</label><input id="loginEmail" type="email">
+   <label>كلمة المرور</label><input id="loginPassword" type="password">
+   <button class="big" onclick="login()">دخول للنظام</button>
+   <button class="secondary big" onclick="toggleAuthMode('register')" style="margin-top:5px;">← العودة لإنشاء حساب</button>
+  </div>
+
+  <!-- صندوق دخول المالك المخفي افتراضياً -->
+  <div id="ownerBox" class="hidden" style="margin-top:15px;border-top:1px solid #eee;padding-top:15px;">
+   <h3>دخول لوحة التحكم</h3>
    <label>اسم المستخدم الإداري</label><input id="ownerUsername">
    <label>كلمة المرور</label><input id="ownerPassword" type="password">
    <button class="big dark" onclick="ownerLogin()">دخول لوحة التحكم الشاملة</button>
+   <button class="secondary big" onclick="toggleAuthMode('register')" style="margin-top:5px;">← العودة لإنشاء حساب</button>
   </div>
+
   <p id="authMsg" class="msg hidden"></p>
  </div>
 </section>
@@ -121,7 +127,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <h2>تم إنشاء حسابك بنجاح! 🚀</h2>
   <p class="muted" style="line-height:1.8;">حسابك الآن قيد المراجعة وفي انتظار التفعيل. يرجى التواصل مع المطور (محمد الصلاحي) عبر واتساب لإتمام عملية الدفع والاستلام والتفعيل الفوري.</p>
   <button class="big green" onclick="sendWhatsAppActivation()" style="margin:15px 0;">💬 تواصل مع المطور للاستلام والدفع والتفعيل</button>
-  <button class="big secondary" onclick="location.reload()">العودة لتسجيل الدخول</button>
+  <button class="big secondary" onclick="location.reload()">العودة للرئيسية</button>
  </div>
 </section>
 
@@ -359,11 +365,14 @@ const docRef=(name,id)=>doc(db,shopRef(),name,id);
 
 function message(t){$("authMsg").textContent=t;$("authMsg").classList.remove("hidden")}
 
-window.showAuth=function(which){
- ["loginBox","registerBox","ownerBox"].forEach(x=>$(x).classList.add("hidden"));
- ["tabLogin","tabRegister","tabOwner"].forEach(x=>$(x).classList.remove("active"));
- const m={login:["loginBox","tabLogin"],register:["registerBox","tabRegister"],owner:["ownerBox","tabOwner"]};
- $(m[which][0]).classList.remove("hidden");$(m[which][1]).classList.add("active");$("authMsg").classList.add("hidden");
+window.toggleAuthMode=function(mode){
+ $("registerBox").classList.add("hidden");
+ $("loginBox").classList.add("hidden");
+ $("ownerBox").classList.add("hidden");
+ if(mode==='register') $("registerBox").classList.remove("hidden");
+ if(mode==='login') $("loginBox").classList.remove("hidden");
+ if(mode==='owner') $("ownerBox").classList.remove("hidden");
+ $("authMsg").classList.add("hidden");
 };
 
 window.login=async()=>{
@@ -396,7 +405,7 @@ window.register=async()=>{
   const cred=await createUserWithEmailAndPassword(auth,email,password);
   await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",status:"pending",createdAt:serverTimestamp()});
   
-  lastRegisteredUser={name,shop,email};
+  lastRegisteredUser={name,shop,phone,email};
   await signOut(auth);
   
   $("auth").classList.add("hidden");
@@ -405,8 +414,8 @@ window.register=async()=>{
 };
 
 window.sendWhatsAppActivation=()=>{
- const data=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:""};
- const msg=encodeURIComponent(`مرحبًا، أنا ${data.name} صاحب نشاط "${data.shop}"، قمت بإنشاء حساب جديد وبريدي هو: ${data.email}، وأرغب في دفع الاشتراك وتفعيل الحساب والاستلام.`);
+ const data=lastRegisteredUser||{name:"عميل",shop:"نشاط",phone:"",email:""};
+ const msg=encodeURIComponent(`مرحبًا، أنا ${data.name} صاحب نشاط "${data.shop}"، رقم الهاتف: ${data.phone}، قمت بإنشاء حساب جديد وبريدي هو: ${data.email}، وأرغب في دفع الاشتراك وتفعيل الحساب والاستلام.`);
  window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
 };
 

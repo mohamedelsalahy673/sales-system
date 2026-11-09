@@ -101,7 +101,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <label>رقم الهاتف</label><input id="regPosPhone">
     <label>البريد الإلكتروني</label><input id="regPosEmail" type="email">
     <label>كلمة المرور</label><input id="regPosPassword" type="password">
-    <button class="big green" onclick="registerSystem('pos')">إنشاء حساب مبيعات والتواصل مع المطور</button>
+    <button class="big green" onclick="registerSystem('pos')">إنشاء حساب وتواصل مع المطور للاستلام والدفع</button>
    </div>
   </div>
 
@@ -133,6 +133,16 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button class="big dark" onclick="ownerLogin()">دخول لوحة التحكم الشاملة</button>
   </div>
   <p id="authMsg" class="msg hidden"></p>
+ </div>
+</section>
+
+<!-- شاشة الانتظار للعميل الجديد بعد التسجيل -->
+<section id="pendingScreen" class="hidden">
+ <div class="card" style="max-width:550px;margin:40px auto;text-align:center;">
+  <h2>تم إنشاء حسابك بنجاح! 🚀</h2>
+  <p class="muted" style="line-height:1.8;">حسابك الآن قيد المراجعة وفي انتظار التفعيل. يرجى التواصل مع المطور (محمد الصلاحي) عبر واتساب لإتمام عملية الدفع والاستلام والتفعيل الفوري.</p>
+  <button class="big green" onclick="sendWhatsAppActivation()" style="margin:15px 0;">💬 تواصل مع المطور للاستلام والدفع والتفعيل</button>
+  <button class="big secondary" onclick="location.reload()">العودة لتسجيل الدخول</button>
  </div>
 </section>
 
@@ -279,7 +289,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     </div>
     <button class="big purple" onclick="savePsStockItem()">حفظ الصنف</button>
    </div>
-   <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>التصنيف</th><th>شراء</th><th>بيع</th><th>المخزون</th><th>إجراء</th></tr></thead><tbody id="psStockTable"></tbody></table></div>
+   <div class="tablewrap"><thead><tr><th>الصنف</th><th>التصنيف</th><th>شراء</th><th>بيع</th><th>المخزون</th><th>إجراء</th></tr></thead><tbody id="psStockTable"></tbody></table></div>
   </div>
 
   <!-- 4. التقفيل -->
@@ -324,6 +334,7 @@ const SUPPORT_PHONE="01062883414";
 let currentUser = null;
 let posProducts = [], posCart = [], posSales = [], posTreasury = [];
 let selectedPosProduct = null;
+let lastRegisteredUser = null;
 
 let psDevices = [], psStockItems = [], psCart = [];
 let totalPSRevenue = 0, totalCafeRevenue = 0;
@@ -333,7 +344,8 @@ const shopRef = () => `shops/${currentUser?.uid}`;
 const col = name => collection(db, shopRef(), name);
 
 window.switchPortal = function(type){
- ["posPortal","psPortal","ownerPortal"].forEach(x=>$(x)?.classList.add("hidden"));
+ ["posPortal","psPortal","ownerPortal","pendingScreen"].forEach(x=>$(x)?.classList.add("hidden"));
+ $("auth").classList.remove("hidden");
  ["tabPos","tabPs","tabOwner"].forEach(x=>$(x)?.classList.remove("active"));
  if(type==='pos'){$("posPortal").classList.remove("hidden");$("tabPos").classList.add("active");}
  if(type==='ps'){$("psPortal").classList.remove("hidden");$("tabPs").classList.add("active");}
@@ -353,7 +365,17 @@ window.showSubAuth = function(sys,type){
 window.loginSystem = async(sys)=>{
  const email = $(sys+'Email').value.trim(), pass = $(sys+'Password').value;
  if(!email || !pass) return alert("أدخل البريد وكلمة المرور.");
- try{ await signInWithEmailAndPassword(auth, email, pass); }catch(e){ alert("خطأ: "+e.message); }
+ try{ 
+  const cred = await signInWithEmailAndPassword(auth, email, pass);
+  if(email.toLowerCase() !== OWNER_EMAIL.toLowerCase()){
+   const snap = await getDoc(doc(db, "users", cred.user.uid));
+   if(snap.exists() && snap.data().status === "pending"){
+    await signOut(auth);
+    alert("حسابك قيد المراجعة ولم يتم تفعيله بعد. يرجى التواصل مع المطور للاستلام والدفع والتفعيل.");
+    return;
+   }
+  }
+ }catch(e){ alert("خطأ: "+e.message); }
 };
 
 window.registerSystem = async(sys)=>{
@@ -365,11 +387,13 @@ window.registerSystem = async(sys)=>{
  if(!shop || !email || !pass || !phone) return alert("أكمل البيانات المطلوبة.");
  try{
   const cred = await createUserWithEmailAndPassword(auth, email, pass);
-  await setDoc(doc(db, "users", cred.user.uid), { shopName: shop, customerName: name, phone, email, sysType: sys, status: "active", createdAt: serverTimestamp() });
+  await setDoc(doc(db, "users", cred.user.uid), { shopName: shop, customerName: name, phone, email, sysType: sys, status: "pending", createdAt: serverTimestamp() });
   
-  const msg = encodeURIComponent(`مرحبًا، أنا ${name} صاحب محل "${shop}"، قمت بإنشاء حساب مبيعات، وبريدي هو: ${email}، وأرغب بإتمام الدفع والتفعيل والاستلام.`);
-  window.open(`https://wa.me/2${SUPPORT_PHONE.replace(/^0/,"")}?text=${msg}`, "_blank");
-  alert("تم تسجيل حسابك بنجاح ووصلت البيانات للإدارة. برجاء التواصل مع المطور عبر واتساب للاستلام والدفع والتفعيل.");
+  lastRegisteredUser = { name, shop, email };
+  await signOut(auth); // منع الدخول التلقائي فوراً
+  
+  $("auth").classList.add("hidden");
+  $("pendingScreen").classList.remove("hidden");
  }catch(e){ alert("خطأ: "+e.message); }
 };
 
@@ -383,13 +407,21 @@ window.registerPSWithWhatsApp = async()=>{
  try{
   const cred = await createUserWithEmailAndPassword(auth, email, pass);
   await setDoc(doc(db, "users", cred.user.uid), { 
-   shopName: shop, customerName: name, phone, email, sysType: "ps", status: "active", createdAt: serverTimestamp() 
+   shopName: shop, customerName: name, phone, email, sysType: "ps", status: "pending", createdAt: serverTimestamp() 
   });
   
-  const msg = encodeURIComponent(`مرحبًا، أنا ${name} صاحب صالة "${shop}"، قمت بإنشاء حساب كاشير البلايستيشن، وبريدي هو: ${email}، وأرغب بإتمام الدفع والتفعيل والاستلام.`);
-  window.open(`https://wa.me/2${SUPPORT_PHONE.replace(/^0/,"")}?text=${msg}`, "_blank");
-  alert("تم تسجيل حسابك بنجاح ووصلت البيانات للإدارة. برجاء التواصل مع المطور عبر واتساب للاستلام والدفع والتفعيل.");
+  lastRegisteredUser = { name, shop, email };
+  await signOut(auth); // منع الدخول التلقائي فوراً
+  
+  $("auth").classList.add("hidden");
+  $("pendingScreen").classList.remove("hidden");
  }catch(e){ alert("خطأ في التسجيل: "+e.message); }
+};
+
+window.sendWhatsAppActivation = ()=>{
+ const data = lastRegisteredUser || { name: "عميل", shop: "نشاط", email: "" };
+ const msg = encodeURIComponent(`مرحبًا، أنا ${data.name} صاحب محل/صالة "${data.shop}"، قمت بإنشاء حساب جديد وبريدي هو: ${data.email}، وأرغب في دفع الاشتراك وتفعيل الحساب والاستلام.`);
+ window.open(`https://wa.me/2${SUPPORT_PHONE.replace(/^0/,"")}?text=${msg}`, "_blank");
 };
 
 window.ownerLogin = async()=>{
@@ -407,11 +439,11 @@ onAuthStateChanged(auth, async user=>{
   $("posSystemPanel").classList.add("hidden");
   $("psSystemPanel").classList.add("hidden");
   $("ownerPanel").classList.add("hidden");
-  $("auth").classList.remove("hidden");
   return;
  }
  if(user.email?.toLowerCase() === OWNER_EMAIL.toLowerCase()){
   $("auth").classList.add("hidden");
+  $("pendingScreen").classList.add("hidden");
   $("ownerPanel").classList.remove("hidden");
   loadUsersList();
   return;
@@ -419,7 +451,14 @@ onAuthStateChanged(auth, async user=>{
  const snap = await getDoc(doc(db, "users", user.uid));
  if(!snap.exists()) return;
  const u = snap.data();
+ 
+ if(u.status === "pending"){
+  await signOut(auth);
+  return;
+ }
+
  $("auth").classList.add("hidden");
+ $("pendingScreen").classList.add("hidden");
  if(u.sysType === 'pos'){
   $("posSystemPanel").classList.remove("hidden");
   loadPOSCloudData();
@@ -433,8 +472,34 @@ async function loadUsersList(){
  const s = await getDocs(collection(db, "users"));
  const list = s.docs.map(d=>({id: d.id, ...d.data()})).filter(u=>u.email!==OWNER_EMAIL);
  $("totalUsers").textContent = list.length;
- $("usersTable").innerHTML = list.map(u=>`<tr><td>${u.shopName}</td><td>${u.sysType}</td><td>${u.email}</td><td>${u.phone}</td><td>${u.status}</td><td>-</td></tr>`).join("");
+ $("usersTable").innerHTML = list.map(u=>`<tr>
+  <td>${u.shopName}</td>
+  <td>${u.sysType}</td>
+  <td>${u.email}</td>
+  <td>${u.phone}</td>
+  <td><span class="tag ${u.status==='active'?'good':''}">${u.status}</span></td>
+  <td>
+   ${u.status==='pending'?`<button class="rowbtn green" onclick="activateUser('${u.id}')">تفعيل</button>`:''}
+   <button class="rowbtn red" onclick="deleteUser('${u.id}')">حذف</button>
+  </td>
+ </tr>`).join("");
 }
+
+window.activateUser = async(id)=>{
+ try{
+  await updateDoc(doc(db, "users", id), { status: "active" });
+  alert("تم تفعيل الحساب بنجاح!");
+  loadUsersList();
+ }catch(e){ alert("خطأ: "+e.message); }
+};
+
+window.deleteUser = async(id)=>{
+ if(!confirm("هل أنت متأكد من حذف هذا الحساب؟")) return;
+ try{
+  await deleteDoc(doc(db, "users", id));
+  loadUsersList();
+ }catch(e){ alert("خطأ: "+e.message); }
+};
 
 // ================= سيستم المبيعات الشامل =================
 window.pagePos = function(page){
@@ -749,7 +814,7 @@ function renderPsStockTable(){
  const tbody = $("psStockTable");
  if(!tbody) return;
  tbody.innerHTML = psStockItems.map(i=>`<tr><td>${i.name}</td><td>${i.cat}</td><td>${i.cost} ج</td><td>${i.price} ج</td><td><b>${i.qty}</b></td><td><button class="rowbtn red" onclick="deletePsStockItem('${i.id}')">حذف</button></td></tr>`).join("") || "<tr><td colspan='6'>المخزن فارغ.</td></tr>";
-}
+};
 
 window.completeNightShift = ()=>{
  if(!confirm("هل أنت متأكد من تقفيل الوردية؟")) return;
@@ -765,7 +830,11 @@ setInterval(()=>{
  }
 }, 1000);
 
-window.logout = ()=> signOut(auth);
+window.logout = async()=>{
+ await signOut(auth);
+ window.location.reload();
+};
+
 window.support = ()=> window.open("https://wa.me/2"+SUPPORT_PHONE.replace(/^0/,""),"_blank");
 </script>
 </body>

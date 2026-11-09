@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NexPOS PRO - Complete POS & Inventory System</title>
+<title>NexPOS PRO - ELSALAHY Edition</title>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
 *{box-sizing:border-box}
@@ -18,7 +18,7 @@ h2,h3{margin-top:0}
 .wrap{max-width:1350px;margin:auto;padding:15px}
 .card{background:white;padding:18px;border-radius:14px;margin:12px 0;box-shadow:0 3px 15px #1822380b}
 .brand{font-size:26px;font-weight:bold;color:#2458d3}
-.version{display:block;color:#fff;background:#2458d3;border-radius:5px;padding:3px 8px;font-size:10px;width:max-content;margin-top:5px;letter-spacing:1px}
+.version{display:block;color:#fff;background:#2458d3;border-radius:5px;padding:3px 8px;font-size:10px;width:max-content;margin-top:5px;letter-spacing:1px;font-weight:bold;}
 .muted{font-size:13px;color:#788397}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
@@ -71,7 +71,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <header class="top">
  <div>
   <div class="brand">NexPOS PRO</div>
-  <span class="version">SAHL EDITION V7</span>
+  <span class="version">ELSALAHY</span>
   <div class="muted">نظام إدارة المبيعات والمخازن وبرنامج المحلات الشامل</div>
  </div>
  <div>
@@ -309,7 +309,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <!-- قالب الإيصال الحراري المخصص للطباعة (Thermal Receipt) -->
 <div id="thermalReceipt" class="hidden">
  <div style="text-align:center;font-weight:bold;font-size:16px;margin-bottom:5px;" id="receiptShopName">متجرك التجاري</div>
- <div style="text-align:center;font-size:11px;margin-bottom:10px;">نظام المبيعات المعتمد - سهل</div>
+ <div style="text-align:center;font-size:11px;margin-bottom:10px;">ELSALAHY POS SYSTEM</div>
  <div style="border-bottom:1px dashed #000;margin-bottom:8px;"></div>
  <div>رقم الفاتورة: <span id="receiptInvNo"></span></div>
  <div>التاريخ: <span id="receiptDate"></span></div>
@@ -323,7 +323,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  <div style="text-align:center;margin-top:15px;font-size:10px;">شكرًا لتعاملكم معنا ❤️</div>
 </div>
 
-<footer class="muted" style="text-align:center;padding:20px">NexPOS PRO — تم التطوير بواسطة محمد صلاح الصلاحي</footer>
+<footer class="muted" style="text-align:center;padding:20px">NexPOS PRO ELSALAHY — تم التطوير بواسطة محمد صلاح الصلاحي</footer>
 </div>
 
 <script type="module">
@@ -442,7 +442,6 @@ onAuthStateChanged(auth,async user=>{
   $("customerPanel").classList.remove("hidden");
   $("shopTitle").textContent=profile.shopName||"نظام المبيعات والمخزون";
 
-  // تطبيق الصلاحيات للموظف (كاشير)
   if(profile.role === 'staff'){
    $("userRoleBadge").textContent = "صلاحية كاشير (مبيعات فقط)";
    $("tileProducts").classList.add("hidden");
@@ -495,7 +494,7 @@ window.updateCustomerPassword=async()=>{
   await updatePassword(auth.currentUser, newPass);
   $("newCustomerPassword").value="";
   alert("تم تحديث كلمة المرور بنجاح!");
- }catch(e){alert("خطأ: "+e.message+". (قد يتطلب الأمر إعادة تسجيل الدخول لتحديث كلمة المرور لأسباب أمنية)");}
+ }catch(e){alert("خطأ: "+e.message+".");}
 };
 
 window.createStaffAccount=async()=>{
@@ -504,8 +503,6 @@ window.createStaffAccount=async()=>{
  const pass=$("staffPassword").value;
  if(!name || !email || !pass) return alert("أكمل بيانات الموظف.");
  try{
-  // إنشاء حساب الموظف في فايربيز باستخدام secondary auth أو إنشاء مستجيل جديد وتوجيهه
-  alert("ملاحظة: لربط الكاشير بنشاطك، يمكنك التواصل مع الدعم الفني أو تسجيله ببريد مستقل وتحديد دوره كـ staff.");
   const cred = await createUserWithEmailAndPassword(auth, email, pass);
   await setDoc(doc(db,"users",cred.user.uid),{
    shopName: profile.shopName, customerName: name, phone: "", email, role: "staff", ownerUid: currentUser.uid, status: "active", createdAt: serverTimestamp()
@@ -553,12 +550,9 @@ function renderProducts(){
  $("productsTable").innerHTML=products.map(p=>`<tr><td><span class="tag">${p.barcode||'بدون'}</span></td><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='6'>لا توجد منتجات</td></tr>";
 }
 
-// ميزة قارئ الباركود الفوري (Barcode Scanner Support)
 window.handleBarcodeScan=(val)=>{
  const q=val.trim().toLowerCase();
  if(!q) { $("searchResults").innerHTML=""; return; }
- 
- // فحص إذا تم مسح الباركود بالكامل ومطابقته مباشرة
  const exactMatch = products.find(p => (p.barcode||"").toLowerCase() === q);
  if(exactMatch){
   selectedProduct = exactMatch;
@@ -569,9 +563,8 @@ window.handleBarcodeScan=(val)=>{
   $("searchResults").innerHTML = "";
   return;
  }
-
  const matches=products.filter(p=>(p.name||"").toLowerCase().includes(q) || (p.barcode||"").toLowerCase().includes(q) && p.qty>0).slice(0,5);
- $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${p.name} (بارجود: ${p.barcode||'--'}) — ${money(p.price)} ج (متاح: ${p.qty})</button>`).join("");
+ $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${p.name} (باركود: ${p.barcode||'--'}) — ${money(p.price)} ج (متاح: ${p.qty})</button>`).join("");
 };
 
 window.selectSaleProduct=id=>{
@@ -606,22 +599,17 @@ window.completeSale=async()=>{
   }
   await addDoc(col("sales"),invoice);
   await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoiceNumber}`,date:invoice.date});
-  
-  // طباعة الإيصال الحراري الفوري
   printThermalReceipt(invoice);
-
   cart=[];renderCart();await loadBusiness();
  }catch(e){alert("خطأ: "+e.message)}
 };
 
-// وظيفة طباعة الإيصال الحراري (Thermal Receipt Print)
 window.printThermalReceipt=(inv)=>{
  $("receiptShopName").textContent = profile?.shopName || "متجرك التجاري";
  $("receiptInvNo").textContent = inv.number;
  $("receiptDate").textContent = inv.date;
  $("receiptItemsBody").innerHTML = inv.items.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>${i.price}</td><td>${i.qty*i.price}</td></tr>`).join("");
  $("receiptTotal").textContent = money(inv.total);
- 
  window.print();
 };
 

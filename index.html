@@ -221,6 +221,9 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <label>البيان</label><input id="tNote" placeholder="التفاصيل">
     <button class="big green" onclick="addTreasuryTransaction()">تسجيل الحركة</button>
    </div>
+   <div style="margin: 15px 0;">
+    <button class="red" onclick="clearTreasuryData()">🗑️ تصفير ومسح حركات الخزينة القديمة</button>
+   </div>
    <div class="tablewrap"><table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
   </div>
 
@@ -435,6 +438,19 @@ async function loadProducts(){const s=await getDocs(col("products"));products=s.
 async function loadSales(){const s=await getDocs(col("sales"));sales=s.docs.map(d=>({id:d.id,...d.data()}));renderSales();}
 async function loadExpenses(){const s=await getDocs(col("expenses"));expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();}
 async function loadTreasury(){const s=await getDocs(col("treasury"));treasury=s.docs.map(d=>({id:d.id,...d.data()}));renderTreasury();}
+
+window.clearTreasuryData=async()=>{
+ if(!confirm("هل أنت متأكد من مسح جميع حركات الخزينة القديمة تماماً؟"))return;
+ try{
+  const snap=await getDocs(col("treasury"));
+  for(const dDoc of snap.docs){
+   await deleteDoc(docRef("treasury",dDoc.id));
+  }
+  await loadTreasury();
+  renderStats();
+  alert("تم تصفير الخزينة وحذف الحركات القديمة بنجاح!");
+ }catch(e){alert("خطأ: "+e.message);}
+};
 
 window.saveProduct=async()=>{
  const name=$("pName").value.trim();

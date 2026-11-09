@@ -7,531 +7,399 @@
 <title>NexPOS PRO</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f3f6fb;color:#182238;font-family:Tahoma,Arial,sans-serif}
-button,input,select{font:inherit}
-button{border:0;border-radius:8px;padding:10px 14px;background:#2563eb;color:white;cursor:pointer}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f5fb;color:#182238}
+button,input{font:inherit}
+button{border:0;cursor:pointer;border-radius:10px;padding:12px 18px;background:#2457d6;color:white;font-weight:bold}
 button:hover{opacity:.9}
-.secondary{background:#e8edf6;color:#24344d}
-.danger{background:#dc3545}
-.success{background:#15966a}
-header{background:#172b4d;color:white;padding:17px 22px;display:flex;justify-content:space-between;align-items:center}
-header h1{margin:0;font-size:23px}
-.wrap{max-width:1400px;margin:auto;padding:18px}
+input{width:100%;padding:13px;margin:7px 0 13px;border:1px solid #dce2ee;border-radius:10px;outline:none}
+input:focus{border-color:#2457d6}
+a{color:#2457d6;cursor:pointer}
+header{background:#101c35;color:white;padding:20px 5%;display:flex;justify-content:space-between;align-items:center}
+header b{font-size:23px}
+.container{max-width:1050px;margin:35px auto;padding:15px}
+.card{background:white;padding:25px;border-radius:17px;box-shadow:0 5px 25px #18223812;margin-bottom:18px}
+.auth{max-width:460px;margin:35px auto}
+h2{margin-top:0}
+.muted{color:#758098;font-size:14px;line-height:1.8}
 .hidden{display:none!important}
-.hero,.panel,.card,.sidebar{background:white;border:1px solid #e2e8f0;border-radius:13px;padding:17px}
-.hero{margin-bottom:16px}
-.services,.stats,.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.service{background:white;border:1px solid #e2e8f0;border-radius:12px;padding:18px}
-.service b{display:block;margin-bottom:8px}
-.layout{display:grid;grid-template-columns:220px 1fr;gap:14px}
-.sidebar{height:max-content}
-.nav{width:100%;display:block;text-align:right;background:white;color:#24344d;margin:3px 0}
-.nav.active,.nav:hover{background:#eaf1ff;color:#1d4ed8}
-.content{min-width:0}
-.topline{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-label{display:block;font-size:13px;margin-bottom:5px;color:#526078}
-.field{margin:9px 0;min-width:0}
-input,select{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;background:white}
-table{width:100%;border-collapse:collapse;min-width:620px}
-th,td{padding:10px;border-bottom:1px solid #e5eaf0;text-align:right;font-size:13px}
-th{background:#f6f8fc}
-.tablewrap{overflow:auto;margin-top:12px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.stat{font-size:23px;font-weight:bold;margin-top:8px}
-.muted{color:#64748b;font-size:13px}
-.total{background:#eff5ff;border-radius:10px;padding:12px;margin-top:12px}
-.total div{display:flex;justify-content:space-between;margin:7px 0}
-.final{font-size:22px;color:#15966a;font-weight:bold}
-.footer{text-align:center;color:#64748b;font-size:12px;padding:22px}
-.footer b{color:#1d3557}
-.modal{position:fixed;inset:0;background:#0008;display:grid;place-items:center;padding:15px}
-.modalbox{background:white;padding:20px;border-radius:13px;width:min(420px,100%)}
-.toast{position:fixed;bottom:15px;left:15px;background:#172b4d;color:white;padding:12px 17px;border-radius:9px}
-.barcode-label{background:white;border:1px dashed #777;text-align:center;margin:15px auto;padding:8px;color:#111;max-width:100%}
-.barcode-bars{height:55px;display:flex;justify-content:center;overflow:hidden;gap:1px}
-.barcode-bars i{display:block;background:#111;height:100%}
-@media(max-width:800px){
-.layout{grid-template-columns:1fr}
-.sidebar{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
-.nav{text-align:center;font-size:12px;padding:9px 3px}
-.wrap{padding:9px}
-}
-@media print{
-header,.sidebar,.topline,.no-print,.footer{display:none!important}
-body{background:white}
-.wrap{padding:0}
-}
+.links{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px}
+.status{padding:13px;border-radius:10px;background:#fff5dc;color:#865d00;margin:15px 0}
+.success{background:#e8f8ef;color:#16733b}
+.danger{background:#fff0f0;color:#a12b2b}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #eee;flex-wrap:wrap}
+.small{font-size:12px;color:#778}
+.secondary{background:#e9efff;color:#2457d6}
+.red{background:#b52c38}
+table{width:100%;border-collapse:collapse}
+td,th{padding:12px;border-bottom:1px solid #eee;text-align:right}
+footer{text-align:center;color:#7b8498;padding:25px;font-size:13px}
+@media(max-width:600px){header{padding:17px}.container{margin:15px auto}.card{padding:18px}td,th{font-size:12px;padding:8px}}
 </style>
 </head>
 <body>
 
 <header>
- <div><h1>NexPOS PRO</h1><small>نظام إدارة المبيعات والمخزون</small></div>
- <small id="today"></small>
+  <b>NexPOS PRO</b>
+  <span>نظام إدارة المبيعات والمخازن</span>
 </header>
 
-<div class="wrap">
+<div class="container">
 
-<section id="home">
- <div class="hero">
-  <h2>مرحباً بك في NexPOS PRO</h2>
-  <p class="muted">كل أدوات إدارة نشاطك التجاري في نظام واحد.</p>
-  <div class="actions">
-   <button onclick="enterApp()">دخول النظام</button>
-   <button class="secondary" onclick="ownerDialog()">دخول المالك</button>
-   <a href="https://wa.me/201062883414"><button class="success">تواصل معنا</button></a>
-  </div>
- </div>
- <div class="services">
-  <div class="service"><b>🧾 المبيعات</b><span class="muted">بيع وفواتير وخصومات.</span></div>
-  <div class="service"><b>📦 المنتجات</b><span class="muted">إدارة الأصناف والمخزون.</span></div>
-  <div class="service"><b>🏷️ الباركود</b><span class="muted">تصميم وطباعة الملصقات.</span></div>
-  <div class="service"><b>👥 العملاء</b><span class="muted">إدارة بيانات العملاء.</span></div>
-  <div class="service"><b>🚚 الموردون</b><span class="muted">إدارة الموردين.</span></div>
-  <div class="service"><b>🛒 المشتريات</b><span class="muted">تسجيل التوريدات.</span></div>
-  <div class="service"><b>💰 الخزينة</b><span class="muted">حركة النقدية.</span></div>
-  <div class="service"><b>📊 التقارير</b><span class="muted">تقارير المبيعات والأرباح.</span></div>
- </div>
-</section>
+  <section id="home">
+    <div class="card">
+      <h2>مرحباً بك في NexPOS PRO</h2>
+      <p class="muted">نظام متكامل لإدارة المحلات والمبيعات والمخازن والحسابات.</p>
+      <button onclick="show('login')">دخول النظام</button>
+      <button class="secondary" onclick="show('ownerLogin')">دخول المالك</button>
+    </div>
+  </section>
 
-<section id="app" class="hidden">
- <div class="layout">
-  <aside class="sidebar no-print">
-   <button class="nav active" onclick="go('dashboard')">الرئيسية</button>
-   <button class="nav" onclick="go('sales')">المبيعات</button>
-   <button class="nav" onclick="go('products')">المنتجات</button>
-   <button class="nav" onclick="go('invoices')">الفواتير</button>
-   <button class="nav" onclick="go('customers')">العملاء</button>
-   <button class="nav" onclick="go('suppliers')">الموردون</button>
-   <button class="nav" onclick="go('purchases')">المشتريات</button>
-   <button class="nav" onclick="go('expenses')">المصروفات</button>
-   <button class="nav" onclick="go('cash')">الخزينة</button>
-   <button class="nav" onclick="go('reports')">التقارير</button>
-   <button class="nav" onclick="go('barcode')">الباركود</button>
-   <button class="nav" onclick="go('settings')">الإعدادات</button>
-   <button class="nav" onclick="backHome()">الصفحة الرئيسية</button>
-  </aside>
-  <main class="content">
-   <div class="topline no-print">
-    <b id="pageTitle">لوحة التحكم</b>
-    <a href="https://wa.me/201062883414"><button class="success">الدعم والتواصل</button></a>
-   </div>
-   <div id="page" class="panel"></div>
-  </main>
- </div>
-</section>
+  <section id="login" class="auth hidden">
+    <div class="card">
+      <h2>تسجيل دخول العميل</h2>
+      <p class="muted">أدخل بيانات حسابك للدخول إلى النظام.</p>
+      <input id="loginEmail" type="email" placeholder="البريد الإلكتروني">
+      <input id="loginPass" type="password" placeholder="كلمة المرور">
+      <button style="width:100%" onclick="login()">تسجيل الدخول</button>
+      <div class="links">
+        <a onclick="show('register')">إنشاء حساب جديد</a>
+        <a onclick="show('forgot')">هل نسيت كلمة المرور؟</a>
+      </div>
+      <p class="muted"><a onclick="show('home')">العودة للرئيسية</a></p>
+    </div>
+  </section>
 
-<section id="owner" class="hidden">
- <div class="topline"><h2>لوحة المالك</h2><button class="secondary" onclick="backHome()">رجوع</button></div>
- <div id="ownerPage" class="panel"></div>
-</section>
+  <section id="register" class="auth hidden">
+    <div class="card">
+      <h2>إنشاء حساب جديد</h2>
+      <p class="muted">سجل بيانات المحل وسيتم إرسال طلب تفعيل للمالك.</p>
+      <input id="shopName" placeholder="اسم المحل">
+      <input id="customerName" placeholder="اسم صاحب المحل">
+      <input id="customerPhone" type="tel" placeholder="رقم الموبايل">
+      <input id="registerEmail" type="email" placeholder="البريد الإلكتروني">
+      <input id="registerPass" type="password" placeholder="كلمة المرور (6 أحرف على الأقل)">
+      <button style="width:100%" onclick="register()">إنشاء الحساب وإرسال طلب التفعيل</button>
+      <p class="muted"><a onclick="show('login')">لديك حساب بالفعل؟ تسجيل الدخول</a></p>
+    </div>
+  </section>
 
-<div class="footer">
- تم التطوير بواسطة <b>المهندس محمد الصلاحي</b><br>
- للتواصل مع المطور والمالك: <b>01062883414</b>
+  <section id="forgot" class="auth hidden">
+    <div class="card">
+      <h2>استعادة كلمة المرور</h2>
+      <p class="muted">أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور.</p>
+      <input id="resetEmail" type="email" placeholder="البريد الإلكتروني">
+      <button style="width:100%" onclick="forgotPassword()">إرسال رابط الاستعادة</button>
+      <p class="muted"><a onclick="show('login')">العودة لتسجيل الدخول</a></p>
+    </div>
+  </section>
+
+  <section id="pending" class="auth hidden">
+    <div class="card">
+      <h2>طلبك قيد المراجعة</h2>
+      <div class="status">حسابك لم يتم تفعيله بعد. انتظر مراجعة المالك لطلب الاشتراك.</div>
+      <p class="muted">بعد إتمام الدفع وتفعيل حسابك ستتمكن من استخدام النظام.</p>
+      <button onclick="checkStatus()">تحديث حالة الحساب</button>
+      <button class="secondary" onclick="logout()">تسجيل الخروج</button>
+    </div>
+  </section>
+
+  <section id="suspended" class="auth hidden">
+    <div class="card">
+      <h2>الحساب غير نشط</h2>
+      <div class="status danger">تم إيقاف الحساب أو انتهت مدة الاشتراك. يرجى التواصل مع إدارة النظام.</div>
+      <p>للتواصل: 01062883414</p>
+      <button onclick="logout()">تسجيل الخروج</button>
+    </div>
+  </section>
+
+  <section id="ownerLogin" class="auth hidden">
+    <div class="card">
+      <h2>دخول مالك النظام</h2>
+      <input id="ownerUser" placeholder="اسم المستخدم">
+      <input id="ownerPass" type="password" placeholder="كلمة المرور">
+      <button style="width:100%" onclick="ownerLogin()">دخول لوحة المالك</button>
+      <p class="muted"><a onclick="show('home')">العودة للرئيسية</a></p>
+    </div>
+  </section>
+
+  <section id="ownerPanel" class="hidden">
+    <div class="card">
+      <div class="row">
+        <div>
+          <h2>لوحة تحكم المالك</h2>
+          <p class="muted">إدارة طلبات التسجيل والاشتراكات.</p>
+        </div>
+        <button class="red" onclick="logout()">خروج</button>
+      </div>
+      <div id="ownerStats" class="status">جاري تحميل البيانات...</div>
+      <h3>طلبات العملاء والحسابات</h3>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>العميل والمحل</th>
+              <th>التواصل</th>
+              <th>الحالة</th>
+              <th>الاشتراك</th>
+              <th>الإجراء</th>
+            </tr>
+          </thead>
+          <tbody id="customersList"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="customerApp" class="hidden">
+    <div class="card">
+      <div class="row">
+        <div>
+          <h2>NexPOS PRO</h2>
+          <p class="muted">تم تفعيل حسابك بنجاح.</p>
+        </div>
+        <button class="red" onclick="logout()">تسجيل الخروج</button>
+      </div>
+      <div class="status success">اشتراكك فعال. مرحباً بك في النظام.</div>
+      <h3>خدمات النظام</h3>
+      <p>المبيعات - المنتجات - المخزون - الفواتير - العملاء - الموردون - المشتريات - المصروفات - الخزينة - التقارير - إعدادات الباركود.</p>
+      <p class="muted">اربط هذه الصفحة بأقسام برنامج المبيعات الحالي بعد تسجيل الدخول.</p>
+    </div>
+  </section>
+
 </div>
-</div>
 
-<div id="modal" class="modal hidden">
- <div class="modalbox" id="modalContent"></div>
-</div>
-<div id="toast" class="toast hidden"></div>
+<footer>
+  NexPOS PRO | تم التطوير بواسطة المهندس محمد الصلاحي
+  <br>الدعم والتواصل: 01062883414
+</footer>
 
-<script>
-const KEY='NEXPOS_PRO_DATA';
-const initial={
- shop:{name:'',phone:'',address:''},
- products:[],sales:[],customers:[],suppliers:[],
- purchases:[],expenses:[],cash:[],
- barcode:{shopName:'',showShop:true,showPrice:false,customName:'',width:50,height:30,font:12},
- sequence:1
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  sendPasswordResetEmail, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {
+  getFirestore, doc, setDoc, getDoc, collection, getDocs,
+  updateDoc, serverTimestamp, addDoc, query, orderBy
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+/* ضع بيانات مشروع Firebase هنا */
+const firebaseConfig = {
+  apiKey: "ضع_API_KEY",
+  authDomain: "ضع_PROJECT_ID.firebaseapp.com",
+  projectId: "ضع_PROJECT_ID",
+  storageBucket: "ضع_PROJECT_ID.firebasestorage.app",
+  messagingSenderId: "ضع_MESSAGING_SENDER_ID",
+  appId: "ضع_APP_ID"
 };
-let db=load();
-let cart=[];
-let selectedProduct=null;
 
-function load(){
- try{
-  return Object.assign(structuredClone(initial),JSON.parse(localStorage.getItem(KEY)||'{}'));
- }catch(e){return structuredClone(initial)}
-}
-function save(){localStorage.setItem(KEY,JSON.stringify(db))}
-function money(n){return Number(n||0).toLocaleString('en-US',{maximumFractionDigits:2})+' ج.م'}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
-function notify(s){
- let x=document.getElementById('toast');
- x.textContent=s;x.classList.remove('hidden');
- setTimeout(()=>x.classList.add('hidden'),2500);
-}
-function enterApp(){
- home.classList.add('hidden');app.classList.remove('hidden');go('dashboard');
-}
-function backHome(){
- app.classList.add('hidden');owner.classList.add('hidden');home.classList.remove('hidden');
-}
-function go(name){
- document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
- let titles={dashboard:'لوحة التحكم',sales:'المبيعات',products:'المنتجات',invoices:'الفواتير',customers:'العملاء',suppliers:'الموردون',purchases:'المشتريات',expenses:'المصروفات',cash:'الخزينة',reports:'التقارير',barcode:'إعدادات الباركود',settings:'الإعدادات'};
- pageTitle.textContent=titles[name]||name;
- let views={dashboard,sales,products,invoices,customers:()=>people('customers'),suppliers:()=>people('suppliers'),purchases,expenses,cash,reports,barcode,settings};
- page.innerHTML=views[name]();
-}
-function dashboard(){
- let total=db.sales.reduce((a,x)=>a+x.total,0);
- return `<div class="stats">
- <div class="card"><b>إجمالي المبيعات</b><div class="stat">${money(total)}</div></div>
- <div class="card"><b>عدد الفواتير</b><div class="stat">${db.sales.length}</div></div>
- <div class="card"><b>عدد المنتجات</b><div class="stat">${db.products.length}</div></div>
- <div class="card"><b>العملاء</b><div class="stat">${db.customers.length}</div></div>
- </div><div class="actions"><button onclick="go('sales')">بدء عملية بيع</button><button class="secondary" onclick="go('products')">إضافة منتج</button></div>`;
+const OWNER_EMAIL = "melsalahy689@gmail.com";
+const OWNER_USERNAME = "elsalahy";
+const OWNER_PASSWORD = "12345678";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const $ = id => document.getElementById(id);
+let currentUser = null;
+
+window.show = function(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"));
+  $(id).classList.remove("hidden");
+};
+
+function notify(message){
+  alert(message);
 }
 
-/* المبيعات */
-function sales(){
- return `<h3>نقطة البيع</h3>
- <div class="fields">
-  <div class="field"><label>ابحث عن صنف بالاسم أو الباركود</label><input id="search" oninput="searchProducts()" placeholder="اسم الصنف أو الباركود"><div id="results"></div></div>
-  <div class="field"><label>استعلام سعر الشراء</label><input id="costQuery" readonly placeholder="سعر الشراء يظهر بعد اختيار الصنف"></div>
-  <div class="field"><label>الكمية المطلوب بيعها</label><input id="quantity" type="number" min="1" value="1"></div>
-  <div class="field"><label>سعر البيع</label><input id="price" type="number" min="0"></div>
- </div>
- <div class="fields">
-  <div class="field"><label>طريقة التحصيل</label><select id="payment"><option>درج النقدية</option><option>الخزينة</option><option>بطاقة الائتمان</option></select></div>
-  <div class="field"><label>العميل</label><select id="saleCustomer"><option>عميل نقدي</option>${db.customers.map(x=>`<option>${esc(x.name)}</option>`).join('')}</select></div>
- </div>
- <div class="actions"><button onclick="addToCart()">إضافة الصنف للفاتورة</button></div>
- <div class="tablewrap"><table><thead><tr><th>اسم الصنف</th><th>المتاح</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead><tbody id="cartRows">${cartTable()}</tbody></table></div>
- <div class="fields">
-  <div class="field"><label>الخصم</label><input id="discount" type="number" min="0" value="0" oninput="calcTotal()"></div>
-  <div class="field"><label>الإجمالي</label><input id="subtotal" readonly value="${cartTotal()}"></div>
-  <div class="field"><label>النهائي</label><input id="final" readonly value="${cartTotal()}"></div>
- </div>
- <div class="actions">
-  <button class="secondary" onclick="go('products')">إضافة منتج</button>
-  <button class="secondary" onclick="document.getElementById('discount').focus()">إضافة خصم</button>
-  <button class="danger" onclick="clearCart()">إلغاء الفاتورة</button>
-  <button class="success" onclick="finishSale()">إتمام البيع وطباعة الفاتورة</button>
- </div>`;
-}
-function searchProducts(){
- let q=document.getElementById('search').value.toLowerCase();
- let found=db.products.filter(x=>x.name.toLowerCase().includes(q)||x.barcode.toLowerCase().includes(q)).slice(0,8);
- results.innerHTML=q?found.map(x=>`<button class="secondary" style="margin:3px" onclick="chooseProduct('${x.id}')">${esc(x.name)} - ${money(x.price)} (المتاح ${x.qty})</button>`).join(''):'';
-}
-function chooseProduct(id){
- let p=db.products.find(x=>x.id===id);if(!p)return;
- selectedProduct=id;search.value=p.name;costQuery.value=money(p.cost);price.value=p.price;results.innerHTML='';
-}
-function addToCart(){
- let p=db.products.find(x=>x.id===selectedProduct);
- let q=Number(quantity.value),v=Number(price.value);
- if(!p)return notify('اختر صنفاً أولاً');
- if(q<=0||v<0)return notify('راجع الكمية والسعر');
- let old=cart.find(x=>x.id===p.id);
- if((old?.qty||0)+q>p.qty)return notify('الكمية أكبر من المتاح');
- if(old){old.qty+=q;old.price=v}else cart.push({id:p.id,name:p.name,qty:q,price:v,cost:p.cost});
- selectedProduct=null;go('sales');
-}
-function cartTotal(){return cart.reduce((a,x)=>a+x.qty*x.price,0)}
-function cartTable(){
- return cart.map((x,i)=>{
-  let p=db.products.find(p=>p.id===x.id);
-  return `<tr><td>${esc(x.name)}</td><td>${p?.qty||0}</td><td>${x.qty}</td><td>${money(x.price)}</td><td>${money(x.qty*x.price)}</td><td><button class="danger" onclick="removeCart(${i})">حذف</button></td></tr>`;
- }).join('')||'<tr><td colspan="6">لم تتم إضافة أصناف.</td></tr>';
-}
-function calcTotal(){
- let d=Math.max(0,Number(discount.value)||0);
- subtotal.value=money(cartTotal());
- final.value=money(Math.max(0,cartTotal()-d));
-}
-function removeCart(i){cart.splice(i,1);go('sales')}
-function clearCart(){cart=[];selectedProduct=null;go('sales')}
-function finishSale(){
- if(!cart.length)return notify('أضف صنفاً أولاً');
- let d=Math.max(0,Number(discount.value)||0),sub=cartTotal();
- if(d>sub)return notify('الخصم أكبر من الإجمالي');
- for(let x of cart){let p=db.products.find(p=>p.id===x.id);if(!p||p.qty<x.qty)return notify('راجع المخزون')}
- let sale={
-  id:db.sequence++,date:new Date().toLocaleString('ar-EG'),
-  items:cart.map(x=>({...x})),subtotal:sub,discount:d,total:sub-d,
-  cost:cart.reduce((a,x)=>a+x.cost*x.qty,0),
-  method:payment.value,customer:saleCustomer.value
- };
- cart.forEach(x=>db.products.find(p=>p.id===x.id).qty-=x.qty);
- db.sales.unshift(sale);
- db.cash.push({date:sale.date,type:'مبيعات',method:sale.method,amount:sale.total,note:'فاتورة '+sale.id});
- save();cart=[];go('invoices');printInvoice(sale.id);
+function isConfigured(){
+  return firebaseConfig.apiKey !== "ضع_API_KEY" &&
+         firebaseConfig.projectId !== "ضع_PROJECT_ID";
 }
 
-/* المنتجات */
-function products(){
- return `<h3>إضافة منتج</h3>
- <div class="fields">
- <div class="field"><label>اسم المنتج</label><input id="pName"></div>
- <div class="field"><label>الباركود</label><input id="pBarcode"></div>
- <div class="field"><label>سعر الشراء</label><input id="pCost" type="number" min="0" value="0"></div>
- <div class="field"><label>سعر البيع</label><input id="pPrice" type="number" min="0" value="0"></div>
- <div class="field"><label>الكمية</label><input id="pQty" type="number" min="0" value="0"></div>
- <div class="field"><label>التصنيف</label><input id="pCategory"></div>
- </div>
- <div class="actions"><button onclick="saveProduct()">حفظ المنتج</button><button class="secondary" onclick="go('barcode')">إعداد الباركود</button></div>
- <h3>قائمة المنتجات</h3>
- <div class="tablewrap"><table><thead><tr><th>الاسم</th><th>الباركود</th><th>الشراء</th><th>البيع</th><th>المتاح</th><th>إجراءات</th></tr></thead><tbody>
- ${db.products.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.barcode)}</td><td>${money(p.cost)}</td><td>${money(p.price)}</td><td>${p.qty}</td><td><button onclick="editProduct('${p.id}')">تعديل</button> <button onclick="printBarcode('${p.id}')">باركود</button> <button class="danger" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join('')||'<tr><td colspan="6">لا توجد منتجات.</td></tr>'}
- </tbody></table></div>`;
-}
-let editing=null;
-function saveProduct(){
- let name=pName.value.trim(),barcode=pBarcode.value.trim()||String(Date.now());
- let cost=Number(pCost.value),price=Number(pPrice.value),qty=Number(pQty.value);
- if(!name)return notify('اكتب اسم المنتج');
- if([cost,price,qty].some(x=>!Number.isFinite(x)||x<0))return notify('راجع البيانات');
- if(db.products.some(x=>x.barcode===barcode&&x.id!==editing))return notify('الباركود مستخدم');
- let data={name,barcode,cost,price,qty,category:pCategory.value};
- if(editing){Object.assign(db.products.find(x=>x.id===editing),data);editing=null}
- else db.products.push({id:uid(),...data});
- save();go('products');notify('تم حفظ المنتج');
-}
-function editProduct(id){
- let p=db.products.find(x=>x.id===id);if(!p)return;
- editing=id;go('products');
- pName.value=p.name;pBarcode.value=p.barcode;pCost.value=p.cost;pPrice.value=p.price;pQty.value=p.qty;pCategory.value=p.category||'';
-}
-function deleteProduct(id){
- if(!confirm('حذف المنتج؟'))return;
- db.products=db.products.filter(x=>x.id!==id);save();go('products');
-}
+window.register = async function(){
+  if(!isConfigured()) return notify("أضف بيانات Firebase أولاً.");
+  const shop = $("shopName").value.trim();
+  const name = $("customerName").value.trim();
+  const phone = $("customerPhone").value.trim();
+  const email = $("registerEmail").value.trim().toLowerCase();
+  const pass = $("registerPass").value;
 
-/* الفواتير */
-function invoices(){
- return `<h3>سجل الفواتير</h3><div class="tablewrap"><table><thead><tr><th>رقم</th><th>التاريخ</th><th>العميل</th><th>الدفع</th><th>الصافي</th><th>طباعة</th></tr></thead><tbody>
- ${db.sales.map(s=>`<tr><td>${s.id}</td><td>${esc(s.date)}</td><td>${esc(s.customer)}</td><td>${esc(s.method)}</td><td>${money(s.total)}</td><td><button onclick="printInvoice(${s.id})">طباعة</button></td></tr>`).join('')||'<tr><td colspan="6">لا توجد فواتير.</td></tr>'}
- </tbody></table></div>`;
-}
-function invoiceHTML(s){
- return `<div style="font-family:Tahoma;direction:rtl;padding:20px">
- <center><h2>${esc(db.shop.name||'اسم المحل')}</h2><p>${esc(db.shop.phone)} - ${esc(db.shop.address)}</p>
- <h3>فاتورة بيع</h3><p>رقم ${s.id} — ${esc(s.date)}</p></center>
- <table style="width:100%;border-collapse:collapse"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>
- ${s.items.map(x=>`<tr><td>${esc(x.name)}</td><td>${x.qty}</td><td>${money(x.price)}</td><td>${money(x.qty*x.price)}</td></tr>`).join('')}</table>
- <p>الإجمالي: ${money(s.subtotal)}</p><p>الخصم: ${money(s.discount)}</p>
- <h3>الصافي: ${money(s.total)}</h3><p>طريقة الدفع: ${esc(s.method)}</p><center>شكراً لتعاملكم معنا</center></div>`;
-}
-function printInvoice(id){
- let s=db.sales.find(x=>x.id===id);if(!s)return;
- let w=window.open('','_blank');
- if(!w)return notify('اسمح بالنوافذ المنبثقة للطباعة');
- w.document.write('<html lang="ar" dir="rtl"><meta charset="UTF-8"><title>فاتورة</title><style>body{font-family:Tahoma}td,th{border:1px solid #ddd;padding:7px;text-align:right}</style><body>'+invoiceHTML(s)+'<script>window.onload=()=>window.print()<\/script></body></html>');
- w.document.close();
-}
+  if(!shop || !name || !phone || !email || !pass)
+    return notify("من فضلك أكمل جميع البيانات.");
+  if(pass.length < 6) return notify("كلمة المرور يجب أن تكون 6 أحرف على الأقل.");
 
-/* العملاء والموردون */
-function people(type){
- let title=type==='customers'?'العملاء':'الموردون';
- return `<h3>إضافة ${title}</h3><div class="fields">
- <div class="field"><label>الاسم</label><input id="personName"></div>
- <div class="field"><label>الهاتف</label><input id="personPhone"></div>
- <div class="field"><label>ملاحظات</label><input id="personNote"></div>
- </div><button onclick="savePerson('${type}')">إضافة</button>
- <div class="tablewrap"><table><tr><th>الاسم</th><th>الهاتف</th><th>ملاحظات</th><th>حذف</th></tr>
- ${db[type].map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.phone)}</td><td>${esc(x.note)}</td><td><button class="danger" onclick="deletePerson('${type}','${x.id}')">حذف</button></td></tr>`).join('')}
- </table></div>`;
-}
-function savePerson(type){
- let name=personName.value.trim();if(!name)return notify('اكتب الاسم');
- db[type].push({id:uid(),name,phone:personPhone.value,note:personNote.value});
- save();go(type);
-}
-function deletePerson(type,id){db[type]=db[type].filter(x=>x.id!==id);save();go(type)}
-
-/* المشتريات */
-function purchases(){
- return `<h3>تسجيل مشتريات</h3><div class="fields">
- <div class="field"><label>المنتج</label><select id="purchaseProduct">${db.products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div>
- <div class="field"><label>الكمية</label><input id="purchaseQty" type="number" min="1" value="1"></div>
- <div class="field"><label>تكلفة الوحدة</label><input id="purchaseCost" type="number" min="0" value="0"></div>
- </div><button onclick="savePurchase()">حفظ التوريد</button>
- <div class="tablewrap"><table><tr><th>التاريخ</th><th>المنتج</th><th>الكمية</th><th>التكلفة</th></tr>
- ${db.purchases.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.name)}</td><td>${x.qty}</td><td>${money(x.cost)}</td></tr>`).join('')}</table></div>`;
-}
-function savePurchase(){
- let p=db.products.find(x=>x.id===purchaseProduct.value),q=Number(purchaseQty.value),c=Number(purchaseCost.value);
- if(!p||q<=0||c<0)return notify('راجع البيانات');
- p.qty+=q;p.cost=c;
- db.purchases.unshift({date:new Date().toLocaleString('ar-EG'),name:p.name,qty:q,cost:c});
- db.cash.push({date:new Date().toLocaleString('ar-EG'),type:'مشتريات',method:'الخزينة',amount:-q*c,note:p.name});
- save();go('purchases');
-}
-
-/* المصروفات */
-function expenses(){
- return `<h3>تسجيل مصروف</h3><div class="fields">
- <div class="field"><label>بيان المصروف</label><input id="expName"></div>
- <div class="field"><label>المبلغ</label><input id="expAmount" type="number" min="0"></div>
- </div><button onclick="saveExpense()">حفظ المصروف</button>
- <div class="tablewrap"><table><tr><th>التاريخ</th><th>البيان</th><th>المبلغ</th></tr>
- ${db.expenses.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.name)}</td><td>${money(x.amount)}</td></tr>`).join('')}</table></div>`;
-}
-function saveExpense(){
- let name=expName.value.trim(),amount=Number(expAmount.value);
- if(!name||amount<=0)return notify('أدخل البيان والمبلغ');
- let x={date:new Date().toLocaleString('ar-EG'),name,amount};
- db.expenses.unshift(x);db.cash.push({...x,type:'مصروف',method:'الخزينة',amount:-amount});
- save();go('expenses');
-}
-function cash(){
- return `<h3>حركة الخزينة</h3><h2>${money(db.cash.reduce((a,x)=>a+x.amount,0))}</h2>
- <div class="tablewrap"><table><tr><th>التاريخ</th><th>النوع</th><th>طريقة الدفع</th><th>القيمة</th><th>البيان</th></tr>
- ${db.cash.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.type)}</td><td>${esc(x.method)}</td><td>${money(x.amount)}</td><td>${esc(x.note)}</td></tr>`).join('')}</table></div>`;
-}
-
-/* التقارير */
-function reports(){
- let salesTotal=db.sales.reduce((a,x)=>a+x.total,0);
- let cost=db.sales.reduce((a,x)=>a+x.cost,0);
- let expensesTotal=db.expenses.reduce((a,x)=>a+x.amount,0);
- return `<div class="stats">
- <div class="card">المبيعات<div class="stat">${money(salesTotal)}</div></div>
- <div class="card">تكلفة المبيعات<div class="stat">${money(cost)}</div></div>
- <div class="card">المصروفات<div class="stat">${money(expensesTotal)}</div></div>
- <div class="card">ربح تقديري<div class="stat">${money(salesTotal-cost-expensesTotal)}</div></div>
- </div><p class="muted">الربح تقديري بناءً على تكاليف الشراء المسجلة.</p>
- <button onclick="exportCSV()">تصدير تقرير CSV</button>`;
-}
-function exportCSV(){
- let rows=[['رقم الفاتورة','التاريخ','الإجمالي','الدفع'],...db.sales.map(s=>[s.id,s.date,s.total,s.method])];
- let csv='\uFEFF'+rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');
- let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='NexPOS-report.csv';a.click();
-}
-
-/* الباركود */
-function barcode(){
- let b=db.barcode;
- return `<h3>تخصيص الباركود</h3>
- <div class="fields">
- <div class="field"><label>الاسم أعلى الباركود</label><input id="bcShop" value="${esc(b.shopName)}" placeholder="اكتب الاسم الذي تريده"></div>
- <div class="field"><label>اسم المنتج أسفل الباركود</label><input id="bcName" value="${esc(b.customName)}" placeholder="اسم المنتج تلقائياً"></div>
- <div class="field"><label>عرض الملصق بالمليمتر</label><input id="bcWidth" type="number" value="${b.width}"></div>
- <div class="field"><label>ارتفاع الملصق بالمليمتر</label><input id="bcHeight" type="number" value="${b.height}"></div>
- <div class="field"><label>حجم الخط</label><input id="bcFont" type="number" value="${b.font}"></div>
- <div class="field"><label>اختر المنتج</label><select id="bcProduct">${db.products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div>
- </div>
- <p><label><input style="width:auto" type="checkbox" id="bcShowShop" ${b.showShop?'checked':''}> إظهار الاسم أعلى الباركود</label></p>
- <p><label><input style="width:auto" type="checkbox" id="bcShowPrice" ${b.showPrice?'checked':''}> إظهار السعر في الباركود</label></p>
- <div class="actions"><button onclick="saveBarcode()">حفظ الإعدادات</button><button class="secondary" onclick="previewBarcode()">معاينة</button><button class="success" onclick="printBarcodeSettings()">طباعة</button></div>
- <div id="barcodePreview"></div>
- <p class="muted">يمكنك تغيير الاسم كما تريد، ولا يوجد اسم HI STORE ثابت في النظام.</p>`;
-}
-function saveBarcode(){
- db.barcode={
- shopName:bcShop.value,customName:bcName.value,
- showShop:bcShowShop.checked,showPrice:bcShowPrice.checked,
- width:Math.max(20,Number(bcWidth.value)||50),
- height:Math.max(15,Number(bcHeight.value)||30),
- font:Math.max(8,Number(bcFont.value)||12)
- };
- save();notify('تم حفظ إعدادات الباركود');
-}
-function barcodeBars(code){
- let html='';
- let str=String(code||'000000');
- for(let c of str){
-  let n=c.charCodeAt(0);
-  for(let i=0;i<7;i++)html+=((n>>i)&1)?'<i style="width:2px"></i>':'<i style="width:1px;background:white"></i>';
- }
- return '<div class="barcode-bars">'+html+'</div>';
-}
-function labelHTML(p){
- let b=db.barcode;
- return `<div class="barcode-label" style="width:${b.width}mm;min-height:${b.height}mm;font-size:${b.font}px">
- ${b.showShop&&b.shopName?`<b>${esc(b.shopName)}</b>`:''}
- ${barcodeBars(p.barcode)}
- <div>${esc(p.barcode)}</div>
- <b>${esc(b.customName||p.name)}</b>
- ${b.showPrice?`<div>${money(p.price)}</div>`:''}
- </div>`;
-}
-function previewBarcode(){
- saveBarcode();
- let p=db.products.find(x=>x.id===bcProduct.value);
- if(!p)return notify('أضف منتجاً أولاً');
- barcodePreview.innerHTML=labelHTML(p);
-}
-function printBarcodeSettings(){
- saveBarcode();
- let p=db.products.find(x=>x.id===bcProduct.value);
- if(p)printLabel(p);else notify('أضف منتجاً أولاً');
-}
-function printBarcode(id){
- let p=db.products.find(x=>x.id===id);if(p)printLabel(p);
-}
-function printLabel(p){
- let w=window.open('','_blank');
- if(!w)return notify('اسمح بالنوافذ المنبثقة للطباعة');
- w.document.write(`<html lang="ar" dir="rtl"><meta charset="UTF-8"><title>باركود</title><style>body{font-family:Tahoma;text-align:center}.barcode-label{border:1px dashed #777;padding:3mm;margin:auto;text-align:center}.barcode-bars{height:14mm;display:flex;justify-content:center;overflow:hidden}.barcode-bars i{height:100%;background:#111;display:block}</style><body>${labelHTML(p)}<script>window.onload=()=>window.print()<\/script></body></html>`);
- w.document.close();
-}
-
-/* الإعدادات */
-function settings(){
- return `<h3>بيانات المحل والفاتورة</h3>
- <div class="fields">
- <div class="field"><label>اسم المحل في الفاتورة</label><input id="shopName" value="${esc(db.shop.name)}"></div>
- <div class="field"><label>رقم الهاتف</label><input id="shopPhone" value="${esc(db.shop.phone)}"></div>
- <div class="field"><label>عنوان المحل</label><input id="shopAddress" value="${esc(db.shop.address)}"></div>
- </div>
- <div class="actions"><button onclick="saveShop()">حفظ البيانات</button><button class="secondary" onclick="backup()">تنزيل نسخة احتياطية</button><label class="secondary" style="padding:10px;border-radius:8px">استعادة نسخة<input type="file" id="restoreFile" accept=".json" onchange="restore(event)"></label></div>
- <p class="muted">اسم المحل هنا يظهر في الفاتورة. إعداد اسم الباركود مستقل في قسم الباركود.</p>`;
-}
-function saveShop(){
- db.shop={name:shopName.value,phone:shopPhone.value,address:shopAddress.value};
- save();notify('تم حفظ البيانات');
-}
-function backup(){
- let a=document.createElement('a');
- a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));
- a.download='NexPOS-backup.json';a.click();
-}
-function restore(e){
- let f=e.target.files[0];if(!f)return;
- let r=new FileReader();
- r.onload=()=>{
   try{
-   let x=JSON.parse(r.result);
-   if(!Array.isArray(x.products)||!Array.isArray(x.sales))throw 0;
-   if(!confirm('استبدال البيانات الحالية؟'))return;
-   db=Object.assign(structuredClone(initial),x);save();go('dashboard');notify('تمت الاستعادة');
-  }catch(_){notify('ملف النسخة غير صالح')}
- };
- r.readAsText(f);
+    const credential = await createUserWithEmailAndPassword(auth,email,pass);
+    const uid = credential.user.uid;
+
+    await setDoc(doc(db,"users",uid),{
+      shopName:shop,
+      customerName:name,
+      phone,
+      email,
+      role:"customer",
+      status:"pending",
+      subscriptionDays:0,
+      createdAt:serverTimestamp()
+    });
+
+    /* إنشاء إشعار في مجموعة البريد المرتبطة بإضافة Trigger Email */
+    await addDoc(collection(db,"mail"),{
+      to:OWNER_EMAIL,
+      message:{
+        subject:"طلب تفعيل حساب جديد - NexPOS PRO",
+        text:`تم تسجيل عميل جديد:
+اسم المحل: ${shop}
+اسم العميل: ${name}
+رقم الهاتف: ${phone}
+البريد: ${email}
+يرجى مراجعة لوحة المالك وتفعيل الحساب بعد استلام الدفع.`
+      }
+    });
+
+    show("pending");
+    notify("تم إنشاء الحساب وإرسال طلب التفعيل.");
+  }catch(e){
+    notify("تعذر إنشاء الحساب: "+e.message);
+  }
+};
+
+window.login = async function(){
+  if(!isConfigured()) return notify("أضف بيانات Firebase أولاً.");
+  const email = $("loginEmail").value.trim().toLowerCase();
+  const pass = $("loginPass").value;
+  if(!email || !pass) return notify("أدخل البريد وكلمة المرور.");
+
+  try{
+    await signInWithEmailAndPassword(auth,email,pass);
+  }catch(e){
+    notify("بيانات الدخول غير صحيحة أو حدث خطأ: "+e.message);
+  }
+};
+
+window.forgotPassword = async function(){
+  if(!isConfigured()) return notify("أضف بيانات Firebase أولاً.");
+  const email = $("resetEmail").value.trim();
+  if(!email) return notify("أدخل بريدك الإلكتروني.");
+  try{
+    await sendPasswordResetEmail(auth,email);
+    notify("تم إرسال رابط استعادة كلمة المرور إلى بريدك.");
+  }catch(e){
+    notify("تعذر إرسال الرابط: "+e.message);
+  }
+};
+
+window.ownerLogin = async function(){
+  if(!isConfigured()) return notify("أضف بيانات Firebase أولاً.");
+  const username = $("ownerUser").value.trim();
+  const password = $("ownerPass").value;
+  if(username !== OWNER_USERNAME || password !== OWNER_PASSWORD)
+    return notify("بيانات دخول المالك غير صحيحة.");
+
+  try{
+    await signInWithEmailAndPassword(auth,OWNER_EMAIL,OWNER_PASSWORD);
+  }catch(e){
+    notify("يجب إنشاء حساب المالك في Firebase Auth بنفس البريد وكلمة المرور. "+e.message);
+  }
+};
+
+async function loadOwnerPanel(){
+  const snap = await getDocs(query(collection(db,"users"),orderBy("createdAt","desc")));
+  const users = snap.docs.map(d=>({id:d.id,...d.data()}));
+  const pending = users.filter(u=>u.status==="pending").length;
+  $("ownerStats").textContent =
+    `إجمالي الحسابات: ${users.length} | طلبات تنتظر التفعيل: ${pending}`;
+
+  $("customersList").innerHTML = "";
+  users.forEach(u=>{
+    const tr = document.createElement("tr");
+    const info = document.createElement("td");
+    info.textContent = `${u.customerName || ""} - ${u.shopName || ""} (${u.email || ""})`;
+
+    const contact = document.createElement("td");
+    contact.textContent = u.phone || "";
+
+    const status = document.createElement("td");
+    status.textContent = u.status || "غير محدد";
+
+    const days = document.createElement("td");
+    days.textContent = u.subscriptionDays ? `${u.subscriptionDays} يوم` : "غير محدد";
+
+    const action = document.createElement("td");
+    const activate = document.createElement("button");
+    activate.textContent = "تفعيل 30 يوم";
+    activate.onclick = ()=>setCustomerStatus(u.id,"active",30);
+
+    const stop = document.createElement("button");
+    stop.textContent = "إيقاف";
+    stop.className = "red";
+    stop.style.margin = "4px";
+    stop.onclick = ()=>setCustomerStatus(u.id,"suspended",0);
+
+    action.append(activate,stop);
+    tr.append(info,contact,status,days,action);
+    $("customersList").append(tr);
+  });
 }
 
-/* المالك */
-function ownerDialog(){
- modal.classList.remove('hidden');
- modalContent.innerHTML=`<h3>دخول المالك</h3>
- <div class="field"><label>اسم المستخدم</label><input id="ownerUser"></div>
- <div class="field"><label>كلمة المرور</label><input id="ownerPass" type="password"></div>
- <div class="actions"><button onclick="ownerLogin()">دخول</button><button class="secondary" onclick="closeModal()">إلغاء</button></div>
- <p class="muted">بيانات تجريبية محلية، ليست وسيلة حماية حقيقية.</p>`;
+async function setCustomerStatus(uid,status,days){
+  try{
+    await updateDoc(doc(db,"users",uid),{
+      status,
+      subscriptionDays:days,
+      activatedAt:serverTimestamp()
+    });
+    notify("تم تحديث حالة الحساب.");
+    await loadOwnerPanel();
+  }catch(e){
+    notify("تعذر تحديث الحساب: "+e.message);
+  }
 }
-function closeModal(){modal.classList.add('hidden')}
-function ownerLogin(){
- if(ownerUser.value==='elsalahy'&&ownerPass.value==='12345678'){
-  closeModal();home.classList.add('hidden');owner.classList.remove('hidden');renderOwner();
- }else notify('بيانات الدخول غير صحيحة');
+
+window.checkStatus = async function(){
+  if(!auth.currentUser) return;
+  await routeUser(auth.currentUser);
+};
+
+async function routeUser(user){
+  currentUser = user;
+  if(user.email.toLowerCase() === OWNER_EMAIL){
+    show("ownerPanel");
+    await loadOwnerPanel();
+    return;
+  }
+
+  const snap = await getDoc(doc(db,"users",user.uid));
+  if(!snap.exists()){
+    show("pending");
+    return;
+  }
+  const data = snap.data();
+
+  if(data.status === "active"){
+    show("customerApp");
+  }else if(data.status === "suspended"){
+    show("suspended");
+  }else{
+    show("pending");
+  }
 }
-function renderOwner(){
- ownerPage.innerHTML=`<div class="stats">
- <div class="card">عدد الفواتير<div class="stat">${db.sales.length}</div></div>
- <div class="card">عدد المنتجات<div class="stat">${db.products.length}</div></div>
- <div class="card">المبيعات<div class="stat">${money(db.sales.reduce((a,x)=>a+x.total,0))}</div></div>
- </div><h3>إدارة النظام</h3>
- <p class="muted">هذه لوحة مالك محلية على هذا الجهاز. إنشاء حسابات عملاء واشتراكات حقيقية يتطلب خادمًا وقاعدة بيانات.</p>
- <div class="actions"><button onclick="backup()">نسخة احتياطية</button><button class="secondary" onclick="owner.classList.add('hidden');enterApp()">فتح النظام</button><a href="https://wa.me/201062883414"><button class="success">التواصل مع المطور</button></a></div>`;
-}
-today.textContent=new Date().toLocaleDateString('ar-EG');
+
+window.logout = async function(){
+  await signOut(auth);
+  currentUser = null;
+  show("home");
+};
+
+onAuthStateChanged(auth,async user=>{
+  if(user){
+    try{await routeUser(user);}
+    catch(e){notify("حدث خطأ في تحميل الحساب: "+e.message);}
+  }
+});
 </script>
 </body>
 </html>

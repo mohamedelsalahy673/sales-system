@@ -129,15 +129,15 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <section id="ownerPanel" class="hidden">
  <div class="card">
   <div class="top">
-   <div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة المتاجر وتفعيل الحسابات</span></div>
+   <div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة المتاجر وتفعيل الاشتراكات</span></div>
    <button class="red" onclick="logout()">تسجيل الخروج</button>
   </div>
   <div class="grid">
    <div class="stat">إجمالي المتاجر المسجلة<strong id="totalUsers">0</strong></div>
   </div>
-  <h3>قائمة العملاء والمتاجر</h3>
+  <h3>قائمة العملاء والمتاجر والاشتراكات</h3>
   <div class="tablewrap"><table>
-   <thead><tr><th>المتجر</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+   <thead><tr><th>المتجر</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة والاشتراك</th><th>إجراءات</th></tr></thead>
    <tbody id="usersTable"></tbody>
   </table></div>
  </div>
@@ -338,7 +338,7 @@ window.register=async()=>{
  if(!shop||!name||!phone||!email||!password)return message("أكمل جميع البيانات المطلوبة.");
  try{
   const cred=await createUserWithEmailAndPassword(auth,email,password);
-  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",status:"pending",createdAt:serverTimestamp()});
+  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",status:"pending",plan:"غير محدد",createdAt:serverTimestamp()});
   lastRegisteredUser={name,shop,email};
   await signOut(auth);
   $("auth").classList.add("hidden");
@@ -395,17 +395,46 @@ window.loadUsers=async()=>{
   $("totalUsers").textContent=list.length;
   $("usersTable").innerHTML=list.map(u=>`<tr>
    <td>${u.shopName||""}</td><td>${u.customerName||""}</td><td>${u.email||""}</td><td>${u.phone||""}</td>
-   <td><span class="tag ${u.status==='active'?'good':''}">${u.status||""}</span></td>
+   <td><span class="tag ${u.status==='active'?'good':''}">${u.status||""}</span><br><small style="color:#555">الخطة: ${u.plan||'غير محدد'}</small></td>
    <td>
-    ${u.status==='pending'?`<button class="rowbtn green" onclick="updateUserStatus('${u.id}','active')">تفعيل</button>`:`<button class="rowbtn red" onclick="updateUserStatus('${u.id}','suspended')">إيقاف</button>`}
+    <button class="rowbtn green" onclick="promptActivation('${u.id}')">تفعيل</button>
+    <button class="rowbtn" style="background:#d97706" onclick="updateUserStatus('${u.id}','suspended','منتهي')">إيقاف</button>
     <button class="rowbtn red" onclick="deleteUser('${u.id}')">حذف</button>
    </td>
   </tr>`).join("");
  }catch(e){}
 };
 
-window.updateUserStatus=async(id,status)=>{
- try{await updateDoc(doc(db,"users",id),{status});loadUsers();}catch(e){}
+window.promptActivation=async(id)=>{
+ const choice=prompt("اختر مدة التفعيل:\n1. شهري (100 جنيه)\n2. 3 شهور (250 جنيه)\n3. سنوي (900 جنيه)\n4. دائم (3000 جنيه)\n\nأدخل الرقم (1 أو 2 أو 3 أو 4):");
+ if(!choice)return;
+ 
+ let planName="", days=30, price=100;
+ if(choice==="1"){ planName="شهري (100 ج)"; days=30; price=100; }
+ else if(choice==="2"){ planName="3 شهور (250 ج)"; days=90; price=250; }
+ else if(choice==="3"){ planName="سنوي (900 ج)"; days=365; price=900; }
+ else if(choice==="4"){ planName="دائم (3000 ج)"; days=36500; price=3000; }
+ else { return alert("اختيار غير صحيح."); }
+
+ const expiryDate = new Date();
+ expiryDate.setDate(expiryDate.getDate() + days);
+
+ try{
+  await updateDoc(doc(db,"users",id),{
+   status:"active",
+   plan: planName,
+   expiresAt: expiryDate.toLocaleDateString("ar-EG")
+  });
+  alert(`تم تفعيل المتجر بنجاح باقة "${planName}" بقيمة ${price} جنيه!`);
+  loadUsers();
+ }catch(e){alert("خطأ في التفعيل: "+e.message);}
+};
+
+window.updateUserStatus=async(id,status,planText)=>{
+ try{
+  await updateDoc(doc(db,"users",id),{status, plan:planText});
+  loadUsers();
+ }catch(e){}
 };
 
 window.deleteUser=async id=>{

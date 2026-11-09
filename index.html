@@ -18,6 +18,7 @@ h2,h3{margin-top:0}
 .wrap{max-width:1350px;margin:auto;padding:15px}
 .card{background:white;padding:18px;border-radius:14px;margin:12px 0;box-shadow:0 3px 15px #1822380b}
 .brand{font-size:26px;font-weight:bold;color:#2458d3}
+.sub-brand{font-size:18px;font-weight:800;color:#1e293b;letter-spacing:1px;margin-top:2px;text-transform:uppercase}
 .version{display:block;color:#fff;background:#2458d3;border-radius:5px;padding:3px 8px;font-size:10px;width:max-content;margin-top:5px;letter-spacing:1px}
 .muted{font-size:13px;color:#788397}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -70,6 +71,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <header class="top">
  <div>
   <div class="brand">NexPOS PRO</div>
+  <div class="sub-brand">ELSALAHY</div>
   <span class="version">TILES INTERFACE V6</span>
   <div class="muted">نظام إدارة المبيعات والمخازن والخزينة المتقدم</div>
  </div>
@@ -287,7 +289,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 </section>
 
 <div id="printArea" class="hidden"></div>
-<footer class="muted" style="text-align:center;padding:20px">NexPOS PRO — تم التطوير بواسطة محمد صلاح الصلاحي</footer>
+<footer class="muted" style="text-align:center;padding:20px">NexPOS PRO — تطوير محمد الصلاحي</footer>
 </div>
 
 <script type="module">
@@ -469,7 +471,7 @@ async function loadTreasury(){const s=await getDocs(col("treasury"));treasury=s.
 
 window.saveProduct=async()=>{
  const name=$("pName").value.trim();
- const cost=Number($("pCost").value)||0, price=Number($("pPrice").value)||0, qty=Number($("pQty").value)||0;
+ const cost=Number($("pCost").value)||0, price=Number($("pPrice").value)\vert{}\vert{}0, qty=Number($("pQty").value)||0;
  if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع.");
  const data={name,cost,price,qty,updatedAt:serverTimestamp()};
  try{
@@ -493,7 +495,7 @@ window.selectSaleProduct=id=>{
 };
 window.addToCart=()=>{
  if(!selectedProduct)return alert("اختر منتجاً.");
- const qty=Number($("saleQty").value)||1, price=Number($("salePrice").value)||selectedProduct.price;
+ const qty=Number($("saleQty").value)\vert{}\vert{}1, price=Number($("salePrice").value)||selectedProduct.price;
  if(qty>selectedProduct.qty)return alert("الكمية غير متوفرة.");
  const old=cart.find(x=>x.productId===selectedProduct.id);
  if(old)old.qty+=qty; else cart.push({productId:selectedProduct.id,name:selectedProduct.name,qty,price,cost:selectedProduct.cost||0});
@@ -519,7 +521,7 @@ window.completeSale=async()=>{
 };
 
 window.addTreasuryTransaction=async()=>{
- const type=$("tType").value, amount=Number($("tAmount").value)||0, note=$("tNote").value.trim();
+ const type=$("tType").value, amount=Number($("tAmount").value)\vert{}\vert{}0, note=$("tNote").value.trim();
  if(amount<=0)return alert("أدخل مبلغاً صحيحاً.");
  try{
   await addDoc(col("treasury"),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});
@@ -527,46 +529,4 @@ window.addTreasuryTransaction=async()=>{
   await loadTreasury();renderStats();alert("تم التسجيل.");
  }catch(e){}
 };
-function renderTreasury(){
- let tIn=0,tOut=0;
- $("treasuryTable").innerHTML=treasury.map(t=>{
-  if(t.type==="in")tIn+=Number(t.amount)||0; else tOut+=Number(t.amount)||0;
-  return `<tr><td><span class="tag ${t.type==='in'?'good':''}">${t.type==='in'?'وارد':'صادر'}</span></td><td>${money(t.amount)} ج</td><td>${t.note}</td><td>${t.date}</td></tr>`;
- }).join("")||"<tr><td colspan='4'>لا توجد حركات</td></tr>";
- $("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" جنيه";
-}
-
-window.addExpense=async()=>{
- const name=$("expenseName").value.trim(), amount=Number($("expenseAmount").value)||0;
- if(!name||amount<=0)return alert("أدخل بيانات المصروف.");
- try{
-  await addDoc(col("expenses"),{name,amount,date:new Date().toLocaleString("ar-EG")});
-  await addDoc(col("treasury"),{type:"out",amount,note:`مصروف: ${name}`,date:new Date().toLocaleString("ar-EG")});
-  $("expenseName").value="";$("expenseAmount").value="";
-  await loadBusiness();alert("تم حفظ المصروف.");
- }catch(e){}
-};
-function renderExpenses(){
- $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${e.name}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات</td></tr>";
-}
-
-function renderSales(){
- $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="alert('طباعة الفاتورة #${s.number}')">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
-}
-
-function renderStats(){
- const rev=sales.reduce((s,x)=>s+Number(x.total||0),0);
- const exp=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
- const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0);
- const tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(x.amount||0),0);
- $("statProducts").textContent=products.length;
- $("statSales").textContent=sales.length;
- $("statRevenue").textContent=money(rev)+" جنيه";
- $("statTreasuryBalance").textContent=money(tIn-tOut)+" جنيه";
- $("reportRevenue").textContent=money(rev)+" جنيه";
- $("reportExpenses").textContent=money(exp)+" جنيه";
- $("reportNet").textContent=money(rev-exp)+" جنيه";
-}
-</script>
-</body>
-</html>
+function

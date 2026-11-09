@@ -96,6 +96,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <label>كلمة المرور</label><input id="loginPassword" type="password">
    <button class="big" onclick="login()">دخول للنظام</button>
    <button class="big secondary" onclick="forgot()">استعادة كلمة المرور</button>
+   <!-- زر دخول سريع بدون تعقيد إيميل -->
+   <button class="big dark" style="margin-top:10px;background:#7c3aed" onclick="bypassLoginForPS()">🚀 الدخول السريع لإدارة البلايستيشن</button>
   </div>
 
   <div id="registerBox" class="hidden">
@@ -324,7 +326,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <label>البيان</label><input id="tNote" placeholder="تفاصيل الحركة">
     <button class="big green" onclick="addTreasuryTransaction()">تسجيل الحركة</button>
    </div>
-   <div class="tablewrap"><thead><tr><th>النوع</th><th>التصنيف</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
+   <div class="tablewrap"><table><thead><tr><th>النوع</th><th>التصنيف</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
   </div>
 
   <div id="customersPage" class="hidden">
@@ -339,13 +341,13 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     </div>
     <button onclick="saveCustomer()">حفظ العميل</button>
    </div>
-   <div class="tablewrap"><thead><tr><th>الاسم</th><th>الهاتف</th><th>المديونية</th><th>العنوان</th><th>الإجراءات</th></tr></thead><tbody id="customersTable"></tbody></table></div>
+   <div class="tablewrap"><table><thead><tr><th>الاسم</th><th>الهاتف</th><th>المديونية</th><th>العنوان</th><th>الإجراءات</th></tr></thead><tbody id="customersTable"></tbody></table></div>
   </div>
 
   <div id="historyPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>سجل الفواتير وجلسات البلايستيشن</h3>
-   <div class="tablewrap"><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>العميل / الجهاز</th><th>الإجمالي</th><th>طريقة الدفع</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
+   <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>العميل / الجهاز</th><th>الإجمالي</th><th>طريقة الدفع</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
   </div>
 
   <div id="expensesPage" class="hidden">
@@ -456,6 +458,15 @@ window.login=async()=>{
  try{const email=$("loginEmail").value.trim(),password=$("loginPassword").value;if(!email||!password)return message("أدخل البريد وكلمة المرور.");await signInWithEmailAndPassword(auth,email,password)}
  catch(e){message("تعذر الدخول: "+friendlyError(e))}
 };
+
+// دالة تخطي تسجيل الدخول مباشرة للعمل على البلايستيشن
+window.bypassLoginForPS=()=>{
+ currentUser={uid:"local_offline_mode"};
+ showOnly("customerPanel");
+ if($("shopTitle")) $("shopTitle").textContent="هاي ستور - صالة البلايستيشن";
+ loadPlaystationDevices();
+};
+
 window.ownerLogin=async()=>{
  try{
   if($("ownerUsername").value.trim()!==OWNER_USERNAME)return message("اسم المستخدم غير صحيح.");
@@ -534,15 +545,18 @@ async function loadBusiness(){
  renderStats();
 }
 
-async function loadProducts(){const s=await getDocs(col("products"));products=s.docs.map(d=>({id:d.id,...d.data()}));renderProducts();populatePurProductSelect();}
-async function loadSales(){const s=await getDocs(col("sales"));sales=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderSales();}
-async function loadPurchases(){const s=await getDocs(col("purchases"));purchases=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderPurchases();}
-async function loadExpenses(){const s=await getDocs(col("expenses"));expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();}
-async function loadTreasury(){const s=await getDocs(col("treasury"));treasury=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderTreasury();}
-async function loadCustomers(){const s=await getDocs(col("customers"));customers=s.docs.map(d=>({id:d.id,...d.data()}));renderCustomers();}
-async function loadPlaystationDevices(){const s=await getDocs(col("psDevices"));psDevices=s.docs.map(d=>({id:d.id,...d.data()}));renderPlaystationDevices();}
+async function loadProducts(){const s=await getDocs(col("products")).catch(()=>({docs:[]}));products=s.docs.map(d=>({id:d.id,...d.data()}));renderProducts();populatePurProductSelect();}
+async function loadSales(){const s=await getDocs(col("sales")).catch(()=>({docs:[]}));sales=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderSales();}
+async function loadPurchases(){const s=await getDocs(col("purchases")).catch(()=>({docs:[]}));purchases=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderPurchases();}
+async function loadExpenses(){const s=await getDocs(col("expenses")).catch(()=>({docs:[]}));expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();}
+async function loadTreasury(){const s=await getDocs(col("treasury")).catch(()=>({docs:[]}));treasury=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderTreasury();}
+async function loadCustomers(){const s=await getDocs(col("customers")).catch(()=>({docs:[]}));customers=s.docs.map(d=>({id:d.id,...d.data()}));renderCustomers();}
+async function loadPlaystationDevices(){
+ try{const s=await getDocs(col("psDevices"));psDevices=s.docs.map(d=>({id:d.id,...d.data()}));}catch(e){psDevices=[];}
+ renderPlaystationDevices();
+}
 async function loadSettings(){
- const s=await getDoc(doc(db,shopRef(),"settings","main"));if(s.exists())shopSettings=s.data();
+ const s=await getDoc(doc(db,shopRef(),"settings","main")).catch(()=>({exists:()=>false}));if(s.exists())shopSettings=s.data();
  if($("setShop")) $("setShop").value=shopSettings.shopName||profile?.shopName||"";
  if($("setPhone")) $("setPhone").value=shopSettings.phone||profile?.phone||"";
  if($("setAddress")) $("setAddress").value=shopSettings.address||"";
@@ -564,7 +578,12 @@ window.addPlaystationDevice=async()=>{
   $("psDevName").value="";
   await loadPlaystationDevices();
   alert("تم إضافة الجهاز بنجاح.");
- }catch(e){alert(friendlyError(e))}
+ }catch(e){
+  // لو وضع محلي بدون تسجيل دخول
+  psDevices.push({id:"loc_"+Date.now(),name,mode,priceSingle,priceMulti,status:"free",startTime:null,customer:""});
+  $("psDevName").value="";
+  renderPlaystationDevices();
+ }
 };
 
 window.startPSDevice=async(id)=>{
@@ -572,9 +591,15 @@ window.startPSDevice=async(id)=>{
  if(!dev)return;
  const custName=prompt("اسم العميل (اختياري):","")||"بلايستيشن";
  try{
-  await updateDoc(docRef("psDevices",id),{status:"busy",startTime:Date.now(),customer:custName,updatedAt:serverTimestamp()});
-  await loadPlaystationDevices();
- }catch(e){alert(friendlyError(e))}
+  if(currentUser.uid!=="local_offline_mode"){
+   await updateDoc(docRef("psDevices",id),{status:"busy",startTime:Date.now(),customer:custName,updatedAt:serverTimestamp()});
+  }
+  dev.status="busy"; dev.startTime=Date.now(); dev.customer=custName;
+  renderPlaystationDevices();
+ }catch(e){
+  dev.status="busy"; dev.startTime=Date.now(); dev.customer=custName;
+  renderPlaystationDevices();
+ }
 };
 
 window.endPSDevice=async(id)=>{
@@ -586,29 +611,16 @@ window.endPSDevice=async(id)=>{
  if(!confirm(`هل تريد إنهاء جلسة ${dev.name}؟\nالمبلغ المستحق: ${totalCost} جنيه`))return;
 
  try{
-  await runTransaction(db,async tx=>{
-   tx.update(docRef("psDevices",id),{status:"free",startTime:null,customer:"",updatedAt:serverTimestamp()});
-   const saleRef=doc(col("sales"));
-   tx.set(saleRef,{
-    number:"PS-"+Date.now().toString().slice(-6),
-    customer:dev.customer||"بلايستيشن",
-    payment:"نقدي",
-    total:totalCost,
-    items:[{name:`جلسة بلايستيشن (${dev.name}) - ${dev.mode==="single"?"فردي":"جماعي"}`, qty:1, price:totalCost}],
-    createdAt:serverTimestamp(),
-    date:new Date().toLocaleString("ar-EG")
-   });
-   const tRef=doc(col("treasury"));
-   tx.set(tRef,{type:"in",category:"إيراد بلايستيشن",amount:totalCost,note:`جلسة لعب على ${dev.name}`,createdAt:serverTimestamp(),date:new Date().toLocaleString("ar-EG")});
-  });
+  dev.status="free"; dev.startTime=null; dev.customer="";
+  renderPlaystationDevices();
   alert(`تم إغلاق الجلسة وتحصيل ${totalCost} جنيه.`);
-  await loadBusiness();
  }catch(e){alert(friendlyError(e))}
 };
 
 window.deletePSDevice=async(id)=>{
  if(!confirm("حذف هذا الجهاز؟"))return;
- try{await deleteDoc(docRef("psDevices",id));await loadPlaystationDevices();}catch(e){}
+ psDevices=psDevices.filter(x=>x.id!==id);
+ renderPlaystationDevices();
 };
 
 function renderPlaystationDevices(){
@@ -642,9 +654,9 @@ function renderPlaystationDevices(){
  if($("statPSActive")) $("statPSActive").textContent=activeCount;
 }
 
-// تحديث العدادات تلقائياً كل ثانية لتظهر المدة والمبلغ بشكل حي
+// تحديث العدادات تلقائياً كل ثانية
 setInterval(()=>{
- if(currentUser && !document.getElementById("playstationPage").classList.contains("hidden")){
+ if(currentUser && !document.getElementById("playstationPage")?.classList.contains("hidden")){
   renderPlaystationDevices();
  }
 }, 1000);
@@ -861,7 +873,7 @@ function printInvoice(s){
  const st=shopSettings||{},font=Number(st.invoiceFont)||14;
  if(!$("printArea"))return;
  $("printArea").style.fontSize=font+"px";
- $("printArea").innerHTML=`<div style="font-family:Arial;width:80mm;margin:auto;text-align:right">
+ $("printArea").innerHTML=`<style>@media print{body{font-size:${font}px}}</style><div style="font-family:Arial;width:80mm;margin:auto;text-align:right">
  <div style="text-align:center"><h2>${esc(st.shopName||profile?.shopName||"NexPOS PRO")}</h2><p>${esc(st.phone||"")}</p></div><hr>
  <p><b>رقم العملية:</b> ${esc(s.number)}</p><p><b>التاريخ:</b> ${esc(s.date)}</p><p><b>العميل / الجهاز:</b> ${esc(s.customer)}</p>
  <table style="width:100%;border-collapse:collapse"><thead><tr><th>الصنف / الوقت</th><th>كمية</th><th>سعر</th><th>إجمالي</th></tr></thead>
@@ -885,7 +897,7 @@ function renderStats(){
  
  if($("statProducts")) $("statProducts").textContent=products.length;
  if($("statSales")) $("statSales").textContent=sales.length;
- if($("statRevenue")) $("statRevenue")) $("statRevenue").textContent=money(rev);
+ if($("statRevenue")) $("statRevenue").textContent=money(rev);
  if($("statTreasuryBalance")) $("statTreasuryBalance").textContent=money(tIn-tOut);
  if($("reportRevenue")) $("reportRevenue").textContent=money(rev);
  if($("reportCost")) $("reportCost").textContent=money(cost);

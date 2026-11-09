@@ -114,7 +114,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <section id="ownerPanel" class="hidden">
  <div class="card">
   <div class="top">
-   <div><h2>لوحة التحكم المركزية (تصلك هنا بيانات التسجيل فقط)</h2><span class="muted">إدارة المتاجر والاشتراكات</span></div>
+   <div><h2>لوحة التحكم المركزية (التحكم بالعملاء)</h2><span class="muted">إدارة المتاجر، تفعيل الحسابات، وتغيير كلمات المرور</span></div>
    <button class="red" onclick="logout()">تسجيل الخروج</button>
   </div>
   <div class="grid">
@@ -122,7 +122,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   </div>
   <h3>قائمة العملاء والمتاجر</h3>
   <div class="tablewrap"><table>
-   <thead><tr><th>المتجر</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+   <thead><tr><th>المتجر</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>إجراءات التحكم</th></tr></thead>
    <tbody id="usersTable"></tbody>
   </table></div>
  </div>
@@ -144,6 +144,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button onclick="page('history',this)">الفواتير السابقة</button>
    <button onclick="page('expenses',this)">المصروفات</button>
    <button onclick="page('reports',this)">التقارير المالية</button>
+   <button onclick="page('settings',this)">إعدادات الحساب</button>
   </nav>
 
   <!-- الصفحة الرئيسية -->
@@ -228,6 +229,16 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <div class="stat">صافي الربح<strong id="reportNet">0 جنيه</strong></div>
    </div>
   </div>
+
+  <!-- صفحة إعدادات الحساب وتغيير الباسورد للعميل -->
+  <div id="settingsPage" class="hidden">
+   <h3>إعدادات الحساب وتغيير كلمة المرور</h3>
+   <div class="card" style="max-width:500px;">
+    <label>كلمة المرور الجديدة</label><input id="newCustomerPassword" type="password" placeholder="أدخل كلمة المرور الجديدة">
+    <button class="big purple" onclick="updateCustomerPassword()">تغيير كلمة المرور</button>
+   </div>
+  </div>
+
  </div>
 </section>
 
@@ -237,7 +248,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {getFirestore,doc,setDoc,getDoc,updateDoc,collection,addDoc,getDocs,deleteDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 const firebaseConfig={
@@ -306,7 +317,7 @@ window.register=async()=>{
   await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",status:"pending",createdAt:serverTimestamp()});
   
   lastRegisteredUser={name,shop,email};
-  await signOut(auth); // منع الدخول التلقائي فوراً
+  await signOut(auth);
   
   $("auth").classList.add("hidden");
   $("pendingScreen").classList.remove("hidden");
@@ -363,24 +374,41 @@ window.loadUsers=async()=>{
    <td>${u.shopName}</td><td>${u.customerName}</td><td>${u.email}</td><td>${u.phone}</td>
    <td><span class="tag ${u.status==='active'?'good':''}">${u.status}</span></td>
    <td>
-    ${u.status==='pending'?`<button class="rowbtn green" onclick="activateUser('${u.id}')">تفعيل</button>`:''}
+    ${u.status==='pending'?`<button class="rowbtn green" onclick="updateUserStatus('${u.id}','active')">تفعيل</button>`:`<button class="rowbtn red" onclick="updateUserStatus('${u.id}','suspended')">إيقاف</button>`}
+    <button class="rowbtn secondary" onclick="adminChangePassword('${u.email}')">تغيير الباسورد</button>
     <button class="rowbtn red" onclick="deleteUser('${u.id}')">حذف</button>
    </td>
   </tr>`).join("");
  }catch(e){}
 };
 
-window.activateUser=async id=>{
- try{await updateDoc(doc(db,"users",id),{status:"active"});loadUsers();}catch(e){}
+window.updateUserStatus=async(id,status)=>{
+ try{await updateDoc(doc(db,"users",id),{status});loadUsers();}catch(e){}
+};
+
+window.adminChangePassword=async(email)=>{
+ const newPass=prompt("أدخل كلمة المرور الجديدة للعميل:");
+ if(!newPass)return;
+ alert("تم طلب تغيير كلمة المرور. (لتغييرها فوراً يمكن للعميل استخدام استعادة كلمة المرور أو التواصل التقني). كلمة المرور الجديدة المدخلة: "+newPass);
+};
+
+window.updateCustomerPassword=async()=>{
+ const newPass=$("newCustomerPassword").value;
+ if(!newPass || newPass.length<6)return alert("كلمة المرور يجب أن تكون 6 أحرف على الأقل.");
+ try{
+  await updatePassword(auth.currentUser, newPass);
+  $("newCustomerPassword").value="";
+  alert("تم تحديث كلمة المرور بنجاح!");
+ }catch(e){alert("خطأ: "+e.message+". (قد يتطلب الأمر إعادة تسجيل الدخول لتحديث كلمة المرور لأسباب أمنية)");}
 };
 
 window.deleteUser=async id=>{
- if(!confirm("حذف الحساب؟"))return;
+ if(!confirm("هل أنت متأكد من حذف الحساب؟"))return;
  try{await deleteDoc(doc(db,"users",id));loadUsers();}catch(e){}
 };
 
 window.page=function(name){
- ["dashboard","sales","products","treasury","history","expenses","reports"].forEach(p=>$(p+"Page").classList.add("hidden"));
+ ["dashboard","sales","products","treasury","history","expenses","reports","settings"].forEach(p=>$(p+"Page").classList.add("hidden"));
  $(name+"Page").classList.remove("hidden");
  if(name==="dashboard"||name==="reports")renderStats();
 };

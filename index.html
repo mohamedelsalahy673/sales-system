@@ -1,143 +1,142 @@
+
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NexPOS PRO</title>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
-:root{--bg:#f3f5fa;--card:#fff;--txt:#172033;--muted:#778196;--line:#e5e8ef;--primary:#5658dc;--green:#159b68;--red:#df4654}
+:root{--main:#2563eb;--dark:#111827;--bg:#f4f6fa;--white:#fff;--muted:#64748b;--line:#e5e7eb;--green:#16a34a;--red:#dc2626}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--txt);font-family:Tahoma,Arial,sans-serif}
-body.dark{--bg:#111827;--card:#1f2937;--txt:#f3f4f6;--muted:#aab3c2;--line:#374151;--primary:#8586ff}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
+body{margin:0;background:var(--bg);font-family:Tahoma,Arial,sans-serif;color:var(--dark)}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0}
 .hidden{display:none!important}
-button:disabled{opacity:.5;cursor:not-allowed}
-.auth{min-height:100vh;display:grid;place-items:center;padding:18px}
-.authbox{width:min(440px,100%);background:var(--card);padding:25px;border-radius:18px;box-shadow:0 10px 35px #0001}
-.logo{font-size:27px;font-weight:900;color:var(--primary);text-align:center}
-.subtitle{text-align:center;color:var(--muted);margin:8px 0 22px;font-size:13px}
+.auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.auth-card{background:#fff;width:100%;max-width:440px;padding:30px;border-radius:20px;box-shadow:0 10px 40px #0f172a12}
+.logo{font-size:27px;font-weight:900;color:var(--main);letter-spacing:-1px}
+.sub{color:var(--muted);font-size:13px;margin:8px 0 22px}
 .field{margin:12px 0}
-label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
-input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--txt);outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--primary)}
-.btn{border:0;border-radius:9px;padding:11px 15px;background:var(--primary);color:white;font-weight:bold}
+.field label{display:block;font-size:13px;margin-bottom:7px;font-weight:bold}
+.field input,.field select{width:100%;padding:13px;border:1px solid var(--line);border-radius:10px;outline:none;background:#fff}
+.field input:focus,.field select:focus{border-color:var(--main)}
+.btn{padding:12px 17px;border-radius:10px;background:var(--main);color:white;font-weight:bold}
+.btn.secondary{background:#e8efff;color:var(--main)}
+.btn.danger{background:#fee2e2;color:#b91c1c}
+.btn.success{background:#dcfce7;color:#166534}
 .btn.block{width:100%}
-.btn.green{background:var(--green)}
-.btn.red{background:var(--red)}
-.btn.gray{background:#6b7280}
-.btn.light{background:#e9eaff;color:#4546b9}
-.link{border:0;background:none;color:var(--primary);padding:8px}
-.msg{padding:11px;border-radius:9px;margin:10px 0;font-size:13px;display:none}
-.msg.show{display:block}
-.msg.error{background:#ffe5e8;color:#a32232}
-.msg.ok{background:#e2f8ed;color:#087c4a}
-.top{height:65px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:sticky;top:0;z-index:20}
-.topbrand{font-size:20px;font-weight:900;color:var(--primary)}
-.topright{display:flex;align-items:center;gap:9px}
-.iconbtn{border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--txt);padding:9px 12px}
-.layout{display:flex;min-height:calc(100vh - 65px)}
-.sidebar{width:245px;flex-shrink:0;background:var(--card);border-left:1px solid var(--line);padding:13px;transition:.2s;overflow:hidden}
-.sidebar.collapsed{width:70px}
-.nav{display:grid;gap:5px}
-.nav button{border:0;background:transparent;color:var(--muted);padding:13px 11px;text-align:right;border-radius:9px;white-space:nowrap}
-.nav button.active,.nav button:hover{background:#eeeeff;color:var(--primary);font-weight:bold}
-.nav .ico{display:inline-block;width:28px;font-size:17px}
-.sidebar.collapsed .navtext{display:none}
-.main{padding:20px;min-width:0;flex:1}
-.page{display:none}
-.page.active{display:block}
-.head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:17px}
-.head h2{margin:0;font-size:21px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:13px;margin-bottom:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:17px;margin-bottom:14px}
+.switch{text-align:center;margin-top:18px;font-size:13px;color:var(--muted)}
+.switch a{color:var(--main);cursor:pointer;font-weight:bold}
+.credit{text-align:center;border-top:1px solid var(--line);margin-top:22px;padding-top:17px;font-size:12px;color:#64748b}
+.credit strong{color:#334155}
+.app{display:flex;min-height:100vh}
+.sidebar{width:245px;background:#111827;color:#fff;padding:22px 15px;flex-shrink:0}
+.brand{font-size:23px;font-weight:900;padding:7px 10px 25px;color:#fff}
+.brand span{color:#60a5fa}
+.nav-title{font-size:11px;color:#94a3b8;padding:15px 10px 8px}
+.nav button{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border-radius:9px;background:transparent;color:#cbd5e1;text-align:right;margin:3px 0}
+.nav button.active,.nav button:hover{background:#263449;color:#fff}
+.nav svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8}
+.main{flex:1;min-width:0}
+.topbar{background:#fff;padding:17px 25px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);gap:10px}
+.topbar h2{margin:0;font-size:19px}
+.content{padding:25px;max-width:1400px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:22px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
 .stat small{color:var(--muted)}
-.stat strong{display:block;font-size:24px;margin-top:9px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
-.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--card);margin-top:14px}
-table{border-collapse:collapse;width:100%;min-width:650px}
-th,td{text-align:right;padding:12px;border-bottom:1px solid var(--line);font-size:13px}
-th{color:var(--muted);background:var(--bg)}
-.actions{display:flex;gap:5px;flex-wrap:wrap}
-.actions .btn{padding:7px 9px;font-size:12px}
-.badge{display:inline-block;border-radius:20px;padding:5px 9px;background:#e9eaff;color:#5556bd;font-size:11px}
-.muted{color:var(--muted)}
-.overlay{display:none}
-.productline{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
-@media(max-width:800px){
- .sidebar{position:fixed;z-index:40;right:0;top:65px;bottom:0;width:260px;transform:translateX(110%);box-shadow:0 5px 30px #0002}
- .sidebar.open{transform:translateX(0)}
- .sidebar.collapsed{width:260px}
- .sidebar.collapsed .navtext{display:inline}
- .overlay.show{display:block;position:fixed;inset:65px 0 0;background:#0007;z-index:30}
- .main{padding:12px}
+.stat strong{display:block;font-size:27px;margin-top:10px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px}
+.panel h3{margin:0 0 15px;font-size:16px}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:600px}
+th,td{text-align:right;padding:13px 10px;border-bottom:1px solid var(--line);font-size:13px}
+th{color:var(--muted);background:#f8fafc}
+.status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;background:#fef3c7;color:#92400e}
+.status.active{background:#dcfce7;color:#166534}
+.status.expired,.status.rejected{background:#fee2e2;color:#991b1b}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.actions button{padding:8px 10px;font-size:12px;border-radius:8px}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.notice{padding:13px;border-radius:10px;background:#eff6ff;color:#1d4ed8;font-size:13px;line-height:1.8;margin-bottom:15px}
+.empty{padding:25px;text-align:center;color:var(--muted)}
+.mobile-menu{display:none}
+@media(max-width:750px){
+ .sidebar{position:fixed;z-index:5;right:-260px;top:0;bottom:0;transition:.25s}
+ .sidebar.open{right:0}
+ .mobile-menu{display:inline-block;background:#eff6ff;color:var(--main);padding:9px;border-radius:8px}
+ .content{padding:15px}
+ .topbar{padding:13px 15px}
 }
 </style>
 </head>
 <body>
 
-<section id="auth" class="auth">
- <div class="authbox">
-  <div class="logo">NexPOS PRO</div>
-  <div class="subtitle">نظام إدارة المحلات والمبيعات</div>
-  <div id="authMsg" class="msg"></div>
+<!-- تسجيل الدخول والتسجيل -->
+<section id="authScreen" class="auth">
+ <div class="auth-card">
+  <div class="logo">NexPOS <span style="color:#111827">PRO</span></div>
+  <div class="sub">نظام إدارة المبيعات والمخزون باحترافية</div>
 
   <div id="loginForm">
-   <div class="field"><label>البريد الإلكتروني</label><input id="loginEmail" type="email"></div>
-   <div class="field"><label>كلمة المرور</label><input id="loginPassword" type="password"></div>
-   <button class="btn block" onclick="login()">تسجيل الدخول</button>
-   <div style="display:flex;justify-content:space-between;margin-top:12px">
-    <button class="link" onclick="showRegister()">إنشاء حساب جديد</button>
-    <button class="link" onclick="resetPassword()">نسيت كلمة المرور؟</button>
-   </div>
+   <h3>تسجيل الدخول</h3>
+   <div class="field"><label>البريد الإلكتروني</label><input id="loginEmail" type="email" placeholder="name@example.com"></div>
+   <div class="field"><label>كلمة المرور</label><input id="loginPassword" type="password" placeholder="كلمة المرور"></div>
+   <button class="btn block" onclick="login()">دخول إلى حسابك</button>
+   <div class="switch">ليس لديك حساب؟ <a onclick="showRegister()">إنشاء حساب جديد</a></div>
   </div>
 
   <div id="registerForm" class="hidden">
-   <div class="field"><label>اسم صاحب المحل</label><input id="regName"></div>
-   <div class="field"><label>اسم المحل</label><input id="regShop"></div>
-   <div class="field"><label>رقم الهاتف</label><input id="regPhone"></div>
-   <div class="field"><label>البريد الإلكتروني</label><input id="regEmail" type="email"></div>
-   <div class="field"><label>كلمة المرور (6 أحرف على الأقل)</label><input id="regPassword" type="password"></div>
+   <h3>إنشاء حساب عميل جديد</h3>
+   <div class="field"><label>اسم صاحب المحل</label><input id="regName" placeholder="الاسم بالكامل"></div>
+   <div class="field"><label>اسم المحل أو النشاط</label><input id="regShop" placeholder="اسم المحل"></div>
+   <div class="field"><label>رقم الهاتف</label><input id="regPhone" type="tel" placeholder="01xxxxxxxxx"></div>
+   <div class="field"><label>البريد الإلكتروني</label><input id="regEmail" type="email" placeholder="name@example.com"></div>
+   <div class="field"><label>كلمة المرور</label><input id="regPassword" type="password" placeholder="6 أحرف على الأقل"></div>
    <button class="btn block" onclick="register()">إنشاء الحساب</button>
-   <button class="link" onclick="showLogin()">العودة لتسجيل الدخول</button>
+   <div class="switch">لديك حساب بالفعل؟ <a onclick="showLogin()">تسجيل الدخول</a></div>
   </div>
 
-  <div id="pendingForm" class="hidden">
-   <h3>طلبك قيد المراجعة</h3>
-   <p class="muted">تم إنشاء حسابك. انتظر تفعيل الاشتراك من إدارة النظام.</p>
-   <p>للدعم: 01062883414</p>
-   <button class="btn block" onclick="logout()">تسجيل الخروج</button>
-  </div>
+  <div class="credit">تم التطوير بواسطة <strong>المهندس محمد صلاح الصلاحي</strong></div>
  </div>
 </section>
 
-<section id="app" class="hidden">
- <header class="top">
-  <div style="display:flex;align-items:center;gap:12px">
-   <button class="iconbtn" onclick="toggleMenu()">☰</button>
-   <span class="topbrand">NexPOS PRO</span>
+<!-- التطبيق -->
+<div id="appScreen" class="app hidden">
+ <aside class="sidebar" id="sidebar">
+  <div class="brand">NexPOS <span>PRO</span></div>
+  <div class="nav-title">القائمة الرئيسية</div>
+  <nav class="nav" id="navigation"></nav>
+  <div style="padding:25px 10px 5px">
+   <button class="btn danger block" onclick="logout()">تسجيل الخروج</button>
   </div>
-  <div class="topright">
-   <span id="userName" class="muted"></span>
-   <button class="iconbtn" onclick="toggleTheme()">🌙</button>
-   <button class="btn red" onclick="logout()">خروج</button>
-  </div>
- </header>
- <div id="overlay" class="overlay" onclick="closeMenu()"></div>
- <div class="layout">
-  <aside class="sidebar" id="sidebar">
-   <nav class="nav" id="nav"></nav>
-  </aside>
-  <main class="main" id="main"></main>
- </div>
-</section>
+ </aside>
+ <main class="main">
+  <header class="topbar">
+   <div style="display:flex;align-items:center;gap:12px">
+    <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+    <h2 id="pageTitle">لوحة التحكم</h2>
+   </div>
+   <div id="userLabel" style="font-size:13px;color:#64748b"></div>
+  </header>
+  <div class="content" id="pageContent"></div>
+ </main>
+</div>
+
+<div id="toast" style="position:fixed;bottom:20px;left:20px;z-index:20;background:#111827;color:#fff;padding:13px 18px;border-radius:10px;display:none;max-width:90%"></div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,sendPasswordResetEmail,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-import {getFirestore,doc,getDoc,setDoc,updateDoc,addDoc,deleteDoc,collection,getDocs,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import {
+ getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,
+ onAuthStateChanged,signOut
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {
+ getFirestore,doc,getDoc,setDoc,collection,addDoc,getDocs,
+ updateDoc,serverTimestamp,Timestamp,query,orderBy,limit
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
+/* إعدادات مشروع Firebase الحالي */
 const firebaseConfig={
  apiKey:"AIzaSyABpb7h1WXzodOKoxoRvvkXZSrPQ6UgZiA",
  authDomain:"nexpos-14155.firebaseapp.com",
@@ -148,367 +147,487 @@ const firebaseConfig={
  appId:"1:932284131293:web:00d6237b1f155ae5daf834",
  measurementId:"G-ND249T5PTN"
 };
-const OWNER_EMAIL="melsalahy689@gmail.com";
-const appFB=initializeApp(firebaseConfig);
-const auth=getAuth(appFB),db=getFirestore(appFB);
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+let currentUser=null;
+let profile=null;
+let currentPage="dashboard";
+let productsCache=[];
+let customersCache=[];
+let salesCache=[];
+
 const $=id=>document.getElementById(id);
-let user=null,profile=null,shopId=null,isOwner=false;
-let data={products:[],customers:[],sales:[],expenses:[],suppliers:[],purchases:[],returns:[]};
-let cart=[],currentPage="home";
-
-const fmt=n=>(Number(n)||0).toLocaleString("ar-EG",{maximumFractionDigits:2});
-const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const col=name=>collection(db,"shops",shopId,name);
-const ref=(name,id)=>doc(db,"shops",shopId,name,id);
-
-function message(text,type="error"){
- $("authMsg").textContent=text;$("authMsg").className="msg show "+type;
+const money=n=>(Number(n)||0).toLocaleString("ar-EG")+" ج.م";
+const dateText=d=>{
+ if(!d)return "—";
+ const x=d.toDate?d.toDate():new Date(d);
+ return x.toLocaleDateString("ar-EG");
+};
+function toast(msg){
+ $("toast").textContent=msg;
+ $("toast").style.display="block";
+ setTimeout(()=>$("toast").style.display="none",3500);
 }
-function errorText(e){
- const s=e?.code||e?.message||"حدث خطأ";
- if(s.includes("invalid-credential"))return "بيانات الدخول غير صحيحة";
- if(s.includes("email-already-in-use"))return "البريد مسجل بالفعل";
- if(s.includes("permission-denied"))return "ليس لديك صلاحية. راجع قواعد Firestore";
- return s;
+function showLogin(){
+ $("loginForm").classList.remove("hidden");
+ $("registerForm").classList.add("hidden");
 }
-window.showRegister=()=>{
- $("loginForm").classList.add("hidden");$("registerForm").classList.remove("hidden");$("pendingForm").classList.add("hidden");
-};
-window.showLogin=()=>{
- $("loginForm").classList.remove("hidden");$("registerForm").classList.add("hidden");$("pendingForm").classList.add("hidden");
-};
-window.login=async()=>{
- try{
-  const email=$("loginEmail").value.trim(),password=$("loginPassword").value;
-  if(!email||!password)throw Error("اكتب البريد وكلمة المرور");
-  await signInWithEmailAndPassword(auth,email,password);
- }catch(e){message(errorText(e));}
-};
+function showRegister(){
+ $("loginForm").classList.add("hidden");
+ $("registerForm").classList.remove("hidden");
+}
+window.showLogin=showLogin;
+window.showRegister=showRegister;
+
 window.register=async()=>{
+ const name=$("regName").value.trim();
+ const shop=$("regShop").value.trim();
+ const phone=$("regPhone").value.trim();
+ const email=$("regEmail").value.trim();
+ const password=$("regPassword").value;
+ if(!name||!shop||!phone||!email||password.length<6){
+  toast("من فضلك أكمل البيانات بشكل صحيح");
+  return;
+ }
  try{
-  const name=$("regName").value.trim(),shop=$("regShop").value.trim();
-  const phone=$("regPhone").value.trim(),email=$("regEmail").value.trim(),password=$("regPassword").value;
-  if(!name||!shop||!email||!password)throw Error("أكمل البيانات المطلوبة");
-  if(password.length<6)throw Error("كلمة المرور قصيرة");
   const result=await createUserWithEmailAndPassword(auth,email,password);
   await setDoc(doc(db,"users",result.user.uid),{
-   customerName:name,shopName:shop,phone,email,role:"customer",
-   status:"pending",subscriptionDays:0,createdAt:serverTimestamp()
+   customerName:name,shopName:shop,phone,email,
+   role:"customer",status:"pending",
+   subscriptionDays:0,subscriptionExpiresAt:null,
+   createdAt:serverTimestamp()
   });
-  message("تم إنشاء الحساب. طلبك في انتظار موافقة المالك","ok");
- }catch(e){message(errorText(e));}
+  toast("تم إنشاء الحساب. انتظر موافقة المالك وتفعيل الاشتراك.");
+ }catch(e){toast(firebaseError(e));}
 };
-window.resetPassword=async()=>{
- try{
-  const email=$("loginEmail").value.trim();if(!email)throw Error("اكتب بريدك أولاً");
-  await sendPasswordResetEmail(auth,email);message("تم إرسال رابط استعادة كلمة المرور","ok");
- }catch(e){message(errorText(e));}
+
+window.login=async()=>{
+ const email=$("loginEmail").value.trim();
+ const password=$("loginPassword").value;
+ if(!email||!password){toast("اكتب البريد وكلمة المرور");return;}
+ try{await signInWithEmailAndPassword(auth,email,password);}
+ catch(e){toast(firebaseError(e));}
 };
 window.logout=()=>signOut(auth);
+window.toggleSidebar=()=>$("sidebar").classList.toggle("open");
 
-onAuthStateChanged(auth,async u=>{
- if(!u){
-  user=null;$("app").classList.add("hidden");$("auth").classList.remove("hidden");showLogin();return;
+function firebaseError(e){
+ const errors={
+  "auth/invalid-credential":"البريد الإلكتروني أو كلمة المرور غير صحيحة",
+  "auth/email-already-in-use":"البريد الإلكتروني مستخدم بالفعل",
+  "auth/weak-password":"كلمة المرور ضعيفة",
+  "auth/invalid-email":"البريد الإلكتروني غير صحيح",
+  "auth/network-request-failed":"تحقق من اتصال الإنترنت"
+ };
+ return errors[e.code]||e.message||"حدث خطأ غير متوقع";
+}
+
+onAuthStateChanged(auth,async user=>{
+ if(!user){
+  currentUser=null;profile=null;
+  $("authScreen").classList.remove("hidden");
+  $("appScreen").classList.add("hidden");
+  return;
  }
+ currentUser=user;
  try{
-  user=u;
-  const snap=await getDoc(doc(db,"users",u.uid));
-  if(!snap.exists())throw Error("لا يوجد ملف مستخدم لهذا الحساب");
-  profile=snap.data();
-  isOwner=profile.role==="owner"||u.email===OWNER_EMAIL;
-  if(!isOwner&&profile.status!=="active"){
-   $("auth").classList.remove("hidden");$("app").classList.add("hidden");
-   $("loginForm").classList.add("hidden");$("registerForm").classList.add("hidden");$("pendingForm").classList.remove("hidden");
-   return;
+  const snap=await getDoc(doc(db,"users",user.uid));
+  if(!snap.exists()){
+   toast("لم يتم العثور على بيانات الحساب");
+   await signOut(auth);return;
   }
-  shopId=u.uid;
-  $("auth").classList.add("hidden");$("app").classList.remove("hidden");
-  $("userName").textContent=isOwner?"المالك":(profile.shopName||profile.customerName||u.email);
-  await buildMenu();await loadData();openPage(isOwner?"owner":"home");
- }catch(e){console.error(e);message(errorText(e));}
+  profile=snap.data();
+  if(profile.role!=="owner"){
+   if(profile.status!=="active"){
+    $("authScreen").classList.remove("hidden");
+    $("appScreen").classList.add("hidden");
+    toast(profile.status==="rejected"?"تم رفض طلب الاشتراك. تواصل مع الإدارة":"حسابك بانتظار موافقة المالك وتفعيل الاشتراك");
+    await signOut(auth);return;
+   }
+   const expiry=profile.subscriptionExpiresAt?.toDate?.();
+   if(!expiry||expiry.getTime()<Date.now()){
+    await updateDoc(doc(db,"users",user.uid),{status:"expired"});
+    toast("انتهى اشتراكك. يمكنك طلب التجديد بعد تسجيل الدخول مرة أخرى.");
+    await signOut(auth);return;
+   }
+  }
+  $("authScreen").classList.add("hidden");
+  $("appScreen").classList.remove("hidden");
+  $("userLabel").textContent=profile.role==="owner"?"المالك: "+(profile.customerName||"NexPOS"):profile.shopName;
+  buildNavigation();
+  await navigate("dashboard");
+ }catch(e){
+  toast("تعذر تحميل الحساب: "+e.message);
+ }
 });
 
-const customerMenu=[
- ["home","🏠","الرئيسية"],["products","📦","المنتجات والمخزون"],
- ["sales","🛒","المبيعات"],["customers","👥","العملاء"],
- ["suppliers","🚚","الموردون"],["purchases","📥","المشتريات"],
- ["invoices","🧾","الفواتير"],["returns","↩️","المرتجعات"],
- ["expenses","💸","المصروفات"],["cashbox","💰","الخزينة"],
- ["reports","📊","التقارير"],["settings","⚙️","الإعدادات"],["subscription","⭐","اشتراكي"]
+/* القوائم */
+const ownerMenu=[
+ ["dashboard","لوحة التحكم","▦"],
+ ["accounts","إدارة العملاء","♙"],
+ ["requests","طلبات الاشتراك","◷"],
+ ["plans","إعدادات الاشتراك","⚙"],
+ ["ownerInfo","بيانات المطور","ⓘ"]
 ];
-const ownerMenu=[["owner","👑","لوحة المالك"],["ownerSettings","⚙️","إعدادات النظام"]];
-
-async function buildMenu(){
- const items=isOwner?ownerMenu:customerMenu;
- $("nav").innerHTML=items.map(([id,ico,label])=>
-  `<button data-page="${id}" onclick="openPage('${id}')"><span class="ico">${ico}</span><span class="navtext">${label}</span></button>`
- ).join("");
+const customerMenu=[
+ ["dashboard","الرئيسية","▦"],
+ ["products","المنتجات والمخزون","▤"],
+ ["sales","المبيعات","▣"],
+ ["customers","العملاء","♙"],
+ ["invoices","الفواتير","▧"],
+ ["subscription","اشتراكي","◷"]
+];
+function buildNavigation(){
+ const items=profile.role==="owner"?ownerMenu:customerMenu;
+ $("navigation").innerHTML=items.map(x=>`
+ <button id="nav-${x[0]}" onclick="navigate('${x[0]}')">
+ <span style="font-size:18px;width:22px">${x[2]}</span>${x[1]}</button>`).join("");
 }
-window.openPage=id=>{
- currentPage=id;
- document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
- renderPage();closeMenu();
-};
+window.navigate=navigate;
 
-async function loadData(){
- if(isOwner){return;}
- const names=Object.keys(data);
- await Promise.all(names.map(async name=>{
-  const snap=await getDocs(col(name));
-  data[name]=snap.docs.map(d=>({id:d.id,...d.data()}));
- }));
+async function navigate(page){
+ currentPage=page;
+ $("sidebar").classList.remove("open");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+ $("nav-"+page)?.classList.add("active");
+ const names={
+ dashboard:"لوحة التحكم",accounts:"إدارة العملاء",
+ requests:"طلبات الاشتراك",plans:"إعدادات الاشتراك",
+ ownerInfo:"بيانات المطور",products:"المنتجات والمخزون",
+ sales:"المبيعات",customers:"العملاء",invoices:"الفواتير",
+ subscription:"اشتراكي"
+ };
+ $("pageTitle").textContent=names[page]||"NexPOS PRO";
+ $("pageContent").innerHTML='<div class="empty">جارٍ تحميل البيانات...</div>';
+ try{
+  if(profile.role==="owner")await ownerPage(page);
+  else await customerPage(page);
+ }catch(e){
+  $("pageContent").innerHTML=`<div class="panel">حدث خطأ أثناء تحميل البيانات: ${e.message}</div>`;
+ }
 }
-function cardStat(label,value){return `<div class="card stat"><small>${label}</small><strong>${value}</strong></div>`;}
+
+function stat(title,value){
+ return `<div class="card stat"><small>${title}</small><strong>${value}</strong></div>`;
+}
+function panel(title,body){
+ return `<section class="panel"><h3>${title}</h3>${body}</section>`;
+}
 function table(headers,rows){
- return `<div class="tablewrap"><table><thead><tr>${headers.map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>${rows||""}</tbody></table></div>`;
+ return `<div class="table-wrap"><table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows||""}</tbody></table></div>`;
 }
-function pageHead(title,extra=""){return `<div class="head"><h2>${title}</h2>${extra}</div>`;}
-function renderPage(){
- const main=$("main");
- if(isOwner){renderOwnerPage();return;}
- const products=data.products,customers=data.customers,sales=data.sales,expenses=data.expenses;
- const revenue=sales.reduce((s,x)=>s+(Number(x.total)||0),0);
- const exp=expenses.reduce((s,x)=>s+(Number(x.amount)||0),0);
- let html="";
- switch(currentPage){
- case "home":
-  html=pageHead("لوحة تحكم المحل")+`<div class="cards">
-  ${cardStat("إجمالي المبيعات",fmt(revenue)+" ج.م")}
-  ${cardStat("عدد المنتجات",products.length)}
-  ${cardStat("عدد العملاء",customers.length)}
-  ${cardStat("المصروفات",fmt(exp)+" ج.م")}
-  </div><div class="card"><h3>مرحباً بك في NexPOS PRO</h3><p class="muted">تابع نشاط محلك وأدر المبيعات والمخزون من مكان واحد.</p></div>`;
-  break;
- case "products":
-  html=pageHead("المنتجات والمخزون",`<button class="btn" onclick="productForm()">إضافة منتج</button>`)+
-  `<div class="card" id="productFormBox" style="display:none"></div>`+
-  table(["المنتج","الكود","الكمية","التكلفة","سعر البيع","إجراءات"],products.map(p=>`<tr>
-  <td>${safe(p.name)}</td><td>${safe(p.code)}</td><td>${fmt(p.qty)}</td><td>${fmt(p.cost)}</td><td>${fmt(p.price)}</td>
-  <td class="actions"><button class="btn light" onclick="productForm('${p.id}')">تعديل</button><button class="btn red" onclick="removeItem('products','${p.id}')">حذف</button></td></tr>`).join(""));
-  break;
- case "sales":
-  html=pageHead("المبيعات")+`<div class="grid">
-   <div class="card"><h3>المنتجات</h3><input id="saleSearch" placeholder="ابحث عن منتج" oninput="renderSaleList()"><div id="saleList"></div></div>
-   <div class="card"><h3>سلة البيع</h3><div id="cartList"></div><hr><h3>الإجمالي: <span id="cartTotal">0</span> ج.م</h3>
-   <div class="field"><label>العميل</label><input id="saleCustomer" placeholder="عميل نقدي"></div>
-   <div class="field"><label>طريقة الدفع</label><select id="salePayment"><option>نقدي</option><option>بطاقة</option><option>تحويل</option><option>آجل</option></select></div>
-   <button class="btn green block" onclick="finishSale()">حفظ الفاتورة</button></div></div>`;
-  break;
- case "customers":
-  html=pageHead("العملاء",`<button class="btn" onclick="simpleAdd('customers')">إضافة عميل</button>`)+
-  table(["الاسم","الهاتف","العنوان","إجراء"],customers.map(x=>`<tr><td>${safe(x.name)}</td><td>${safe(x.phone)}</td><td>${safe(x.address)}</td><td><button class="btn red" onclick="removeItem('customers','${x.id}')">حذف</button></td></tr>`).join(""));
-  break;
- case "suppliers":
-  html=pageHead("الموردون",`<button class="btn" onclick="simpleAdd('suppliers')">إضافة مورد</button>`)+
-  table(["الاسم","الهاتف","العنوان","إجراء"],data.suppliers.map(x=>`<tr><td>${safe(x.name)}</td><td>${safe(x.phone)}</td><td>${safe(x.address)}</td><td><button class="btn red" onclick="removeItem('suppliers','${x.id}')">حذف</button></td></tr>`).join(""));
-  break;
- case "purchases":
-  html=pageHead("المشتريات",`<button class="btn" onclick="newPurchase()">تسجيل مشتريات</button>`)+
-  table(["التاريخ","المورد","البيان","الإجمالي"],data.purchases.map(x=>`<tr><td>${dateOf(x)}</td><td>${safe(x.supplier)}</td><td>${safe(x.description)}</td><td>${fmt(x.total)}</td></tr>`).join(""));
-  break;
- case "invoices":
-  html=pageHead("الفواتير")+table(["رقم الفاتورة","التاريخ","العميل","الدفع","الإجمالي","عرض"],sales.map(x=>`<tr><td>${safe(x.invoiceNo)}</td><td>${dateOf(x)}</td><td>${safe(x.customer)}</td><td>${safe(x.payment)}</td><td>${fmt(x.total)}</td><td><button class="btn light" onclick="showInvoice('${x.id}')">عرض</button></td></tr>`).join(""));
-  break;
- case "returns":
-  html=pageHead("المرتجعات",`<button class="btn" onclick="newReturn()">تسجيل مرتجع</button>`)+
-  table(["التاريخ","رقم الفاتورة","السبب","القيمة"],data.returns.map(x=>`<tr><td>${dateOf(x)}</td><td>${safe(x.invoiceNo)}</td><td>${safe(x.reason)}</td><td>${fmt(x.amount)}</td></tr>`).join(""));
-  break;
- case "expenses":
-  html=pageHead("المصروفات",`<button class="btn" onclick="simpleAdd('expenses')">إضافة مصروف</button>`)+
-  table(["البيان","التصنيف","المبلغ","التاريخ","إجراء"],expenses.map(x=>`<tr><td>${safe(x.name)}</td><td>${safe(x.category)}</td><td>${fmt(x.amount)}</td><td>${dateOf(x)}</td><td><button class="btn red" onclick="removeItem('expenses','${x.id}')">حذف</button></td></tr>`).join(""));
-  break;
- case "cashbox":
-  html=pageHead("الخزينة")+`<div class="cards">${cardStat("إجمالي المقبوضات",fmt(sales.filter(x=>x.payment==="نقدي").reduce((s,x)=>s+(Number(x.total)||0),0))+" ج.م")}${cardStat("المصروفات النقدية",fmt(exp)+" ج.م")}${cardStat("الرصيد التقريبي",fmt(sales.filter(x=>x.payment==="نقدي").reduce((s,x)=>s+(Number(x.total)||0),0)-exp)+" ج.م")}</div>`;
-  break;
- case "reports":
-  const cost=sales.reduce((s,x)=>s+(Number(x.cost)||0),0);
-  html=pageHead("التقارير")+`<div class="cards">${cardStat("الإيرادات",fmt(revenue)+" ج.م")}${cardStat("تكلفة البضاعة",fmt(cost)+" ج.م")}${cardStat("المصروفات",fmt(exp)+" ج.م")}${cardStat("صافي الربح التقريبي",fmt(revenue-cost-exp)+" ج.م")}</div>
-  <div class="card"><p class="muted">الأرقام محسوبة من الفواتير والمصروفات المسجلة في النظام.</p></div>`;
-  break;
- case "settings":
-  html=pageHead("إعدادات المحل")+`<div class="card"><div class="field"><label>اسم المحل</label><input id="setShop" value="${safe(profile.shopName)}"></div>
-  <div class="field"><label>رقم الهاتف</label><input id="setPhone" value="${safe(profile.phone)}"></div>
-  <div class="field"><label>عنوان المحل</label><input id="setAddress" value="${safe(profile.address)}"></div>
-  <button class="btn" onclick="saveShopSettings()">حفظ الإعدادات</button></div>`;
-  break;
- case "subscription":
-  html=pageHead("اشتراكي")+`<div class="card"><h3>حالة الاشتراك: <span class="badge">${safe(profile.status)}</span></h3>
-  <p>الأيام المسجلة: ${fmt(profile.subscriptionDays||0)}</p><p class="muted">لتجديد الاشتراك تواصل مع إدارة النظام.</p>
-  <p>الدفع عبر Cash أو InstaPay على الرقم: <b>01062883414</b></p></div>`;
-  break;
+
+/* لوحة المالك */
+async function ownerPage(page){
+ if(page==="dashboard"||page==="accounts"||page==="requests"){
+  const snaps=await getDocs(collection(db,"users"));
+  const users=snaps.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
+  const pending=users.filter(u=>u.status==="pending");
+  const active=users.filter(u=>u.status==="active");
+  const expired=users.filter(u=>u.status==="expired"||u.status==="rejected");
+  if(page==="dashboard"){
+   $("pageContent").innerHTML=`
+    <div class="grid">
+     ${stat("إجمالي العملاء",users.length)}
+     ${stat("اشتراكات نشطة",active.length)}
+     ${stat("طلبات معلقة",pending.length)}
+     ${stat("منتهية أو مرفوضة",expired.length)}
+    </div>
+    ${panel("آخر طلبات التسجيل",table(["اسم العميل","المحل","الهاتف","الحالة"],users.slice(0,8).map(u=>`
+     <tr><td>${esc(u.customerName)}</td><td>${esc(u.shopName)}</td><td>${esc(u.phone)}</td><td>${statusLabel(u.status)}</td></tr>`).join("")))}
+    <div class="notice">يمكنك مراجعة طلبات الاشتراك وتفعيل الحسابات من قسم إدارة العملاء.</div>`;
+   return;
+  }
+  const filtered=page==="requests"?pending:users;
+  $("pageContent").innerHTML=panel(page==="requests"?"طلبات الاشتراك المعلقة":"جميع حسابات العملاء",
+   table(["العميل","اسم المحل","الهاتف","البريد","الحالة","الإجراءات"],
+   filtered.map(u=>`<tr>
+    <td>${esc(u.customerName)}</td><td>${esc(u.shopName)}</td>
+    <td>${esc(u.phone)}</td><td>${esc(u.email)}</td>
+    <td>${statusLabel(u.status)}</td>
+    <td><div class="actions">
+     <button class="btn success" onclick="activateCustomer('${u.id}')">تفعيل</button>
+     <button class="btn secondary" onclick="extendCustomer('${u.id}')">تجديد</button>
+     <button class="btn danger" onclick="blockCustomer('${u.id}')">إيقاف</button>
+    </div></td></tr>`).join("")||`<tr><td colspan="6" class="empty">لا توجد حسابات هنا</td></tr>`)));
+  return;
  }
- main.innerHTML=html;
- if(currentPage==="sales"){renderSaleList();renderCart();}
-}
-function dateOf(x){return x.createdAt?.toDate?x.createdAt.toDate().toLocaleString("ar-EG"):"—";}
-
-function renderOwnerPage(){
- const main=$("main");
- main.innerHTML=pageHead("لوحة المالك 👑")+`
- <div class="cards">
- ${cardStat("إجمالي الحسابات",$("ownerUsersCount")?.textContent||"—")}
- ${cardStat("طلبات الانتظار",$("ownerPendingCount")?.textContent||"—")}
- </div>
- <div class="card"><button class="btn" onclick="loadOwner()">تحديث القائمة</button>
- <div id="ownerTable"></div></div>`;
- loadOwner();
-}
-window.loadOwner=async()=>{
- try{
-  const snap=await getDocs(collection(db,"users"));
-  const users=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>x.role!=="owner");
-  const pending=users.filter(x=>x.status==="pending").length;
-  $("main").querySelector(".cards").innerHTML=cardStat("إجمالي الحسابات",users.length)+cardStat("طلبات الانتظار",pending)+cardStat("الحسابات النشطة",users.filter(x=>x.status==="active").length);
-  $("ownerTable").innerHTML=table(["المحل","صاحب الحساب","البريد","الهاتف","الحالة","الاشتراك","الإجراءات"],users.map(u=>`<tr>
-  <td>${safe(u.shopName)}</td><td>${safe(u.customerName)}</td><td>${safe(u.email)}</td><td>${safe(u.phone)}</td>
-  <td>${safe(u.status)}</td><td>${fmt(u.subscriptionDays)} يوم</td>
-  <td class="actions">
-  <button class="btn green" onclick="changeSubscription('${u.id}','active')">تفعيل</button>
-  <button class="btn light" onclick="extendSubscription('${u.id}')">تمديد</button>
-  <button class="btn red" onclick="changeSubscription('${u.id}','blocked')">إيقاف</button>
-  <button class="btn gray" onclick="changeSubscription('${u.id}','pending')">تعليق</button>
-  </td></tr>`).join(""));
- }catch(e){$("ownerTable").textContent=errorText(e);}
-};
-window.changeSubscription=async(id,status)=>{
- if(!confirm("تأكيد تغيير حالة الحساب؟"))return;
- let days;
- if(status==="active"){days=Number(prompt("مدة الاشتراك بالأيام","30"));if(!days||days<1)return;}
- const update={status};
- if(days)update.subscriptionDays=days;
- await updateDoc(doc(db,"users",id),update);await loadOwner();
-};
-window.extendSubscription=async id=>{
- const days=Number(prompt("عدد الأيام المراد إضافتها"));
- if(!days||days<1)return;
- const r=doc(db,"users",id),s=await getDoc(r);
- await updateDoc(r,{status:"active",subscriptionDays:(Number(s.data().subscriptionDays)||0)+days});
- await loadOwner();
-};
-
-window.productForm=(id="")=>{
- const p=data.products.find(x=>x.id===id)||{};
- const box=$("productFormBox");
- box.style.display="block";
- box.innerHTML=`<h3>${id?"تعديل منتج":"إضافة منتج"}</h3>
- <div class="grid">
- ${field("اسم المنتج","fName",p.name)}
- ${field("كود المنتج","fCode",p.code)}
- ${field("الباركود","fBarcode",p.barcode)}
- ${field("التصنيف","fCategory",p.category)}
- ${field("الشركة","fBrand",p.brand)}
- ${field("الوحدة","fUnit",p.unit||"قطعة")}
- ${field("سعر التكلفة","fCost",p.cost,"number")}
- ${field("سعر البيع","fPrice",p.price,"number")}
- ${field("سعر الجملة","fWholesale",p.wholesale,"number")}
- ${field("الكمية","fQty",p.qty,"number")}
- ${field("حد التنبيه","fMin",p.minQty??5,"number")}
- ${field("المورد","fSupplier",p.supplier)}
- </div><button class="btn" onclick="saveProduct('${id}')">حفظ</button> <button class="btn gray" onclick="document.getElementById('productFormBox').style.display='none'">إلغاء</button>`;
-};
-function field(label,id,value="",type="text"){
- return `<div class="field"><label>${label}</label><input id="${id}" type="${type}" value="${safe(value)}"></div>`;
-}
-window.saveProduct=async id=>{
- const name=$("fName").value.trim();if(!name)return alert("اكتب اسم المنتج");
- const item={name,code:$("fCode").value,barcode:$("fBarcode").value,category:$("fCategory").value,brand:$("fBrand").value,unit:$("fUnit").value,cost:Number($("fCost").value)||0,price:Number($("fPrice").value)||0,wholesale:Number($("fWholesale").value)||0,qty:Number($("fQty").value)||0,minQty:Number($("fMin").value)||0,supplier:$("fSupplier").value,updatedAt:serverTimestamp()};
- if(id)await updateDoc(ref("products",id),item);else await addDoc(col("products"),{...item,createdAt:serverTimestamp()});
- await refresh("products");
-};
-window.simpleAdd=async type=>{
- let name=prompt(type==="expenses"?"بيان المصروف":type==="customers"?"اسم العميل":"اسم المورد");
- if(!name)return;
- let item={name,createdAt:serverTimestamp()};
- if(type==="expenses"){
-  const amount=Number(prompt("قيمة المصروف"));if(!amount||amount<=0)return;
-  item={name,amount,category:prompt("تصنيف المصروف")||"",createdAt:serverTimestamp()};
- }else{
-  item.phone=prompt("رقم الهاتف")||"";item.address=prompt("العنوان")||"";
+ if(page==="plans"){
+  const ref=doc(db,"systemSettings","subscription");
+  const snap=await getDoc(ref);
+  const s=snap.exists()?snap.data():{};
+  $("pageContent").innerHTML=panel("إعدادات الاشتراك",`
+   <div class="notice">بيانات الدفع التي تظهر للعملاء الجدد.</div>
+   <div class="field"><label>رقم الدفع والتحويل InstaPay</label><input id="payPhone" value="${esc(s.paymentPhone||"01062883414")}"></div>
+   <div class="field"><label>تعليمات الدفع</label><input id="payText" value="${esc(s.paymentText||"الدفع نقدًا أو عن طريق InstaPay")}"></div>
+   <div class="field"><label>سعر الاشتراك الشهري (جنيه)</label><input id="planPrice" type="number" value="${Number(s.monthlyPrice||0)}"></div>
+   <button class="btn" onclick="savePlans()">حفظ الإعدادات</button>`);
+  return;
  }
- await addDoc(col(type),item);await refresh(type);
-};
-window.removeItem=async(type,id)=>{
- if(!confirm("هل تريد الحذف؟"))return;
- await deleteDoc(ref(type,id));await refresh(type);
-};
-async function refresh(type){
- const snap=await getDocs(col(type));data[type]=snap.docs.map(d=>({id:d.id,...d.data()}));renderPage();
-};
-
-window.renderSaleList=()=>{
- const q=($("saleSearch")?.value||"").toLowerCase();
- $("saleList").innerHTML=data.products.filter(p=>(p.name||"").toLowerCase().includes(q)||(p.code||"").toLowerCase().includes(q)).map(p=>`<div class="productline"><span>${safe(p.name)}<br><small class="muted">${fmt(p.price)} ج.م | المتاح ${fmt(p.qty)}</small></span><button class="btn" onclick="addCart('${p.id}')">إضافة</button></div>`).join("");
-};
-window.addCart=id=>{
- const p=data.products.find(x=>x.id===id);if(!p)return;
- const old=cart.find(x=>x.id===id);
- if((old?.qty||0)+1>Number(p.qty))return alert("الكمية غير متاحة");
- if(old)old.qty++;else cart.push({id,name:p.name,price:Number(p.price)||0,cost:Number(p.cost)||0,qty:1});
- renderCart();
-};
-window.cartChange=(id,step)=>{
- const x=cart.find(i=>i.id===id);if(!x)return;
- x.qty+=step;if(x.qty<=0)cart=cart.filter(i=>i.id!==id);
- const p=data.products.find(i=>i.id===id);
- if(x.qty>Number(p.qty)){x.qty=Number(p.qty);alert("الكمية غير متاحة");}
- renderCart();
-};
-function renderCart(){
- if(!$("cartList"))return;
- $("cartList").innerHTML=cart.map(x=>`<div class="productline"><span>${safe(x.name)}<br>${fmt(x.price)} × ${x.qty}</span><span><button class="iconbtn" onclick="cartChange('${x.id}',-1)">−</button> ${x.qty} <button class="iconbtn" onclick="cartChange('${x.id}',1)">+</button></span></div>`).join("")||"السلة فارغة";
- $("cartTotal").textContent=fmt(cart.reduce((s,x)=>s+x.price*x.qty,0));
+ if(page==="ownerInfo"){
+  $("pageContent").innerHTML=panel("بيانات المطور",`
+   <h2>محمد صلاح الصلاحي</h2>
+   <p>تم التطوير بواسطة المهندس محمد صلاح الصلاحي</p>
+   <p>أولاد صقر، الشرقية، مصر</p>
+   <p>الدعم الفني: 01062883414</p>
+   <p>وسائل الدفع: Cash / InstaPay</p>`);
+ }
 }
-window.finishSale=async()=>{
- if(!cart.length)return alert("السلة فارغة");
- const items=cart.map(x=>({...x})),total=items.reduce((s,x)=>s+x.price*x.qty,0);
- const saleRef=doc(col("sales"));
+
+function statusLabel(s){
+ const labels={pending:"بانتظار الموافقة",active:"نشط",expired:"منتهي",rejected:"مرفوض",blocked:"موقوف"};
+ const cls=s==="active"?"active":(s==="expired"||s==="rejected"||s==="blocked"?"expired":"");
+ return `<span class="status ${cls}">${labels[s]||s||"غير محدد"}</span>`;
+}
+function esc(v){
+ return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+/* إدارة الاشتراكات */
+window.activateCustomer=async uid=>{
+ const days=Number(prompt("مدة الاشتراك بالأيام:",30));
+ if(!days||days<1){toast("أدخل مدة صحيحة");return;}
  try{
-  await runTransaction(db,async tx=>{
-   const refs=items.map(x=>ref("products",x.id)),snaps=[];
-   for(const r of refs)snaps.push(await tx.get(r));
-   snaps.forEach((s,i)=>{if(!s.exists()||(Number(s.data().qty)||0)<items[i].qty)throw Error("الكمية غير كافية: "+items[i].name);});
-   snaps.forEach((s,i)=>tx.update(refs[i],{qty:(Number(s.data().qty)||0)-items[i].qty}));
-   tx.set(saleRef,{invoiceNo:"INV-"+Date.now(),items,total,cost:items.reduce((s,x)=>s+x.cost*x.qty,0),customer:$("saleCustomer").value||"عميل نقدي",payment:$("salePayment").value,createdAt:serverTimestamp()});
+  const ref=doc(db,"users",uid);
+  const snap=await getDoc(ref);
+  const old=snap.data()?.subscriptionExpiresAt?.toDate?.();
+  const base=old&&old.getTime()>Date.now()?old:new Date();
+  base.setDate(base.getDate()+days);
+  await updateDoc(ref,{
+   status:"active",subscriptionDays:days,
+   subscriptionExpiresAt:Timestamp.fromDate(base),
+   activatedAt:serverTimestamp()
   });
-  cart=[];await loadData();openPage("invoices");alert("تم حفظ الفاتورة");
- }catch(e){alert(errorText(e));}
+  toast("تم تفعيل الاشتراك بنجاح");
+  await navigate(currentPage);
+ }catch(e){toast("تعذر التفعيل: "+e.message);}
 };
-window.showInvoice=id=>{
- const s=data.sales.find(x=>x.id===id);if(!s)return;
- const w=window.open("","_blank");
- w.document.write(`<html dir="rtl"><meta charset="UTF-8"><body style="font-family:Tahoma;padding:25px"><h2>${safe(profile.shopName||"NexPOS PRO")}</h2><p>فاتورة ${safe(s.invoiceNo)}</p><p>العميل: ${safe(s.customer)}</p><table border="1" cellpadding="8" width="100%"><tr><th>المنتج</th><th>الكمية</th><th>السعر</th></tr>${(s.items||[]).map(x=>`<tr><td>${safe(x.name)}</td><td>${x.qty}</td><td>${fmt(x.price)}</td></tr>`).join("")}</table><h3>الإجمالي: ${fmt(s.total)} جنيه</h3><button onclick="print()">طباعة</button></body></html>`);
- w.document.close();
+window.extendCustomer=async uid=>{
+ const days=Number(prompt("عدد أيام التجديد:",30));
+ if(!days||days<1)return;
+ try{
+  const ref=doc(db,"users",uid);
+  const snap=await getDoc(ref);
+  const old=snap.data()?.subscriptionExpiresAt?.toDate?.();
+  const base=old&&old.getTime()>Date.now()?old:new Date();
+  base.setDate(base.getDate()+days);
+  await updateDoc(ref,{
+   status:"active",subscriptionDays:days,
+   subscriptionExpiresAt:Timestamp.fromDate(base)
+  });
+  toast("تم تجديد الاشتراك");
+  await navigate(currentPage);
+ }catch(e){toast(e.message);}
 };
-window.newPurchase=async()=>{
- const supplier=prompt("اسم المورد")||"",description=prompt("تفاصيل المشتريات")||"";
- const total=Number(prompt("إجمالي المشتريات"));if(!total||total<=0)return;
- await addDoc(col("purchases"),{supplier,description,total,createdAt:serverTimestamp()});
- await refresh("purchases");
+window.blockCustomer=async uid=>{
+ if(!confirm("هل تريد إيقاف هذا الحساب؟"))return;
+ try{
+  await updateDoc(doc(db,"users",uid),{status:"blocked"});
+  toast("تم إيقاف الحساب");
+  await navigate(currentPage);
+ }catch(e){toast(e.message);}
 };
-window.newReturn=async()=>{
- const invoiceNo=prompt("رقم الفاتورة")||"",reason=prompt("سبب المرتجع")||"";
- const amount=Number(prompt("قيمة المرتجع"));if(!amount||amount<=0)return;
- await addDoc(col("returns"),{invoiceNo,reason,amount,createdAt:serverTimestamp()});
- await refresh("returns");
-};
-window.saveShopSettings=async()=>{
- await updateDoc(doc(db,"users",user.uid),{shopName:$("setShop").value,phone:$("setPhone").value,address:$("setAddress").value});
- profile={...profile,shopName:$("setShop").value,phone:$("setPhone").value,address:$("setAddress").value};
- alert("تم حفظ الإعدادات");
+window.savePlans=async()=>{
+ try{
+  await setDoc(doc(db,"systemSettings","subscription"),{
+   paymentPhone:$("payPhone").value.trim(),
+   paymentText:$("payText").value.trim(),
+   monthlyPrice:Number($("planPrice").value||0),
+   updatedAt:serverTimestamp()
+  },{merge:true});
+  toast("تم حفظ الإعدادات");
+ }catch(e){toast(e.message);}
 };
 
-window.toggleMenu=()=>{
- if(innerWidth<=800){$("sidebar").classList.toggle("open");$("overlay").classList.toggle("show");}
- else $("sidebar").classList.toggle("collapsed");
-};
-window.closeMenu=()=>{$("sidebar").classList.remove("open");$("overlay").classList.remove("show");};
-window.toggleTheme=()=>{
- document.body.classList.toggle("dark");
- localStorage.setItem("nexpos-theme",document.body.classList.contains("dark")?"dark":"light");
-};
-if(localStorage.getItem("nexpos-theme")==="dark")document.body.classList.add("dark");
+/* لوحة العميل */
+const shopRef=name=>collection(db,"shops",currentUser.uid,name);
+async function customerPage(page){
+ if(page==="dashboard"){
+  const [p,s,c]=await Promise.all([
+   getDocs(shopRef("products")),getDocs(shopRef("sales")),getDocs(shopRef("customers"))
+  ]);
+  const products=p.docs.map(d=>d.data());
+  const sales=s.docs.map(d=>d.data());
+  const total=sales.reduce((a,x)=>a+Number(x.total||0),0);
+  $("pageContent").innerHTML=`
+   <div class="grid">
+    ${stat("عدد المنتجات",products.length)}
+    ${stat("عدد الفواتير",sales.length)}
+    ${stat("إجمالي المبيعات",money(total))}
+    ${stat("عدد العملاء",c.size)}
+   </div>
+   ${panel("مرحبًا بك في NexPOS PRO",`
+    <p>إدارة نشاطك التجاري أصبحت أسهل.</p>
+    <p>المحل: <strong>${esc(profile.shopName)}</strong></p>
+    <p>صاحب الحساب: ${esc(profile.customerName)}</p>`)}
+   `;
+  return;
+ }
+ if(page==="products"){
+  const snap=await getDocs(shopRef("products"));
+  productsCache=snap.docs.map(d=>({id:d.id,...d.data()}));
+  $("pageContent").innerHTML=`
+   ${panel("إضافة منتج",`
+    <div class="form-grid">
+     <div class="field"><label>اسم المنتج</label><input id="pName"></div>
+     <div class="field"><label>كود المنتج / الباركود</label><input id="pCode"></div>
+     <div class="field"><label>سعر البيع</label><input id="pPrice" type="number"></div>
+     <div class="field"><label>سعر التكلفة</label><input id="pCost" type="number"></div>
+     <div class="field"><label>الكمية</label><input id="pQty" type="number"></div>
+     <div class="field"><label>حد التنبيه</label><input id="pMin" type="number" value="5"></div>
+    </div>
+    <button class="btn" onclick="addProduct()">حفظ المنتج</button>`)}
+   ${panel("قائمة المنتجات",table(["المنتج","الكود","سعر البيع","التكلفة","الكمية","الإجراء"],
+    productsCache.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.code)}</td>
+    <td>${money(p.price)}</td><td>${money(p.cost)}</td><td>${p.qty}</td>
+    <td><button class="btn danger" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||`<tr><td colspan="6" class="empty">لا توجد منتجات</td></tr>`))}
+  `;
+  return;
+ }
+ if(page==="sales"){
+  const snap=await getDocs(shopRef("products"));
+  productsCache=snap.docs.map(d=>({id:d.id,...d.data()}));
+  $("pageContent").innerHTML=panel("تسجيل عملية بيع",`
+   <div class="field"><label>اختر المنتج</label>
+    <select id="saleProduct">${productsCache.map(p=>`<option value="${p.id}">${esc(p.name)} - ${money(p.price)} (المتاح ${p.qty})</option>`).join("")}</select>
+   </div>
+   <div class="field"><label>الكمية</label><input id="saleQty" type="number" value="1" min="1"></div>
+   <div class="field"><label>طريقة الدفع</label><select id="saleMethod"><option>نقدي</option><option>بطاقة</option><option>تحويل</option><option>آجل</option></select></div>
+   <button class="btn" onclick="makeSale()">حفظ الفاتورة</button>`);
+  return;
+ }
+ if(page==="invoices"){
+  const snap=await getDocs(query(shopRef("sales"),orderBy("createdAt","desc"),limit(100)));
+  salesCache=snap.docs.map(d=>({id:d.id,...d.data()}));
+  $("pageContent").innerHTML=panel("سجل الفواتير",table(
+   ["رقم الفاتورة","المنتج","الكمية","الإجمالي","طريقة الدفع","التاريخ"],
+   salesCache.map(s=>`<tr><td>${esc(s.invoiceNo)}</td><td>${esc(s.productName)}</td><td>${s.qty}</td><td>${money(s.total)}</td><td>${esc(s.paymentMethod)}</td><td>${dateText(s.createdAt)}</td></tr>`).join("")||`<tr><td colspan="6" class="empty">لا توجد فواتير</td></tr>`
+  ));
+  return;
+ }
+ if(page==="customers"){
+  const snap=await getDocs(shopRef("customers"));
+  customersCache=snap.docs.map(d=>({id:d.id,...d.data()}));
+  $("pageContent").innerHTML=`
+   ${panel("إضافة عميل",`
+    <div class="form-grid">
+     <div class="field"><label>اسم العميل</label><input id="cName"></div>
+     <div class="field"><label>رقم الهاتف</label><input id="cPhone"></div>
+    </div><button class="btn" onclick="addCustomer()">إضافة العميل</button>`)}
+   ${panel("العملاء",table(["الاسم","الهاتف"],customersCache.map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.phone)}</td></tr>`).join("")||`<tr><td colspan="2" class="empty">لا يوجد عملاء</td></tr>`))}
+  `;
+  return;
+ }
+ if(page==="subscription"){
+  const ref=doc(db,"users",currentUser.uid);
+  const snap=await getDoc(ref);
+  const u=snap.data();
+  const settings=await getDoc(doc(db,"systemSettings","subscription"));
+  const s=settings.exists()?settings.data():{};
+  const expiry=u.subscriptionExpiresAt?.toDate?.();
+  $("pageContent").innerHTML=panel("اشتراكي",`
+   <div class="grid">
+    <div class="card"><small>حالة الاشتراك</small><h3>${statusLabel(u.status)}</h3></div>
+    <div class="card"><small>تاريخ الانتهاء</small><h3>${dateText(u.subscriptionExpiresAt)}</h3></div>
+   </div>
+   <div class="notice">لتجديد الاشتراك تواصل مع الإدارة أو أرسل طلب التجديد من الزر التالي.<br>
+   الدفع نقدًا أو InstaPay: <strong>${esc(s.paymentPhone||"01062883414")}</strong><br>
+   ${esc(s.paymentText||"الدفع نقدًا أو عن طريق InstaPay")}</div>
+   <button class="btn" onclick="requestRenewal()">طلب تجديد الاشتراك</button>
+  `);
+ }
+}
 
-window.ownerSettings=()=>alert("إعدادات النظام: إدارة حسابات المستخدمين والاشتراكات من لوحة المالك.");
+/* عمليات المنتجات */
+window.addProduct=async()=>{
+ const name=$("pName").value.trim();
+ const code=$("pCode").value.trim();
+ const price=Number($("pPrice").value);
+ const cost=Number($("pCost").value);
+ const qty=Number($("pQty").value);
+ const minQty=Number($("pMin").value||5);
+ if(!name||price<0||!Number.isFinite(qty)){toast("أكمل بيانات المنتج");return;}
+ try{
+  await addDoc(shopRef("products"),{
+   name,code,price,cost,qty,minQty,
+   createdAt:serverTimestamp()
+  });
+  toast("تم إضافة المنتج");
+  await navigate("products");
+ }catch(e){toast(e.message);}
+};
+window.deleteProduct=async id=>{
+ if(!confirm("حذف المنتج؟"))return;
+ try{
+  const {deleteDoc}=await import("https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js");
+  await deleteDoc(doc(db,"shops",currentUser.uid,"products",id));
+  toast("تم حذف المنتج");
+  await navigate("products");
+ }catch(e){toast(e.message);}
+};
+
+/* المبيعات وتحديث المخزون */
+window.makeSale=async()=>{
+ const id=$("saleProduct").value;
+ const qty=Number($("saleQty").value);
+ const method=$("saleMethod").value;
+ const p=productsCache.find(x=>x.id===id);
+ if(!p||qty<1||qty>Number(p.qty)){toast("الكمية غير متاحة في المخزون");return;}
+ try{
+  const {runTransaction}=await import("https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js");
+  await runTransaction(db,async tx=>{
+   const ref=doc(db,"shops",currentUser.uid,"products",id);
+   const snap=await tx.get(ref);
+   if(!snap.exists()||Number(snap.data().qty)<qty)throw new Error("المخزون غير كافٍ");
+   tx.update(ref,{qty:Number(snap.data().qty)-qty});
+   const saleRef=doc(collection(db,"shops",currentUser.uid,"sales"));
+   tx.set(saleRef,{
+    invoiceNo:"NX-"+Date.now(),
+    productId:id,productName:p.name,
+    qty,price:Number(p.price),
+    cost:Number(p.cost||0),
+    total:Number(p.price)*qty,
+    paymentMethod:method,
+    createdAt:serverTimestamp()
+   });
+  });
+  toast("تم تسجيل البيع وتحديث المخزون");
+  await navigate("dashboard");
+ }catch(e){toast("لم تتم عملية البيع: "+e.message);}
+};
+
+/* العملاء */
+window.addCustomer=async()=>{
+ const name=$("cName").value.trim();
+ const phone=$("cPhone").value.trim();
+ if(!name){toast("اكتب اسم العميل");return;}
+ try{
+  await addDoc(shopRef("customers"),{name,phone,createdAt:serverTimestamp()});
+  toast("تم إضافة العميل");
+  await navigate("customers");
+ }catch(e){toast(e.message);}
+};
+
+/* طلب تجديد الاشتراك */
+window.requestRenewal=async()=>{
+ try{
+  const requests=collection(db,"subscriptionRequests");
+  await addDoc(requests,{
+   uid:currentUser.uid,
+   customerName:profile.customerName,
+   shopName:profile.shopName,
+   phone:profile.phone,
+   email:profile.email,
+   status:"pending",
+   paymentMethod:"Cash / InstaPay",
+   createdAt:serverTimestamp()
+  });
+  toast("تم إرسال طلب التجديد إلى المالك");
+ }catch(e){toast("تعذر إرسال الطلب: "+e.message);}
+};
 </script>
 </body>
 </html>

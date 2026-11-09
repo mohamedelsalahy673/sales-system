@@ -11,12 +11,11 @@ body{margin:0;background:#f3f5fa;color:#1c2940;font-family:Arial,sans-serif}
 button,input,select,textarea{font:inherit}
 button{border:0;border-radius:9px;padding:11px 15px;background:#2458d3;color:white;cursor:pointer}
 button:hover{opacity:.9}
-input,select,textarea{width:100%;padding:11px;border:1px solid #dce2ed;border-radius:9px;margin:6px 0 13px;background:white}
-textarea{min-height:75px}
-label{font-size:13px;font-weight:bold}
+input,select,textarea{width:100%;padding:12px;border:1px solid #dce2ed;border-radius:9px;margin:8px 0 16px;background:white}
+label{font-size:13px;font-weight:bold;color:#1e293b;display:block;margin-bottom:3px}
 h2,h3{margin-top:0}
 .wrap{max-width:1350px;margin:auto;padding:15px}
-.card{background:white;padding:18px;border-radius:14px;margin:12px 0;box-shadow:0 3px 15px #1822380b}
+.card{background:white;padding:22px;border-radius:14px;margin:12px 0;box-shadow:0 3px 15px #1822380b}
 .brand{font-size:26px;font-weight:bold;color:#2458d3}
 .version{display:block;color:#fff;background:#2458d3;border-radius:5px;padding:3px 8px;font-size:10px;width:max-content;margin-top:5px;letter-spacing:1px;font-weight:bold;}
 .muted{font-size:13px;color:#788397}
@@ -40,7 +39,7 @@ td,th{padding:11px;border-bottom:1px solid #edf0f5;text-align:right;font-size:13
 .tag{border-radius:20px;padding:5px 9px;background:#fff0d3;color:#885900;font-size:12px}
 .tag.good{background:#e0f6e9;color:#167445}
 .rowbtn{padding:7px 10px;margin:2px;font-size:12px}
-.msg{padding:10px;border-radius:8px;background:#f0f4fc;margin-top:10px;font-size:13px}
+.msg{padding:10px;border-radius:8px;background:#f8d7da;color:#721c24;margin-top:10px;font-size:13px}
 hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .result{display:block;width:100%;text-align:right;margin:4px 0}
 
@@ -79,40 +78,40 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  </div>
 </header>
 
-<!-- الواجهة الافتتاحية: إنشاء الحساب مباشرة مع زر لدخول المالك أو تسجيل الدخول -->
+<!-- الواجهة الافتتاحية: إنشاء الحساب مباشرة -->
 <section id="auth">
  <div class="card" style="max-width:500px;margin:30px auto">
   <h2>إنشاء حساب جديد في النظام</h2>
-  <p class="muted">أدخل بيانات نشاطك لإنشاء الحساب والتواصل للتفعيل</p>
+  <p class="muted">أدخل بيانات نشاطك بدقة لإنشاء الحساب والتواصل للتفعيل</p>
 
   <div id="registerBox">
-   <label>اسم النشاط التجاري</label><input id="regShop">
-   <label>اسم المسؤول</label><input id="regName">
-   <label>رقم الهاتف</label><input id="regPhone">
-   <label>البريد الإلكتروني</label><input id="regEmail" type="email">
-   <label>كلمة المرور</label><input id="regPassword" type="password">
+   <label>اسم النشاط التجاري</label><input id="regShop" placeholder="مثال: هاي ستور">
+   <label>اسم المسؤول</label><input id="regName" placeholder="اسمك الكريم">
+   <label>رقم الهاتف</label><input id="regPhone" placeholder="010xxxxxxxx">
+   <label>البريد الإلكتروني</label><input id="regEmail" type="email" placeholder="example@gmail.com">
+   <label>كلمة المرور (6 أحرف على الأقل)</label><input id="regPassword" type="password" placeholder="********">
    <button class="big green" onclick="register()">إنشاء الحساب وتواصل مع المطور للاستلام والدفع والتفعيل</button>
   </div>
 
-  <div style="margin-top:15px;text-align:center;">
-   <button class="secondary" onclick="toggleAuthMode('login')" style="font-size:12px;padding:6px 12px;">لديك حساب بالفعل؟ تسجيل الدخول</button>
-   <button class="dark" onclick="toggleAuthMode('owner')" style="font-size:12px;padding:6px 12px;margin-right:5px;">لوحة التحكم</button>
+  <div style="margin-top:20px;text-align:center;display:flex;gap:10px;justify-content:center;">
+   <button class="secondary" onclick="toggleAuthMode('login')" style="font-size:12px;padding:8px 14px;">لديك حساب بالفعل؟ تسجيل الدخول</button>
+   <button class="dark" onclick="toggleAuthMode('owner')" style="font-size:12px;padding:8px 14px;">لوحة التحكم</button>
   </div>
 
   <!-- صندوق تسجيل الدخول المخفي افتراضياً -->
-  <div id="loginBox" class="hidden" style="margin-top:15px;border-top:1px solid #eee;padding-top:15px;">
+  <div id="loginBox" class="hidden" style="margin-top:20px;border-top:1px solid #eee;padding-top:15px;">
    <h3>تسجيل الدخول</h3>
-   <label>البريد الإلكتروني</label><input id="loginEmail" type="email">
-   <label>كلمة المرور</label><input id="loginPassword" type="password">
+   <label>البريد الإلكتروني</label><input id="loginEmail" type="email" placeholder="example@gmail.com">
+   <label>كلمة المرور</label><input id="loginPassword" type="password" placeholder="********">
    <button class="big" onclick="login()">دخول للنظام</button>
    <button class="secondary big" onclick="toggleAuthMode('register')" style="margin-top:5px;">← العودة لإنشاء حساب</button>
   </div>
 
   <!-- صندوق دخول المالك المخفي افتراضياً -->
-  <div id="ownerBox" class="hidden" style="margin-top:15px;border-top:1px solid #eee;padding-top:15px;">
+  <div id="ownerBox" class="hidden" style="margin-top:20px;border-top:1px solid #eee;padding-top:15px;">
    <h3>دخول لوحة التحكم</h3>
-   <label>اسم المستخدم الإداري</label><input id="ownerUsername">
-   <label>كلمة المرور</label><input id="ownerPassword" type="password">
+   <label>اسم المستخدم الإداري</label><input id="ownerUsername" placeholder="elsalahy">
+   <label>كلمة المرور</label><input id="ownerPassword" type="password" placeholder="********">
    <button class="big dark" onclick="ownerLogin()">دخول لوحة التحكم الشاملة</button>
    <button class="secondary big" onclick="toggleAuthMode('register')" style="margin-top:5px;">← العودة لإنشاء حساب</button>
   </div>
@@ -304,7 +303,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <p class="muted">يمكنك إضافة موظف جديد بصلاحية "كاشير" (يستطيع البيع فقط ولا يمكنه تعديل المخزون أو الاطلاع على التقارير).</p>
     <label>اسم الموظف</label><input id="staffName" placeholder="اسم الكاشير">
     <label>البريد الإلكتروني للكاشير</label><input id="staffEmail" type="email" placeholder="cashier@store.com">
-    <label>كلمة المرور</label><input id="staffPassword" type="password">
+    <label>كلمة المرور</label><input id="staffPassword" type="password" placeholder="********">
     <button class="big green" onclick="createStaffAccount()">إنشاء حساب كاشير جديد</button>
    </div>
   </div>
@@ -399,8 +398,15 @@ window.ownerLogin=async()=>{
 };
 
 window.register=async()=>{
- const shop=$("regShop").value.trim(), name=$("regName").value.trim(), phone=$("regPhone").value.trim(), email=$("regEmail").value.trim(), password=$("regPassword").value;
- if(!shop||!name||!phone||!email||!password)return message("أكمل جميع البيانات المطلوبة.");
+ const shop=$("regShop").value.trim();
+ const name=$("regName").value.trim();
+ const phone=$("regPhone").value.trim();
+ const email=$("regEmail").value.trim();
+ const password=$("regPassword").value;
+
+ if(!shop||!name||!phone||!email||!password) return message("أكمل جميع البيانات المطلوبة بدقة.");
+ if(!email.includes("@") || !email.includes(".")) return message("صيغة البريد الإلكتروني غير صحيحة.");
+
  try{
   const cred=await createUserWithEmailAndPassword(auth,email,password);
   await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",status:"pending",createdAt:serverTimestamp()});
@@ -410,6 +416,10 @@ window.register=async()=>{
   
   $("auth").classList.add("hidden");
   $("pendingScreen").classList.remove("hidden");
+
+  // فتح الواتساب تلقائياً بعد التسجيل بالبيانات
+  sendWhatsAppActivation();
+
  }catch(e){message("تعذر التسجيل: "+e.message)}
 };
 

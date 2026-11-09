@@ -70,7 +70,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <header class="top">
  <div>
   <div class="brand">NexPOS PRO</div>
-  <span class="version">TILES INTERFACE V5</span>
+  <span class="version">TILES INTERFACE V6</span>
   <div class="muted">نظام إدارة المبيعات والمخازن والخزينة المتقدم</div>
  </div>
  <div>
@@ -149,18 +149,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div><h2 id="shopTitle">نظام المبيعات والمخزون</h2><span class="muted">لوحة الإدارة الشاملة للمتجر</span></div>
    <button class="red" onclick="logout()">تسجيل الخروج</button>
   </div>
-  
-  <!-- قائمة التنقل المخفية داخلياً للرجوع السريع -->
-  <nav id="mainNav" class="hidden">
-   <button class="active" onclick="page('dashboard')">الرئيسية</button>
-   <button onclick="page('sales')">المبيعات</button>
-   <button onclick="page('products')">المنتجات</button>
-   <button onclick="page('treasury')">الخزينة</button>
-   <button onclick="page('history')">الفواتير</button>
-   <button onclick="page('expenses')">المصروفات</button>
-   <button onclick="page('reports')">التقارير</button>
-   <button onclick="page('settings')">الإعدادات</button>
-  </nav>
 
   <!-- الصفحة الرئيسية بتصميم المربعات (Tiles UI) -->
   <div id="dashboardPage">
@@ -318,7 +306,7 @@ const firebaseConfig={
 };
 const OWNER_EMAIL="melsalahy689@gmail.com";
 const OWNER_USERNAME="elsalahy";
-const SUPPORT_PHONE="01062883414";
+const SUPPORT_PHONE="201062883414";
 
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app), db=getFirestore(app);
@@ -383,11 +371,11 @@ window.register=async()=>{
 window.sendWhatsAppActivation=()=>{
  const data=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:""};
  const msg=encodeURIComponent(`مرحبًا، أنا ${data.name} صاحب نشاط "${data.shop}"، قمت بإنشاء حساب جديد وبريدي هو: ${data.email}، وأرغب في دفع الاشتراك وتفعيل الحساب والاستلام.`);
- window.open(`https://wa.me/2${SUPPORT_PHONE.replace(/^0/,"")}?text=${msg}`,"_blank");
+ window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
 };
 
 window.logout=async()=>{await signOut(auth);window.location.reload();};
-window.support=()=>window.open("https://wa.me/2"+SUPPORT_PHONE.replace(/^0/,""),"_blank");
+window.support=()=>window.open(`https://wa.me/${SUPPORT_PHONE}`,"_blank");
 
 onAuthStateChanged(auth,async user=>{
  currentUser=user;

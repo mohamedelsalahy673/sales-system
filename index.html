@@ -94,7 +94,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <label>البريد الإلكتروني</label><input id="posEmail" type="email">
     <label>كلمة المرور</label><input id="posPassword" type="password">
     <button class="big blue" onclick="loginSystem('pos')">دخول لسيستم المبيعات</button>
-    <button class="big secondary" style="margin-top:8px" onclick="bypassLoginForPOS()">⚡ دخول تجريبي سريع للمبيعات</button>
    </div>
    <div id="posRegisterBox" class="hidden">
     <label>اسم المحل / النشاط</label><input id="regPosShop">
@@ -102,7 +101,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <label>رقم الهاتف</label><input id="regPosPhone">
     <label>البريد الإلكتروني</label><input id="regPosEmail" type="email">
     <label>كلمة المرور</label><input id="regPosPassword" type="password">
-    <button class="big green" onclick="registerSystem('pos')">إنشاء حساب مبيعات جديد</button>
+    <button class="big green" onclick="registerSystem('pos')">إنشاء حساب مبيعات والتواصل مع المطور</button>
    </div>
   </div>
 
@@ -116,7 +115,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <label>البريد الإلكتروني</label><input id="psEmail" type="email">
     <label>كلمة المرور</label><input id="psPassword" type="password">
     <button class="big purple" onclick="loginSystem('ps')">دخول للبلايستيشن</button>
-    <button class="big secondary" style="margin-top:8px" onclick="bypassLoginForPS()">⚡ دخول تجريبي سريع للبلايستيشن</button>
    </div>
    <div id="psRegisterBox" class="hidden">
     <label>اسم صالة البلايستيشن</label><input id="regPsShop">
@@ -124,7 +122,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <label>رقم الهاتف</label><input id="regPsPhone">
     <label>البريد الإلكتروني</label><input id="regPsEmail" type="email">
     <label>كلمة المرور المطلوبة</label><input id="regPsPassword" type="password">
-    <button class="big purple" onclick="registerPSWithWhatsApp()">إنشاء الحساب والتواصل مع المطور للدفع</button>
+    <button class="big purple" onclick="registerPSWithWhatsApp()">إنشاء الحساب وتواصل مع المطور للاستلام والدفع والتفعيل</button>
    </div>
   </div>
 
@@ -227,7 +225,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  <div class="card">
   <div class="top">
    <div><h2 id="psShopTitle">كاشير البلايستيشن والكافيه (بيانات خاصة بالصالة فقط)</h2></div>
-   <button class="red" onclick="logout()">تسجيل الخروج (آخر الليل)</button>
+   <button class="red" onclick="logout()">تسجيل الخروج</button>
   </div>
 
   <nav>
@@ -359,20 +357,22 @@ window.loginSystem = async(sys)=>{
 };
 
 window.registerSystem = async(sys)=>{
- const shop = $(sys==='pos'?'regPosShop':'regPsShop').value.trim();
- const name = $(sys==='pos'?'regPosName':'regPsName').value.trim();
- const phone = $(sys==='pos'?'regPosPhone':'regPsPhone').value.trim();
- const email = $(sys==='pos'?'regPosEmail':'regPsEmail').value.trim();
- const pass = $(sys==='pos'?'regPosPassword':'regPsPassword').value;
- if(!shop || !email || !pass) return alert("أكمل البيانات المطلوبة.");
+ const shop = $("regPosShop").value.trim();
+ const name = $("regPosName").value.trim();
+ const phone = $("regPosPhone").value.trim();
+ const email = $("regPosEmail").value.trim();
+ const pass = $("regPosPassword").value;
+ if(!shop || !email || !pass || !phone) return alert("أكمل البيانات المطلوبة.");
  try{
   const cred = await createUserWithEmailAndPassword(auth, email, pass);
   await setDoc(doc(db, "users", cred.user.uid), { shopName: shop, customerName: name, phone, email, sysType: sys, status: "active", createdAt: serverTimestamp() });
-  alert("تم التسجيل بنجاح!");
+  
+  const msg = encodeURIComponent(`مرحبًا، أنا ${name} صاحب محل "${shop}"، قمت بإنشاء حساب مبيعات، وبريدي هو: ${email}، وأرغب بإتمام الدفع والتفعيل والاستلام.`);
+  window.open(`https://wa.me/2${SUPPORT_PHONE.replace(/^0/,"")}?text=${msg}`, "_blank");
+  alert("تم تسجيل حسابك بنجاح ووصلت البيانات للإدارة. برجاء التواصل مع المطور عبر واتساب للاستلام والدفع والتفعيل.");
  }catch(e){ alert("خطأ: "+e.message); }
 };
 
-// تسجيل صالة بلايستيشن وتحويل العميل عبر واتساب لتأكيد الدفع للمطور، مع وصول بياناته للوحة التحكم
 window.registerPSWithWhatsApp = async()=>{
  const shop = $("regPsShop").value.trim();
  const name = $("regPsName").value.trim();
@@ -386,9 +386,9 @@ window.registerPSWithWhatsApp = async()=>{
    shopName: shop, customerName: name, phone, email, sysType: "ps", status: "active", createdAt: serverTimestamp() 
   });
   
-  const msg = encodeURIComponent(`مرحبًا، أنا ${name} صاحب صالة "${shop}"، قمت بإنشاء حساب كاشير البلايستيشن، وبريدي هو: ${email}، وأرغب بإتمام الدفع والتفعيل.`);
+  const msg = encodeURIComponent(`مرحبًا، أنا ${name} صاحب صالة "${shop}"، قمت بإنشاء حساب كاشير البلايستيشن، وبريدي هو: ${email}، وأرغب بإتمام الدفع والتفعيل والاستلام.`);
   window.open(`https://wa.me/2${SUPPORT_PHONE.replace(/^0/,"")}?text=${msg}`, "_blank");
-  alert("تم تسجيل حسابك بنجاح ووصلت البيانات للإدارة، جارٍ تحويلك لواتساب المطور لتأكيد الدفع.");
+  alert("تم تسجيل حسابك بنجاح ووصلت البيانات للإدارة. برجاء التواصل مع المطور عبر واتساب للاستلام والدفع والتفعيل.");
  }catch(e){ alert("خطأ في التسجيل: "+e.message); }
 };
 
@@ -399,20 +399,6 @@ window.ownerLogin = async()=>{
  try{
   await signInWithEmailAndPassword(auth, OWNER_EMAIL, pass);
  }catch(e){ alert("كلمة مرور المالك غير صحيحة."); }
-};
-
-window.bypassLoginForPOS = ()=>{
- currentUser = { uid: "local_pos_user" };
- $("auth").classList.add("hidden");
- $("posSystemPanel").classList.remove("hidden");
- loadLocalPOSData();
-};
-
-window.bypassLoginForPS = ()=>{
- currentUser = { uid: "local_ps_user" };
- $("auth").classList.add("hidden");
- $("psSystemPanel").classList.remove("hidden");
- loadLocalPSData();
 };
 
 onAuthStateChanged(auth, async user=>{
@@ -457,16 +443,6 @@ window.pagePos = function(page){
  renderPOSStats();
 };
 
-function loadLocalPOSData(){
- posProducts = [{id:"p1", name:"سماعة أيفون أصلية", cost:150, price:250, qty:15}];
- posSales = [];
- posTreasury = [{type:"in", amount:500, note:"رأس مال ابتدائي", date:"اليوم"}];
- renderPOSStats();
- renderPOSProducts();
- renderPOSHistory();
- renderPOSTreasury();
-}
-
 async function loadPOSCloudData(){
  try{
   const [prodSnap, salesSnap, treasSnap] = await Promise.all([
@@ -481,7 +457,7 @@ async function loadPOSCloudData(){
   renderPOSProducts();
   renderPOSHistory();
   renderPOSTreasury();
- }catch(e){ loadLocalPOSData(); }
+ }catch(e){ posProducts = []; posSales = []; posTreasury = []; }
 }
 
 window.savePosProduct = async()=>{
@@ -490,10 +466,8 @@ window.savePosProduct = async()=>{
  if(!name || price <= 0) return alert("أدخل اسم المنتج وسعر البيع.");
  const newItem = { name, cost: Number($("pCost").value)||0, price, qty: Number($("pQty").value)||0 };
  try{
-  if(currentUser.uid !== "local_pos_user"){
-   const ref = await addDoc(col("pos_products"), newItem);
-   newItem.id = ref.id;
-  } else { newItem.id = "p_"+Date.now(); }
+  const ref = await addDoc(col("pos_products"), newItem);
+  newItem.id = ref.id;
   posProducts.push(newItem);
   $("pName").value=""; $("pCost").value=""; $("pPrice").value="";
   renderPOSProducts();

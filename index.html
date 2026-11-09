@@ -324,7 +324,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <label>البيان</label><input id="tNote" placeholder="تفاصيل الحركة">
     <button class="big green" onclick="addTreasuryTransaction()">تسجيل الحركة</button>
    </div>
-   <div class="tablewrap"><table><thead><tr><th>النوع</th><th>التصنيف</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
+   <div class="tablewrap"><thead><tr><th>النوع</th><th>التصنيف</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
   </div>
 
   <div id="customersPage" class="hidden">
@@ -339,20 +339,20 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     </div>
     <button onclick="saveCustomer()">حفظ العميل</button>
    </div>
-   <div class="tablewrap"><table><thead><tr><th>الاسم</th><th>الهاتف</th><th>المديونية</th><th>العنوان</th><th>الإجراءات</th></tr></thead><tbody id="customersTable"></tbody></table></div>
+   <div class="tablewrap"><thead><tr><th>الاسم</th><th>الهاتف</th><th>المديونية</th><th>العنوان</th><th>الإجراءات</th></tr></thead><tbody id="customersTable"></tbody></table></div>
   </div>
 
   <div id="historyPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>سجل الفواتير وجلسات البلايستيشن</h3>
-   <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>العميل / الجهاز</th><th>الإجمالي</th><th>طريقة الدفع</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
+   <div class="tablewrap"><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>العميل / الجهاز</th><th>الإجمالي</th><th>طريقة الدفع</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
   </div>
 
   <div id="expensesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>المصروفات اليومية</h3>
    <div class="card"><label>بيان المصروف</label><input id="expenseName"><label>المبلغ</label><input id="expenseAmount" type="number" min="0"><button onclick="addExpense()">حفظ المصروف وصرفه من الخزينة</button></div>
-   <div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div>
+   <div class="tablewrap"><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div>
   </div>
 
   <div id="reportsPage" class="hidden">
@@ -617,10 +617,11 @@ function renderPlaystationDevices(){
   let timeStr="متاح حالياً", costStr="0 جنيه";
   if(d.status==="busy"){
    activeCount++;
-   const mins=Math.floor((Date.now()-d.startTime)/(1000*60));
-   const hrs=(mins/60).toFixed(1);
+   const diffMs=Date.now()-d.startTime;
+   const mins=Math.floor(diffMs/(1000*60));
+   const hrs=(diffMs/(1000*60*60)).toFixed(1);
    const rate=d.mode==="single"?d.priceSingle:d.priceMulti;
-   const currentTotal=Math.max(5,Math.round((mins/60)*rate));
+   const currentTotal=Math.max(5,Math.round((diffMs/(1000*60*60))*rate));
    timeStr=`المدة: ${hrs} ساعة (${mins} دقيقة)`;
    costStr=`الحساب الحالي: ${currentTotal} جنيه`;
   }
@@ -640,6 +641,13 @@ function renderPlaystationDevices(){
  if($("psDevicesContainer")) $("psDevicesContainer").innerHTML=html||"<p>لا توجد أجهزة مضافة حتى الآن.</p>";
  if($("statPSActive")) $("statPSActive").textContent=activeCount;
 }
+
+// تحديث العدادات تلقائياً كل ثانية لتظهر المدة والمبلغ بشكل حي
+setInterval(()=>{
+ if(currentUser && !document.getElementById("playstationPage").classList.contains("hidden")){
+  renderPlaystationDevices();
+ }
+}, 1000);
 
 window.saveProduct=async()=>{
  const name=$("pName").value.trim();let barcode=$("pBarcode").value.trim();
@@ -877,7 +885,7 @@ function renderStats(){
  
  if($("statProducts")) $("statProducts").textContent=products.length;
  if($("statSales")) $("statSales").textContent=sales.length;
- if($("statRevenue")) $("statRevenue").textContent=money(rev);
+ if($("statRevenue")) $("statRevenue")) $("statRevenue").textContent=money(rev);
  if($("statTreasuryBalance")) $("statTreasuryBalance").textContent=money(tIn-tOut);
  if($("reportRevenue")) $("reportRevenue").textContent=money(rev);
  if($("reportCost")) $("reportCost").textContent=money(cost);

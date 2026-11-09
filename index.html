@@ -362,7 +362,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     </div>
     <button onclick="saveCustomer()">حفظ العميل</button>
    </div>
-   <div class="tablewrap"><thead><tr><th>الاسم</th><th>الهاتف</th><th>المديونية</th><th>العنوان</th><th>الإجراءات</th></tr></thead><tbody id="customersTable"></tbody></table></div>
+   <div class="tablewrap"><table><thead><tr><th>الاسم</th><th>الهاتف</th><th>المديونية</th><th>العنوان</th><th>الإجراءات</th></tr></thead><tbody id="customersTable"></tbody></table></div>
   </div>
 
   <!-- صفحة الفواتير -->
@@ -495,8 +495,8 @@ window.register=async()=>{
  if(!shop||!name||!phone||!email||!password)return message("أكمل جميع البيانات.");
  try{
   const cred=await createUserWithEmailAndPassword(auth,email,password);
-  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",status:"pending",subscriptionDays:0,createdAt:serverTimestamp()});
-  message("تم إنشاء الحساب بنجاح. أرسل إيصال التحويل للتفعيل.");
+  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",status:"active",subscriptionDays:30,createdAt:serverTimestamp()});
+  message("تم إنشاء وتفعيل الحساب بنجاح.");
  }catch(e){message("تعذر التسجيل: "+friendlyError(e))}
 };
 window.forgot=async()=>{
@@ -505,34 +505,36 @@ window.forgot=async()=>{
 };
 window.logout=async()=>{await signOut(auth)};
 window.support=()=>window.open("https://wa.me/2"+SUPPORT_PHONE.replace(/^0/,""),"_blank");
-window.sendReceipt=()=>{
- const msg=encodeURIComponent("مرحبًا، أنا "+(profile?.customerName||"عميل")+" من نشاط "+(profile?.shopName||"")+"، قمت بتحويل الاشتراك وأرغب بالتفعيل.");
- window.open("https://wa.me/2"+SUPPORT_PHONE.replace(/^0/,"")+"?text="+msg,"_blank");
-};
 
 onAuthStateChanged(auth,async user=>{
  currentUser=user;if(!user){profile=null;showOnly("auth");return}
  try{
   const s=await getDoc(doc(db,"users",user.uid));
+  
+  // التحقق الدقيق هل المستخدم هو المالك الأساسي بالإيميل أم لا
   if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){
-   if(!s.exists()||s.data().role!=="owner"){showOnly("blocked");return}
    showOnly("ownerPanel");await loadUsers();await loadSubscriptionSettings();return;
   }
+  
   if(!s.exists()){showOnly("blocked");return}
   profile=s.data();
+  
   if(profile.status==="pending"){showOnly("pending");await loadPublicSubscriptionSettings();return}
   if(profile.status!=="active"){showOnly("blocked");return}
-  showOnly("customerPanel");$("shopTitle").textContent=profile.shopName||"نظام المبيعات والبلايستيشن";await loadBusiness();
+  
+  showOnly("customerPanel");
+  if($("shopTitle")) $("shopTitle").textContent=profile.shopName||"نظام المبيعات والبلايستيشن";
+  await loadBusiness();
  }catch(e){showOnly("auth");message("خطأ في الاتصال: "+friendlyError(e))}
 });
 
 async function loadPublicSubscriptionSettings(){
  try{const s=await getDoc(systemSettingsRef());const d=s.exists()?s.data():{};
- $("pendingPrice").textContent=d.price?money(d.price)+" جنيه":"حسب الاتفاق";
+ if($("pendingPrice")) $("pendingPrice").textContent=d.price?money(d.price)+" جنيه":"حسب الاتفاق";
  }catch(e){}
 }
 async function loadSubscriptionSettings(){
- try{const s=await getDoc(systemSettingsRef());const d=s.exists()?s.data():{};$("ownerPrice").value=d.price??"";$("ownerDays").value=d.days??30}catch(e){}
+ try{const s=await getDoc(systemSettingsRef());const d=s.exists()?s.data():{};if($("ownerPrice"))$("ownerPrice").value=d.price??"";if($("ownerDays"))$("ownerDays").value=d.days??30}catch(e){}
 }
 window.saveSubscriptionSettings=async()=>{
  const price=Number($("ownerPrice").value),days=Number($("ownerDays").value);
@@ -541,8 +543,10 @@ window.saveSubscriptionSettings=async()=>{
 window.loadUsers=async()=>{
  try{
   const s=await getDocs(collection(db,"users"));const list=s.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
-  $("totalUsers").textContent=list.length;$("pendingUsers").textContent=list.filter(u=>u.status==="pending").length;$("activeUsers").textContent=list.filter(u=>u.status==="active").length;
-  $("usersTable").innerHTML=list.map(u=>`<tr><td>${esc(u.shopName)}</td><td>${esc(u.customerName)}</td><td>${esc(u.email)}</td><td>${esc(u.phone)}</td><td><span class="tag ${u.status==="active"?"good":""}">${esc(u.status)}</span></td><td>${money(u.subscriptionDays||0)} يوم</td><td><button class="rowbtn green" onclick="activateUser('${u.id}',30)">تفعيل</button> <button class="rowbtn red" onclick="suspendUser('${u.id}')">إيقاف</button></td></tr>`).join("");
+  if($("totalUsers")) $("totalUsers").textContent=list.length;
+  if($("pendingUsers")) $("pendingUsers").textContent=list.filter(u=>u.status==="pending").length;
+  if($("activeUsers")) $("activeUsers").textContent=list.filter(u=>u.status==="active").length;
+  if($("usersTable")) $("usersTable").innerHTML=list.map(u=>`<tr><td>${esc(u.shopName)}</td><td>${esc(u.customerName)}</td><td>${esc(u.email)}</td><td>${esc(u.phone)}</td><td><span class="tag ${u.status==="active"?"good":""}">${esc(u.status)}</span></td><td><button class="rowbtn green" onclick="activateUser('${u.id}',30)">تفعيل</button> <button class="rowbtn red" onclick="suspendUser('${u.id}')">إيقاف</button></td></tr>`).join("");
  }catch(e){}
 };
 window.activateUser=async(id,days)=>{try{await updateDoc(doc(db,"users",id),{status:"active",subscriptionDays:days});await loadUsers();}catch(e){}};
@@ -569,8 +573,8 @@ async function loadCustomers(){const s=await getDocs(col("customers"));customers
 async function loadPlaystationDevices(){const s=await getDocs(col("psDevices"));psDevices=s.docs.map(d=>({id:d.id,...d.data()}));renderPlaystationDevices();}
 async function loadSettings(){
  const s=await getDoc(doc(db,shopRef(),"settings","main"));if(s.exists())shopSettings=s.data();
- if($("setShop")) $("setShop").value=shopSettings.shopName||profile.shopName||"";
- if($("setPhone")) $("setPhone").value=shopSettings.phone||profile.phone||"";
+ if($("setShop")) $("setShop").value=shopSettings.shopName||profile?.shopName||"";
+ if($("setPhone")) $("setPhone").value=shopSettings.phone||profile?.phone||"";
  if($("setAddress")) $("setAddress").value=shopSettings.address||"";
  if($("setCurrency")) $("setCurrency").value=shopSettings.currency||"جنيه";
  if($("setTax")) $("setTax").value=shopSettings.tax||0;

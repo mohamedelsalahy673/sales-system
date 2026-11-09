@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NexPOS PRO - Dashboard Tiles Interface</title>
+<title>NexPOS PRO - Ultimate & PlayStation Edition</title>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
 *{box-sizing:border-box}
@@ -43,7 +43,7 @@ td,th{padding:11px;border-bottom:1px solid #edf0f5;text-align:right;font-size:13
 hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .result{display:block;width:100%;text-align:right;margin:4px 0}
 
-/* تصميم المربعات الرئيسية شبيه الصورة (Tiles UI) */
+/* مربعات الواجهة الرئيسية (Tiles UI) */
 .tiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px;margin-top:20px}
 .tile{padding:22px;border-radius:16px;color:white;cursor:pointer;transition:transform .2s,opacity .2s;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;justify-content:space-between;min-height:130px}
 .tile:hover{transform:translateY(-3px);opacity:.95}
@@ -57,6 +57,12 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .t-teal{background:linear-gradient(135deg,#0d9488,#14b8a6)}
 .t-red{background:linear-gradient(135deg,#b72f3b,#dc2626)}
 
+/* شبكة أجهزة البلايستيشن */
+.ps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:15px;margin-top:15px}
+.ps-card{background:white;border:1px solid #dce2ed;border-radius:12px;padding:15px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.ps-card.busy{border-color:#b72f3b;background:#fff5f5}
+.ps-card.free{border-color:#178653;background:#f0fdf4}
+
 @media print{
  body *{visibility:hidden!important}
  #printArea,#printArea *{visibility:visible!important}
@@ -69,8 +75,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <header class="top">
  <div>
   <div class="brand">NexPOS PRO</div>
-  <span class="version">TILES INTERFACE V4</span>
-  <div class="muted">نظام إدارة المبيعات والمخازن والخزينة المتقدم</div>
+  <span class="version">PLAYSTATION & POS EDITION</span>
+  <div class="muted">نظام المبيعات الشامل وإدارة صالات البلايستيشن</div>
  </div>
  <div>
   <span id="networkStatus" class="tag good" style="margin-left:10px;">متصل بالخادم</span>
@@ -80,8 +86,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
 <section id="auth">
  <div class="card" style="max-width:500px;margin:30px auto">
-  <h2>مرحبًا بك في NexPOS PRO</h2>
-  <p class="muted">سجل الدخول لإدارة نشاطك التجاري</p>
+  <h2>تسجيل الدخول للنظام</h2>
   <nav>
    <button id="tabLogin" class="active" onclick="showAuth('login')">تسجيل الدخول</button>
    <button id="tabRegister" onclick="showAuth('register')">حساب جديد</button>
@@ -126,14 +131,14 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <section id="blocked" class="hidden">
  <div class="card" style="text-align:center">
   <h2>الحساب موقوف أو انتهت صلاحيته</h2>
-  <button onclick="support()">تواصل مع الدعم لتجديد الاشتراك</button>
+  <button onclick="support()">تواصل مع الدعم الفني</button>
   <button class="secondary" onclick="logout()">تسجيل الخروج</button>
  </div>
 </section>
 
 <section id="ownerPanel" class="hidden">
  <div class="card">
-  <div class="top"><div><h2>لوحة تحكم المالك العام</h2><span class="muted">إدارة المتاجر والاشتراكات</span></div><button class="red" onclick="logout()">خروج</button></div>
+  <div class="top"><div><h2>لوحة تحكم المالك العام</h2></div><button class="red" onclick="logout()">خروج</button></div>
   <div class="grid">
    <div class="stat">إجمالي المتاجر<strong id="totalUsers">0</strong></div>
    <div class="stat">الطلبات المعلقة<strong id="pendingUsers">0</strong></div>
@@ -145,9 +150,9 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <label>مدة الاشتراك (أيام)</label><input id="ownerDays" type="number" min="1">
    <button onclick="saveSubscriptionSettings()">حفظ إعدادات الاشتراك</button>
   </div>
-  <h3>قائمة العملاء والمتاجر</h3>
+  <h3>قائمة المتاجر</h3>
   <div class="tablewrap"><table>
-   <thead><tr><th>المتجر</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>المدة</th><th>إجراءات</th></tr></thead>
+   <thead><tr><th>المتجر</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>إجراءات</th></tr></thead>
    <tbody id="usersTable"></tbody>
   </table></div>
  </div>
@@ -156,13 +161,13 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <section id="customerPanel" class="hidden">
  <div class="card">
   <div class="top">
-   <div><h2 id="shopTitle">نظام المبيعات</h2><span class="muted">لوحة الإدارة الشاملة للمتجر</span></div>
+   <div><h2 id="shopTitle">نظام المبيعات والبلايستيشن</h2><span class="muted">لوحة الإدارة الشاملة</span></div>
    <button class="red" onclick="logout()">تسجيل الخروج</button>
   </div>
   
-  <!-- القائمة العلوية المخفية للتحويل السريع الداخلي -->
   <nav id="mainNav" class="hidden">
    <button class="active" onclick="page('dashboard',this)">الرئيسية</button>
+   <button onclick="page('playstation',this)">البلايستيشن</button>
    <button onclick="page('sales',this)">المبيعات</button>
    <button onclick="page('purchases',this)">المشتريات</button>
    <button onclick="page('returns',this)">المرتجعات</button>
@@ -172,45 +177,44 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button onclick="page('history',this)">الفواتير</button>
    <button onclick="page('expenses',this)">المصروفات</button>
    <button onclick="page('reports',this)">التقارير</button>
-   <button onclick="page('usersManagement',this)">المستخدمين</button>
    <button onclick="page('settings',this)">الإعدادات</button>
   </nav>
 
-  <!-- الصفحة الرئيسية بتصميم المربعات (Tiles UI) شبيه الصورة -->
+  <!-- الصفحة الرئيسية (Tiles UI) -->
   <div id="dashboardPage">
    <div class="grid">
+    <div class="stat">عدد الأجهزة النشطة<strong id="statPSActive">0</strong></div>
     <div class="stat">إجمالي المنتجات<strong id="statProducts">0</strong></div>
-    <div class="stat">عدد الفواتير<strong id="statSales">0</strong></div>
     <div class="stat">مبيعات اليوم<strong id="statRevenue">0</strong></div>
     <div class="stat">رصيد الخزينة<strong id="statTreasuryBalance">0</strong></div>
    </div>
 
    <div class="card">
-    <h3>شاشة الإدارة السريعة (اختر القسم)</h3>
+    <h3>شاشة الإدارة السريعة</h3>
     <div class="tiles-grid">
+     <div class="tile t-purple" onclick="navTo('playstation')">
+      <h3>إدارة البلايستيشن</h3>
+      <p>تشغيل الأجهزة، حساب الوقت، والأسعار</p>
+     </div>
      <div class="tile t-blue" onclick="navTo('sales')">
       <h3>شاشة المبيعات (POS)</h3>
-      <p>إصدار الفواتير وبيع الأصناف بالباركود</p>
+      <p>إصدار الفواتير وبيع الأصناف للمحلات</p>
      </div>
      <div class="tile t-green" onclick="navTo('products')">
       <h3>المنتجات والمخزون</h3>
-      <p>إدارة الأصناف، الأسعار، والمخزون الحالي</p>
+      <p>إدارة الأصناف والمشروبات وأسعار البيع</p>
      </div>
      <div class="tile t-orange" onclick="navTo('treasury')">
       <h3>الخزينة والحسابات</h3>
-      <p>متابعة النقدية، الوارد، الصادر والأرباح</p>
+      <p>متابعة النقدية الواردة والصادرة والأرباح</p>
      </div>
-     <div class="tile t-purple" onclick="navTo('purchases')">
+     <div class="tile t-dark" onclick="navTo('purchases')">
       <h3>المشتريات والموردين</h3>
       <p>تسجيل فواتير الشراء وإضافة البضائع</p>
      </div>
-     <div class="tile t-dark" onclick="navTo('history')">
-      <h3>الفواتير السابقة</h3>
-      <p>استعراض وطباعة الفواتير السابقة</p>
-     </div>
-     <div class="tile t-teal" onclick="navTo('customers')">
-      <h3>العملاء والديون</h3>
-      <p>إدارة بيانات العملاء والذصائد الحسابية</p>
+     <div class="tile t-teal" onclick="navTo('history')">
+      ### الفواتير السابقة
+      <p>استعراض وطباعة الفواتير وحسابات الجلسات</p>
      </div>
      <div class="tile t-red" onclick="navTo('returns')">
       <h3>المرتجعات</h3>
@@ -232,10 +236,32 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
+  <!-- واجهة البلايستيشن المستقلة -->
+  <div id="playstationPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
+   <h3>إدارة أجهزة وطاولات البلايستيشن</h3>
+   <div class="card">
+    <div class="grid">
+     <div><label>اسم الجهاز / الغرفة</label><input id="psDevName" placeholder="مثال: جهاز 1 - PS5"></div>
+     <div><label>نوع اللعب</label><select id="psMode"><option value="single">فردي (Single)</option><option value="multi">مزدوج / جماعي (Multi)</option></select></div>
+     <div><label>سعر الساعة فردي (جنيه)</label><input id="psPriceSingle" type="number" value="30"></div>
+     <div><label>سعر الساعة جماعي (جنيه)</label><input id="psPriceMulti" type="number" value="40"></div>
+    </div>
+    <button class="big green" onclick="addPlaystationDevice()">إضافة جهاز جديد</button>
+   </div>
+
+   <div class="card">
+    <h3>الأجهزة الحالية (متابعة العدادات والوقت)</h3>
+    <div id="psDevicesContainer" class="ps-grid">
+     <!-- سيتم تعبئة الأجهزة هنا برمجياً -->
+    </div>
+   </div>
+  </div>
+
   <!-- صفحة المبيعات -->
   <div id="salesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>شاشة نقاط البيع (المبيعات)</h3>
+   <h3>شاشة نقاط البيع (المبيعات للمحل)</h3>
    <div class="grid">
     <div><label>بحث بالاسم أو الباركود</label><input id="saleSearch" placeholder="امسح الباركود أو اكتب اسم المنتج" oninput="searchProducts()"><div id="searchResults"></div></div>
     <div>
@@ -268,10 +294,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     </div>
     <button class="big green" onclick="completePurchase()">تأكيد وإضافة للمخزون والخزينة</button>
    </div>
-   <div class="card">
-    <h3>سجل المشتريات</h3>
-    <div class="tablewrap"><table><thead><tr><th>الشحنة</th><th>المورد</th><th>الصنف</th><th>الكمية</th><th>الإجمالي</th><th>التاريخ</th></tr></thead><tbody id="purchasesTable"></tbody></table></div>
-   </div>
+   <div class="tablewrap"><table><thead><tr><th>الشحنة</th><th>المورد</th><th>الصنف</th><th>الكمية</th><th>الإجمالي</th><th>التاريخ</th></tr></thead><tbody id="purchasesTable"></tbody></table></div>
   </div>
 
   <!-- صفحة المرتجعات -->
@@ -292,13 +315,13 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <!-- صفحة المنتجات -->
   <div id="productsPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>إدارة المنتجات والمخزون</h3>
+   <h3>إدارة المنتجات والمخزون والمشروبات</h3>
    <div class="card">
-    <input id="pName" placeholder="اسم المنتج">
+    <input id="pName" placeholder="اسم المنتج (مثل: عبوة مياه، علبة كنز...)">
     <div class="grid">
      <div><label>كود المنتج</label><input id="pCode"></div>
      <div><label>الباركود</label><input id="pBarcode"></div>
-     <div><label>التصنيف</label><input id="pCategory"></div>
+     <div><label>التصنيف</label><input id="pCategory" value="مشروبات ووجبات"></div>
      <div><label>سعر الشراء</label><input id="pCost" type="number" min="0"></div>
      <div><label>سعر البيع</label><input id="pPrice" type="number" min="0"></div>
      <div><label>الكمية الحالية</label><input id="pQty" type="number" min="0"></div>
@@ -306,15 +329,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     </div>
     <button onclick="saveProduct()">حفظ المنتج</button>
     <button class="secondary" onclick="clearProductForm()">إلغاء</button>
-   </div>
-   <div class="card">
-    <h3>طباعة باركود المنتجات</h3>
-    <div class="grid">
-     <div><label>نوع الباركود</label><select id="barcodeType"><option>CODE128</option><option>EAN13</option></select></div>
-     <div><label>المقاس</label><select id="labelSize"><option value="small">صغير</option><option value="medium" selected>متوسط</option></select></div>
-     <div><label>عدد النسخ</label><input id="labelCopies" type="number" min="1" value="1"></div>
-    </div>
-    <button class="secondary" onclick="printSelectedBarcode()">طباعة باركود المنتج المحدد</button>
    </div>
    <div class="tablewrap"><table><thead><tr><th>المنتج</th><th>الباركود</th><th>الشراء</th><th>البيع</th><th>المخزون</th><th>الإجراءات</th></tr></thead><tbody id="productsTable"></tbody></table></div>
   </div>
@@ -358,8 +372,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <!-- صفحة الفواتير -->
   <div id="historyPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>سجل الفواتير السابقة</h3>
-   <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>العميل</th><th>الإجمالي</th><th>الدفع</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
+   <h3>سجل الفواتير وجلسات البلايستيشن</h3>
+   <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>العميل / الجهاز</th><th>الإجمالي</th><th>طريقة الدفع</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
   </div>
 
   <!-- صفحة المصروفات -->
@@ -375,7 +389,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>التقارير المالية والمخزنية</h3>
    <div class="grid">
-    <div class="stat">إجمالي المبيعات<strong id="reportRevenue">0</strong></div>
+    <div class="stat">إجمالي الإيرادات<strong id="reportRevenue">0</strong></div>
     <div class="stat">تكلفة البضاعة<strong id="reportCost">0</strong></div>
     <div class="stat">إجمالي المصروفات<strong id="reportExpenses">0</strong></div>
     <div class="stat">صافي أرباح النشاط<strong id="reportNet">0</strong></div>
@@ -383,24 +397,12 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="card"><h3>تنبيهات نواقص المخزون</h3><div id="stockAlerts"></div></div>
   </div>
 
-  <!-- صفحة المستخدمين -->
-  <div id="usersManagementPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>إدارة المستخدمين والصلاحيات</h3>
-   <div class="card">
-    <label>اسم المستخدم</label><input id="umName" placeholder="مثال: كاشير 1">
-    <label>الصلاحية</label><select id="umRole"><option value="cashier">كاشير</option><option value="manager">مدير</option></select>
-    <button onclick="saveStoreUser()">إضافة مستخدم</button>
-   </div>
-   <div class="tablewrap"><table><thead><tr><th>المستخدم</th><th>الصلاحية</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="storeUsersTable"></tbody></table></div>
-  </div>
-
   <!-- صفحة الإعدادات -->
   <div id="settingsPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إعدادات المتجر والطباعة</h3>
    <div class="card">
-    <label>اسم المحل</label><input id="setShop">
+    <label>اسم المحل / البلايستيشن</label><input id="setShop">
     <label>رقم الهاتف</label><input id="setPhone">
     <label>العنوان</label><input id="setAddress">
     <label>العملة</label><select id="setCurrency"><option>جنيه</option><option>ريال</option><option>درهم</option></select>
@@ -449,7 +451,7 @@ const auth=getAuth(app),db=getFirestore(app);
 
 try{enableIndexedDbPersistence(db).catch(()=>{});}catch(e){}
 
-let currentUser=null,profile=null,products=[],sales=[],purchases=[],expenses=[],treasury=[],customers=[],storeUsers=[],cart=[];
+let currentUser=null,profile=null,products=[],sales=[],purchases=[],expenses=[],treasury=[],customers=[],storeUsers=[],psDevices=[],cart=[];
 let selectedProduct=null,editingProduct=null,editingCustomer=null,shopSettings={};
 let returnFoundInvoice=null;
 
@@ -524,7 +526,7 @@ onAuthStateChanged(auth,async user=>{
   profile=s.data();
   if(profile.status==="pending"){showOnly("pending");await loadPublicSubscriptionSettings();return}
   if(profile.status!=="active"){showOnly("blocked");return}
-  showOnly("customerPanel");$("shopTitle").textContent=profile.shopName||"نظام المبيعات";await loadBusiness();
+  showOnly("customerPanel");$("shopTitle").textContent=profile.shopName||"نظام المبيعات والبلايستيشن";await loadBusiness();
  }catch(e){showOnly("auth");message("خطأ في الاتصال: "+friendlyError(e))}
 });
 
@@ -544,25 +546,21 @@ window.loadUsers=async()=>{
  try{
   const s=await getDocs(collection(db,"users"));const list=s.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
   $("totalUsers").textContent=list.length;$("pendingUsers").textContent=list.filter(u=>u.status==="pending").length;$("activeUsers").textContent=list.filter(u=>u.status==="active").length;
-  $("usersTable").innerHTML=list.map(u=>`<tr><td>${esc(u.shopName)}</td><td>${esc(u.customerName)}</td><td>${esc(u.email)}</td><td>${esc(u.phone)}</td><td><span class="tag ${u.status==="active"?"good":""}">${esc(u.status)}</span></td><td>${money(u.subscriptionDays||0)} يوم</td><td><button class="rowbtn green" onclick="activateUser('${u.id}',30)">تفعيل</button> <button class="rowbtn red" onclick="suspendUser('${u.id}')">إيقاف</button></td></tr>`).join("");
+  $("usersTable").innerHTML=list.map(u=>`<tr><td>${esc(u.shopName)}</td><td>${esc(u.customerName)}</td><td>${esc(u.email)}</td><td>${esc(u.phone)}</td><td><span class="tag ${u.status==="active"?"good":""}">${esc(u.status)}</span></td><td><button class="rowbtn green" onclick="activateUser('${u.id}',30)">تفعيل</button> <button class="rowbtn red" onclick="suspendUser('${u.id}')">إيقاف</button></td></tr>`).join("");
  }catch(e){}
 };
 window.activateUser=async(id,days)=>{try{await updateDoc(doc(db,"users",id),{status:"active",subscriptionDays:days});await loadUsers();}catch(e){}};
 window.suspendUser=async id=>{if(!confirm("إيقاف الحساب؟"))return;try{await updateDoc(doc(db,"users",id),{status:"suspended"});await loadUsers();}catch(e){}};
 
-// التبديل السريع بين الأقسام من خلال المربعات (Tiles)
-window.navTo=function(name){
- page(name);
-};
-
+window.navTo=function(name){page(name);};
 window.page=function(name,btn){
- ["dashboard","sales","purchases","returns","products","treasury","customers","history","expenses","reports","usersManagement","settings"].forEach(p=>$(p+"Page").classList.add("hidden"));
+ ["dashboard","playstation","sales","purchases","returns","products","treasury","customers","history","expenses","reports","settings"].forEach(p=>$(p+"Page").classList.add("hidden"));
  $(name+"Page").classList.remove("hidden");
  if(name==="dashboard"||name==="reports")renderStats();
 };
 
 async function loadBusiness(){
- await Promise.all([loadProducts(),loadSales(),loadPurchases(),loadExpenses(),loadTreasury(),loadCustomers(),loadStoreUsers(),loadSettings()]);
+ await Promise.all([loadProducts(),loadSales(),loadPurchases(),loadExpenses(),loadTreasury(),loadCustomers(),loadPlaystationDevices(),loadSettings()]);
  renderStats();
 }
 
@@ -572,7 +570,7 @@ async function loadPurchases(){const s=await getDocs(col("purchases"));purchases
 async function loadExpenses(){const s=await getDocs(col("expenses"));expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();}
 async function loadTreasury(){const s=await getDocs(col("treasury"));treasury=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderTreasury();}
 async function loadCustomers(){const s=await getDocs(col("customers"));customers=s.docs.map(d=>({id:d.id,...d.data()}));renderCustomers();}
-async function loadStoreUsers(){const s=await getDocs(col("storeUsers"));storeUsers=s.docs.map(d=>({id:d.id,...d.data()}));renderStoreUsers();}
+async function loadPlaystationDevices(){const s=await getDocs(col("psDevices"));psDevices=s.docs.map(d=>({id:d.id,...d.data()}));renderPlaystationDevices();}
 async function loadSettings(){
  const s=await getDoc(doc(db,shopRef(),"settings","main"));if(s.exists())shopSettings=s.data();
  $("setShop").value=shopSettings.shopName||profile.shopName||"";
@@ -583,8 +581,116 @@ async function loadSettings(){
  $("invoiceSize").value=shopSettings.invoiceSize||"80mm";$("invoiceFont").value=shopSettings.invoiceFont||14;
 }
 
-function makeBarcode(){return "NX"+Date.now().toString().slice(-10);}
+// إدارة أجهزة البلايستيشن
+window.addPlaystationDevice=async()=>{
+ const name=$("psDevName").value.trim();
+ const mode=$("psMode").value;
+ const priceSingle=Number($("psPriceSingle").value)||30;
+ const priceMulti=Number($("psPriceMulti").value)||40;
+ if(!name)return alert("أدخل اسم الجهاز.");
+ try{
+  await addDoc(col("psDevices"),{
+   name, mode, priceSingle, priceMulti,
+   status: "free", startTime: null, customer: "",
+   createdAt: serverTimestamp()
+  });
+  $("psDevName").value="";
+  await loadPlaystationDevices();
+  alert("تم إضافة الجهاز بنجاح.");
+ }catch(e){alert(friendlyError(e))}
+};
 
+window.startPSDevice=async(id)=>{
+ const dev=psDevices.find(x=>x.id===id);
+ if(!dev)return;
+ const custName=prompt("اسم العميل (اختياري):","")||"بلايستيشن";
+ try{
+  await updateDoc(docRef("psDevices",id),{
+   status: "busy",
+   startTime: Date.now(),
+   customer: custName,
+   updatedAt: serverTimestamp()
+  });
+  await loadPlaystationDevices();
+ }catch(e){alert(friendlyError(e))}
+};
+
+window.endPSDevice=async(id)=>{
+ const dev=psDevices.find(x=>x.id===id);
+ if(!dev||dev.status!=="busy")return;
+ const diffHours=(Date.now()-dev.startTime)/(1000*60*60);
+ const hourlyRate=dev.mode==="single"?dev.priceSingle:dev.priceMulti;
+ const totalCost=Math.max(5,Math.round(diffHours*hourlyRate));
+ 
+ if(!confirm(`هل تريد إنهاء جلسة ${dev.name}؟\nالمبلغ المستحق: ${totalCost} جنيه`))return;
+
+ try{
+  await runTransaction(db,async tx=>{
+   // تحديث حالة الجهاز ليكون متاحاً
+   tx.update(docRef("psDevices",id),{
+    status: "free", startTime: null, customer: "", updatedAt: serverTimestamp()
+   });
+   // تسجيل الفاتورة في المبيعات
+   const saleRef=doc(col("sales"));
+   tx.set(saleRef,{
+    number:"PS-"+Date.now().toString().slice(-6),
+    customer:dev.customer||"بلايستيشن",
+    payment:"نقدي",
+    total:totalCost,
+    items:[{name:`جلسة بلايستيشن (${dev.name}) - ${dev.mode==="single"?"فردي":"جماعي"}`, qty:1, price:totalCost}],
+    createdAt:serverTimestamp(),
+    date:new Date().toLocaleString("ar-EG")
+   });
+   // إضافة المبلغ للخزينة
+   const tRef=doc(col("treasury"));
+   tx.set(tRef,{
+    type:"in", category:"إيراد بلايستيشن", amount:totalCost,
+    note:`جلسة لعب على ${dev.name}`, createdAt:serverTimestamp(), date:new Date().toLocaleString("ar-EG")
+   });
+  });
+  alert(`تم إغلاق الجلسة بنجاح وتحصيل ${totalCost} جنيه.`);
+  await loadBusiness();
+ }catch(e){alert(friendlyError(e))}
+};
+
+window.deletePSDevice=async(id)=>{
+ if(!confirm("حذف هذا الجهاز؟"))return;
+ try{await deleteDoc(docRef("psDevices",id));await loadPlaystationDevices();}catch(e){}
+};
+
+function renderPlaystationDevices(){
+ let activeCount=0;
+ const html=psDevices.map(d=>{
+  let timeStr="متاح حالياً";
+  let costStr="0 جنيه";
+  if(d.status==="busy"){
+   activeCount++;
+   const mins=Math.floor((Date.now()-d.startTime)/(1000*60));
+   const hrs=(mins/60).toFixed(1);
+   const rate=d.mode==="single"?d.priceSingle:d.priceMulti;
+   const currentTotal=Math.max(5,Math.round((mins/60)*rate));
+   timeStr=`المدة: ${hrs} ساعة (${mins} دقيقة)`;
+   costStr=`الحساب الحالي: ${currentTotal} جنيه`;
+  }
+  return `<div class="ps-card ${d.status}">
+   <h4>${esc(d.name)} <span class="tag ${d.status==="busy"?"":"good"}">${d.status==="busy"?"مشغول":"متاح"}</span></h4>
+   <p><b>الوضع:</b> ${d.mode==="single"?"فردي":"جماعي"} (${d.priceSingle}/${d.priceMulti} ج/ساعة)</p>
+   <p><b>العميل:</b> ${esc(d.customer||"-")}</p>
+   <p><b>${timeStr}</b></p>
+   <p style="color:#2458d3;font-weight:bold">${costStr}</p>
+   <div style="margin-top:10px">
+    ${d.status==="free"?`<button class="rowbtn green" onclick="startPSDevice('${d.id}')">بدء جلسة</button>`:`<button class="rowbtn red" onclick="endPSDevice('${d.id}')">إنهاء وتحصيل</button>`}
+    <button class="rowbtn secondary" onclick="deletePSDevice('${d.id}')">حذف</button>
+   </div>
+  </div>`;
+ }).join("");
+
+ $("psDevicesContainer").innerHTML=html||"<p>لا توجد أجهزة مضافة حتى الآن.</p>";
+ $("statPSActive").textContent=activeCount;
+}
+
+// مبيعات المحل
+function makeBarcode(){return "NX"+Date.now().toString().slice(-10);}
 window.saveProduct=async()=>{
  const name=$("pName").value.trim();let barcode=$("pBarcode").value.trim();
  const cost=Number($("pCost").value),price=Number($("pPrice").value),qty=Number($("pQty").value);
@@ -597,17 +703,17 @@ window.saveProduct=async()=>{
   clearProductForm();await loadProducts();renderStats();alert("تم حفظ المنتج بنجاح.");
  }catch(e){alert(friendlyError(e))}
 };
+window.clearProductForm=()=>{editingProduct=null;["pName","pBarcode","pCode","pCost","pPrice","pQty","pMinQty"].forEach(k=>$(k).value="");};
+window.deleteProduct=async id=>{if(!confirm("حذف المنتج؟"))return;try{await deleteDoc(docRef("products",id));await loadProducts();renderStats();}catch(e){}};
+function renderProducts(){
+ $("productsTable").innerHTML=products.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.barcode)}</td><td>${money(p.cost)}</td><td>${money(p.price)}</td><td>${money(p.qty)}</td><td><button class="rowbtn secondary" onclick="editProduct('${p.id}')">تعديل</button> <button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||"<tr><td colspan='6'>لا توجد منتجات</td></tr>";
+}
 window.editProduct=id=>{
  const p=products.find(x=>x.id===id);if(!p)return;editingProduct=id;
  $("pName").value=p.name; $("pBarcode").value=p.barcode; $("pCode").value=p.code; $("pCategory").value=p.category;
  $("pCost").value=p.cost; $("pPrice").value=p.price; $("pQty").value=p.qty; $("pMinQty").value=p.minQty;
  page("products");
 };
-window.clearProductForm=()=>{editingProduct=null;["pName","pBarcode","pCode","pCategory","pCost","pPrice","pQty","pMinQty"].forEach(k=>$(k).value="");};
-window.deleteProduct=async id=>{if(!confirm("حذف المنتج؟"))return;try{await deleteDoc(docRef("products",id));await loadProducts();renderStats();}catch(e){}};
-function renderProducts(){
- $("productsTable").innerHTML=products.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.barcode)}</td><td>${money(p.cost)}</td><td>${money(p.price)}</td><td>${money(p.qty)}</td><td><button class="rowbtn secondary" onclick="editProduct('${p.id}')">تعديل</button> <button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||"<tr><td colspan='6'>لا توجد منتجات</td></tr>";
-}
 
 function populatePurProductSelect(){
  $("pPurProduct").innerHTML=products.map(p=>`<option value="${p.id}">${esc(p.name)} (متوفر: ${p.qty})</option>`).join("");
@@ -682,9 +788,8 @@ window.completeSale=async()=>{
    }
   });
 
-  const saved={...invoice,id:saleRef.id};
   cart=[];renderCart();$("saleCustomer").value="";
-  await loadBusiness();printInvoice(saved);
+  await loadBusiness();printInvoice(invoice);
  }catch(e){alert(friendlyError(e))}
 };
 
@@ -772,18 +877,6 @@ function renderCustomers(){
  $("customerOptions").innerHTML=customers.map(c=>`<option value="${esc(c.name)}">`).join("");
 }
 
-window.saveStoreUser=async()=>{
- const name=$("umName").value.trim(), role=$("umRole").value;
- if(!name)return alert("أدخل اسم المستخدم.");
- try{
-  await addDoc(col("storeUsers"),{name,role,date:new Date().toLocaleString("ar-EG"),createdAt:serverTimestamp()});
-  $("umName").value="";await loadStoreUsers();alert("تمت الإضافة.");
- }catch(e){}
-};
-function renderStoreUsers(){
- $("storeUsersTable").innerHTML=storeUsers.map(u=>`<tr><td>${esc(u.name)}</td><td>${esc(u.role)}</td><td>${esc(u.date)}</td><td><button class="rowbtn red" onclick="deleteDoc(docRef('storeUsers','${u.id}'));loadStoreUsers();">حذف</button></td></tr>`).join("")||"<tr><td colspan='4'>لا يوجد مستخدمون</td></tr>";
-}
-
 window.saveSettings=async()=>{
  try{
   shopSettings={
@@ -792,7 +885,7 @@ window.saveSettings=async()=>{
    invoiceSize:$("invoiceSize").value, invoiceFont:Number($("invoiceFont").value)||14
   };
   await setDoc(doc(db,shopRef(),"settings","main"),shopSettings,{merge:true});
-  $("shopTitle").textContent=shopSettings.shopName||"نظام المبيعات";alert("تم الحفظ بنجاح.");
+  $("shopTitle").textContent=shopSettings.shopName||"نظام المبيعات والبلايستيشن";alert("تم الحفظ بنجاح.");
  }catch(e){}
 };
 
@@ -801,16 +894,18 @@ function printInvoice(s){
  $("printArea").style.fontSize=font+"px";
  $("printArea").innerHTML=`<div style="font-family:Arial;width:80mm;margin:auto;text-align:right">
  <div style="text-align:center"><h2>${esc(st.shopName||profile.shopName||"NexPOS PRO")}</h2><p>${esc(st.phone||"")}</p></div><hr>
- <p><b>فاتورة رقم:</b> ${esc(s.number)}</p><p><b>التاريخ:</b> ${esc(s.date)}</p><p><b>العميل:</b> ${esc(s.customer)}</p>
- <table style="width:100%;border-collapse:collapse"><thead><tr><th>الصنف</th><th>كمية</th><th>سعر</th><th>إجمالي</th></tr></thead>
+ <p><b>رقم العملية:</b> ${esc(s.number)}</p><p><b>التاريخ:</b> ${esc(s.date)}</p><p><b>العميل / الجهاز:</b> ${esc(s.customer)}</p>
+ <table style="width:100%;border-collapse:collapse"><thead><tr><th>الصنف / الوقت</th><th>كمية</th><th>سعر</th><th>إجمالي</th></tr></thead>
  <tbody>${(s.items||[]).map(x=>`<tr><td>${esc(x.name)}</td><td>${x.qty}</td><td>${money(x.price)}</td><td>${money(x.qty*x.price)}</td></tr>`).join("")}</tbody></table>
  <hr><p><b>الإجمالي النهائي:</b> ${money(s.total)} ${esc(st.currency||"جنيه")}</p>
  <p style="text-align:center">شكراً لتعاملكم معنا</p></div>`;
  $("printArea").classList.remove("hidden");window.print();$("printArea").classList.add("hidden");
 }
+
 function renderSales(){
  $("salesTable").innerHTML=sales.map(s=>`<tr><td>${esc(s.number)}</td><td>${esc(s.date)}</td><td>${esc(s.customer)}</td><td>${money(s.total)}</td><td>${esc(s.payment)}</td><td><button class="rowbtn secondary" onclick="printInvoice(${JSON.stringify(s).replace(/"/g,'&quot;')})">طباعة</button></td></tr>`).join("")||"<tr><td colspan='6'>لا توجد فواتير</td></tr>";
 }
+
 function renderStats(){
  const rev=sales.reduce((s,x)=>s+Number(x.total||0),0);
  const cost=sales.reduce((s,x)=>s+Number(x.cost||0),0);
@@ -820,6 +915,7 @@ function renderStats(){
  $("statProducts").textContent=products.length;
  $("statSales").textContent=sales.length;
  $("statRevenue").textContent=money(rev);
+ $("statStatsActive")?.setAttribute("text", psDevices.filter(d=>d.status==="busy").length);
  $("statTreasuryBalance").textContent=money(tIn-tOut);
  $("reportRevenue").textContent=money(rev);
  $("reportCost").textContent=money(cost);

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NexPOS PRO - Ultimate & PlayStation Edition</title>
+<title>NexPOS & PlayStation Systems</title>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
 *{box-sizing:border-box}
@@ -31,6 +31,7 @@ nav button.active{background:#2458d3;color:white}
 .secondary{background:#e8edfa;color:#29416f}
 .red{background:#b72f3b}
 .green{background:#178653}
+.purple{background:#7c3aed}
 .dark{background:#202c43}
 .hidden{display:none!important}
 .tablewrap{overflow:auto}
@@ -41,7 +42,6 @@ td,th{padding:11px;border-bottom:1px solid #edf0f5;text-align:right;font-size:13
 .rowbtn{padding:7px 10px;margin:2px;font-size:12px}
 .msg{padding:10px;border-radius:8px;background:#f0f4fc;margin-top:10px;font-size:13px}
 hr{border:0;border-top:1px solid #eee;margin:18px 0}
-.result{display:block;width:100%;text-align:right;margin:4px 0}
 
 .tiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px;margin-top:20px}
 .tile{padding:22px;border-radius:16px;color:white;cursor:pointer;transition:transform .2s,opacity .2s;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;justify-content:space-between;min-height:130px}
@@ -53,8 +53,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .t-orange{background:linear-gradient(135deg,#d97706,#f59e0b)}
 .t-purple{background:linear-gradient(135deg,#7c3aed,#9333ea)}
 .t-dark{background:linear-gradient(135deg,#1e293b,#334155)}
-.t-teal{background:linear-gradient(135deg,#0d9488,#14b8a6)}
-.t-red{background:linear-gradient(135deg,#b72f3b,#dc2626)}
 
 .ps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:15px;margin-top:15px}
 .ps-card{background:white;border:1px solid #dce2ed;border-radius:12px;padding:15px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
@@ -73,8 +71,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <header class="top">
  <div>
   <div class="brand">NexPOS PRO</div>
-  <span class="version">PLAYSTATION & POS EDITION</span>
-  <div class="muted">نظام المبيعات الشامل وإدارة صالات البلايستيشن</div>
+  <span class="version">MANAGEMENT SYSTEMS</span>
+  <div class="muted">بوابة إدارة المبيعات وصالات البلايستيشن</div>
  </div>
  <div>
   <span id="networkStatus" class="tag good" style="margin-left:10px;">متصل بالخادم</span>
@@ -82,327 +80,179 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  </div>
 </header>
 
+<!-- الواجهة الخارجية الرئيسية -->
 <section id="auth">
- <div class="card" style="max-width:500px;margin:30px auto">
-  <h2>تسجيل الدخول للنظام</h2>
+ <div class="card" style="max-width:550px;margin:30px auto">
+  <h2>اختر النظام المراد الدخول إليه</h2>
   <nav>
-   <button id="tabLogin" class="active" onclick="showAuth('login')">تسجيل الدخول</button>
-   <button id="tabRegister" onclick="showAuth('register')">حساب جديد</button>
-   <button id="tabOwner" onclick="showAuth('owner')">لوحة المالك</button>
+   <button id="tabPos" class="active" onclick="switchPortal('pos')">سيستم المبيعات</button>
+   <button id="tabPs" onclick="switchPortal('ps')">سيستم البلايستيشن</button>
+   <button id="tabOwner" onclick="switchPortal('owner')">لوحة التحكم</button>
   </nav>
 
-  <div id="loginBox">
-   <label>البريد الإلكتروني</label><input id="loginEmail" type="email">
-   <label>كلمة المرور</label><input id="loginPassword" type="password">
-   <button class="big" onclick="login()">دخول للنظام</button>
-   <button class="big secondary" onclick="forgot()">استعادة كلمة المرور</button>
-   <!-- زر دخول سريع بدون تعقيد إيميل -->
-   <button class="big dark" style="margin-top:10px;background:#7c3aed" onclick="bypassLoginForPS()">🚀 الدخول السريع لإدارة البلايستيشن</button>
+  <!-- بوابة سيستم المبيعات -->
+  <div id="posPortal">
+   <div style="margin-bottom:10px;">
+    <button class="rowbtn active" onclick="showSubAuth('pos','login')">دخول للمبيعات</button>
+    <button class="rowbtn secondary" onclick="showSubAuth('pos','register')">إنشاء حساب مبيعات</button>
+   </div>
+   <div id="posLoginBox">
+    <label>البريد الإلكتروني (المبيعات)</label><input id="posEmail" type="email">
+    <label>كلمة المرور</label><input id="posPassword" type="password">
+    <button class="big blue" onclick="loginSystem('pos')">دخول لسيستم المبيعات</button>
+   </div>
+   <div id="posRegisterBox" class="hidden">
+    <label>اسم المحل / النشاط التجاري</label><input id="regPosShop">
+    <label>اسم المسؤول</label><input id="regPosName">
+    <label>رقم الهاتف</label><input id="regPosPhone">
+    <label>البريد الإلكتروني</label><input id="regPosEmail" type="email">
+    <label>كلمة المرور</label><input id="regPosPassword" type="password">
+    <button class="big green" onclick="registerSystem('pos')">إنشاء حساب مبيعات جديد</button>
+   </div>
   </div>
 
-  <div id="registerBox" class="hidden">
-   <label>اسم النشاط التجاري / صالة البلايستيشن</label><input id="regShop">
-   <label>اسم المسؤول</label><input id="regName">
-   <label>رقم الهاتف</label><input id="regPhone">
-   <label>البريد الإلكتروني</label><input id="regEmail" type="email">
-   <label>كلمة المرور</label><input id="regPassword" type="password">
-   <button class="big green" onclick="register()">إنشاء الحساب وإرسال للتفعيل</button>
+  <!-- بوابة سيستم البلايستيشن -->
+  <div id="psPortal" class="hidden">
+   <div style="margin-bottom:10px;">
+    <button class="rowbtn active" onclick="showSubAuth('ps','login')">دخول صالة البلايستيشن</button>
+    <button class="rowbtn secondary" onclick="showSubAuth('ps','register')">إنشاء حساب صالة جديد</button>
+   </div>
+   <div id="psLoginBox">
+    <label>البريد الإلكتروني (البلايستيشن)</label><input id="psEmail" type="email">
+    <label>كلمة المرور</label><input id="psPassword" type="password">
+    <button class="big purple" onclick="loginSystem('ps')">دخول لسيستم البلايستيشن</button>
+    <button class="big secondary" style="margin-top:8px" onclick="bypassLoginForPS()">⚡ دخول سريع للصالة (تخطي)</button>
+   </div>
+   <div id="psRegisterBox" class="hidden">
+    <label>اسم صالة البلايستيشن</label><input id="regPsShop">
+    <label>اسم المسؤول</label><input id="regPsName">
+    <label>رقم الهاتف</label><input id="regPsPhone">
+    <label>البريد الإلكتروني</label><input id="regPsEmail" type="email">
+    <label>كلمة المرور</label><input id="regPsPassword" type="password">
+    <button class="big purple" onclick="registerSystem('ps')">إنشاء حساب بلايستيشن جديد</button>
+   </div>
   </div>
 
-  <div id="ownerBox" class="hidden">
+  <!-- لوحة التحكم العامة (المالك) -->
+  <div id="ownerPortal" class="hidden">
    <label>اسم المستخدم الإداري</label><input id="ownerUsername">
    <label>كلمة المرور</label><input id="ownerPassword" type="password">
-   <button class="big" onclick="ownerLogin()">دخول المالك العام</button>
+   <button class="big dark" onclick="ownerLogin()">دخول لوحة التحكم الشاملة</button>
   </div>
   <p id="authMsg" class="msg hidden"></p>
  </div>
 </section>
 
+<!-- الحساب قيد الانتظار -->
 <section id="pending" class="hidden">
  <div class="card" style="text-align:center;margin-top:35px">
-  <h2>الحساب قيد المراجعة والانتظار</h2>
-  <p>تم إرسال طلب تفعيل حسابك لإدارة السيستم.</p>
-  <div class="card">
-   <p>فودافون كاش / إنستاباي: <b>01062883414</b></p>
-   <p>قيمة الاشتراك: <b id="pendingPrice">جاري التحميل...</b></p>
-   <button class="green big" onclick="sendReceipt()">إرسال إيصال الدفع عبر واتساب للتفعيل</button>
-  </div>
+  <h2>الحساب قيد التفعيل والمراجعة</h2>
+  <p>تم إرسال طلبك للوحة التحكم للتفعيل.</p>
   <button onclick="logout()">تسجيل الخروج</button>
  </div>
 </section>
 
-<section id="blocked" class="hidden">
- <div class="card" style="text-align:center">
-  <h2>الحساب موقوف أو انتهت صلاحيته</h2>
-  <button onclick="support()">تواصل مع الدعم الفني</button>
-  <button class="secondary" onclick="logout()">تسجيل الخروج</button>
- </div>
-</section>
-
+<!-- لوحة التحكم الشاملة (المالك) -->
 <section id="ownerPanel" class="hidden">
  <div class="card">
-  <div class="top"><div><h2>لوحة تحكم المالك العام (إدارة التفعيلات)</h2></div><button class="red" onclick="logout()">خروج</button></div>
+  <div class="top"><div><h2>لوحة التحكم المركزية (المبيعات والبلايستيشن)</h2></div><button class="red" onclick="logout()">خروج</button></div>
   <div class="grid">
-   <div class="stat">إجمالي المتاجر<strong id="totalUsers">0</strong></div>
-   <div class="stat">الطلبات المعلقة<strong id="pendingUsers">0</strong></div>
-   <div class="stat">المتاجر المفعلة<strong id="activeUsers">0</strong></div>
+   <div class="stat">إجمالي الحسابات<strong id="totalUsers">0</strong></div>
+   <div class="stat">حسابات المبيعات<strong id="posUsersCount">0</strong></div>
+   <div class="stat">حسابات البلايستيشن<strong id="psUsersCount">0</strong></div>
   </div>
-  <div class="card">
-   <h3>إعدادات الاشتراك العامة</h3>
-   <label>سعر الاشتراك (جنيه)</label><input id="ownerPrice" type="number" min="0">
-   <label>مدة الاشتراك (أيام)</label><input id="ownerDays" type="number" min="1">
-   <button onclick="saveSubscriptionSettings()">حفظ إعدادات الاشتراك</button>
-  </div>
-  <h3>طلبات الحسابات المسجلة حديثاً</h3>
+  <h3>جميع الحسابات والطلبات المسجلة</h3>
   <div class="tablewrap"><table>
-   <thead><tr><th>المتجر / الصالة</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>مدة الاشتراك</th><th>إجراءات التفعيل</th></tr></thead>
+   <thead><tr><th>الاسم / المتجر</th><th>نوع النظام</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>إجراءات التفعيل</th></tr></thead>
    <tbody id="usersTable"></tbody>
   </table></div>
  </div>
 </section>
 
-<section id="customerPanel" class="hidden">
+<!-- سيستم المبيعات (POS Only) -->
+<section id="posSystemPanel" class="hidden">
  <div class="card">
   <div class="top">
-   <div><h2 id="shopTitle">نظام المبيعات والبلايستيشن</h2><span class="muted">لوحة الإدارة الشاملة</span></div>
-   <button class="red" onclick="logout()">تسجيل الخروج</button>
+   <div><h2 id="posShopTitle">سيستم المبيعات والمخزون</h2></div>
+   <button class="red" onclick="logout()">خروج</button>
+  </div>
+  <div class="tiles-grid">
+   <div class="tile t-blue" onclick="pagePos('sales')"><h3>شاشة المبيعات (POS)</h3><p>بيع المنتجات وإصدار الفواتير</p></div>
+   <div class="tile t-green" onclick="pagePos('products')"><h3>المنتجات والمخزون</h3><p>إدارة البضائع والأسعار</p></div>
+   <div class="tile t-orange" onclick="pagePos('treasury')"><h3>الخزينة والنقدية</h3><p>حسابات الوارد والصادر</p></div>
+   <div class="tile t-dark" onclick="pagePos('reports')"><h3>التقارير المالية</h3><p>متابعة المبيعات والأرباح</p></div>
   </div>
 
-  <div id="dashboardPage">
+  <!-- صفحة المبيعات -->
+  <div id="posSalesPage" style="margin-top:20px">
+   <h3>شاشة المبيعات</h3>
    <div class="grid">
-    <div class="stat">عدد الأجهزة النشطة<strong id="statPSActive">0</strong></div>
-    <div class="stat">إجمالي المنتجات<strong id="statProducts">0</strong></div>
-    <div class="stat">مبيعات اليوم<strong id="statRevenue">0</strong></div>
-    <div class="stat">رصيد الخزينة<strong id="statTreasuryBalance">0</strong></div>
+    <div><label>بحث بالمنتج أو الباركود</label><input id="posSaleSearch" oninput="searchPosProducts()"><div id="posSearchResults"></div></div>
+    <div><label>الكمية</label><input id="posSaleQty" type="number" value="1"><button class="big green" onclick="addPosCart()">إضافة للسلة</button></div>
    </div>
+   <div class="tablewrap"><table><thead><tr><th>المنتج</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead><tbody id="posCartTable"></tbody></table></div>
+   <h3>الإجمالي: <span id="posCartTotal">0</span> جنيه</h3>
+   <button class="big green" onclick="completePosSale()">إتمام البيع</button>
+  </div>
+ </div>
+</section>
 
-   <div class="card">
-    <h3>شاشة الإدارة السريعة</h3>
-    <div class="tiles-grid">
-     <div class="tile t-purple" onclick="navTo('playstation')">
-      <h3>إدارة البلايستيشن</h3>
-      <p>إدارة الأجهزة، تشغيل العدادات، والأسعار</p>
-     </div>
-     <div class="tile t-blue" onclick="navTo('sales')">
-      <h3>شاشة المبيعات (POS)</h3>
-      <p>إصدار الفواتير وبيع الأصناف للمحلات</p>
-     </div>
-     <div class="tile t-green" onclick="navTo('products')">
-      <h3>المنتجات والمخزون</h3>
-      <p>إدارة الأصناف والمشروبات وأسعار البيع</p>
-     </div>
-     <div class="tile t-orange" onclick="navTo('treasury')">
-      <h3>الخزينة والحسابات</h3>
-      <p>متابعة النقدية الواردة والصادرة والأرباح</p>
-     </div>
-     <div class="tile t-dark" onclick="navTo('purchases')">
-      <h3>المشتريات والموردين</h3>
-      <p>تسجيل فواتير الشراء وإضافة البضائع</p>
-     </div>
-     <div class="tile t-teal" onclick="navTo('history')">
-      <h3>الفواتير السابقة</h3>
-      <p>استعراض وطباعة الفواتير وحسابات الجلسات</p>
-     </div>
-     <div class="tile t-red" onclick="navTo('returns')">
-      <h3>المرتجعات</h3>
-      <p>إرجاع البضائع ورد المبالغ للخزينة</p>
-     </div>
-     <div class="tile t-blue" onclick="navTo('reports')">
-      <h3>التقارير المالية</h3>
-      <p>تقارير الأرباح والمصاريف والنواقص</p>
-     </div>
-     <div class="tile t-green" onclick="navTo('expenses')">
-      <h3>المصروفات اليومية</h3>
-      <p>تسجيل المصاريف النثرية والتشغيلية</p>
-     </div>
-     <div class="tile t-orange" onclick="navTo('settings')">
-      <h3>إعدادات المتجر والطباعة</h3>
-      <p>تخصيص الفواتير وطابعات الكاشير</p>
-     </div>
-    </div>
-   </div>
+<!-- سيستم البلايستيشن (PlayStation System Only) -->
+<section id="psSystemPanel" class="hidden">
+ <div class="card">
+  <div class="top">
+   <div><h2 id="psShopTitle">سيستم صالة البلايستيشن والمشروبات</h2></div>
+   <button class="red" onclick="logout()">خروج</button>
   </div>
 
-  <div id="playstationPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>صالة أجهزة وطاولات البلايستيشن</h3>
+  <nav>
+   <button class="active" onclick="showPsSection('devices')">الأجهزة والعدادات</button>
+   <button onclick="showPsSection('cafe')">السندوتشات والمشروبات</button>
+   <button onclick="showPsSection('treasury')">خزينة الصالة</button>
+  </nav>
+
+  <!-- قسم الأجهزة -->
+  <div id="psDevicesSec">
    <div class="card">
+    <h3>إضافة جهاز / غرفة جديدة</h3>
     <div class="grid">
-     <div><label>اسم الجهاز / الغرفة</label><input id="psDevName" placeholder="مثال: جهاز 1 - PS5"></div>
-     <div><label>نوع اللعب</label><select id="psMode"><option value="single">فردي (Single)</option><option value="multi">مزدوج / جماعي (Multi)</option></select></div>
-     <div><label>سعر الساعة فردي (جنيه)</label><input id="psPriceSingle" type="number" value="30"></div>
-     <div><label>سعر الساعة جماعي (جنيه)</label><input id="psPriceMulti" type="number" value="40"></div>
+     <div><label>اسم الجهاز</label><input id="psDevName" placeholder="جهاز 1 - PS5"></div>
+     <div><label>نوع اللعب</label><select id="psMode"><option value="single">فردي</option><option value="multi">جماعي</option></select></div>
+     <div><label>سعر الساعة فردي</label><input id="psPriceSingle" type="number" value="30"></div>
+     <div><label>سعر الساعة جماعي</label><input id="psPriceMulti" type="number" value="40"></div>
     </div>
-    <button class="big green" onclick="addPlaystationDevice()">إضافة جهاز جديد للصالة</button>
+    <button class="big purple" onclick="addPlaystationDevice()">إضافة الجهاز</button>
    </div>
-
-   <div class="card">
-    <h3>الأجهزة الحالية (متابعة العدادات والوقت)</h3>
-    <div id="psDevicesContainer" class="ps-grid"></div>
-   </div>
+   <h3>أجهزة الصالة الحالية</h3>
+   <div id="psDevicesContainer" class="ps-grid"></div>
   </div>
 
-  <div id="salesPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>شاشة نقاط البيع (POS)</h3>
-   <div class="grid">
-    <div><label>بحث بالاسم أو الباركود</label><input id="saleSearch" placeholder="امسح الباركود أو اكتب اسم المنتج" oninput="searchProducts()"><div id="searchResults"></div></div>
-    <div>
-     <label>الكمية</label><input id="saleQty" type="number" min="1" value="1">
-     <label>سعر البيع</label><input id="salePrice" type="number" min="0">
-     <button class="big" onclick="addToCart()">إضافة للسلة</button>
-    </div>
-   </div>
+  <!-- قسم السندوتشات والمشروبات للبلايستيشن -->
+  <div id="psCafeSec" class="hidden">
    <div class="card">
-    <h3>سلة المبيعات الحالية</h3>
-    <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead><tbody id="cartTable"></tbody></table></div>
-    <h3>الإجمالي الكلي: <span id="cartTotal">0</span> جنيه</h3>
-    <button class="big green" onclick="completeSale()">إتمام البيع وطباعة الفاتورة</button>
-   </div>
-  </div>
-
-  <div id="purchasesPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>إدارة المشتريات والموردين</h3>
-   <div class="card">
+    <h3>إضافة صنف (سندوتش / مشروب)</h3>
     <div class="grid">
-     <div><label>اختر المنتج</label><select id="pPurProduct" onchange="fillPurCost()"></select></div>
-     <div><label>اسم المورد</label><input id="pPurSupplier" placeholder="اسم المورد"></div>
-     <div><label>الكمية</label><input id="pPurQty" type="number" min="1" value="1"></div>
-     <div><label>سعر الشراء للقطعة</label><input id="pPurCost" type="number" min="0"></div>
+     <div><label>اسم الصنف</label><input id="psItemName" placeholder="مثال: كانز / كريب / سندوتش"></div>
+     <div><label>التصنيف</label><select id="psItemCat"><option value="mshrob">مشروبات</option><option value="sand">سندوتشات ووجبات</option></select></div>
+     <div><label>سعر البيع</label><input id="psItemPrice" type="number" min="0"></div>
+     <div><label>الكمية المتاحة</label><input id="psItemQty" type="number" min="0"></div>
     </div>
-    <button class="big green" onclick="completePurchase()">تأكيد وإضافة للمخزون والخزينة</button>
+    <button class="big green" onclick="savePsCafeItem()">حفظ الصنف</button>
    </div>
-   <div class="tablewrap"><table><thead><tr><th>الشحنة</th><th>المورد</th><th>الصنف</th><th>الكمية</th><th>الإجمالي</th><th>التاريخ</th></tr></thead><tbody id="purchasesTable"></tbody></table></div>
-  </div>
-
-  <div id="returnsPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>إدارة المرتجعات</h3>
-   <div class="card">
-    <label>رقم الفاتورة الأصلية</label><input id="returnInvoiceNo" placeholder="أدخل رقم الفاتورة">
-    <button class="secondary" onclick="searchInvoiceForReturn()">بحث عن الفاتورة</button>
-    <div id="returnInvoiceDetails" class="hidden" style="margin-top:15px">
-     <p><b>العميل:</b> <span id="retCust"></span> | <b>التاريخ:</b> <span id="retDate"></span></p>
-     <div class="tablewrap"><table><thead><tr><th>المنتج</th><th>الكمية المباعة</th><th>الكمية المراد إرجاعها</th><th>استرجاع</th></tr></thead><tbody id="returnItemsTable"></tbody></table></div>
-     <button class="big red" onclick="executeReturn()">تأكيد المرتجع ورد المبلغ</button>
-    </div>
-   </div>
-  </div>
-
-  <div id="productsPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>إدارة المنتجات والمخزون والمشروبات</h3>
-   <div class="card">
-    <input id="pName" placeholder="اسم المنتج">
-    <div class="grid">
-     <div><label>كود المنتج</label><input id="pCode"></div>
-     <div><label>الباركود</label><input id="pBarcode"></div>
-     <div><label>التصنيف</label><input id="pCategory" value="مشروبات ووجبات"></div>
-     <div><label>سعر الشراء</label><input id="pCost" type="number" min="0"></div>
-     <div><label>سعر البيع</label><input id="pPrice" type="number" min="0"></div>
-     <div><label>الكمية الحالية</label><input id="pQty" type="number" min="0"></div>
-     <div><label>حد التنبيه (النواقص)</label><input id="pMinQty" type="number" min="0"></div>
-    </div>
-    <button onclick="saveProduct()">حفظ المنتج</button>
-    <button class="secondary" onclick="clearProductForm()">إلغاء</button>
-   </div>
-   <div class="tablewrap"><table><thead><tr><th>المنتج</th><th>الباركود</th><th>الشراء</th><th>البيع</th><th>المخزون</th><th>الإجراءات</th></tr></thead><tbody id="productsTable"></tbody></table></div>
-  </div>
-
-  <div id="treasuryPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>الخزينة والحسابات النقدية</h3>
-   <div class="grid">
-    <div class="stat">رصيد الخزينة المتاح<strong id="treasuryBalanceDisplay">0</strong></div>
-    <div class="stat">إجمالي الوارد<strong id="treasuryTotalIn">0</strong></div>
-    <div class="stat">إجمالي الصادر<strong id="treasuryTotalOut">0</strong></div>
-   </div>
-   <div class="card">
-    <h3>سند قبض أو صرف</h3>
-    <label>نوع الحركة</label><select id="tType"><option value="in">وارد (إيداع نقدية)</option><option value="out">صادر (صرف نقدية)</option></select>
-    <label>التصنيف</label><select id="tCategory"><option>إيداع رأس مال</option><option>مسحوبات شخصية</option><option>مصاريف عامة</option><option>إيراد متنوع</option></select>
-    <label>المبلغ</label><input id="tAmount" type="number" min="0">
-    <label>البيان</label><input id="tNote" placeholder="تفاصيل الحركة">
-    <button class="big green" onclick="addTreasuryTransaction()">تسجيل الحركة</button>
-   </div>
-   <div class="tablewrap"><table><thead><tr><th>النوع</th><th>التصنيف</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
-  </div>
-
-  <div id="customersPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>إدارة العملاء والديون</h3>
-   <div class="card">
-    <input id="cName" placeholder="اسم العميل">
-    <div class="grid">
-     <div><label>الهاتف</label><input id="cPhone"></div>
-     <div><label>الرصيد / المديونية</label><input id="cBalance" type="number" value="0"></div>
-     <div><label>العنوان</label><input id="cAddress"></div>
-    </div>
-    <button onclick="saveCustomer()">حفظ العميل</button>
-   </div>
-   <div class="tablewrap"><table><thead><tr><th>الاسم</th><th>الهاتف</th><th>المديونية</th><th>العنوان</th><th>الإجراءات</th></tr></thead><tbody id="customersTable"></tbody></table></div>
-  </div>
-
-  <div id="historyPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>سجل الفواتير وجلسات البلايستيشن</h3>
-   <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>العميل / الجهاز</th><th>الإجمالي</th><th>طريقة الدفع</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
-  </div>
-
-  <div id="expensesPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>المصروفات اليومية</h3>
-   <div class="card"><label>بيان المصروف</label><input id="expenseName"><label>المبلغ</label><input id="expenseAmount" type="number" min="0"><button onclick="addExpense()">حفظ المصروف وصرفه من الخزينة</button></div>
-   <div class="tablewrap"><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div>
-  </div>
-
-  <div id="reportsPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>التقارير المالية والمخزنية</h3>
-   <div class="grid">
-    <div class="stat">إجمالي الإيرادات<strong id="reportRevenue">0</strong></div>
-    <div class="stat">تكلفة البضاعة<strong id="reportCost">0</strong></div>
-    <div class="stat">إجمالي المصروفات<strong id="reportExpenses">0</strong></div>
-    <div class="stat">صافي أرباح النشاط<strong id="reportNet">0</strong></div>
-   </div>
-   <div class="card"><h3>تنبيهات نواقص المخزون</h3><div id="stockAlerts"></div></div>
-  </div>
-
-  <div id="settingsPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>إعدادات المتجر والطباعة</h3>
-   <div class="card">
-    <label>اسم المحل / البلايستيشن</label><input id="setShop">
-    <label>رقم الهاتف</label><input id="setPhone">
-    <label>العنوان</label><input id="setAddress">
-    <label>العملة</label><select id="setCurrency"><option>جنيه</option><option>ريال</option><option>درهم</option></select>
-    <label>نسبة الضريبة %</label><input id="setTax" type="number" min="0">
-    <label>نسبة الخصم %</label><input id="setDiscount" type="number" min="0">
-    <hr>
-    <h3>قالب وطباعة الفواتير</h3>
-    <label>مقاس الفاتورة</label><select id="invoiceSize"><option value="80mm">رول 80mm</option><option value="58mm">رول 58mm</option><option value="A4">A4</option></select>
-    <label>حجم الخط</label><input id="invoiceFont" type="number" value="14">
-    <button class="big green" onclick="saveSettings()">حفظ الإعدادات</button>
-   </div>
+   <h3>قائمة المأكولات والمشروبات بالصالة</h3>
+   <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>التصنيف</th><th>السعر</th><th>الكمية</th></tr></thead><tbody id="psCafeTable"></tbody></table></div>
   </div>
  </div>
 </section>
 
 <div id="printArea" class="hidden"></div>
-<footer class="muted" style="text-align:center;padding:20px">NexPOS PRO — تم التطوير بواسطة محمد صلاح الصلاحي</footer>
+<footer class="muted" style="text-align:center;padding:20px">NexPOS & PlayStation — تطوير محمد صلاح الصلاحي</footer>
 </div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import {
- getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,
- sendPasswordResetEmail,onAuthStateChanged,signOut
-} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-import {
- getFirestore,doc,setDoc,getDoc,updateDoc,collection,addDoc,
- getDocs,deleteDoc,serverTimestamp,runTransaction,enableIndexedDbPersistence
-} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {getFirestore,doc,setDoc,getDoc,updateDoc,collection,addDoc,getDocs,deleteDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 const firebaseConfig={
  apiKey:"AIzaSyABpb7h1WXzodOKoxoRvvkXZSrPQ6UgZiA",
@@ -411,502 +261,119 @@ const firebaseConfig={
  projectId:"nexpos-14155",
  storageBucket:"nexpos-14155.firebasestorage.app",
  messagingSenderId:"932284131293",
- appId:"1:932284131293:web:00d6237b1f155ae5daf834",
- measurementId:"G-ND249T5PTN"
+ appId:"1:932284131293:web:00d6237b1f155ae5daf834"
 };
 const OWNER_EMAIL="melsalahy689@gmail.com";
 const OWNER_USERNAME="elsalahy";
-const SUPPORT_PHONE="01062883414";
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app),db=getFirestore(app);
 
-try{enableIndexedDbPersistence(db).catch(()=>{});}catch(e){}
-
-let currentUser=null,profile=null,products=[],sales=[],purchases=[],expenses=[],treasury=[],customers=[],storeUsers=[],psDevices=[],cart=[];
-let selectedProduct=null,editingProduct=null,editingCustomer=null,shopSettings={};
-let returnFoundInvoice=null;
+let currentUser=null, currentSysType="", psDevices=[], psCafeItems=[];
 
 const $=id=>document.getElementById(id);
-const money=n=>(Number(n)||0).toLocaleString("ar-EG",{maximumFractionDigits:2});
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const shopRef=()=>`shops/${currentUser?.uid}`;
-const col=name=>collection(db,shopRef(),name);
-const docRef=(name,id)=>doc(db,shopRef(),name,id);
-const systemSettingsRef=()=>doc(db,"systemSettings","subscription");
 
-function message(t){if($("authMsg")){$("authMsg").textContent=t;$("authMsg").classList.remove("hidden")}}
-function showOnly(id){["auth","pending","blocked","ownerPanel","customerPanel"].forEach(x=>$(x)?.classList.add("hidden"));$(id)?.classList.remove("hidden")}
-window.showAuth=function(which){
- ["loginBox","registerBox","ownerBox"].forEach(x=>$(x)?.classList.add("hidden"));
- ["tabLogin","tabRegister","tabOwner"].forEach(x=>$(x)?.classList.remove("active"));
- const m={login:["loginBox","tabLogin"],register:["registerBox","tabRegister"],owner:["ownerBox","tabOwner"]};
- if($(m[which][0])) $(m[which][0]).classList.remove("hidden");
- if($(m[which][1])) $(m[which][1]).classList.add("active");
- if($("authMsg")) $("authMsg").classList.add("hidden");
-};
-function friendlyError(e){
- const m={
- "auth/invalid-credential":"البريد أو كلمة المرور غير صحيحة.",
- "auth/email-already-in-use":"هذا البريد مسجل بالفعل.",
- "auth/weak-password":"كلمة المرور ضعيفة.",
- "auth/network-request-failed":"تحقق من اتصال الإنترنت."
- };
- return m[e?.code]||e?.message||"حدث خطأ غير معروف.";
-}
-
-window.login=async()=>{
- try{const email=$("loginEmail").value.trim(),password=$("loginPassword").value;if(!email||!password)return message("أدخل البريد وكلمة المرور.");await signInWithEmailAndPassword(auth,email,password)}
- catch(e){message("تعذر الدخول: "+friendlyError(e))}
+window.switchPortal=function(type){
+ ["posPortal","psPortal","ownerPortal"].forEach(x=>$(x)?.classList.add("hidden"));
+ ["tabPos","tabPs","tabOwner"].forEach(x=>$(x)?.classList.remove("active"));
+ if(type==='pos'){$("posPortal").classList.remove("hidden");$("tabPos").classList.add("active");}
+ if(type==='ps'){$("psPortal").classList.remove("hidden");$("tabPs").classList.add("active");}
+ if(type==='owner'){$("ownerPortal").classList.remove("hidden");$("tabOwner").classList.add("active");}
 };
 
-// دالة تخطي تسجيل الدخول مباشرة للعمل على البلايستيشن
-window.bypassLoginForPS=()=>{
- currentUser={uid:"local_offline_mode"};
- showOnly("customerPanel");
- if($("shopTitle")) $("shopTitle").textContent="هاي ستور - صالة البلايستيشن";
- loadPlaystationDevices();
+window.showSubAuth=function(sys,type){
+ if(sys==='pos'){
+  $("posLoginBox").classList.toggle("hidden", type!=='login');
+  $("posRegisterBox").classList.toggle("hidden", type!=='register');
+ }else{
+  $("psLoginBox").classList.toggle("hidden", type!=='login');
+  $("psRegisterBox").classList.toggle("hidden", type!=='register');
+ }
+};
+
+window.loginSystem=async(sys)=>{
+ const email=$(sys+'Email').value.trim(), pass=$(sys+'Password').value;
+ if(!email||!pass)return alert("أدخل البيانات.");
+ try{
+  currentSysType=sys;
+  await signInWithEmailAndPassword(auth,email,pass);
+ }catch(e){alert("خطأ في تسجيل الدخول: "+e.message)}
+};
+
+window.registerSystem=async(sys)=>{
+ const shop=$(sys==='pos'?'regPosShop':'regPsShop').value.trim();
+ const name=$(sys==='pos'?'regPosName':'regPsName').value.trim();
+ const phone=$(sys==='pos'?'regPosPhone':'regPsPhone').value.trim();
+ const email=$(sys==='pos'?'regPosEmail':'regPsEmail').value.trim();
+ const pass=$(sys==='pos'?'regPosPassword':'regPsPassword').value;
+ if(!shop||!email||!pass)return alert("أكمل البيانات الحيوية.");
+ try{
+  const cred=await createUserWithEmailAndPassword(auth,email,pass);
+  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,sysType:sys,status:"pending",createdAt:serverTimestamp()});
+  alert("تم إرسال حسابك لوحة التحكم للتفعيل.");
+ }catch(e){alert("خطأ: "+e.message)}
 };
 
 window.ownerLogin=async()=>{
- try{
-  if($("ownerUsername").value.trim()!==OWNER_USERNAME)return message("اسم المستخدم غير صحيح.");
-  const p=$("ownerPassword").value;if(!p)return message("أدخل كلمة المرور.");
-  const r=await signInWithEmailAndPassword(auth,OWNER_EMAIL,p);
-  const s=await getDoc(doc(db,"users",r.user.uid));
-  if(!s.exists()||s.data().role!=="owner"){await signOut(auth);return message("الحساب ليس لديه صلاحية المالك.");}
- }catch(e){message("تعذر الدخول: "+friendlyError(e))}
+ if($("ownerUsername").value.trim()!==OWNER_USERNAME)return alert("اسم المالك خطأ.");
+ try{await signInWithEmailAndPassword(auth,OWNER_EMAIL,$("ownerPassword").value);}catch(e){alert("عذراً كلمة المرور خطأ.")}
 };
-window.register=async()=>{
- const shop=$("regShop").value.trim(),name=$("regName").value.trim(),phone=$("regPhone").value.trim(),email=$("regEmail").value.trim(),password=$("regPassword").value;
- if(!shop||!name||!phone||!email||!password)return message("أكمل جميع البيانات.");
- try{
-  const cred=await createUserWithEmailAndPassword(auth,email,password);
-  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",status:"pending",subscriptionDays:0,createdAt:serverTimestamp()});
-  message("تم إنشاء الحساب بنجاح. تم إرساله للوحة المالك للتفعيل.");
- }catch(e){message("تعذر التسجيل: "+friendlyError(e))}
+
+window.bypassLoginForPS=()=>{
+ currentUser={uid:"local_ps"};
+ ["auth","posSystemPanel","ownerPanel"].forEach(x=>$(x).classList.add("hidden"));
+ $("psSystemPanel").classList.remove("hidden");
+ renderPlaystationDevices();
 };
-window.forgot=async()=>{
- const email=$("loginEmail").value.trim();if(!email)return message("اكتب بريدك الإلكتروني أولًا.");
- try{await sendPasswordResetEmail(auth,email);message("تم إرسال رابط الاستعادة لبريدك.")}catch(e){message(friendlyError(e))}
-};
-window.logout=async()=>{await signOut(auth)};
-window.support=()=>window.open("https://wa.me/2"+SUPPORT_PHONE.replace(/^0/,""),"_blank");
 
 onAuthStateChanged(auth,async user=>{
- currentUser=user;if(!user){profile=null;showOnly("auth");return}
- try{
-  const s=await getDoc(doc(db,"users",user.uid));
-  if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){
-   showOnly("ownerPanel");await loadUsers();await loadSubscriptionSettings();return;
-  }
-  if(!s.exists()){showOnly("blocked");return}
-  profile=s.data();
-  if(profile.status==="pending"){showOnly("pending");await loadPublicSubscriptionSettings();return}
-  if(profile.status!=="active"){showOnly("blocked");return}
-  showOnly("customerPanel");
-  if($("shopTitle")) $("shopTitle").textContent=profile.shopName||"نظام المبيعات والبلايستيشن";
-  await loadBusiness();
- }catch(e){showOnly("auth");message("خطأ في الاتصال: "+friendlyError(e))}
+ currentUser=user;
+ if(!user){["posSystemPanel","psSystemPanel","ownerPanel","pending"].forEach(x=>$(x).classList.add("hidden"));$("auth").classList.remove("hidden");return}
+ const snap=await getDoc(doc(db,"users",user.uid));
+ if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){
+  $("auth").classList.add("hidden");$("ownerPanel").classList.remove("hidden");loadUsers();return;
+ }
+ if(!snap.exists())return;
+ const u=snap.data();
+ if(u.status==="pending"){$("auth").classList.add("hidden");$("pending").classList.remove("hidden");return}
+ $("auth").classList.add("hidden");
+ if(u.sysType==="pos"){$("posSystemPanel").classList.remove("hidden");}
+ else{$("psSystemPanel").classList.remove("hidden");loadPlaystationDevices();}
 });
 
-async function loadPublicSubscriptionSettings(){
- try{const s=await getDoc(systemSettingsRef());const d=s.exists()?s.data():{};
- if($("pendingPrice")) $("pendingPrice").textContent=d.price?money(d.price)+" جنيه":"حسب الاتفاق";
- }catch(e){}
+async function loadUsers(){
+ const s=await getDocs(collection(db,"users"));
+ const list=s.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.email!==OWNER_EMAIL);
+ $("totalUsers").textContent=list.length;
+ $("posUsersCount").textContent=list.filter(x=>x.sysType==="pos").length;
+ $("psUsersCount").textContent=list.filter(x=>x.sysType==="ps").length;
+ $("usersTable").innerHTML=list.map(u=>`<tr><td>${u.shopName}</td><td>${u.sysType==='pos'?'مبيعات':'بلايستيشن'}</td><td>${u.email}</td><td>${u.phone}</td><td>${u.status}</td><td><button class="rowbtn green" onclick="activateUser('${u.id}')">تفعيل</button></td></tr>`).join("");
 }
-async function loadSubscriptionSettings(){
- try{const s=await getDoc(systemSettingsRef());const d=s.exists()?s.data():{};if($("ownerPrice"))$("ownerPrice").value=d.price??"";if($("ownerDays"))$("ownerDays").value=d.days??30}catch(e){}
-}
-window.saveSubscriptionSettings=async()=>{
- const price=Number($("ownerPrice").value),days=Number($("ownerDays").value);
- try{await setDoc(systemSettingsRef(),{price,days,updatedAt:serverTimestamp()},{merge:true});alert("تم الحفظ بنجاح.");}catch(e){}
+window.activateUser=async id=>{await updateDoc(doc(db,"users",id),{status:"active"});loadUsers();};
+
+// البلايستيشن والمشروبات
+window.showPsSection=s=>{
+ $("psDevicesSec").classList.toggle("hidden",s!=='devices');
+ $("psCafeSec").classList.toggle("hidden",s!=='cafe');
 };
-window.loadUsers=async()=>{
- try{
-  const s=await getDocs(collection(db,"users"));const list=s.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
-  if($("totalUsers")) $("totalUsers").textContent=list.length;
-  if($("pendingUsers")) $("pendingUsers").textContent=list.filter(u=>u.status==="pending").length;
-  if($("activeUsers")) $("activeUsers").textContent=list.filter(u=>u.status==="active").length;
-  if($("usersTable")) $("usersTable").innerHTML=list.map(u=>`<tr><td>${esc(u.shopName)}</td><td>${esc(u.customerName)}</td><td>${esc(u.email)}</td><td>${esc(u.phone)}</td><td><span class="tag ${u.status==="active"?"good":""}">${esc(u.status)}</span></td><td>${money(u.subscriptionDays||0)} يوم</td><td><button class="rowbtn green" onclick="activateUser('${u.id}',30)">تفعيل</button> <button class="rowbtn red" onclick="suspendUser('${u.id}')">إيقاف</button></td></tr>`).join("");
- }catch(e){}
+window.addPlaystationDevice=()=>{
+ psDevices.push({id:"dev_"+Date.now(),name:$("psDevName").value,mode:$("psMode").value,priceSingle:Number($("psPriceSingle").value),priceMulti:Number($("psPriceMulti").value),status:"free",startTime:null});
+ $("psDevName").value="";renderPlaystationDevices();
 };
-window.activateUser=async(id,days)=>{try{await updateDoc(doc(db,"users",id),{status:"active",subscriptionDays:days});await loadUsers();alert("تم تفعيل الحساب بنجاح!");}catch(e){}};
-window.suspendUser=async id=>{if(!confirm("إيقاف الحساب؟"))return;try{await updateDoc(doc(db,"users",id),{status:"suspended"});await loadUsers();}catch(e){}};
-
-window.navTo=function(name){page(name);};
-window.page=function(name){
- ["dashboard","playstation","sales","purchases","returns","products","treasury","customers","history","expenses","reports","settings"].forEach(p=>$(p+"Page")?.classList.add("hidden"));
- $(name+"Page")?.classList.remove("hidden");
- if(name==="dashboard"||name==="reports")renderStats();
+window.startPSDevice=id=>{
+ const d=psDevices.find(x=>x.id===id);if(d){d.status="busy";d.startTime=Date.now();renderPlaystationDevices();}
 };
-
-async function loadBusiness(){
- await Promise.all([loadProducts(),loadSales(),loadPurchases(),loadExpenses(),loadTreasury(),loadCustomers(),loadPlaystationDevices(),loadSettings()]);
- renderStats();
-}
-
-async function loadProducts(){const s=await getDocs(col("products")).catch(()=>({docs:[]}));products=s.docs.map(d=>({id:d.id,...d.data()}));renderProducts();populatePurProductSelect();}
-async function loadSales(){const s=await getDocs(col("sales")).catch(()=>({docs:[]}));sales=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderSales();}
-async function loadPurchases(){const s=await getDocs(col("purchases")).catch(()=>({docs:[]}));purchases=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderPurchases();}
-async function loadExpenses(){const s=await getDocs(col("expenses")).catch(()=>({docs:[]}));expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();}
-async function loadTreasury(){const s=await getDocs(col("treasury")).catch(()=>({docs:[]}));treasury=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderTreasury();}
-async function loadCustomers(){const s=await getDocs(col("customers")).catch(()=>({docs:[]}));customers=s.docs.map(d=>({id:d.id,...d.data()}));renderCustomers();}
-async function loadPlaystationDevices(){
- try{const s=await getDocs(col("psDevices"));psDevices=s.docs.map(d=>({id:d.id,...d.data()}));}catch(e){psDevices=[];}
- renderPlaystationDevices();
-}
-async function loadSettings(){
- const s=await getDoc(doc(db,shopRef(),"settings","main")).catch(()=>({exists:()=>false}));if(s.exists())shopSettings=s.data();
- if($("setShop")) $("setShop").value=shopSettings.shopName||profile?.shopName||"";
- if($("setPhone")) $("setPhone").value=shopSettings.phone||profile?.phone||"";
- if($("setAddress")) $("setAddress").value=shopSettings.address||"";
- if($("setCurrency")) $("setCurrency").value=shopSettings.currency||"جنيه";
- if($("setTax")) $("setTax").value=shopSettings.tax||0;
- if($("setDiscount")) $("setDiscount").value=shopSettings.discount||0;
- if($("invoiceSize")) $("invoiceSize").value=shopSettings.invoiceSize||"80mm";
- if($("invoiceFont")) $("invoiceFont").value=shopSettings.invoiceFont||14;
-}
-
-window.addPlaystationDevice=async()=>{
- const name=$("psDevName").value.trim();
- const mode=$("psMode").value;
- const priceSingle=Number($("psPriceSingle").value)||30;
- const priceMulti=Number($("psPriceMulti").value)||40;
- if(!name)return alert("أدخل اسم الجهاز.");
- try{
-  await addDoc(col("psDevices"),{name,mode,priceSingle,priceMulti,status:"free",startTime:null,customer:"",createdAt:serverTimestamp()});
-  $("psDevName").value="";
-  await loadPlaystationDevices();
-  alert("تم إضافة الجهاز بنجاح.");
- }catch(e){
-  // لو وضع محلي بدون تسجيل دخول
-  psDevices.push({id:"loc_"+Date.now(),name,mode,priceSingle,priceMulti,status:"free",startTime:null,customer:""});
-  $("psDevName").value="";
-  renderPlaystationDevices();
- }
+window.endPSDevice=id=>{
+ const d=psDevices.find(x=>x.id===id);if(d){d.status="free";d.startTime=null;renderPlaystationDevices();}
 };
-
-window.startPSDevice=async(id)=>{
- const dev=psDevices.find(x=>x.id===id);
- if(!dev)return;
- const custName=prompt("اسم العميل (اختياري):","")||"بلايستيشن";
- try{
-  if(currentUser.uid!=="local_offline_mode"){
-   await updateDoc(docRef("psDevices",id),{status:"busy",startTime:Date.now(),customer:custName,updatedAt:serverTimestamp()});
-  }
-  dev.status="busy"; dev.startTime=Date.now(); dev.customer=custName;
-  renderPlaystationDevices();
- }catch(e){
-  dev.status="busy"; dev.startTime=Date.now(); dev.customer=custName;
-  renderPlaystationDevices();
- }
-};
-
-window.endPSDevice=async(id)=>{
- const dev=psDevices.find(x=>x.id===id);
- if(!dev||dev.status!=="busy")return;
- const diffHours=(Date.now()-dev.startTime)/(1000*60*60);
- const hourlyRate=dev.mode==="single"?dev.priceSingle:dev.priceMulti;
- const totalCost=Math.max(5,Math.round(diffHours*hourlyRate));
- if(!confirm(`هل تريد إنهاء جلسة ${dev.name}؟\nالمبلغ المستحق: ${totalCost} جنيه`))return;
-
- try{
-  dev.status="free"; dev.startTime=null; dev.customer="";
-  renderPlaystationDevices();
-  alert(`تم إغلاق الجلسة وتحصيل ${totalCost} جنيه.`);
- }catch(e){alert(friendlyError(e))}
-};
-
-window.deletePSDevice=async(id)=>{
- if(!confirm("حذف هذا الجهاز؟"))return;
- psDevices=psDevices.filter(x=>x.id!==id);
- renderPlaystationDevices();
-};
-
 function renderPlaystationDevices(){
- let activeCount=0;
- const html=psDevices.map(d=>{
-  let timeStr="متاح حالياً", costStr="0 جنيه";
-  if(d.status==="busy"){
-   activeCount++;
-   const diffMs=Date.now()-d.startTime;
-   const mins=Math.floor(diffMs/(1000*60));
-   const hrs=(diffMs/(1000*60*60)).toFixed(1);
-   const rate=d.mode==="single"?d.priceSingle:d.priceMulti;
-   const currentTotal=Math.max(5,Math.round((diffMs/(1000*60*60))*rate));
-   timeStr=`المدة: ${hrs} ساعة (${mins} دقيقة)`;
-   costStr=`الحساب الحالي: ${currentTotal} جنيه`;
-  }
-  return `<div class="ps-card ${d.status}">
-   <h4>${esc(d.name)} <span class="tag ${d.status==="busy"?"":"good"}">${d.status==="busy"?"مشغول":"متاح"}</span></h4>
-   <p><b>الوضع:</b> ${d.mode==="single"?"فردي":"جماعي"} (${d.priceSingle}/${d.priceMulti} ج/ساعة)</p>
-   <p><b>العميل:</b> ${esc(d.customer||"-")}</p>
-   <p><b>${timeStr}</b></p>
-   <p style="color:#2458d3;font-weight:bold">${costStr}</p>
-   <div style="margin-top:10px">
-    ${d.status==="free"?`<button class="rowbtn green" onclick="startPSDevice('${d.id}')">بدء جلسة</button>`:`<button class="rowbtn red" onclick="endPSDevice('${d.id}')">إنهاء وتحصيل</button>`}
-    <button class="rowbtn secondary" onclick="deletePSDevice('${d.id}')">حذف</button>
-   </div>
-  </div>`;
- }).join("");
-
- if($("psDevicesContainer")) $("psDevicesContainer").innerHTML=html||"<p>لا توجد أجهزة مضافة حتى الآن.</p>";
- if($("statPSActive")) $("statPSActive").textContent=activeCount;
+ $("psDevicesContainer").innerHTML=psDevices.map(d=>`<div class="ps-card ${d.status}"><h4>${d.name}</h4><p>فردي: ${d.priceSingle} | جماعي: ${d.priceMulti}</p><button class="rowbtn ${d.status==='free'?'green':'red'}" onclick="${d.status==='free'?'startPSDevice':'endPSDevice'}('${d.id}')">${d.status==='free'?'بدء':'إنهاء'}</button></div>`).join("");
 }
-
-// تحديث العدادات تلقائياً كل ثانية
-setInterval(()=>{
- if(currentUser && !document.getElementById("playstationPage")?.classList.contains("hidden")){
-  renderPlaystationDevices();
- }
-}, 1000);
-
-window.saveProduct=async()=>{
- const name=$("pName").value.trim();let barcode=$("pBarcode").value.trim();
- const cost=Number($("pCost").value),price=Number($("pPrice").value),qty=Number($("pQty").value);
- if(!name||![cost,price,qty].every(Number.isFinite)||cost<0||price<0||qty<0)return alert("أدخل بيانات المنتج بدقة.");
- if(!barcode)barcode="NX"+Date.now().toString().slice(-10);
- const data={name,barcode,code:$("pCode").value.trim(),category:$("pCategory").value.trim(),cost,price,qty,minQty:Number($("pMinQty").value)||0,updatedAt:serverTimestamp()};
- try{
-  if(editingProduct)await updateDoc(docRef("products",editingProduct),data);
-  else await addDoc(col("products"),{...data,createdAt:serverTimestamp()});
-  clearProductForm();await loadProducts();renderStats();alert("تم حفظ المنتج بنجاح.");
- }catch(e){alert(friendlyError(e))}
+window.savePsCafeItem=()=>{
+ psCafeItems.push({name:$("psItemName").value,cat:$("psItemCat").value,price:$("psItemPrice").value,qty:$("psItemQty").value});
+ $("psItemName").value="";
+ $("psCafeTable").innerHTML=psCafeItems.map(i=>`<tr><td>${i.name}</td><td>${i.cat==='mshrob'?'مشروبات':'سندوتشات'}</td><td>${i.price}</td><td>${i.qty}</td></tr>`).join("");
 };
-window.clearProductForm=()=>{editingProduct=null;["pName","pBarcode","pCode","pCost","pPrice","pQty","pMinQty"].forEach(k=>$(k).value="");};
-window.deleteProduct=async id=>{if(!confirm("حذف المنتج؟"))return;try{await deleteDoc(docRef("products",id));await loadProducts();renderStats();}catch(e){}};
-function renderProducts(){
- if(!$("productsTable"))return;
- $("productsTable").innerHTML=products.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.barcode)}</td><td>${money(p.cost)}</td><td>${money(p.price)}</td><td>${money(p.qty)}</td><td><button class="rowbtn secondary" onclick="editProduct('${p.id}')">تعديل</button> <button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||"<tr><td colspan='6'>لا توجد منتجات</td></tr>";
-}
-window.editProduct=id=>{
- const p=products.find(x=>x.id===id);if(!p)return;editingProduct=id;
- $("pName").value=p.name; $("pBarcode").value=p.barcode; $("pCode").value=p.code; $("pCategory").value=p.category;
- $("pCost").value=p.cost; $("pPrice").value=p.price; $("pQty").value=p.qty; $("pMinQty").value=p.minQty;
- page("products");
-};
-
-function populatePurProductSelect(){
- if(!$("pPurProduct"))return;
- $("pPurProduct").innerHTML=products.map(p=>`<option value="${p.id}">${esc(p.name)} (متوفر: ${p.qty})</option>`).join("");
- fillPurCost();
-}
-window.fillPurCost=()=>{const p=products.find(x=>x.id===$("pPurProduct")?.value);if(p&&$("pPurCost"))$("pPurCost").value=p.cost||0;};
-window.completePurchase=async()=>{
- const prodId=$("pPurProduct").value, sup=$("pPurSupplier").value.trim(), qty=Number($("pPurQty").value), cost=Number($("pPurCost").value);
- const p=products.find(x=>x.id===prodId);
- if(!p||qty<=0||cost<0)return alert("راجع بيانات المشتريات.");
- const total=qty*cost;
- try{
-  await runTransaction(db,async tx=>{
-   const pRef=docRef("products",prodId);
-   const snap=await tx.get(pRef);
-   tx.update(pRef,{qty:Number(snap.data().qty||0)+qty,cost,updatedAt:serverTimestamp()});
-   tx.set(doc(col("purchases")),{supplier:sup||"مورد عام",productName:p.name,qty,cost,total,createdAt:serverTimestamp(),date:new Date().toLocaleString("ar-EG")});
-   tx.set(doc(col("treasury")),{type:"out",category:"شراء بضاعة",amount:total,note:`شراء ${p.name} من ${sup||"مورد"}`,createdAt:serverTimestamp(),date:new Date().toLocaleString("ar-EG")});
-  });
-  alert("تمت الشحنة وتحديث المخزون والخزينة.");
-  await loadBusiness();
- }catch(e){alert(friendlyError(e))}
-};
-function renderPurchases(){
- if(!$("purchasesTable"))return;
- $("purchasesTable").innerHTML=purchases.map(p=>`<tr><td>#${p.id.slice(-5)}</td><td>${esc(p.supplier)}</td><td>${esc(p.productName)}</td><td>${p.qty}</td><td>${money(p.total)}</td><td>${esc(p.date)}</td></tr>`).join("")||"<tr><td colspan='6'>لا توجد مشتريات</td></tr>";
-}
-
-window.searchProducts=()=>{
- const q=$("saleSearch").value.trim().toLowerCase();
- const matches=products.filter(p=>(p.name||"").toLowerCase().includes(q)||(p.barcode||"").toLowerCase().includes(q)).slice(0,10);
- if($("searchResults")) $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${esc(p.name)} — ${money(p.price)} — متاح (${p.qty})</button>`).join("");
-};
-window.selectSaleProduct=id=>{
- selectedProduct=products.find(p=>p.id===id);if(!selectedProduct)return;
- $("saleSearch").value=selectedProduct.name;$("salePrice").value=selectedProduct.price;$("searchResults").innerHTML="";
-};
-window.addToCart=()=>{
- if(!selectedProduct)return alert("اختر منتجاً.");
- const qty=Number($("saleQty").value),price=Number($("salePrice").value);
- if(qty<=0||qty>Number(selectedProduct.qty))return alert("الكمية غير متوفرة.");
- const old=cart.find(x=>x.productId===selectedProduct.id);
- if(old)old.qty+=qty; else cart.push({productId:selectedProduct.id,name:selectedProduct.name,qty,price,cost:Number(selectedProduct.cost)||0});
- selectedProduct=null;$("saleSearch").value="";$("saleQty").value=1;$("salePrice").value="";renderCart();
-};
-function renderCart(){
- if(!$("cartTable"))return;
- $("cartTable").innerHTML=cart.map((x,i)=>`<tr><td>${esc(x.name)}</td><td>${x.qty}</td><td>${money(x.price)}</td><td>${money(x.qty*x.price)}</td><td><button class="rowbtn red" onclick="cart.splice(${i},1);renderCart()">حذف</button></td></tr>`).join("");
- if($("cartTotal")) $("cartTotal").textContent=money(cart.reduce((s,x)=>s+x.qty*x.price,0));
-}
-window.completeSale=async()=>{
- if(!cart.length)return alert("السلة فارغة.");
- try{
-  const items=[...cart];
-  const subtotal=items.reduce((s,x)=>s+x.qty*x.price,0);
-  const total=subtotal;
-  const cost=items.reduce((s,x)=>s+x.qty*x.cost,0);
-  const payment=$("payment").value;
-  const custName=$("saleCustomer").value.trim();
-  const invoice={number:"NX-"+Date.now().toString().slice(-8),customer:custName||"نقدي",payment,subtotal,discount:0,tax:0,total,cost,profit:total-cost,items,createdAt:serverTimestamp(),date:new Date().toLocaleString("ar-EG")};
-  const saleRef=doc(col("sales"));
-
-  await runTransaction(db,async tx=>{
-   for(const item of items){
-    const ref=docRef("products",item.productId);
-    const snap=await tx.get(ref);
-    const curr=Number(snap.data().qty||0);
-    if(curr<item.qty)throw new Error("الكمية غير متوفرة لصنف: "+item.name);
-    tx.update(ref,{qty:curr-item.qty,updatedAt:serverTimestamp()});
-   }
-   tx.set(saleRef,invoice);
-   if(payment==="نقدي"){
-    tx.set(doc(col("treasury")),{type:"in",category:"مبيعات نقدية",amount:total,note:`إيراد فاتورة #${invoice.number}`,createdAt:serverTimestamp(),date:new Date().toLocaleString("ar-EG")});
-   }
-  });
-
-  cart=[];renderCart();if($("saleCustomer"))$("saleCustomer").value="";
-  await loadBusiness();printInvoice(invoice);
- }catch(e){alert(friendlyError(e))}
-};
-
-window.searchInvoiceForReturn=async()=>{
- const no=$("returnInvoiceNo").value.trim();
- const found=sales.find(s=>s.number===no);
- if(!found)return alert("لم يتم العثور على الفاتورة.");
- returnFoundInvoice=found;
- if($("returnInvoiceDetails")) $("returnInvoiceDetails").classList.remove("hidden");
- if($("retCust")) $("retCust").textContent=found.customer; 
- if($("retDate")) $("retDate").textContent=found.date;
- if($("returnItemsTable")) $("returnItemsTable").innerHTML=found.items.map((it,i)=>`<tr><td>${esc(it.name)}</td><td>${it.qty}</td><td><input type="number" id="retQty_${i}" min="0" max="${it.qty}" value="0" style="width:80px"></td><td><input type="checkbox" id="retCheck_${i}"></td></tr>`).join("");
-};
-window.executeReturn=async()=>{
- if(!returnFoundInvoice)return;
- let refundTotal=0; const returnedItems=[];
- returnFoundInvoice.items.forEach((it,i)=>{
-  if($(`retCheck_${i}`)?.checked){
-   const q=Number($(`retQty_${i}`).value)||0;
-   if(q>0){refundTotal+=q*it.price; returnedItems.push({...it,qty:q});}
-  }
- });
- if(!returnedItems.length)return alert("حدد الأصناف المراد إرجاعها.");
- try{
-  await runTransaction(db,async tx=>{
-   for(const it of returnedItems){
-    const ref=docRef("products",it.productId);
-    const snap=await tx.get(ref);
-    if(snap.exists())tx.update(ref,{qty:Number(snap.data().qty||0)+it.qty,updatedAt:serverTimestamp()});
-   }
-   tx.set(doc(col("treasury")),{type:"out",category:"مرتجعات مبيعات",amount:refundTotal,note:`مرتجع للفاتورة ${returnFoundInvoice.number}`,createdAt:serverTimestamp(),date:new Date().toLocaleString("ar-EG")});
-  });
-  alert("تم إرجاع البضاعة ورد المبلغ.");
-  if($("returnInvoiceDetails")) $("returnInvoiceDetails").classList.add("hidden");
-  await loadBusiness();
- }catch(e){alert(friendlyError(e))}
-};
-
-window.addTreasuryTransaction=async()=>{
- const type=$("tType").value, category=$("tCategory").value, amount=Number($("tAmount").value), note=$("tNote").value.trim();
- if(!amount||amount<=0)return alert("أدخل مبلغاً صحيحاً.");
- try{
-  await addDoc(col("treasury"),{type,category,amount,note:note||"حركة يدوية",createdAt:serverTimestamp(),date:new Date().toLocaleString("ar-EG")});
-  if($("tAmount")) $("tAmount").value="";
-  if($("tNote")) $("tNote").value="";
-  await loadTreasury();renderStats();alert("تم التسجيل.");
- }catch(e){}
-};
-window.deleteTreasuryItem=async id=>{if(!confirm("حذف الحركة؟"))return;try{await deleteDoc(docRef("treasury",id));await loadTreasury();renderStats();}catch(e){}};
-function renderTreasury(){
- let tIn=0, tOut=0;
- const rows=treasury.map(t=>{
-  if(t.type==="in") tIn+=Number(t.amount)||0; else tOut+=Number(t.amount)||0;
-  return `<tr><td><span class="tag ${t.type==="in"?"good":""}">${t.type==="in"?"وارد":"صادر"}</span></td><td>${esc(t.category)}</td><td>${money(t.amount)}</td><td>${esc(t.note)}</td><td>${esc(t.date)}</td><td><button class="rowbtn red" onclick="deleteTreasuryItem('${t.id}')">حذف</button></td></tr>`;
- }).join("");
- if($("treasuryTable")) $("treasuryTable").innerHTML=rows||"<tr><td colspan='6'>لا توجد حركات</td></tr>";
- if($("treasuryBalanceDisplay")) $("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" جنيه";
- if($("treasuryTotalIn")) $("treasuryTotalIn").textContent=money(tIn)+" جنيه";
- if($("treasuryTotalOut")) $("treasuryTotalOut").textContent=money(tOut)+" جنيه";
-}
-
-window.addExpense=async()=>{
- const name=$("expenseName").value.trim(), amount=Number($("expenseAmount").value);
- if(!name||amount<=0)return alert("أدخل بيانات المصروف.");
- try{
-  await addDoc(col("expenses"),{name,amount,date:new Date().toLocaleString("ar-EG"),createdAt:serverTimestamp()});
-  await addDoc(col("treasury"),{type:"out",category:"مصاريف",amount,note:`مصروف: ${name}`,createdAt:serverTimestamp(),date:new Date().toLocaleString("ar-EG")});
-  if($("expenseName")) $("expenseName").value="";
-  if($("expenseAmount")) $("expenseAmount").value="";
-  await loadBusiness();alert("تم حفظ المصروف.");
- }catch(e){}
-};
-function renderExpenses(){
- if(!$("expensesTable"))return;
- $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${esc(e.name)}</td><td>${money(e.amount)}</td><td>${esc(e.date)}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات</td></tr>";
-}
-
-window.saveCustomer=async()=>{
- const name=$("cName").value.trim();if(!name)return alert("أدخل اسم العميل.");
- const data={name,phone:$("cPhone").value.trim(),balance:Number($("cBalance").value)||0,address:$("cAddress").value.trim(),updatedAt:serverTimestamp()};
- try{
-  if(editingCustomer)await updateDoc(docRef("customers",editingCustomer),data); else await addDoc(col("customers"),{...data,createdAt:serverTimestamp()});
-  editingCustomer=null;["cName","cPhone","cBalance","cAddress"].forEach(k=>{if($(k))$(k).value="";});
-  await loadCustomers();alert("تم حفظ العميل.");
- }catch(e){}
-};
-function renderCustomers(){
- if(!$("customersTable"))return;
- $("customersTable").innerHTML=customers.map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.phone)}</td><td>${money(c.balance)}</td><td>${esc(c.address)}</td><td><button class="rowbtn secondary" onclick="editingCustomer='${c.id}';if($('cName'))$('cName').value='${c.name}';if($('cPhone'))$('cPhone').value='${c.phone}';if($('cBalance'))$('cBalance').value='${c.balance}';if($('cAddress'))$('cAddress').value='${c.address}';">تعديل</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد عملاء</td></tr>";
- if($("customerOptions")) $("customerOptions").innerHTML=customers.map(c=>`<option value="${esc(c.name)}">`).join("");
-}
-
-window.saveSettings=async()=>{
- try{
-  shopSettings={
-   shopName:$("setShop").value.trim(), phone:$("setPhone").value.trim(), address:$("setAddress").value.trim(),
-   currency:$("setCurrency").value, tax:Number($("setTax").value)||0, discount:Number($("setDiscount").value)||0,
-   invoiceSize:$("invoiceSize").value, invoiceFont:Number($("invoiceFont").value)||14
-  };
-  await setDoc(doc(db,shopRef(),"settings","main"),shopSettings,{merge:true});
-  if($("shopTitle")) $("shopTitle").textContent=shopSettings.shopName||"نظام المبيعات والبلايستيشن";
-  alert("تم الحفظ بنجاح.");
- }catch(e){}
-};
-
-function printInvoice(s){
- const st=shopSettings||{},font=Number(st.invoiceFont)||14;
- if(!$("printArea"))return;
- $("printArea").style.fontSize=font+"px";
- $("printArea").innerHTML=`<style>@media print{body{font-size:${font}px}}</style><div style="font-family:Arial;width:80mm;margin:auto;text-align:right">
- <div style="text-align:center"><h2>${esc(st.shopName||profile?.shopName||"NexPOS PRO")}</h2><p>${esc(st.phone||"")}</p></div><hr>
- <p><b>رقم العملية:</b> ${esc(s.number)}</p><p><b>التاريخ:</b> ${esc(s.date)}</p><p><b>العميل / الجهاز:</b> ${esc(s.customer)}</p>
- <table style="width:100%;border-collapse:collapse"><thead><tr><th>الصنف / الوقت</th><th>كمية</th><th>سعر</th><th>إجمالي</th></tr></thead>
- <tbody>${(s.items||[]).map(x=>`<tr><td>${esc(x.name)}</td><td>${x.qty}</td><td>${money(x.price)}</td><td>${money(x.qty*x.price)}</td></tr>`).join("")}</tbody></table>
- <hr><p><b>الإجمالي النهائي:</b> ${money(s.total)} ${esc(st.currency||"جنيه")}</p>
- <p style="text-align:center">شكراً لتعاملكم معنا</p></div>`;
- $("printArea").classList.remove("hidden");window.print();$("printArea").classList.add("hidden");
-}
-
-function renderSales(){
- if(!$("salesTable"))return;
- $("salesTable").innerHTML=sales.map(s=>`<tr><td>${esc(s.number)}</td><td>${esc(s.date)}</td><td>${esc(s.customer)}</td><td>${money(s.total)}</td><td>${esc(s.payment)}</td><td><button class="rowbtn secondary" onclick="printInvoice(${JSON.stringify(s).replace(/"/g,'&quot;')})">طباعة</button></td></tr>`).join("")||"<tr><td colspan='6'>لا توجد فواتير</td></tr>";
-}
-
-function renderStats(){
- const rev=sales.reduce((s,x)=>s+Number(x.total||0),0);
- const cost=sales.reduce((s,x)=>s+Number(x.cost||0),0);
- const exp=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
- const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0);
- const tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(x.amount||0),0);
- 
- if($("statProducts")) $("statProducts").textContent=products.length;
- if($("statSales")) $("statSales").textContent=sales.length;
- if($("statRevenue")) $("statRevenue").textContent=money(rev);
- if($("statTreasuryBalance")) $("statTreasuryBalance").textContent=money(tIn-tOut);
- if($("reportRevenue")) $("reportRevenue").textContent=money(rev);
- if($("reportCost")) $("reportCost").textContent=money(cost);
- if($("reportExpenses")) $("reportExpenses").textContent=money(exp);
- if($("reportNet")) $("reportNet").textContent=money(rev-cost-exp);
- 
- const alerts=products.filter(p=>Number(p.qty)<=Number(p.minQty||0));
- if($("stockAlerts")) $("stockAlerts").innerHTML=alerts.map(p=>`<p>${esc(p.name)} — المتبقي: ${p.qty}</p>`).join("")||"<p>المخزون بحالة ممتازة.</p>";
-}
+window.logout=()=>signOut(auth);
 </script>
 </body>
 </html>

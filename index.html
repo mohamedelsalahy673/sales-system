@@ -434,7 +434,7 @@ window.updateUserStatus=async(id,status,planText)=>{
  try{
   await updateDoc(doc(db,"users",id),{status, plan:planText});
   loadUsers();
- }catch(e){}
+ }catch(e){alert("خطأ: "+e.message);}
 };
 
 window.deleteUser=async id=>{

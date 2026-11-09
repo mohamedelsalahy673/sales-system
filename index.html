@@ -428,7 +428,7 @@ window.promptActivation=async(id)=>{
   });
   alert(`تم تفعيل المتجر بنجاح باقة "${planName}" بقيمة ${price} جنيه!`);
   loadUsers();
- }catch(e){alert("خطأ في التفعيل: "+e.message);}
+ }catch(e){alert("خطأ في التفعيل: تأكد من صلاحيات الفايربيس (Rules). الخطأ: "+e.message);}
 };
 
 window.updateUserStatus=async(id,status,planText)=>{

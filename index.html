@@ -204,8 +204,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   </div>
 
   <nav>
-   <button class="active" onclick="showPsSection('devices')">الأجهزة والعدادات</button>
-   <button onclick="showPsSection('cafe')">السندوتشات والمشروبات</button>
+   <button id="btnPsDev" class="active" onclick="showPsSection('devices')">الأجهزة والعدادات</button>
+   <button id="btnPsCafe" onclick="showPsSection('cafe')">السندوتشات والمشروبات</button>
   </nav>
 
   <!-- قسم الأجهزة والعدادات الحيّة -->
@@ -229,15 +229,15 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="card">
     <h3>إضافة صنف (سندوتش / مشروب)</h3>
     <div class="grid">
-     <div><label>اسم الصنف</label><input id="psItemName" placeholder="مثال: كانز / كريب / سندوتش"></div>
+     <div><label>اسم الصنف</label><input id="psItemName" placeholder="مثال: كريب / سندوتش / كانز"></div>
      <div><label>التصنيف</label><select id="psItemCat"><option value="mshrob">مشروبات</option><option value="sand">سندوتشات ووجبات</option></select></div>
      <div><label>سعر البيع</label><input id="psItemPrice" type="number" min="0"></div>
      <div><label>الكمية المتاحة</label><input id="psItemQty" type="number" min="0"></div>
     </div>
-    <button class="big green" onclick="savePsCafeItem()">حفظ الصنف</button>
+    <button class="big green" onclick="savePsCafeItem()">حفظ الصنف في الصالة</button>
    </div>
    <h3>قائمة المأكولات والمشروبات بالصالة</h3>
-   <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>التصنيف</th><th>السعر</th><th>الكمية</th></tr></thead><tbody id="psCafeTable"></tbody></table></div>
+   <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>التصنيف</th><th>السعر</th><th>الكمية المتاحة</th><th>إجراء</th></tr></thead><tbody id="psCafeTable"></tbody></table></div>
   </div>
  </div>
 </section>
@@ -323,6 +323,7 @@ window.bypassLoginForPS=()=>{
  ["auth","posSystemPanel","ownerPanel"].forEach(x=>$(x).classList.add("hidden"));
  $("psSystemPanel").classList.remove("hidden");
  renderPlaystationDevices();
+ renderPsCafeTable();
 };
 
 onAuthStateChanged(auth,async user=>{
@@ -340,7 +341,11 @@ onAuthStateChanged(auth,async user=>{
  
  $("auth").classList.add("hidden");
  if(u.sysType==="pos"){$("posSystemPanel").classList.remove("hidden");}
- else{$("psSystemPanel").classList.remove("hidden");renderPlaystationDevices();}
+ else{
+  $("psSystemPanel").classList.remove("hidden");
+  renderPlaystationDevices();
+  renderPsCafeTable();
+ }
 });
 
 async function loadUsers(){
@@ -357,7 +362,10 @@ window.activateUser=async id=>{await updateDoc(doc(db,"users",id),{status:"activ
 window.showPsSection=s=>{
  $("psDevicesSec").classList.toggle("hidden",s!=='devices');
  $("psCafeSec").classList.toggle("hidden",s!=='cafe');
+ $("btnPsDev").classList.toggle("active", s==='devices');
+ $("btnPsCafe").classList.toggle("active", s==='cafe');
 };
+
 window.addPlaystationDevice=()=>{
  const name=$("psDevName").value.trim();
  if(!name)return alert("أدخل اسم الجهاز.");
@@ -369,10 +377,12 @@ window.addPlaystationDevice=()=>{
  });
  $("psDevName").value=""; renderPlaystationDevices();
 };
+
 window.startPSDevice=id=>{
  const d=psDevices.find(x=>x.id===id);
  if(d){d.status="busy"; d.startTime=Date.now(); renderPlaystationDevices();}
 };
+
 window.endPSDevice=id=>{
  const d=psDevices.find(x=>x.id===id);
  if(d&&d.status==="busy"){
@@ -383,22 +393,24 @@ window.endPSDevice=id=>{
   d.status="free"; d.startTime=null; renderPlaystationDevices();
  }
 };
+
 window.deletePSDevice=id=>{
  psDevices=psDevices.filter(x=>x.id!==id); renderPlaystationDevices();
 };
 
 function renderPlaystationDevices(){
- if(!$("psDevicesContainer"))return;
- $("psDevicesContainer").innerHTML=psDevices.map(d=>{
+ const container = $("psDevicesContainer");
+ if(!container) return;
+ container.innerHTML = psDevices.map(d=>{
   let timeStr="متاح حالياً", costStr="0 جنيه";
   if(d.status==="busy"){
-   const diffMs=Date.now()-d.startTime;
-   const mins=Math.floor(diffMs/(1000*60));
-   const hrs=(diffMs/(1000*60*60)).toFixed(1);
-   const rate=d.mode==="single"?d.priceSingle:d.priceMulti;
-   const currentTotal=Math.max(5,Math.round((diffMs/(1000*60*60))*rate));
-   timeStr=`المدة: ${hrs} ساعة (${mins} دقيقة)`;
-   costStr=`الحساب الحالي: ${currentTotal} جنيه`;
+   const diffMs = Date.now() - d.startTime;
+   const mins = Math.floor(diffMs / (1000 * 60));
+   const hrs = (diffMs / (1000 * 60 * 60)).toFixed(1);
+   const rate = d.mode === "single" ? d.priceSingle : d.priceMulti;
+   const currentTotal = Math.max(5, Math.round((diffMs / (1000 * 60 * 60)) * rate));
+   timeStr = `المدة: ${hrs} ساعة (${mins} دقيقة)`;
+   costStr = `الحساب الحالي: ${currentTotal} جنيه`;
   }
   return `<div class="ps-card ${d.status}">
    <h4>${d.name} <span class="tag ${d.status==='busy'?'':'good'}">${d.status==='busy'?'مشغول':'متاح'}</span></h4>
@@ -410,23 +422,50 @@ function renderPlaystationDevices(){
     <button class="rowbtn secondary" onclick="deletePSDevice('${d.id}')">حذف</button>
    </div>
   </div>`;
- }).join("")||"<p>لا توجد أجهزة مضافة.</p>";
+ }).join("") || "<p>لا توجد أجهزة مضافة.</p>";
 }
 
-// تحديث العدادات الحية لكل ثانية
-setInterval(()=>{
- if(!document.getElementById("psSystemPanel")?.classList.contains("hidden")){
-  renderPlaystationDevices();
- }
-}, 1000);
-
+// السندوتشات والمشروبات داخل البلايستيشن
 window.savePsCafeItem=()=>{
  const name=$("psItemName").value.trim();
  if(!name)return alert("أدخل اسم الصنف.");
- psCafeItems.push({name, cat:$("psItemCat").value, price:Number($("psItemPrice").value)||0, qty:Number($("psItemQty").value)||0});
- $("psItemName").value="";
- $("psCafeTable").innerHTML=psCafeItems.map(i=>`<tr><td>${i.name}</td><td>${i.cat==='mshrob'?'مشروبات':'سندوتشات'}</td><td>${i.price} جنيه</td><td>${i.qty}</td></tr>`).join("");
+ psCafeItems.push({
+  id:"item_"+Date.now(),
+  name, 
+  cat:$("psItemCat").value, 
+  price:Number($("psItemPrice").value)||0, 
+  qty:Number($("psItemQty").value)||0
+ });
+ $("psItemName").value=""; 
+ $("psItemPrice").value=""; 
+ $("psItemQty").value="";
+ renderPsCafeTable();
 };
+
+window.deletePsCafeItem=id=>{
+ psCafeItems = psCafeItems.filter(x=>x.id!==id);
+ renderPsCafeTable();
+};
+
+function renderPsCafeTable(){
+ const tbody = $("psCafeTable");
+ if(!tbody) return;
+ tbody.innerHTML = psCafeItems.map(i=>`<tr>
+  <td>${i.name}</td>
+  <td><span class="tag">${i.cat==='mshrob'?'مشروبات':'سندوتشات ووجبات'}</span></td>
+  <td>${i.price} جنيه</td>
+  <td>${i.qty}</td>
+  <td><button class="rowbtn red" onclick="deletePsCafeItem('${i.id}')">حذف</button></td>
+ </tr>`).join("") || "<tr><td colspan='5'>لا توجد أصناف مضافة حالياً.</td></tr>";
+}
+
+// تحديث العدادات بشكل دوري كل ثانية لضمان العد الحي
+setInterval(()=>{
+ const psPanel = $("psSystemPanel");
+ if(psPanel && !psPanel.classList.contains("hidden")){
+  renderPlaystationDevices();
+ }
+}, 1000);
 
 window.logout=()=>signOut(auth);
 </script>

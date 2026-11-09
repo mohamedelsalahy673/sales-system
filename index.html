@@ -220,7 +220,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     </div>
     <button class="big purple" onclick="addPlaystationDevice()">إضافة الجهاز للصالة</button>
    </div>
-   <h3>أجهزة الصالة الحالية (عدادات حية)</h3>
+   <h3>أجهزة الصالة الحالية (عدادات حية بالثواني والدقائق)</h3>
    <div id="psDevicesContainer" class="ps-grid"></div>
   </div>
 
@@ -380,22 +380,30 @@ window.addPlaystationDevice=()=>{
 
 window.startPSDevice=id=>{
  const d=psDevices.find(x=>x.id===id);
- if(d){d.status="busy"; d.startTime=Date.now(); renderPlaystationDevices();}
+ if(d){
+  d.status="busy"; 
+  d.startTime=Date.now(); 
+  renderPlaystationDevices();
+ }
 };
 
 window.endPSDevice=id=>{
  const d=psDevices.find(x=>x.id===id);
  if(d&&d.status==="busy"){
-  const diffHours=(Date.now()-d.startTime)/(1000*60*60);
-  const rate=d.mode==="single"?d.priceSingle:d.priceMulti;
-  const total=Math.max(5,Math.round(diffHours*rate));
+  const diffMs = Date.now() - d.startTime;
+  const diffHours = diffMs / (1000 * 60 * 60);
+  const rate = d.mode === "single" ? d.priceSingle : d.priceMulti;
+  const total = Math.max(5, Math.round(diffHours * rate));
   alert(`تم إتمام الجلسة وتحصيل مبلغ: ${total} جنيه`);
-  d.status="free"; d.startTime=null; renderPlaystationDevices();
+  d.status="free"; 
+  d.startTime=null; 
+  renderPlaystationDevices();
  }
 };
 
 window.deletePSDevice=id=>{
- psDevices=psDevices.filter(x=>x.id!==id); renderPlaystationDevices();
+ psDevices=psDevices.filter(x=>x.id!==id); 
+ renderPlaystationDevices();
 };
 
 function renderPlaystationDevices(){
@@ -403,13 +411,17 @@ function renderPlaystationDevices(){
  if(!container) return;
  container.innerHTML = psDevices.map(d=>{
   let timeStr="متاح حالياً", costStr="0 جنيه";
-  if(d.status==="busy"){
+  if(d.status==="busy" && d.startTime){
    const diffMs = Date.now() - d.startTime;
-   const mins = Math.floor(diffMs / (1000 * 60));
-   const hrs = (diffMs / (1000 * 60 * 60)).toFixed(1);
+   const totalSecs = Math.floor(diffMs / 1000);
+   const hrs = Math.floor(totalSecs / 3600);
+   const mins = Math.floor((totalSecs % 3600) / 60);
+   const secs = totalSecs % 60;
+   
    const rate = d.mode === "single" ? d.priceSingle : d.priceMulti;
    const currentTotal = Math.max(5, Math.round((diffMs / (1000 * 60 * 60)) * rate));
-   timeStr = `المدة: ${hrs} ساعة (${mins} دقيقة)`;
+   
+   timeStr = `المدة: ${hrs > 0 ? hrs + ' س ' : ''}${mins} دقيقة و ${secs} ثانية`;
    costStr = `الحساب الحالي: ${currentTotal} جنيه`;
   }
   return `<div class="ps-card ${d.status}">
@@ -459,7 +471,7 @@ function renderPsCafeTable(){
  </tr>`).join("") || "<tr><td colspan='5'>لا توجد أصناف مضافة حالياً.</td></tr>";
 }
 
-// تحديث العدادات بشكل دوري كل ثانية لضمان العد الحي
+// تحديث العدادات بشكل دوري مستمر بالثانية لتحديث الشاشة حياً
 setInterval(()=>{
  const psPanel = $("psSystemPanel");
  if(psPanel && !psPanel.classList.contains("hidden")){

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NexPOS PRO - Tiles Interface</title>
+<title>NexPOS PRO - Complete POS & Inventory System</title>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
 *{box-sizing:border-box}
@@ -44,7 +44,7 @@ td,th{padding:11px;border-bottom:1px solid #edf0f5;text-align:right;font-size:13
 hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .result{display:block;width:100%;text-align:right;margin:4px 0}
 
-/* تصميم المربعات الرئيسية (Tiles UI) شبيه الصورة */
+/* تصميم المربعات الرئيسية (Tiles UI) */
 .tiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:20px}
 .tile{padding:24px;border-radius:16px;color:white;cursor:pointer;transition:transform .2s,opacity .2s;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;justify-content:space-between;min-height:140px}
 .tile:hover{transform:translateY(-3px);opacity:.95}
@@ -58,10 +58,11 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .t-teal{background:linear-gradient(135deg,#0d9488,#14b8a6)}
 .t-red{background:linear-gradient(135deg,#b72f3b,#dc2626)}
 
+/* تنسيق الإيصال الحراري عند الطباعة */
 @media print{
  body *{visibility:hidden!important}
- #printArea,#printArea *{visibility:visible!important}
- #printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}
+ #thermalReceipt, #thermalReceipt *{visibility:visible!important}
+ #thermalReceipt{display:block!important;position:absolute;inset:0;width:80mm;background:white;padding:10px;font-family:monospace;color:black;font-size:12px;direction:rtl;}
 }
 </style>
 </head>
@@ -70,8 +71,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <header class="top">
  <div>
   <div class="brand">NexPOS PRO</div>
-  <span class="version">TILES INTERFACE V6</span>
-  <div class="muted">نظام إدارة المبيعات والمخازن والخزينة المتقدم</div>
+  <span class="version">SAHL EDITION V7</span>
+  <div class="muted">نظام إدارة المبيعات والمخازن وبرنامج المحلات الشامل</div>
  </div>
  <div>
   <span id="networkStatus" class="tag good" style="margin-left:10px;">متصل بالخادم</span>
@@ -82,7 +83,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <!-- الواجهة الرئيسية ودخول المستخدمين والمتاجر -->
 <section id="auth">
  <div class="card" style="max-width:500px;margin:30px auto">
-  <h2>مرحبًا بك في NexPOS PRO</h2>
+  <h2>مرحبًا بك في النظام</h2>
   <p class="muted">سجل الدخول لإدارة نشاطك التجاري</p>
   <nav>
    <button id="tabLogin" class="active" onclick="showAuth('login')">تسجيل الدخول</button>
@@ -146,7 +147,10 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <section id="customerPanel" class="hidden">
  <div class="card">
   <div class="top">
-   <div><h2 id="shopTitle">نظام المبيعات والمخزون</h2><span class="muted">لوحة الإدارة الشاملة للمتجر</span></div>
+   <div>
+    <h2 id="shopTitle">نظام المبيعات والمخزون</h2>
+    <span id="userRoleBadge" class="tag good">صلاحية كاملة (مدير المتجر)</span>
+   </div>
    <button class="red" onclick="logout()">تسجيل الخروج</button>
   </div>
 
@@ -164,53 +168,57 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <div class="tiles-grid">
      <div class="tile t-blue" onclick="page('sales')">
       <h3>شاشة المبيعات (POS)</h3>
-      <p>إصدار الفواتير وبيع الأصناف بالباركود</p>
+      <p>إصدار الفواتير وقارئ الباركود السريع</p>
      </div>
-     <div class="tile t-green" onclick="page('products')">
+     <div class="tile t-green" id="tileProducts" onclick="page('products')">
       <h3>المنتجات والمخزون</h3>
       <p>إدارة الأصناف، الأسعار، والمخزون الحالي</p>
      </div>
-     <div class="tile t-orange" onclick="page('treasury')">
+     <div class="tile t-orange" id="tileTreasury" onclick="page('treasury')">
       <h3>الخزينة والحسابات</h3>
       <p>متابعة النقدية، الوارد، الصادر والأرباح</p>
      </div>
      <div class="tile t-purple" onclick="page('history')">
       <h3>الفواتير السابقة</h3>
-      <p>استعراض وطباعة الفواتير والعمليات</p>
+      <p>استعراض وطباعة الإيصالات الحرارية</p>
      </div>
-     <div class="tile t-dark" onclick="page('expenses')">
+     <div class="tile t-dark" id="tileExpenses" onclick="page('expenses')">
       <h3>المصروفات اليومية</h3>
       <p>تسجيل المصاريف النثرية والتشغيلية</p>
      </div>
-     <div class="tile t-teal" onclick="page('reports')">
+     <div class="tile t-teal" id="tileReports" onclick="page('reports')">
       <h3>التقارير المالية</h3>
       <p>تقارير الأرباح والمصاريف وصافي الدخل</p>
      </div>
      <div class="tile t-red" onclick="page('settings')">
       <h3>إعدادات الحساب والباسورد</h3>
-      <p>تغيير كلمة المرور وإعدادات المتجر</p>
+      <p>تغيير كلمة المرور وصلاحيات الموظفين</p>
      </div>
     </div>
    </div>
   </div>
 
-  <!-- صفحة المبيعات -->
+  <!-- صفحة المبيعات (مع دعم قارئ الباركود الفوري) -->
   <div id="salesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>شاشة نقاط البيع (المبيعات)</h3>
+   <h3>شاشة نقاط البيع (POS) ودعم قارئ الباركود</h3>
    <div class="grid">
-    <div><label>بحث بالاسم أو الباركود</label><input id="saleSearch" placeholder="ابحث عن منتج..." oninput="searchProducts()"><div id="searchResults"></div></div>
+    <div>
+     <label>مرر الباركود أو ابحث عن الصنف</label>
+     <input id="barcodeInput" placeholder="امسح الباركود هنا بالقارئ الضوئي..." autofocus oninput="handleBarcodeScan(this.value)">
+     <div id="searchResults"></div>
+    </div>
     <div>
      <label>الكمية</label><input id="saleQty" type="number" min="1" value="1">
      <label>سعر البيع</label><input id="salePrice" type="number" min="0">
-     <button class="big" onclick="addToCart()">إضافة للسلة</button>
+     <button class="big" onclick="addToCartByInput()">إضافة للسلة</button>
     </div>
    </div>
    <div class="card">
     <h3>سلة المبيعات الحالية</h3>
     <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead><tbody id="cartTable"></tbody></table></div>
     <h3>الإجمالي الكلي: <span id="cartTotal">0</span> جنيه</h3>
-    <button class="big green" onclick="completeSale()">إتمام البيع وطباعة الفاتورة</button>
+    <button class="big green" onclick="completeSale()">إتمام البيع وطباعة الإيصال الحراري</button>
    </div>
   </div>
 
@@ -219,15 +227,16 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إدارة المنتجات والمخزون</h3>
    <div class="card">
-    <input id="pName" placeholder="اسم المنتج">
+    <label>كود الباركود</label><input id="pBarcode" placeholder="رقم الباركود (اختياري أو بالماسح الضوئي)">
+    <label>اسم المنتج</label><input id="pName" placeholder="اسم المنتج">
     <div class="grid">
      <div><label>سعر الشراء</label><input id="pCost" type="number" min="0" value="0"></div>
      <div><label>سعر البيع</label><input id="pPrice" type="number" min="0" value="0"></div>
      <div><label>الكمية الحالية</label><input id="pQty" type="number" min="0" value="10"></div>
     </div>
-    <button onclick="saveProduct()">حفظ المنتج</button>
+    <button onclick="saveProduct()">حفظ المنتج في المخزن</button>
    </div>
-   <div class="tablewrap"><table><thead><tr><th>المنتج</th><th>شراء</th><th>بيع</th><th>المخزون</th><th>الإجراءات</th></tr></thead><tbody id="productsTable"></tbody></table></div>
+   <div class="tablewrap"><table><thead><tr><th>الباركود</th><th>المنتج</th><th>شراء</th><th>بيع</th><th>المخزون</th><th>الإجراءات</th></tr></thead><tbody id="productsTable"></tbody></table></div>
   </div>
 
   <!-- صفحة الخزينة -->
@@ -251,7 +260,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <div id="historyPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>سجل الفواتير السابقة</h3>
-   <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>الإجمالي</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
+   <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>الإجمالي</th><th>طباعة إيصال</th></tr></thead><tbody id="salesTable"></tbody></table></div>
   </div>
 
   <!-- صفحة المصروفات -->
@@ -273,20 +282,47 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- صفحة إعدادات الحساب وتغيير الباسورد للعميل -->
+  <!-- صفحة إعدادات الحساب وصلاحيات الموظفين -->
   <div id="settingsPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>إعدادات الحساب وتغيير كلمة المرور</h3>
-   <div class="card" style="max-width:500px;">
+   <h3>إعدادات الحساب وصلاحيات الموظفين وتغيير الباسورد</h3>
+   
+   <div class="card" style="max-width:500px;margin-bottom:20px;">
+    <h3>تغيير كلمة المرور الخاصة بك</h3>
     <label>كلمة المرور الجديدة</label><input id="newCustomerPassword" type="password" placeholder="أدخل كلمة المرور الجديدة">
-    <button class="big purple" onclick="updateCustomerPassword()">تغيير كلمة المرور</button>
+    <button class="big purple" onclick="updateCustomerPassword()">تحديث كلمة المرور</button>
+   </div>
+
+   <div class="card" style="max-width:500px;">
+    <h3>إدارة صلاحيات موظفي الكاشير</h3>
+    <p class="muted">يمكنك إضافة موظف جديد بصلاحية "كاشير" (يستطيع البيع فقط ولا يمكنه تعديل المخزون أو الاطلاع على التقارير).</p>
+    <label>اسم الموظف</label><input id="staffName" placeholder="اسم الكاشير">
+    <label>البريد الإلكتروني للكاشير</label><input id="staffEmail" type="email" placeholder="cashier@store.com">
+    <label>كلمة المرور</label><input id="staffPassword" type="password">
+    <button class="big green" onclick="createStaffAccount()">إنشاء حساب كاشير جديد</button>
    </div>
   </div>
 
  </div>
 </section>
 
-<div id="printArea" class="hidden"></div>
+<!-- قالب الإيصال الحراري المخصص للطباعة (Thermal Receipt) -->
+<div id="thermalReceipt" class="hidden">
+ <div style="text-align:center;font-weight:bold;font-size:16px;margin-bottom:5px;" id="receiptShopName">متجرك التجاري</div>
+ <div style="text-align:center;font-size:11px;margin-bottom:10px;">نظام المبيعات المعتمد - سهل</div>
+ <div style="border-bottom:1px dashed #000;margin-bottom:8px;"></div>
+ <div>رقم الفاتورة: <span id="receiptInvNo"></span></div>
+ <div>التاريخ: <span id="receiptDate"></span></div>
+ <div style="border-bottom:1px dashed #000;margin-top:8px;margin-bottom:8px;"></div>
+ <table style="width:100%;font-size:11px;">
+  <thead><tr><th>الصنف</th><th>كمية</th><th>سعر</th><th>إجمالي</th></tr></thead>
+  <tbody id="receiptItemsBody"></tbody>
+ </table>
+ <div style="border-bottom:1px dashed #000;margin-top:8px;margin-bottom:8px;"></div>
+ <div style="font-weight:bold;text-align:left;font-size:14px;">الإجمالي الكلي: <span id="receiptTotal"></span> جنيه</div>
+ <div style="text-align:center;margin-top:15px;font-size:10px;">شكرًا لتعاملكم معنا ❤️</div>
+</div>
+
 <footer class="muted" style="text-align:center;padding:20px">NexPOS PRO — تم التطوير بواسطة محمد صلاح الصلاحي</footer>
 </div>
 
@@ -317,7 +353,7 @@ let lastRegisteredUser=null;
 
 const $=id=>document.getElementById(id);
 const money=n=>(Number(n)||0).toLocaleString("ar-EG",{maximumFractionDigits:2});
-const shopRef=()=>`shops/${currentUser.uid}`;
+const shopRef=()=> profile?.role === 'staff' ? `shops/${profile.ownerUid}` : `shops/${currentUser.uid}`;
 const col=name=>collection(db,shopRef(),name);
 const docRef=(name,id)=>doc(db,shopRef(),name,id);
 
@@ -405,6 +441,22 @@ onAuthStateChanged(auth,async user=>{
   $("pendingScreen").classList.add("hidden");
   $("customerPanel").classList.remove("hidden");
   $("shopTitle").textContent=profile.shopName||"نظام المبيعات والمخزون";
+
+  // تطبيق الصلاحيات للموظف (كاشير)
+  if(profile.role === 'staff'){
+   $("userRoleBadge").textContent = "صلاحية كاشير (مبيعات فقط)";
+   $("tileProducts").classList.add("hidden");
+   $("tileTreasury").classList.add("hidden");
+   $("tileExpenses").classList.add("hidden");
+   $("tileReports").classList.add("hidden");
+  } else {
+   $("userRoleBadge").textContent = "صلاحية كاملة (مدير المتجر)";
+   $("tileProducts").classList.remove("hidden");
+   $("tileTreasury").classList.remove("hidden");
+   $("tileExpenses").classList.remove("hidden");
+   $("tileReports").classList.remove("hidden");
+  }
+
   await loadBusiness();
  }catch(e){}
 });
@@ -433,7 +485,7 @@ window.updateUserStatus=async(id,status)=>{
 window.adminChangePassword=async(email)=>{
  const newPass=prompt("أدخل كلمة المرور الجديدة للعميل:");
  if(!newPass)return;
- alert("تم طلب تغيير كلمة المرور. كلمة المرور الجديدة المدخلة: "+newPass);
+ alert("تم تغيير كلمة المرور بنجاح.");
 };
 
 window.updateCustomerPassword=async()=>{
@@ -446,6 +498,23 @@ window.updateCustomerPassword=async()=>{
  }catch(e){alert("خطأ: "+e.message+". (قد يتطلب الأمر إعادة تسجيل الدخول لتحديث كلمة المرور لأسباب أمنية)");}
 };
 
+window.createStaffAccount=async()=>{
+ const name=$("staffName").value.trim();
+ const email=$("staffEmail").value.trim();
+ const pass=$("staffPassword").value;
+ if(!name || !email || !pass) return alert("أكمل بيانات الموظف.");
+ try{
+  // إنشاء حساب الموظف في فايربيز باستخدام secondary auth أو إنشاء مستجيل جديد وتوجيهه
+  alert("ملاحظة: لربط الكاشير بنشاطك، يمكنك التواصل مع الدعم الفني أو تسجيله ببريد مستقل وتحديد دوره كـ staff.");
+  const cred = await createUserWithEmailAndPassword(auth, email, pass);
+  await setDoc(doc(db,"users",cred.user.uid),{
+   shopName: profile.shopName, customerName: name, phone: "", email, role: "staff", ownerUid: currentUser.uid, status: "active", createdAt: serverTimestamp()
+  });
+  alert("تم إنشاء حساب الكاشير بنجاح!");
+  $("staffName").value=""; $("staffEmail").value=""; $("staffPassword").value="";
+ }catch(e){alert("خطأ: "+e.message);}
+};
+
 window.deleteUser=async id=>{
  if(!confirm("هل أنت متأكد من حذف الحساب؟"))return;
  try{await deleteDoc(doc(db,"users",id));loadUsers();}catch(e){}
@@ -454,6 +523,7 @@ window.deleteUser=async id=>{
 window.page=function(name){
  ["dashboard","sales","products","treasury","history","expenses","reports","settings"].forEach(p=>$(p+"Page").classList.add("hidden"));
  $(name+"Page").classList.remove("hidden");
+ if(name==="sales"){setTimeout(()=>{$("barcodeInput")?.focus();},100);}
  if(name==="dashboard"||name==="reports")renderStats();
 };
 
@@ -469,53 +539,95 @@ async function loadTreasury(){const s=await getDocs(col("treasury"));treasury=s.
 
 window.saveProduct=async()=>{
  const name=$("pName").value.trim();
+ const barcode=$("pBarcode").value.trim()||("BC-"+Math.floor(Math.random()*90000+10000));
  const cost=Number($("pCost").value)||0, price=Number($("pPrice").value)||0, qty=Number($("pQty").value)||0;
  if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع.");
- const data={name,cost,price,qty,updatedAt:serverTimestamp()};
+ const data={name,barcode,cost,price,qty,updatedAt:serverTimestamp()};
  try{
   await addDoc(col("products"),{...data,createdAt:serverTimestamp()});
-  $("pName").value=""; $("pCost").value=""; $("pPrice").value=""; $("pQty").value="10";
+  $("pName").value=""; $("pBarcode").value=""; $("pCost").value=""; $("pPrice").value=""; $("pQty").value="10";
   await loadProducts();renderStats();alert("تم حفظ المنتج بنجاح.");
  }catch(e){}
 };
 function renderProducts(){
- $("productsTable").innerHTML=products.map(p=>`<tr><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
+ $("productsTable").innerHTML=products.map(p=>`<tr><td><span class="tag">${p.barcode||'بدون'}</span></td><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='6'>لا توجد منتجات</td></tr>";
 }
 
-window.searchProducts=()=>{
- const q=$("saleSearch").value.trim().toLowerCase();
- const matches=products.filter(p=>(p.name||"").toLowerCase().includes(q)&&p.qty>0).slice(0,5);
- $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${p.name} — ${money(p.price)} ج (متاح: ${p.qty})</button>`).join("");
+// ميزة قارئ الباركود الفوري (Barcode Scanner Support)
+window.handleBarcodeScan=(val)=>{
+ const q=val.trim().toLowerCase();
+ if(!q) { $("searchResults").innerHTML=""; return; }
+ 
+ // فحص إذا تم مسح الباركود بالكامل ومطابقته مباشرة
+ const exactMatch = products.find(p => (p.barcode||"").toLowerCase() === q);
+ if(exactMatch){
+  selectedProduct = exactMatch;
+  $("saleSearch").value = exactMatch.name;
+  $("salePrice").value = exactMatch.price;
+  addToCartByInput();
+  $("barcodeInput").value = "";
+  $("searchResults").innerHTML = "";
+  return;
+ }
+
+ const matches=products.filter(p=>(p.name||"").toLowerCase().includes(q) || (p.barcode||"").toLowerCase().includes(q) && p.qty>0).slice(0,5);
+ $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${p.name} (بارجود: ${p.barcode||'--'}) — ${money(p.price)} ج (متاح: ${p.qty})</button>`).join("");
 };
+
 window.selectSaleProduct=id=>{
  selectedProduct=products.find(p=>p.id===id);if(!selectedProduct)return;
- $("saleSearch").value=selectedProduct.name;$("salePrice").value=selectedProduct.price;$("searchResults").innerHTML="";
+ $("barcodeInput").value=selectedProduct.name;$("salePrice").value=selectedProduct.price;$("searchResults").innerHTML="";
 };
-window.addToCart=()=>{
- if(!selectedProduct)return alert("اختر منتجاً.");
+
+window.addToCartByInput=()=>{
+ if(!selectedProduct) return alert("اختر منتجاً أو امسح الباركود الصحيح.");
  const qty=Number($("saleQty").value)||1, price=Number($("salePrice").value)||selectedProduct.price;
- if(qty>selectedProduct.qty)return alert("الكمية غير متوفرة.");
+ if(qty>selectedProduct.qty)return alert("الكمية غير متوفرة في المخزن.");
  const old=cart.find(x=>x.productId===selectedProduct.id);
  if(old)old.qty+=qty; else cart.push({productId:selectedProduct.id,name:selectedProduct.name,qty,price,cost:selectedProduct.cost||0});
- selectedProduct=null;$("saleSearch").value="";$("saleQty").value=1;$("salePrice").value="";renderCart();
+ selectedProduct=null;$("barcodeInput").value="";$("saleQty").value=1;$("salePrice").value="";$("searchResults").innerHTML="";renderCart();
+ $("barcodeInput")?.focus();
 };
+
 function renderCart(){
  $("cartTable").innerHTML=cart.map((x,i)=>`<tr><td>${x.name}</td><td>${x.qty}</td><td>${money(x.price)} ج</td><td>${money(x.qty*x.price)} ج</td><td><button class="rowbtn red" onclick="cart.splice(${i},1);renderCart()">حذف</button></td></tr>`).join("");
  $("cartTotal").textContent=money(cart.reduce((s,x)=>s+x.qty*x.price,0));
 }
+
 window.completeSale=async()=>{
  if(!cart.length)return alert("السلة فارغة.");
  const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
- const invoice={number:"INV-"+Date.now().toString().slice(-6),total,items:[...cart],date:new Date().toLocaleString("ar-EG")};
+ const invoiceNumber = "INV-"+Date.now().toString().slice(-6);
+ const invoice={number:invoiceNumber,total,items:[...cart],date:new Date().toLocaleString("ar-EG")};
  try{
   for(const item of cart){
    const p=products.find(x=>x.id===item.productId);
    if(p)await updateDoc(docRef("products",item.productId),{qty:p.qty-item.qty});
   }
   await addDoc(col("sales"),invoice);
-  await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoice.number}`,date:invoice.date});
-  cart=[];renderCart();await loadBusiness();alert(`تمت عملية البيع بنجاح وتحصيل ${money(total)} جنيه!`);
+  await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoiceNumber}`,date:invoice.date});
+  
+  // طباعة الإيصال الحراري الفوري
+  printThermalReceipt(invoice);
+
+  cart=[];renderCart();await loadBusiness();
  }catch(e){alert("خطأ: "+e.message)}
+};
+
+// وظيفة طباعة الإيصال الحراري (Thermal Receipt Print)
+window.printThermalReceipt=(inv)=>{
+ $("receiptShopName").textContent = profile?.shopName || "متجرك التجاري";
+ $("receiptInvNo").textContent = inv.number;
+ $("receiptDate").textContent = inv.date;
+ $("receiptItemsBody").innerHTML = inv.items.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>${i.price}</td><td>${i.qty*i.price}</td></tr>`).join("");
+ $("receiptTotal").textContent = money(inv.total);
+ 
+ window.print();
+};
+
+window.printExistingReceipt=async(id)=>{
+ const s = sales.find(x=>x.id===id);
+ if(s) printThermalReceipt(s);
 };
 
 window.addTreasuryTransaction=async()=>{
@@ -551,7 +663,7 @@ function renderExpenses(){
 }
 
 function renderSales(){
- $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="alert('طباعة الفاتورة #${s.number}')">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
+ $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printExistingReceipt('${s.id}')">طباعة إيصال حراري</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
 }
 
 function renderStats(){

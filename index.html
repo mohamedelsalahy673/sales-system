@@ -42,6 +42,7 @@ td,th{padding:11px;border-bottom:1px solid #edf0f5;text-align:right;font-size:13
 .rowbtn{padding:7px 10px;margin:2px;font-size:12px}
 .msg{padding:10px;border-radius:8px;background:#f0f4fc;margin-top:10px;font-size:13px}
 hr{border:0;border-top:1px solid #eee;margin:18px 0}
+.result{display:block;width:100%;text-align:right;margin:4px 0}
 
 .tiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px;margin-top:20px}
 .tile{padding:22px;border-radius:16px;color:white;cursor:pointer;transition:transform .2s,opacity .2s;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;justify-content:space-between;min-height:130px}
@@ -111,7 +112,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- بوابة البلايستيشن (يوزر وباسورد حقيقي وإنشاء حساب) -->
+  <!-- بوابة البلايستيشن -->
   <div id="psPortal" class="hidden">
    <div style="margin-bottom:10px;">
     <button id="btnPsLoginTab" class="rowbtn active" onclick="showSubAuth('ps','login')">تسجيل دخول الصالة</button>
@@ -182,21 +183,22 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  </div>
 </section>
 
-<!-- سيستم البلايستيشن الشامل (الأجهزة، المشروبات، إغلاق الوردية آخر الليل) -->
+<!-- سيستم البلايستيشن الشامل (الأجهزة، المبيعات POS، تقفيل الوردية) -->
 <section id="psSystemPanel" class="hidden">
  <div class="card">
   <div class="top">
-   <div><h2 id="psShopTitle">سيستم صالة البلايستيشن والمشروبات</h2></div>
+   <div><h2 id="psShopTitle">سيستم صالة البلايستيشن والكافيه</h2></div>
    <button class="red" onclick="logout()">تسجيل الخروج (قفل الوردية)</button>
   </div>
 
   <nav>
-   <button id="btnPsDev" class="active" onclick="showPsSection('devices')">الأجهزة والعدادات</button>
-   <button id="btnPsCafe" onclick="showPsSection('cafe')">السندوتشات والمشروبات</button>
+   <button id="btnPsDev" class="active" onclick="showPsSection('devices')">🎮 الأجهزة والعدادات</button>
+   <button id="btnPsCafe" onclick="showPsSection('cafe')">🍔 مبيعات السندوتشات والمشروبات (POS)</button>
+   <button id="btnPsStock" onclick="showPsSection('stock')">📦 إضافة أصناف ومخزون</button>
    <button id="btnPsNight" onclick="showPsSection('night')">🌙 تقفيل وردية آخر الليل</button>
   </nav>
 
-  <!-- الأجهزة -->
+  <!-- 1. الأجهزة -->
   <div id="psDevicesSec">
    <div class="card">
     <h3>إضافة جهاز / غرفة جديدة</h3>
@@ -212,35 +214,65 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div id="psDevicesContainer" class="ps-grid"></div>
   </div>
 
-  <!-- السندوتشات والمشروبات -->
+  <!-- 2. مبيعات الكافيه وسندوتشات (POS) -->
   <div id="psCafeSec" class="hidden">
    <div class="card">
-    <h3>إضافة صنف (سندوتش / مشروب)</h3>
+    <h3>شاشة بيع السندوتشات والمشروبات (كافيه البلايستيشن)</h3>
     <div class="grid">
-     <div><label>اسم الصنف</label><input id="psItemName" placeholder="مثال: كريب / سندوتش / كانز"></div>
-     <div><label>التصنيف</label><select id="psItemCat"><option value="mshrob">مشروبات</option><option value="sand">سندوتشات ووجبات</option></select></div>
-     <div><label>سعر البيع</label><input id="psItemPrice" type="number" min="0"></div>
-     <div><label>الكمية المتاحة</label><input id="psItemQty" type="number" min="0"></div>
+     <div>
+      <label>بحث بالصنف أو الباركود</label>
+      <input id="psSaleSearch" placeholder="اكتب اسم الصنف للبحث..." oninput="searchPsProducts()">
+      <div id="psSearchResults"></div>
+     </div>
+     <div>
+      <label>الكمية</label>
+      <input id="psSaleQty" type="number" min="1" value="1">
+      <label>سعر البيع</label>
+      <input id="psSalePrice" type="number" min="0">
+      <button class="big green" onclick="addPsCart()">إضافة للسلة</button>
+     </div>
     </div>
-    <button class="big green" onclick="savePsCafeItem()">حفظ الصنف في الصالة</button>
+    <div class="tablewrap" style="margin-top:15px;">
+     <table>
+      <thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead>
+      <tbody id="psCartTable"></tbody>
+     </table>
+    </div>
+    <h3 style="margin-top:15px;">إجمالي مبيعات البوفيه: <span id="psCartTotal">0</span> جنيه</h3>
+    <button class="big green" onclick="completePsSale()">إتمام البيع وطباعة الفاتورة</button>
    </div>
-   <h3>قائمة المأكولات والمشروبات بالصالة</h3>
-   <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>التصنيف</th><th>السعر</th><th>الكمية المتاحة</th><th>إجراء</th></tr></thead><tbody id="psCafeTable"></tbody></table></div>
   </div>
 
-  <!-- تقفيل وردية آخر الليل -->
+  <!-- 3. مخزون وأصناف الكافيه -->
+  <div id="psStockSec" class="hidden">
+   <div class="card">
+    <h3>إضافة صنف جديد (سندوتش، وجبة، أو مشروب)</h3>
+    <div class="grid">
+     <div><label>اسم الصنف</label><input id="pItemName" placeholder="مثال: كريب شاورما / كانز بيبسي"></div>
+     <div><label>التصنيف</label><select id="pItemCat"><option value="مشروبات">مشروبات</option><option value="سندوتشات ووجبات">سندوتشات ووجبات</option></select></div>
+     <div><label>سعر الشراء</label><input id="pItemCost" type="number" min="0" value="0"></div>
+     <div><label>سعر البيع</label><input id="pItemPrice" type="number" min="0" value="0"></div>
+     <div><label>الكمية المتاحة بالمخزن</label><input id="pItemQty" type="number" min="0" value="10"></div>
+    </div>
+    <button class="big purple" onclick="savePsStockItem()">حفظ الصنف في المخزون</button>
+   </div>
+   <h3>قائمة أصناف ومخزون البوفيه</h3>
+   <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>التصنيف</th><th>شراء</th><th>بيع</th><th>المخزون</th><th>إجراء</th></tr></thead><tbody id="psStockTable"></tbody></table></div>
+  </div>
+
+  <!-- 4. تقفيل الوردية آخر الليل -->
   <div id="psNightSec" class="hidden">
    <div class="card" style="background:#f8fafc;border:2px dashed #cbd5e1;">
     <h3>🌙 تقفيل وتقرير وردية آخر الليل</h3>
-    <p class="muted">قم بمراجعة إجمالي إيرادات الجلسات والمشروبات وسجل النقدية قبل إغلاق المحل.</p>
+    <p class="muted">مراجعة إيرادات الجلسات والمبيعات ومجمل نقدية الخزينة قبل غلق الصالة.</p>
     <div class="grid">
-     <div class="stat">إيرادات الجلسات المحصلة<strong id="nightTotalPS">0 جنيه</strong></div>
-     <div class="stat">إيرادات الكافيه والبوفيه<strong id="nightTotalCafe">0 جنيه</strong></div>
-     <div class="stat">إجمالي الخزينة اليومية<strong id="nightTotalRevenue">0 جنيه</strong></div>
+     <div class="stat">إيرادات جلسات البلايستيشن<strong id="nightTotalPS">0 جنيه</strong></div>
+     <div class="stat">مبيعات الكافيه والسندوتشات<strong id="nightTotalCafe">0 جنيه</strong></div>
+     <div class="stat">إجمالي النقدية في الخزينة<strong id="nightTotalRevenue">0 جنيه</strong></div>
     </div>
     <hr>
     <label>ملاحظات الوردية أو العجز (إن وجد)</label>
-    <textarea id="nightNotes" placeholder="اكتب ملاحظات الوردية، المصروفات النثرية، أو تسليم الوردية..."></textarea>
+    <textarea id="nightNotes" placeholder="اكتب ملاحظات الوردية، مسحوبات، أو تسليم الوردية..."></textarea>
     <button class="big green" onclick="completeNightShift()">🔒 اعتماد وتقفيل الوردية وتصفير العدادات</button>
    </div>
   </div>
@@ -271,8 +303,9 @@ const OWNER_USERNAME="elsalahy";
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app),db=getFirestore(app);
 
-let currentUser=null, currentSysType="", psDevices=[], psCafeItems=[];
+let currentUser=null, currentSysType="", psDevices=[], psStockItems=[], psCart=[];
 let totalCollectedPS = 0, totalCollectedCafe = 0;
+let selectedPsProduct = null;
 
 const $=id=>document.getElementById(id);
 
@@ -332,7 +365,7 @@ window.bypassLoginForPS=()=>{
  ["auth","posSystemPanel","ownerPanel"].forEach(x=>$(x).classList.add("hidden"));
  $("psSystemPanel").classList.remove("hidden");
  renderPlaystationDevices();
- renderPsCafeTable();
+ renderPsStockTable();
 };
 
 onAuthStateChanged(auth,async user=>{
@@ -353,7 +386,7 @@ onAuthStateChanged(auth,async user=>{
  else{
   $("psSystemPanel").classList.remove("hidden");
   renderPlaystationDevices();
-  renderPsCafeTable();
+  renderPsStockTable();
  }
 });
 
@@ -367,13 +400,16 @@ async function loadUsers(){
 }
 window.activateUser=async id=>{await updateDoc(doc(db,"users",id),{status:"active"});loadUsers();alert("تم التفعيل بنجاح!");};
 
-// البلايستيشن والعدادات
+// التنقل بين أقسام البلايستيشن
 window.showPsSection=s=>{
  $("psDevicesSec").classList.toggle("hidden",s!=='devices');
  $("psCafeSec").classList.toggle("hidden",s!=='cafe');
+ $("psStockSec").classList.toggle("hidden",s!=='stock');
  $("psNightSec").classList.toggle("hidden",s!=='night');
+ 
  $("btnPsDev").classList.toggle("active", s==='devices');
  $("btnPsCafe").classList.toggle("active", s==='cafe');
+ $("btnPsStock").classList.toggle("active", s==='stock');
  $("btnPsNight").classList.toggle("active", s==='night');
  
  if(s==='night'){
@@ -383,6 +419,7 @@ window.showPsSection=s=>{
  }
 };
 
+// 1. إدارة أجهزة البلايستيشن والعدادات الحية
 window.addPlaystationDevice=()=>{
  const name=$("psDevName").value.trim();
  if(!name)return alert("أدخل اسم الجهاز.");
@@ -448,38 +485,120 @@ function renderPlaystationDevices(){
  }).join("") || "<p>لا توجد أجهزة مضافة.</p>";
 }
 
-// السندوتشات والمشروبات
-window.savePsCafeItem=()=>{
- const name=$("psItemName").value.trim();
- const price = Number($("psItemPrice").value)||0;
- if(!name || price<=0)return alert("أدخل اسم الصنف والسعر بصورة صحيحة.");
- psCafeItems.push({
-  id:"item_"+Date.now(), name, cat:$("psItemCat").value, price, qty:Number($("psItemQty").value)||0
+// 2. مخزون وأصناف البوفيه
+window.savePsStockItem=()=>{
+ const name=$("pItemName").value.trim();
+ const price = Number($("pItemPrice").value)||0;
+ if(!name || price<=0)return alert("أدخل اسم الصنف وسعر البيع بشكل صحيح.");
+ psStockItems.push({
+  id:"stock_"+Date.now(),
+  name,
+  cat:$("pItemCat").value,
+  cost:Number($("pItemCost").value)||0,
+  price,
+  qty:Number($("pItemQty").value)||0
  });
- totalCollectedCafe += price; // افتراضي إضافة سعر البيع للخزينة
- $("psItemName").value=""; $("psItemPrice").value=""; $("psItemQty").value="";
- renderPsCafeTable();
- alert("تم بيع وإضافة الصنف بنجاح!");
+ $("pItemName").value=""; $("pItemCost").value=""; $("pItemPrice").value=""; $("pItemQty").value="";
+ renderPsStockTable();
+ alert("تم حفظ الصنف في المخزون بنجاح!");
 };
 
-window.deletePsCafeItem=id=>{
- psCafeItems = psCafeItems.filter(x=>x.id!==id);
- renderPsCafeTable();
+window.deletePsStockItem=id=>{
+ psStockItems = psStockItems.filter(x=>x.id!==id);
+ renderPsStockTable();
 };
 
-function renderPsCafeTable(){
- const tbody = $("psCafeTable");
+function renderPsStockTable(){
+ const tbody = $("psStockTable");
  if(!tbody) return;
- tbody.innerHTML = psCafeItems.map(i=>`<tr>
+ tbody.innerHTML = psStockItems.map(i=>`<tr>
   <td>${i.name}</td>
-  <td><span class="tag">${i.cat==='mshrob'?'مشروبات':'سندوتشات ووجبات'}</span></td>
-  <td>${i.price} جنيه</td>
-  <td>${i.qty}</td>
-  <td><button class="rowbtn red" onclick="deletePsCafeItem('${i.id}')">حذف</button></td>
- </tr>`).join("") || "<tr><td colspan='5'>لا توجد أصناف مسجلة حالياً.</td></tr>";
+  <td><span class="tag">${i.cat}</span></td>
+  <td>${i.cost} ج</td>
+  <td>${i.price} ج</td>
+  <td><b>${i.qty}</b></td>
+  <td><button class="rowbtn red" onclick="deletePsStockItem('${i.id}')">حذف</button></td>
+ </tr>`).join("") || "<tr><td colspan='6'>لا توجد أصناف في المخزن.</td></tr>";
 }
 
-// تقفيل الوردية آخر الليل
+// 3. شاشة بيع الكافيه والسندوتشات (POS)
+window.searchPsProducts=()=>{
+ const q = $("psSaleSearch").value.trim().toLowerCase();
+ const matches = psStockItems.filter(p=>p.name.toLowerCase().includes(q) && p.qty > 0).slice(0, 5);
+ $("psSearchResults").innerHTML = matches.map(p=>`<button class="result secondary" onclick="selectPsSaleProduct('${p.id}')">${p.name} — سعر: ${p.price} ج (متاح: ${p.qty})</button>`).join("");
+};
+
+window.selectPsSaleProduct=id=>{
+ selectedPsProduct = psStockItems.find(p=>p.id===id);
+ if(!selectedPsProduct) return;
+ $("psSaleSearch").value = selectedPsProduct.name;
+ $("psSalePrice").value = selectedPsProduct.price;
+ $("psSearchResults").innerHTML = "";
+};
+
+window.addPsCart=()=>{
+ if(!selectedPsProduct) return alert("اختر صنفاً من البحث أولاً.");
+ const qty = Number($("psSaleQty").value)||1;
+ const price = Number($("psSalePrice").value)||selectedPsProduct.price;
+ 
+ if(qty > selectedPsProduct.qty) return alert("الكمية المطلوبة غير متوفرة بالمخزن!");
+
+ const existing = psCart.find(x=>x.id===selectedPsProduct.id);
+ if(existing){
+  if(existing.qty + qty > selectedPsProduct.qty) return alert("تجاوزت الكمية المتاحة بالمخزن!");
+  existing.qty += qty;
+ } else {
+  psCart.push({ id: selectedPsProduct.id, name: selectedPsProduct.name, qty, price });
+ }
+ 
+ selectedPsProduct = null;
+ $("psSaleSearch").value = "";
+ $("psSaleQty").value = 1;
+ $("psSalePrice").value = "";
+ renderPsCart();
+};
+
+window.removePsCart=(index)=>{
+ psCart.splice(index, 1);
+ renderPsCart();
+};
+
+function renderPsCart(){
+ const tbody = $("psCartTable");
+ if(!tbody) return;
+ tbody.innerHTML = psCart.map((item, index)=>`<tr>
+  <td>${item.name}</td>
+  <td>${item.qty}</td>
+  <td>${item.price} ج</td>
+  <td>${item.qty * item.price} ج</td>
+  <td><button class="rowbtn red" onclick="removePsCart(${index})">حذف</button></td>
+ </tr>`).join("") || "<tr><td colspan='5'>السلة فارغة</td></tr>";
+
+ const total = psCart.reduce((s, x)=>s + (x.qty * x.price), 0);
+ $("psCartTotal").textContent = total;
+}
+
+window.completePsSale=()=>{
+ if(!psCart.length) return alert("السلة فارغة!");
+ 
+ const totalSale = psCart.reduce((s, x)=>s + (x.qty * x.price), 0);
+ 
+ // خصم الكميات من المخزون
+ psCart.forEach(cartItem=>{
+  const stockItem = psStockItems.find(s=>s.id===cartItem.id);
+  if(stockItem){
+   stockItem.qty -= cartItem.qty;
+  }
+ });
+
+ totalCollectedCafe += totalSale;
+ alert(`تم إتمام البيع بنجاح وتحصيل مبلغ ${totalSale} جنيه للخزينة!`);
+ psCart = [];
+ renderPsCart();
+ renderPsStockTable();
+};
+
+// 4. تقفيل الوردية آخر الليل
 window.completeNightShift=()=>{
  if(!confirm("هل أنت متأكد من تقفيل الوردية واعتماد الإيرادات؟")) return;
  alert(`تم تقفيل الوردية بنجاح!\nإجمالي الإيرادات المسجلة: ${totalCollectedPS + totalCollectedCafe} جنيه.`);

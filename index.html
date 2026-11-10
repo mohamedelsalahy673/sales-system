@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -97,6 +98,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .order-line{display:flex;justify-content:space-between;align-items:center;gap:5px;padding:7px 0;border-bottom:1px solid #e5e7eb;font-size:12px}
 .inline-form{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .inline-form button{width:100%}
+.mode-note{background:#eff6ff;color:#1d4ed8;border-radius:8px;padding:9px;font-size:12px;margin:8px 0}
 @media(max-width:950px){.sahal-layout{grid-template-columns:1fr}.sahal-sidebar{display:grid;grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}}
 @media(max-width:600px){.sale-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.sale-fields .search-container{grid-column:1/-1}.sahal-sidebar{grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}.ps-item-form{grid-template-columns:1fr 1fr}.ps-item-form input:first-child{grid-column:1/-1}.ps-item-form button{grid-column:1/-1}}
 @media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
@@ -161,30 +163,22 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button id="psSessionsTab" onclick="showPsSection('sessions')">📄 سجل الجلسات</button>
   </div>
 
-  <!-- أجهزة الرومات -->
   <div id="psDevicesSection">
-   <div class="card">
-    <h3>إضافة جهاز روم جديد</h3>
-    <div class="grid">
-     <div><label>اسم الروم</label><input id="psNewDeviceName" placeholder="مثال: روم 1"></div>
-     <div><label>سعر الساعة بالجنيه</label><input id="psNewDeviceRate" type="number" min=".01" step=".01" placeholder="اكتب السعر"></div>
-     <div style="display:flex;align-items:end"><button class="big green" onclick="addPsDevice('room')">إضافة الروم</button></div>
-    </div>
-   </div>
+   <div class="card"><h3>إضافة جهاز روم جديد</h3><div class="grid">
+    <div><label>اسم الروم</label><input id="psNewDeviceName" placeholder="مثال: روم 1"></div>
+    <div><label>سعر الساعة بالجنيه</label><input id="psNewDeviceRate" type="number" min=".01" step=".01" placeholder="اكتب السعر"></div>
+    <div style="display:flex;align-items:end"><button class="big green" onclick="addPsDevice('room')">إضافة الروم</button></div>
+   </div></div>
    <div class="ps-section-title"><h3>إدارة أجهزة الرومات</h3><button class="secondary" onclick="loadPlaystationData()">تحديث</button></div>
    <div id="psDevicesList" class="ps-device-grid"><div class="ps-empty">جاري تحميل الرومات...</div></div>
   </div>
 
-  <!-- أجهزة VIP -->
   <div id="psVipSection" class="hidden">
-   <div class="card">
-    <h3>إضافة جهاز إلى صالة VIP</h3>
-    <div class="grid">
-     <div><label>اسم جهاز VIP</label><input id="psNewVipName" placeholder="مثال: VIP 1"></div>
-     <div><label>سعر الساعة بالجنيه</label><input id="psNewVipRate" type="number" min=".01" step=".01" placeholder="حدد سعر VIP"></div>
-     <div style="display:flex;align-items:end"><button class="big purple" onclick="addPsDevice('vip')">إضافة جهاز VIP</button></div>
-    </div>
-   </div>
+   <div class="card"><h3>إضافة جهاز إلى صالة VIP</h3><div class="grid">
+    <div><label>اسم جهاز VIP</label><input id="psNewVipName" placeholder="مثال: VIP 1"></div>
+    <div><label>سعر الساعة بالجنيه</label><input id="psNewVipRate" type="number" min=".01" step=".01" placeholder="حدد سعر VIP"></div>
+    <div style="display:flex;align-items:end"><button class="big purple" onclick="addPsDevice('vip')">إضافة جهاز VIP</button></div>
+   </div></div>
    <div class="ps-section-title"><h3>إدارة أجهزة صالة VIP</h3><button class="secondary" onclick="loadPlaystationData()">تحديث</button></div>
    <div id="psVipDevicesList" class="ps-device-grid"><div class="ps-empty">لا توجد أجهزة VIP حتى الآن.</div></div>
   </div>
@@ -385,44 +379,36 @@ async function loadPlaystationData(){
   psDevices=ds.docs.map(d=>({id:d.id,...d.data()}));
   psItems=is.docs.map(d=>({id:d.id,...d.data()}));
   psSessions=ss.docs.map(d=>({id:d.id,...d.data()}));
-  for(const d of [...psDevices])if(d.status==="running"&&Number(d.endAt)<=Date.now())await finalizePsSession(d,"automatic");
+
+  /* لا يتم إنهاء الجلسة التلقائية بسبب عدم وجود endAt */
+  for(const d of [...psDevices]){
+   if(d.status==="running"&&d.sessionMode!=="auto"&&Number(d.endAt)>0&&Number(d.endAt)<=Date.now()){
+    await finalizePsSession(d,"automatic");
+   }
+  }
   const refreshed=await getDocs(col("devices"));psDevices=refreshed.docs.map(d=>({id:d.id,...d.data()}));
   const sessions=await getDocs(col("psSessions"));psSessions=sessions.docs.map(d=>({id:d.id,...d.data()}));
   renderPsDevices();renderPsItems();renderPsStats();renderPsSessions();
  }catch(e){console.error(e);alert("تعذر تحميل بيانات البلايستيشن: "+e.message);}
 }
-
-/* الأجهزة القديمة التي لا تحتوي deviceType تعتبر أجهزة رومات */
 function getDeviceType(device){return device.deviceType==="vip"?"vip":"room";}
 
 window.addPsDevice=async type=>{
- const isVip=type==="vip";
- const name=$(isVip?"psNewVipName":"psNewDeviceName").value.trim();
- const rate=Number($(isVip?"psNewVipRate":"psNewDeviceRate").value);
+ const isVip=type==="vip",name=$(isVip?"psNewVipName":"psNewDeviceName").value.trim(),rate=Number($(isVip?"psNewVipRate":"psNewDeviceRate").value);
  if(!name)return alert(isVip?"اكتب اسم جهاز VIP.":"اكتب اسم الروم.");
  if(!Number.isFinite(rate)||rate<=0)return alert("أدخل سعر ساعة صحيح.");
  try{
-  await addDoc(col("devices"),{
-   name,deviceType:isVip?"vip":"room",status:"idle",
-   startedAt:null,endAt:null,hourlyRate:rate,createdAt:Date.now()
-  });
-  $(isVip?"psNewVipName":"psNewDeviceName").value="";
-  $(isVip?"psNewVipRate":"psNewDeviceRate").value="";
-  await loadPlaystationData();
-  alert(isVip?"تمت إضافة جهاز VIP بنجاح.":"تمت إضافة الروم بنجاح.");
+  await addDoc(col("devices"),{name,deviceType:isVip?"vip":"room",status:"idle",startedAt:null,endAt:null,hourlyRate:rate,createdAt:Date.now()});
+  $(isVip?"psNewVipName":"psNewDeviceName").value="";$(isVip?"psNewVipRate":"psNewDeviceRate").value="";
+  await loadPlaystationData();alert(isVip?"تمت إضافة جهاز VIP بنجاح.":"تمت إضافة الروم بنجاح.");
  }catch(e){alert("تعذر إضافة الجهاز: "+e.message);}
 };
-
 window.updatePsRate=async id=>{
  const input=$(`psRate_${id}`),rate=Number(input?.value);
  if(!Number.isFinite(rate)||rate<=0)return alert("أدخل سعر ساعة صحيح.");
- try{
-  await updateDoc(docRef("devices",id),{hourlyRate:rate});
-  const d=psDevices.find(x=>x.id===id);if(d)d.hourlyRate=rate;
-  renderPsDevices();alert("تم تحديث سعر الساعة.");
- }catch(e){alert("تعذر تعديل السعر: "+e.message);}
+ try{await updateDoc(docRef("devices",id),{hourlyRate:rate});const d=psDevices.find(x=>x.id===id);if(d)d.hourlyRate=rate;renderPsDevices();alert("تم تحديث سعر الساعة.");}
+ catch(e){alert("تعذر تعديل السعر: "+e.message);}
 };
-
 window.deletePsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);if(!d)return;
  if(d.status==="running")return alert("لا يمكن حذف جهاز يعمل. أنهِ الجلسة أولاً.");
@@ -430,20 +416,28 @@ window.deletePsDevice=async id=>{
  try{await deleteDoc(docRef("devices",id));await loadPlaystationData();}catch(e){alert(e.message);}
 };
 
+/* بدء الجلسة: مدة محددة أو حساب تلقائي أو مبلغ */
 window.startPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status==="running")return alert("الجهاز غير متاح.");
  const mode=$(`psMode_${id}`).value,rate=Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
- let minutes=0,plannedAmount=0;
+ let minutes=0,plannedAmount=0,now=Date.now(),endAt=null;
+
  if(mode==="duration"){
   minutes=Number($(`psDuration_${id}`).value);
-  if(!Number.isFinite(minutes)||minutes<=0)return alert("أدخل مدة صحيحة.");
- }else{
+  if(!Number.isFinite(minutes)||minutes<=0)return alert("اختر مدة صحيحة.");
+  endAt=now+minutes*60000;
+ }else if(mode==="amount"){
   plannedAmount=Number($(`psAmount_${id}`).value);
   if(!Number.isFinite(plannedAmount)||plannedAmount<=0)return alert("أدخل مبلغًا صحيحًا.");
   minutes=Math.max(1,Math.round(plannedAmount/rate*60));
- }
- const now=Date.now(),endAt=now+minutes*60000,sessionRef=doc(col("psSessions")),sessionId=sessionRef.id;
+  endAt=now+minutes*60000;
+ }else if(mode==="auto"){
+  minutes=0;
+  endAt=null;
+ }else return alert("اختر طريقة حساب صحيحة.");
+
+ const sessionRef=doc(col("psSessions")),sessionId=sessionRef.id;
  try{
   await setDoc(sessionRef,{
    deviceId:id,deviceName:d.name,deviceType:getDeviceType(d),
@@ -464,6 +458,7 @@ window.startPsDevice=async id=>{
 window.extendPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status!=="running")return alert("الجهاز غير مشغل.");
+ if(d.sessionMode==="auto")return alert("الجلسة تعمل بالحساب التلقائي، لا تحتاج إلى تمديد. أنهِ الجلسة عند الانتهاء.");
  const minutes=Number($(`psExtend_${id}`).value);
  if(!Number.isFinite(minutes)||minutes<=0)return alert("اختر مدة صحيحة.");
  const now=Date.now(),newEndAt=Math.max(now,Number(d.endAt)||0)+minutes*60000;
@@ -473,11 +468,9 @@ window.extendPsDevice=async id=>{
   await runTransaction(db,async tx=>{
    const ss=await tx.get(sRef);
    if(!ss.exists()||ss.data().finalized)throw new Error("الجلسة غير متاحة للتمديد.");
-   const old=ss.data();
-   const addAmount=(minutes/60)*Number(old.hourlyRate||d.hourlyRate||PS_DEFAULT_HOURLY_RATE);
+   const old=ss.data(),addAmount=(minutes/60)*Number(old.hourlyRate||d.hourlyRate||PS_DEFAULT_HOURLY_RATE);
    tx.update(sRef,{
-    endAt:newEndAt,
-    plannedMinutes:Number(old.plannedMinutes||0)+minutes,
+    endAt:newEndAt,plannedMinutes:Number(old.plannedMinutes||0)+minutes,
     plannedAmount:Number(old.plannedAmount||0)+(old.sessionMode==="amount"?addAmount:0),
     lastExtendedAt:now
    });
@@ -494,39 +487,32 @@ window.stopPsDevice=async id=>{
  await finalizePsSession(d,"manual");
 };
 
-/* إضافة طلبات للمشروبات والسندوتشات على الجهاز الحالي */
+/* إضافة الطلبات إلى فاتورة الجهاز */
 window.addOrderToRoom=async(deviceId,itemId)=>{
  const d=psDevices.find(x=>x.id===deviceId),item=psItems.find(x=>x.id===itemId);
  if(!d||d.status!=="running"||!d.sessionId)return alert("لا توجد جلسة نشطة على هذا الجهاز.");
  if(!item)return alert("الصنف غير موجود.");
- const qty=Number($(`orderQty_${deviceId}_${itemId}`)?.value||$(`orderQty_${deviceId}`)?.value||1);
+ const qty=Number($(`orderQty_${deviceId}`)?.value||1);
  if(!Number.isInteger(qty)||qty<=0)return alert("أدخل كمية صحيحة.");
- const price=Number(item.price)||0;
- if(price<0)return alert("سعر الصنف غير صحيح.");
+ const price=Number(item.price)||0;if(price<0)return alert("سعر الصنف غير صحيح.");
  const sRef=docRef("psSessions",d.sessionId);
  try{
   await runTransaction(db,async tx=>{
    const snap=await tx.get(sRef);
    if(!snap.exists()||snap.data().finalized)throw new Error("الجلسة انتهت بالفعل.");
    const old=snap.data(),orders=Array.isArray(old.orders)?[...old.orders]:[];
-   orders.push({
-    itemId:item.id,name:item.name,category:item.category,
-    qty,price,lineTotal:qty*price,addedAt:Date.now()
-   });
+   orders.push({itemId:item.id,name:item.name,category:item.category,qty,price,lineTotal:Number((qty*price).toFixed(2)),addedAt:Date.now()});
    tx.update(sRef,{orders,updatedAt:Date.now()});
   });
-  await refreshCurrentSession(d.sessionId);renderPsDevices();
-  alert("تمت إضافة الطلب إلى فاتورة الجهاز.");
+  await refreshCurrentSession(d.sessionId);renderPsDevices();alert("تمت إضافة الطلب إلى فاتورة الجهاز.");
  }catch(e){alert("تعذر إضافة الطلب: "+e.message);}
 };
-
 async function refreshCurrentSession(id){
  const snap=await getDoc(docRef("psSessions",id));if(!snap.exists())return;
  const s=snap.data(),d=psDevices.find(x=>x.sessionId===id);
  if(d)d.currentOrders=s.orders||[];
  psSessions=psSessions.map(x=>x.id===id?{id,...s}:x);
 }
-
 window.removeRoomOrder=async(deviceId,index)=>{
  const d=psDevices.find(x=>x.id===deviceId);if(!d?.sessionId)return;
  if(!confirm("حذف هذا الطلب من الفاتورة؟"))return;
@@ -535,14 +521,13 @@ window.removeRoomOrder=async(deviceId,index)=>{
   await runTransaction(db,async tx=>{
    const snap=await tx.get(ref);
    if(!snap.exists()||snap.data().finalized)throw new Error("الجلسة انتهت.");
-   const orders=[...(snap.data().orders||[])];
-   orders.splice(index,1);tx.update(ref,{orders});
+   const orders=[...(snap.data().orders||[])];orders.splice(index,1);tx.update(ref,{orders});
   });
   await refreshCurrentSession(d.sessionId);renderPsDevices();
  }catch(e){alert(e.message);}
 };
 
-/* إنهاء الجلسة وإنشاء فاتورة واحدة وحركة خزينة واحدة */
+/* إنهاء الجلسة وتسجيل إيراد واحد فقط */
 async function finalizePsSession(device,reason="manual"){
  if(!currentUser||!device||psEndingDevices.has(device.id))return;
  psEndingDevices.add(device.id);
@@ -559,20 +544,28 @@ async function finalizePsSession(device,reason="manual"){
    }
    const s=ss.exists()?ss.data():{};
    const startedAt=Number(s.startedAt||current.startedAt)||now;
-   const elapsedMinutes=Math.max(1,Math.ceil(Math.max(0,now-startedAt)/60000));
+   const elapsedMs=Math.max(0,now-startedAt);
+   const elapsedMinutes=Math.max(1,Math.ceil(elapsedMs/60000));
    const rate=Number(s.hourlyRate||current.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
-   const playTotal=s.sessionMode==="amount"
-    ?Number(s.plannedAmount||current.sessionAmount||0)
-    :Math.ceil(elapsedMinutes/60*rate);
+   let playTotal=0;
+   if(s.sessionMode==="amount"){
+    playTotal=Number(s.plannedAmount||current.sessionAmount||0);
+   }else if(s.sessionMode==="auto"){
+    playTotal=Number((elapsedMs/3600000*rate).toFixed(2));
+   }else{
+    const chargedMinutes=Number(s.plannedMinutes||current.lastDuration||elapsedMinutes);
+    playTotal=Number((chargedMinutes/60*rate).toFixed(2));
+   }
    const orders=Array.isArray(s.orders)?s.orders:[];
-   const ordersTotal=orders.reduce((sum,o)=>sum+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0);
+   const ordersTotal=Number(orders.reduce((sum,o)=>sum+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0).toFixed(2));
    const total=Number((playTotal+ordersTotal).toFixed(2));
    const invoiceNumber="PS-"+now.toString().slice(-8);
    const invoice={
     invoiceNumber,deviceId:device.id,deviceName:current.name||device.name,
     deviceType:current.deviceType||device.deviceType||"room",
     startedAt,endedAt:now,elapsedMinutes,hourlyRate:rate,
-    sessionMode:s.sessionMode||"duration",plannedAmount:Number(s.plannedAmount||0),
+    sessionMode:s.sessionMode||"duration",plannedMinutes:Number(s.plannedMinutes||0),
+    plannedAmount:Number(s.plannedAmount||0),
     playTotal,orders,ordersTotal,total,paymentMethod:"cash",
     paymentStatus:"paid",finalized:true,reason,
     date:new Date(now).toLocaleString("ar-EG"),createdAt:now
@@ -603,11 +596,10 @@ function formatPsTime(ms){
  return [h,m,s].map(v=>String(v).padStart(2,"0")).join(":");
 }
 
-/* بناء كارت الجهاز نفسه للرومات أو VIP */
 function buildPsDeviceCard(d){
- const running=d.status==="running";
- const isVip=getDeviceType(d)==="vip";
- const time=running?formatPsTime(Number(d.endAt)-Date.now()):"00:00:00";
+ const running=d.status==="running",isVip=getDeviceType(d)==="vip";
+ const autoMode=running&&d.sessionMode==="auto";
+ const time=running?(autoMode?formatPsTime(Date.now()-Number(d.startedAt)):formatPsTime(Number(d.endAt)-Date.now())):"00:00:00";
  const orders=d.currentOrders||psSessions.find(s=>s.id===d.sessionId)?.orders||[];
  const orderTotal=orders.reduce((a,o)=>a+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0);
  const itemOptions=psItems.map(i=>`<option value="${i.id}">${escapeHTML(i.name)} - ${money(i.price)} ج</option>`).join("");
@@ -615,98 +607,89 @@ function buildPsDeviceCard(d){
  return `<div class="ps-device-card ${running?"running":""} ${isVip?"vip-card":""}">
   <div class="top"><h3>${isVip?"⭐":"🎮"} ${escapeHTML(d.name)}</h3><span class="tag ${running?"good":""}">${running?"يعمل الآن":typeLabel}</span></div>
   <div class="ps-device-time ${running?"":"ps-device-idle"}" id="psClock_${d.id}">${time}</div>
-  <p class="muted" style="text-align:center">${running?"الوقت المتبقي":"الجهاز جاهز لجلسة جديدة"}</p>
+  <p class="muted" style="text-align:center" id="psClockLabel_${d.id}">${running?(autoMode?"الوقت المنقضي - حساب تلقائي":"الوقت المتبقي"):"الجهاز جاهز لجلسة جديدة"}</p>
   <label>سعر الساعة بالجنيه</label>
-  <div class="inline-form">
-   <input id="psRate_${d.id}" type="number" min=".01" step=".01" value="${Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE}">
-   <button class="secondary" onclick="updatePsRate('${d.id}')">حفظ السعر</button>
-  </div>
+  <div class="inline-form"><input id="psRate_${d.id}" type="number" min=".01" step=".01" value="${Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE}"><button class="secondary" onclick="updatePsRate('${d.id}')">حفظ السعر</button></div>
   ${running?`
    <div class="card" style="padding:10px;margin:10px 0">
     <b>إضافة طلبات إلى فاتورة ${isVip?"VIP":"الروم"}</b>
     <label>المشروب أو السندوتش</label>
     <select id="orderItem_${d.id}">${itemOptions||'<option value="">لا توجد أصناف</option>'}</select>
-    <label>الكمية</label>
-    <input id="orderQty_${d.id}" type="number" min="1" value="1">
+    <label>الكمية</label><input id="orderQty_${d.id}" type="number" min="1" value="1">
     <button class="green big" onclick="addOrderToRoom('${d.id}',$('orderItem_${d.id}').value)">+ إضافة إلى الفاتورة</button>
-    <div class="order-list">
-     <b>طلبات الجهاز الحالية</b>
-     ${orders.map((o,index)=>`
-      <div class="order-line">
-       <span>${escapeHTML(o.name)} × ${o.qty}<br>${money(o.price)} ج</span>
-       <b>${money(o.lineTotal??(o.price*o.qty))} ج</b>
-       <button class="rowbtn red" onclick="removeRoomOrder('${d.id}',${index})">حذف</button>
-      </div>
-     `).join("")||'<p class="muted">لا توجد طلبات إضافية.</p>'}
+    <div class="order-list"><b>طلبات الجهاز الحالية</b>
+     ${orders.map((o,index)=>`<div class="order-line"><span>${escapeHTML(o.name)} × ${o.qty}<br>${money(o.price)} ج</span><b>${money(o.lineTotal??(o.price*o.qty))} ج</b><button class="rowbtn red" onclick="removeRoomOrder('${d.id}',${index})">حذف</button></div>`).join("")||'<p class="muted">لا توجد طلبات إضافية.</p>'}
      <p><b>إجمالي الإضافات: ${money(orderTotal)} جنيه</b></p>
     </div>
    </div>
-   <div class="ps-device-actions">
-    <select id="psExtend_${d.id}">
-     <option value="15">تمديد 15 دقيقة</option>
-     <option value="30">30 دقيقة</option>
-     <option value="60">ساعة</option>
-     <option value="120">ساعتان</option>
-     <option value="180">3 ساعات</option>
-    </select>
-    <button class="green" onclick="extendPsDevice('${d.id}')">تمديد الوقت</button>
-    <button class="red" onclick="stopPsDevice('${d.id}')">إنهاء الجلسة والفاتورة</button>
-   </div>
+   ${autoMode?'<div class="mode-note">حساب تلقائي: سيستمر العداد في حساب وقت اللعب حتى تضغط إنهاء الجلسة.</div>':`
+    <div class="ps-device-actions">
+     <select id="psExtend_${d.id}"><option value="15">تمديد 15 دقيقة</option><option value="30">30 دقيقة</option><option value="60">ساعة</option><option value="120">ساعتان</option><option value="180">3 ساعات</option></select>
+     <button class="green" onclick="extendPsDevice('${d.id}')">تمديد الوقت</button>
+    </div>
+   `}
+   <button class="red big" onclick="stopPsDevice('${d.id}')">إنهاء الجلسة والفاتورة</button>
   `:`
-   <label>طريقة تحديد الجلسة</label>
+   <label>طريقة حساب الجلسة</label>
    <select id="psMode_${d.id}" onchange="togglePsMode('${d.id}')">
-    <option value="duration">تحديد المدة</option>
-    <option value="amount">تحديد مبلغ</option>
+    <option value="duration">⏱ تحديد مدة الجلسة</option>
+    <option value="auto">♾ حساب تلقائي حسب الوقت</option>
+    <option value="amount">💵 تحديد مبلغ وحساب المدة</option>
    </select>
    <div id="psDurationBox_${d.id}">
-    <label>مدة الجلسة بالدقائق</label>
+    <label>اختر مدة اللعب</label>
     <select id="psDuration_${d.id}">
-     <option value="30">30 دقيقة</option>
-     <option value="45">45 دقيقة</option>
+     <option value="15">ربع ساعة (15 دقيقة)</option>
+     <option value="30">نصف ساعة (30 دقيقة)</option>
      <option value="60">ساعة واحدة</option>
      <option value="90">ساعة ونصف</option>
      <option value="120">ساعتان</option>
      <option value="180">3 ساعات</option>
      <option value="240">4 ساعات</option>
+     <option value="300">5 ساعات</option>
     </select>
+    <div class="mode-note">سيتم حساب سعر اللعب حسب المدة وسعر الساعة، وتنتهي الجلسة تلقائيًا عند انتهاء الوقت.</div>
    </div>
+   <div id="psAutoBox_${d.id}" class="hidden"><div class="mode-note">سيبدأ العداد من لحظة التشغيل، ويحسب السعر حسب الوقت الفعلي. اضغط إنهاء الجلسة عند مغادرة العميل.</div></div>
    <div id="psAmountBox_${d.id}" class="hidden">
     <label>مبلغ الجلسة بالجنيه</label>
     <input id="psAmount_${d.id}" type="number" min=".01" step=".01" placeholder="اكتب المبلغ الذي تريده">
-    <small class="muted">سيتم حساب المدة حسب سعر ساعة الجهاز، والمبلغ الذي أدخلته هو قيمة اللعب في الفاتورة.</small>
+    <div class="mode-note">سيتم حساب مدة اللعب حسب سعر ساعة الجهاز، ويُسجل المبلغ الذي أدخلته كقيمة اللعب.</div>
    </div>
-   <div class="ps-device-actions">
-    <button class="green" onclick="startPsDevice('${d.id}')">▶ بدء الجلسة</button>
-    <button class="red" onclick="deletePsDevice('${d.id}')">حذف الجهاز</button>
-   </div>
+   <div class="ps-device-actions"><button class="green" onclick="startPsDevice('${d.id}')">▶ بدء الجلسة</button><button class="red" onclick="deletePsDevice('${d.id}')">حذف الجهاز</button></div>
   `}
  </div>`;
 }
 
 function renderPsDevices(){
- const rooms=psDevices.filter(d=>getDeviceType(d)==="room");
- const vips=psDevices.filter(d=>getDeviceType(d)==="vip");
+ const rooms=psDevices.filter(d=>getDeviceType(d)==="room"),vips=psDevices.filter(d=>getDeviceType(d)==="vip");
  $("psDevicesList").innerHTML=rooms.map(buildPsDeviceCard).join("")||'<div class="ps-empty">لا توجد رومات. أضف أول روم من الأعلى.</div>';
  $("psVipDevicesList").innerHTML=vips.map(buildPsDeviceCard).join("")||'<div class="ps-empty">لا توجد أجهزة VIP. أضف أول جهاز من الأعلى.</div>';
 }
-
 window.togglePsMode=id=>{
- const amount=$(`psMode_${id}`).value==="amount";
- $(`psAmountBox_${id}`).classList.toggle("hidden",!amount);
- $(`psDurationBox_${id}`).classList.toggle("hidden",amount);
+ const mode=$(`psMode_${id}`).value;
+ $(`psAmountBox_${id}`).classList.toggle("hidden",mode!=="amount");
+ $(`psDurationBox_${id}`).classList.toggle("hidden",mode!=="duration");
+ $(`psAutoBox_${id}`).classList.toggle("hidden",mode!=="auto");
 };
 
+/* المؤقت: العد التنازلي للمدة والمبلغ، والعد التصاعدي للتلقائي */
 function startPsTimer(){
  if(psTimer)clearInterval(psTimer);
  psTimer=setInterval(async()=>{
   const now=Date.now();
   for(const d of psDevices){
    if(d.status!=="running")continue;
-   const remaining=Number(d.endAt)-now,clock=$(`psClock_${d.id}`);
-   if(remaining<=0){
-    if(clock)clock.textContent="00:00:00";
-    if(!psEndingDevices.has(d.id))await finalizePsSession(d,"automatic");
-   }else if(clock)clock.textContent=formatPsTime(remaining);
+   const clock=$(`psClock_${d.id}`);
+   if(d.sessionMode==="auto"){
+    if(clock)clock.textContent=formatPsTime(now-Number(d.startedAt||now));
+   }else{
+    const remaining=Number(d.endAt)-now;
+    if(remaining<=0){
+     if(clock)clock.textContent="00:00:00";
+     if(!psEndingDevices.has(d.id))await finalizePsSession(d,"automatic");
+    }else if(clock)clock.textContent=formatPsTime(remaining);
+   }
   }
   renderPsStats();
  },1000);
@@ -721,110 +704,69 @@ function renderPsSessions(){
  $("psSessionsRevenue2").textContent=money(total)+" جنيه";
  table.innerHTML=sorted.map(s=>{
   const type=s.deviceType==="vip"?"VIP":"روم";
-  return `<tr>
-   <td>${escapeHTML(s.invoiceNumber||"—")}</td>
-   <td>${escapeHTML(s.deviceName||"—")} <span class="tag">${type}</span></td>
-   <td>${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</td>
-   <td>${s.endedAt?new Date(s.endedAt).toLocaleString("ar-EG"):"—"}</td>
-   <td>${Number(s.elapsedMinutes)||0} دقيقة</td>
-   <td>${money(s.playTotal??s.total)} ج</td>
-   <td>${money(s.ordersTotal||0)} ج</td>
-   <td><b>${money(s.total)} ج</b></td>
-   <td><button class="rowbtn secondary" onclick="printPsInvoice('${s.id}')">طباعة</button></td>
-  </tr>`;
+  return `<tr><td>${escapeHTML(s.invoiceNumber||"—")}</td><td>${escapeHTML(s.deviceName||"—")} <span class="tag">${type}</span></td>
+   <td>${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</td><td>${s.endedAt?new Date(s.endedAt).toLocaleString("ar-EG"):"—"}</td>
+   <td>${Number(s.elapsedMinutes)||0} دقيقة</td><td>${money(s.playTotal??s.total)} ج</td><td>${money(s.ordersTotal||0)} ج</td><td><b>${money(s.total)} ج</b></td>
+   <td><button class="rowbtn secondary" onclick="printPsInvoice('${s.id}')">طباعة</button></td></tr>`;
  }).join("")||'<tr><td colspan="9">لا توجد جلسات مسجلة</td></tr>';
 }
 
 window.printPsInvoice=id=>{
  const s=psSessions.find(x=>x.id===id);if(!s)return;
- const orders=Array.isArray(s.orders)?s.orders:[];
- const type=s.deviceType==="vip"?"صالة VIP":"روم";
+ const orders=Array.isArray(s.orders)?s.orders:[],type=s.deviceType==="vip"?"صالة VIP":"روم";
+ const modeLabel=s.sessionMode==="auto"?"حساب تلقائي":s.sessionMode==="amount"?"تحديد مبلغ":"مدة محددة";
  $("printArea").innerHTML=`
  <div style="font-family:Arial;text-align:center;padding:10px;direction:rtl">
-  <h2>${escapeHTML(profile?.shopName||"نشاط البلايستيشن")}</h2>
-  <h3>فاتورة جلسة ${type}</h3><hr>
-  <p>رقم الفاتورة: ${escapeHTML(s.invoiceNumber||"—")}</p>
-  <p>نوع الجهاز: ${type}</p>
-  <p>الجهاز: ${escapeHTML(s.deviceName||"—")}</p>
+  <h2>${escapeHTML(profile?.shopName||"نشاط البلايستيشن")}</h2><h3>فاتورة جلسة ${type}</h3><hr>
+  <p>رقم الفاتورة: ${escapeHTML(s.invoiceNumber||"—")}</p><p>نوع الجهاز: ${type}</p><p>الجهاز: ${escapeHTML(s.deviceName||"—")}</p>
+  <p>طريقة الحساب: ${modeLabel}</p>
   <p>بداية الجلسة: ${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</p>
   <p>نهاية الجلسة: ${s.endedAt?new Date(s.endedAt).toLocaleString("ar-EG"):"—"}</p>
-  <p>مدة التشغيل: ${Number(s.elapsedMinutes)||0} دقيقة</p>
-  <p>سعر الساعة: ${money(s.hourlyRate)} جنيه</p><hr>
-  <h3>قيمة اللعب: ${money(s.playTotal??s.total)} جنيه</h3>
-  <h3>المشروبات والسندوتشات</h3>
-  <table style="width:100%;min-width:0">
-   <thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead>
-   <tbody>
-    ${orders.map(o=>`<tr><td>${escapeHTML(o.name)}</td><td>${Number(o.qty)||0}</td><td>${money(o.price)} ج</td><td>${money(o.lineTotal??(o.price*o.qty))} ج</td></tr>`).join("")||'<tr><td colspan="4">لا توجد إضافات</td></tr>'}
-   </tbody>
-  </table>
-  <hr>
-  <p>إجمالي الإضافات: ${money(s.ordersTotal||0)} جنيه</p>
-  <h2>الإجمالي النهائي: ${money(s.total)} جنيه</h2>
-  <p>شكراً لزيارتكم</p><p>تطوير: محمد الصلاحي</p>
+  <p>مدة التشغيل الفعلية: ${Number(s.elapsedMinutes)||0} دقيقة</p><p>سعر الساعة: ${money(s.hourlyRate)} جنيه</p><hr>
+  <h3>قيمة اللعب: ${money(s.playTotal??s.total)} جنيه</h3><h3>المشروبات والسندوتشات</h3>
+  <table style="width:100%;min-width:0"><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead>
+   <tbody>${orders.map(o=>`<tr><td>${escapeHTML(o.name)}</td><td>${Number(o.qty)||0}</td><td>${money(o.price)} ج</td><td>${money(o.lineTotal??(o.price*o.qty))} ج</td></tr>`).join("")||'<tr><td colspan="4">لا توجد إضافات</td></tr>'}</tbody>
+  </table><hr><p>إجمالي الإضافات: ${money(s.ordersTotal||0)} جنيه</p>
+  <h2>الإجمالي النهائي: ${money(s.total)} جنيه</h2><p>شكراً لزيارتكم</p><p>تطوير: محمد الصلاحي</p>
  </div>`;
  window.print();
 };
 
-/* إدارة المشروبات والسندوتشات وتعديل أسعارها */
+/* إدارة المشروبات والسندوتشات */
 window.addPsItem=async category=>{
- const drink=category==="drink";
- const name=$(drink?"psDrinkName":"psSandwichName").value.trim();
- const price=Number($(drink?"psDrinkPrice":"psSandwichPrice").value);
- const qty=Number($(drink?"psDrinkQty":"psSandwichQty").value);
+ const drink=category==="drink",name=$(drink?"psDrinkName":"psSandwichName").value.trim();
+ const price=Number($(drink?"psDrinkPrice":"psSandwichPrice").value),qty=Number($(drink?"psDrinkQty":"psSandwichQty").value);
  if(!name)return alert("اكتب اسم الصنف.");
  if(!Number.isFinite(price)||price<=0)return alert("أدخل سعرًا صحيحًا.");
  if(!Number.isInteger(qty)||qty<0)return alert("أدخل كمية صحيحة.");
  try{
   await addDoc(col("psItems"),{category,name,price,qty,createdAt:Date.now()});
-  $(drink?"psDrinkName":"psSandwichName").value="";
-  $(drink?"psDrinkPrice":"psSandwichPrice").value="";
-  $(drink?"psDrinkQty":"psSandwichQty").value="1";
+  $(drink?"psDrinkName":"psSandwichName").value="";$(drink?"psDrinkPrice":"psSandwichPrice").value="";$(drink?"psDrinkQty":"psSandwichQty").value="1";
   await loadPlaystationData();alert("تمت إضافة الصنف.");
  }catch(e){alert(e.message);}
 };
-
 window.editPsItem=async id=>{
  const item=psItems.find(x=>x.id===id);if(!item)return;
  const name=prompt("اسم الصنف:",item.name);if(name===null)return;
  const price=prompt("السعر الجديد:",item.price);if(price===null)return;
  const qty=prompt("الكمية:",item.qty??0);if(qty===null)return;
  if(!name.trim()||!Number.isFinite(Number(price))||Number(price)<=0||!Number.isInteger(Number(qty))||Number(qty)<0)return alert("بيانات غير صحيحة.");
- try{
-  await updateDoc(docRef("psItems",id),{name:name.trim(),price:Number(price),qty:Number(qty),updatedAt:Date.now()});
-  await loadPlaystationData();alert("تم تعديل الصنف.");
- }catch(e){alert(e.message);}
-};
-
-window.deletePsItem=async id=>{
- if(!confirm("هل تريد حذف هذا الصنف؟"))return;
- try{await deleteDoc(docRef("psItems",id));await loadPlaystationData();}
+ try{await updateDoc(docRef("psItems",id),{name:name.trim(),price:Number(price),qty:Number(qty),updatedAt:Date.now()});await loadPlaystationData();alert("تم تعديل الصنف.");}
  catch(e){alert(e.message);}
 };
-
+window.deletePsItem=async id=>{
+ if(!confirm("هل تريد حذف هذا الصنف؟"))return;
+ try{await deleteDoc(docRef("psItems",id));await loadPlaystationData();}catch(e){alert(e.message);}
+};
 function renderPsItems(){
- const drinks=psItems.filter(x=>x.category==="drink");
- const sandwiches=psItems.filter(x=>x.category==="sandwich");
- const render=arr=>arr.map(i=>`
-  <tr>
-   <td>${escapeHTML(i.name)}</td>
-   <td>${money(i.price)} ج</td>
-   <td>${Number(i.qty)||0}</td>
-   <td><button class="rowbtn secondary" onclick="editPsItem('${i.id}')">تعديل</button><button class="rowbtn red" onclick="deletePsItem('${i.id}')">حذف</button></td>
-  </tr>
- `).join("")||'<tr><td colspan="4">لا توجد أصناف</td></tr>';
- $("psDrinksTable").innerHTML=render(drinks);
- $("psSandwichesTable").innerHTML=render(sandwiches);
- renderPsStats();
+ const drinks=psItems.filter(x=>x.category==="drink"),sandwiches=psItems.filter(x=>x.category==="sandwich");
+ const render=arr=>arr.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${money(i.price)} ج</td><td>${Number(i.qty)||0}</td><td><button class="rowbtn secondary" onclick="editPsItem('${i.id}')">تعديل</button><button class="rowbtn red" onclick="deletePsItem('${i.id}')">حذف</button></td></tr>`).join("")||'<tr><td colspan="4">لا توجد أصناف</td></tr>';
+ $("psDrinksTable").innerHTML=render(drinks);$("psSandwichesTable").innerHTML=render(sandwiches);renderPsStats();
 }
-
 function renderPsStats(){
- const rooms=psDevices.filter(d=>getDeviceType(d)==="room");
- const vips=psDevices.filter(d=>getDeviceType(d)==="vip");
- $("psTotalDevices").textContent=psDevices.length;
- $("psRoomDevices").textContent=rooms.length;
- $("psVipDevices").textContent=vips.length;
- $("psRunningDevices").textContent=psDevices.filter(d=>d.status==="running"&&Number(d.endAt)>Date.now()).length;
+ const rooms=psDevices.filter(d=>getDeviceType(d)==="room"),vips=psDevices.filter(d=>getDeviceType(d)==="vip");
+ $("psTotalDevices").textContent=psDevices.length;$("psRoomDevices").textContent=rooms.length;$("psVipDevices").textContent=vips.length;
+ $("psRunningDevices").textContent=psDevices.filter(d=>d.status==="running").length;
  $("psDrinksCount").textContent=psItems.filter(x=>x.category==="drink").length;
  $("psSandwichesCount").textContent=psItems.filter(x=>x.category==="sandwich").length;
 }
@@ -837,7 +779,6 @@ window.page=name=>{
  if(name==="dashboard"||name==="reports")renderStats();
  if(name==="sales")renderCart();
 };
-
 async function checkAndSettleDailySales(){
  try{
   const ref=doc(db,"users",currentUser.uid),snap=await getDoc(ref);if(!snap.exists())return;
@@ -849,14 +790,10 @@ async function checkAndSettleDailySales(){
   }
  }catch(e){console.error(e);}
 }
-
 window.updateShopNameSetting=async()=>{
  const n=$("settingsShopName").value.trim();if(!n)return alert("أدخل اسم المحل.");
- try{
-  await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});
-  profile.shopName=n;$("shopTitle").textContent=n;$("sahalShopTitle").textContent=n;
-  alert("تم تحديث الاسم.");
- }catch(e){alert(e.message);}
+ try{await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;$("shopTitle").textContent=n;$("sahalShopTitle").textContent=n;alert("تم تحديث الاسم.");}
+ catch(e){alert(e.message);}
 };
 window.updateCustomerEmailSetting=async()=>{
  const n=$("settingsEmail").value.trim();if(!n)return alert("أدخل البريد الجديد.");
@@ -864,43 +801,31 @@ window.updateCustomerEmailSetting=async()=>{
  catch(e){alert(e.message);}
 };
 window.updateCustomerPassword=async()=>{
- const p=$("newCustomerPassword").value;
- if(!p||p.length<6)return alert("كلمة المرور يجب ألا تقل عن 6 أحرف.");
+ const p=$("newCustomerPassword").value;if(!p||p.length<6)return alert("كلمة المرور يجب ألا تقل عن 6 أحرف.");
  try{await updatePassword(auth.currentUser,p);$("newCustomerPassword").value="";alert("تم تحديث كلمة المرور.");}
  catch(e){alert("تعذر تحديث كلمة المرور. قد تحتاج إلى تسجيل الدخول مجدداً.");}
 };
-
-async function loadBusiness(){
- await Promise.all([loadProducts(),loadSales(),loadExpenses(),loadTreasury()]);
- renderStats();
-}
+async function loadBusiness(){await Promise.all([loadProducts(),loadSales(),loadExpenses(),loadTreasury()]);renderStats();}
 async function loadProducts(){const s=await getDocs(col("products"));products=s.docs.map(d=>({id:d.id,...d.data()}));renderProducts();}
 async function loadSales(){const s=await getDocs(col("sales"));sales=s.docs.map(d=>({id:d.id,...d.data()}));renderSales();}
 async function loadExpenses(){const s=await getDocs(col("expenses"));expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();}
 async function loadTreasury(){const s=await getDocs(col("treasury"));treasury=s.docs.map(d=>({id:d.id,...d.data()}));renderTreasury();}
-
 window.clearTreasuryData=async()=>{
  if(!confirm("هل تريد مسح حركات الخزينة؟"))return;
- const snap=await getDocs(col("treasury"));
- for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));
+ const snap=await getDocs(col("treasury"));for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));
  await loadTreasury();renderStats();alert("تم التصفير.");
 };
-
 window.saveProduct=async()=>{
  const name=$("pName").value.trim(),cost=Number($("pCost").value)||0,price=Number($("pPrice").value)||0,qty=Number($("pQty").value)||0;
  if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع.");
  await addDoc(col("products"),{name,cost,price,qty,createdAt:serverTimestamp()});
- $("pName").value="";$("pCost").value="";$("pPrice").value="";$("pQty").value=10;
- await loadProducts();renderStats();alert("تم حفظ المنتج.");
+ $("pName").value="";$("pCost").value="";$("pPrice").value="";$("pQty").value=10;await loadProducts();renderStats();alert("تم حفظ المنتج.");
 };
 window.deleteProduct=async id=>{
- if(!confirm("حذف المنتج؟"))return;
- await deleteDoc(docRef("products",id));await loadProducts();renderStats();
+ if(!confirm("حذف المنتج؟"))return;await deleteDoc(docRef("products",id));await loadProducts();renderStats();
 };
 function renderProducts(){
- $("productsTable").innerHTML=products.map(p=>`
-  <tr><td>${escapeHTML(p.name)}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td>${p.qty}</td><td><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>
- `).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
+ $("productsTable").innerHTML=products.map(p=>`<tr><td>${escapeHTML(p.name)}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td>${p.qty}</td><td><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
 }
 window.searchProducts=()=>{
  const q=$("saleSearch").value.trim().toLowerCase();selectedProduct=null;
@@ -910,8 +835,7 @@ window.searchProducts=()=>{
 };
 window.selectSaleProduct=id=>{
  selectedProduct=products.find(p=>p.id===id);if(!selectedProduct)return;
- $("saleSearch").value=selectedProduct.name;$("salePrice").value=selectedProduct.price;
- $("searchResults").innerHTML="";addToCart();
+ $("saleSearch").value=selectedProduct.name;$("salePrice").value=selectedProduct.price;$("searchResults").innerHTML="";addToCart();
 };
 window.addToCart=()=>{
  const qty=Number($("saleQty").value)||1,priceInput=$("salePrice").value;
@@ -921,80 +845,44 @@ window.addToCart=()=>{
  if(price<0||!Number.isFinite(price))return alert("أدخل سعر بيع صحيح.");
  const old=cart.find(x=>x.productId===p.id),already=old?old.qty:0;
  if(qty+already>Number(p.qty))return alert("الكمية المطلوبة أكبر من المخزون.");
- if(old){old.qty+=qty;old.price=price;}
- else cart.push({productId:p.id,name:p.name,qty,price,cost:p.cost||0});
- selectedProduct=null;$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";
- renderCart();$("saleSearch").focus();
+ if(old){old.qty+=qty;old.price=price;}else cart.push({productId:p.id,name:p.name,qty,price,cost:p.cost||0});
+ selectedProduct=null;$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";renderCart();$("saleSearch").focus();
 };
 function renderCart(){
- $("cartTable").innerHTML=cart.map((x,i)=>`
-  <tr><td>${escapeHTML(x.name)}</td><td>${x.qty}</td><td>${money(x.price)} ج</td><td><b>${money(x.qty*x.price)} ج</b></td><td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td></tr>
- `).join("")||'<tr><td colspan="5" style="text-align:center">الفاتورة فارغة</td></tr>';
- const subtotal=cart.reduce((s,x)=>s+x.qty*x.price,0);
- const discount=Math.max(0,Number($("saleDiscount").value)||0);
- const addition=Math.max(0,Number($("saleAddition").value)||0);
- const total=Math.max(0,subtotal-discount+addition);
- $("cartTotalDisplay").textContent=money(total);
- return {subtotal,discount,addition,total};
+ $("cartTable").innerHTML=cart.map((x,i)=>`<tr><td>${escapeHTML(x.name)}</td><td>${x.qty}</td><td>${money(x.price)} ج</td><td><b>${money(x.qty*x.price)} ج</b></td><td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td></tr>`).join("")||'<tr><td colspan="5" style="text-align:center">الفاتورة فارغة</td></tr>';
+ const subtotal=cart.reduce((s,x)=>s+x.qty*x.price,0),discount=Math.max(0,Number($("saleDiscount").value)||0),addition=Math.max(0,Number($("saleAddition").value)||0),total=Math.max(0,subtotal-discount+addition);
+ $("cartTotalDisplay").textContent=money(total);return {subtotal,discount,addition,total};
 }
 window.renderCart=renderCart;
-$("saleDiscount").addEventListener("input",renderCart);
-$("saleAddition").addEventListener("input",renderCart);
+$("saleDiscount").addEventListener("input",renderCart);$("saleAddition").addEventListener("input",renderCart);
 window.removeCartItem=i=>{cart.splice(i,1);renderCart();};
 window.clearCart=()=>{
  if(cart.length&&!confirm("هل تريد إلغاء الفاتورة؟"))return;
- cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";
- $("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";
- $("searchResults").innerHTML="";selectedProduct=null;renderCart();
+ cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";selectedProduct=null;renderCart();
 };
 window.completeSale=async()=>{
  if(!cart.length)return alert("الفاتورة فارغة.");
  const {subtotal,discount,addition,total}=renderCart();
  if(discount>subtotal+addition)return alert("الخصم أكبر من الإجمالي.");
- for(const item of cart){
-  const p=products.find(x=>x.id===item.productId);
-  if(!p||Number(p.qty)<item.qty)return alert("المخزون غير كافٍ: "+item.name);
- }
- const invoice={
-  number:"INV-"+Date.now().toString().slice(-6),
-  subtotal,discount,addition,total,items:[...cart],date:new Date().toLocaleString("ar-EG")
- };
+ for(const item of cart){const p=products.find(x=>x.id===item.productId);if(!p||Number(p.qty)<item.qty)return alert("المخزون غير كافٍ: "+item.name);}
+ const invoice={number:"INV-"+Date.now().toString().slice(-6),subtotal,discount,addition,total,items:[...cart],date:new Date().toLocaleString("ar-EG")};
  try{
-  for(const item of cart){
-   const p=products.find(x=>x.id===item.productId);
-   await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});
-  }
-  await addDoc(col("sales"),invoice);
-  await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoice.number}`,date:invoice.date});
+  for(const item of cart){const p=products.find(x=>x.id===item.productId);await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});}
+  await addDoc(col("sales"),invoice);await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoice.number}`,date:invoice.date});
   if($("autoPrintToggle").checked)printInvoiceDirectly(invoice);
-  cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";
-  $("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";
-  selectedProduct=null;renderCart();await loadBusiness();
+  cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";selectedProduct=null;renderCart();await loadBusiness();
   alert("تم البيع بنجاح. الإجمالي: "+money(total)+" جنيه");
  }catch(e){alert("حدث خطأ أثناء البيع: "+e.message);}
 };
 window.printInvoiceDirectly=inv=>{
- $("printArea").innerHTML=`
-  <div style="text-align:center;font-family:Arial;padding:10px">
-   <h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة مبيعات</h3>
-   <p>رقم الفاتورة: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr>
-   <table style="width:100%;min-width:0">
-    <tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>
-    ${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}
-   </table>
-   <hr><p>إجمالي الأصناف: ${money(inv.subtotal)} جنيه</p>
-   <p>الخصم: -${money(inv.discount)} جنيه</p><p>الإضافة: +${money(inv.addition)} جنيه</p>
-   <h2>الإجمالي النهائي: ${money(inv.total)} جنيه</h2>
-   <p>شكراً لتعاملكم معنا</p><p>تطوير: محمد الصلاحي</p>
-  </div>`;
+ $("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px"><h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة مبيعات</h3><p>رقم الفاتورة: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr><table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}</table><hr><p>إجمالي الأصناف: ${money(inv.subtotal)} جنيه</p><p>الخصم: -${money(inv.discount)} جنيه</p><p>الإضافة: +${money(inv.addition)} جنيه</p><h2>الإجمالي النهائي: ${money(inv.total)} جنيه</h2><p>شكراً لتعاملكم معنا</p><p>تطوير: محمد الصلاحي</p></div>`;
  window.print();
 };
 window.addTreasuryTransaction=async()=>{
  const type=$("tType").value,amount=Number($("tAmount").value)||0,note=$("tNote").value.trim();
  if(amount<=0)return alert("أدخل مبلغاً صحيحاً.");
  await addDoc(col("treasury"),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});
- $("tAmount").value="";$("tNote").value="";
- await loadTreasury();renderStats();alert("تم تسجيل الحركة.");
+ $("tAmount").value="";$("tNote").value="";await loadTreasury();renderStats();alert("تم تسجيل الحركة.");
 };
 function renderTreasury(){
  let tIn=0,tOut=0;
@@ -1008,10 +896,8 @@ window.addExpense=async()=>{
  const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value)||0;
  if(!name||amount<=0)return alert("أدخل اسم المصروف والمبلغ.");
  const date=new Date().toLocaleString("ar-EG");
- await addDoc(col("expenses"),{name,amount,date});
- await addDoc(col("treasury"),{type:"out",amount,note:"مصروف: "+name,date});
- $("expenseName").value="";$("expenseAmount").value="";
- await loadBusiness();alert("تم حفظ المصروف.");
+ await addDoc(col("expenses"),{name,amount,date});await addDoc(col("treasury"),{type:"out",amount,note:"مصروف: "+name,date});
+ $("expenseName").value="";$("expenseAmount").value="";await loadBusiness();alert("تم حفظ المصروف.");
 };
 function renderExpenses(){
  $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات</td></tr>";
@@ -1021,17 +907,11 @@ function renderSales(){
 }
 window.printSavedInvoice=id=>{const inv=sales.find(s=>s.id===id);if(inv)printInvoiceDirectly(inv);};
 function renderStats(){
- const rev=sales.reduce((s,x)=>s+Number(x.total||0),0);
- const exp=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
- const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0);
- const tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(x.amount||0),0);
- $("statProducts").textContent=products.length;
- $("statSales").textContent=sales.length;
- $("statRevenue").textContent=money(rev)+" جنيه";
- $("statTreasuryBalance").textContent=money(tIn-tOut)+" جنيه";
- $("reportRevenue").textContent=money(rev)+" جنيه";
- $("reportExpenses").textContent=money(exp)+" جنيه";
- $("reportNet").textContent=money(rev-exp)+" جنيه";
+ const rev=sales.reduce((s,x)=>s+Number(x.total||0),0),exp=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
+ const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0),tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(x.amount||0),0);
+ $("statProducts").textContent=products.length;$("statSales").textContent=sales.length;
+ $("statRevenue").textContent=money(rev)+" جنيه";$("statTreasuryBalance").textContent=money(tIn-tOut)+" جنيه";
+ $("reportRevenue").textContent=money(rev)+" جنيه";$("reportExpenses").textContent=money(exp)+" جنيه";$("reportNet").textContent=money(rev-exp)+" جنيه";
 }
 </script>
 </body>

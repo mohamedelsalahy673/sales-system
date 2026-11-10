@@ -37,7 +37,7 @@ td,th{padding:11px;border-bottom:1px solid #edf0f5;text-align:right;font-size:13
 .tag{border-radius:20px;padding:5px 9px;background:#fff0d3;color:#885900;font-size:12px;display:inline-block}
 .tag.good{background:#e0f6e9;color:#167445}
 .rowbtn{padding:7px 10px;margin:2px;font-size:12px}
-.msg{padding:10px;border-radius:8px;background:#fef2f2;color:#991b1b;margin-top:10px;font-size:13px;border:1px solid #fecaca}
+.msg{padding:10px;border-radius:8px;background:#fef2f2;color:#991b1b;margin-top:10px;font-size:13px;border:1px solid #fecaca;word-break:break-word}
 hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .result{display:block;width:100%;text-align:right;margin:0;border-radius:0}
 .tiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:20px}
@@ -95,7 +95,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .ps-item-form input{margin-bottom:0}
 .ps-section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .ps-empty{text-align:center;padding:25px;color:#788397;background:#f8fafc;border-radius:10px}
-.order-list{background:#f8fafc;border-radius:99px;padding:10px;margin-top:10px;border-radius:9px}
+.order-list{background:#f8fafc;padding:10px;margin-top:10px;border-radius:9px}
 .order-line{display:flex;justify-content:space-between;align-items:center;gap:5px;padding:7px 0;border-bottom:1px solid #e5e7eb;font-size:12px}
 .inline-form{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .inline-form button{width:100%}
@@ -398,7 +398,7 @@ const snap=await getDoc(doc(db,"users",cred.user.uid));
 if(!snap.exists()){
 await signOut(auth);
 if(btn) btn.disabled=false;
-return message("لا توجد بيانات حساب لهذا المستخدم.");
+return message("لا توجد بيانات حساب لهذا المستخدم في قاعدة البيانات.");
 }
 const si=systemInfo(snap.data(),selectedSystem);
 if(si.status="not_registered"){
@@ -412,10 +412,11 @@ if(btn) btn.disabled=false;
 return message(si.status==="pending"?"حسابك قيد المراجعة ولم يتم تفعيل الاشتراك.":"اشتراك هذا النظام غير نشط أو انتهت صلاحيته.");
 }
 }catch(e){
-console.error("Login error:", e);
+console.error("Detailed Login Error:", e);
 let errText = e.message;
-if(e.code==="auth/invalid-credential" || e.code==="auth/user-not-found" || e.code==="auth/wrong-password") errText="البريد أو كلمة المرور غير صحيحة.";
-message("تعذر الدخول: " + errText);
+if(e.code==="auth/invalid-credential" || e.code==="auth/user-not-found" || e.code==="auth/wrong-password") errText="البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+else if(e.code==="auth/too-many-requests") errText="تم حظر المحاولات مؤقتا بسبب التكرار. حاول لاحقا.";
+message("خطأ بالدخول: " + errText + " (" + (e.code||"") + ")");
 } finally {
 if(btn) btn.disabled=false;
 }
@@ -429,8 +430,8 @@ if(!p) return message("أدخل كلمة المرور.");
 if(btn) btn.disabled=true;
 await signInWithEmailAndPassword(auth,OWNER_EMAIL,p);
 }catch(e){
-console.error(e);
-message("تعذر الدخول إلى لوحة المالك. "+(e.code||""));
+console.error("Owner Login Error:", e);
+message("تعذر الدخول إلى لوحة المالك: "+(e.message||e.code));
 }finally{
 if(btn) btn.disabled=false;
 }
@@ -458,8 +459,10 @@ $("auth").classList.add("hidden");
 $("pendingScreen").classList.remove("hidden");
 }catch(e){
 registeringNow=false;
-console.error("Register Error:", e);
-message(e.code==="auth/email-already-in-use"?"البريد مسجل بالفعل.":"تعذر التسجيل: "+(e.message||e.code));
+console.error("Register Detailed Error:", e);
+let msgTxt = e.message;
+if(e.code==="auth/email-already-in-use") msgTxt="البريد الإلكتروني مسجل بالفعل.";
+message("تعذر إنشاء الحساب: " + msgTxt + " ("+(e.code||"")+")");
 }finally{
 if(btn) btn.disabled=false;
 }
@@ -1317,7 +1320,7 @@ $("salesTable").innerHTML=sales.map(s=>⁠<tr><td>${s.number}</td><td>${s.date}<
 window.printSavedInvoice=id=>{const inv=sales.find(s=>s.id===id);if(inv)window.printInvoiceDirectly(inv);};
 function renderStats(){
 const rev=sales.reduce((s,x)=>s+Number(x.total||0),0),exp=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
-const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0),tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(x.amount||0),0);
+const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(s.amount||0),0),tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(s.amount||0),0);
 $("statProducts").textContent=products.length;
 $("statSales").textContent=sales.length;
 $("statRevenue").textContent=money(rev)+" جنيه";

@@ -695,7 +695,7 @@ window.addOrderToRoom = async (deviceId) => {
     await refreshCurrentSession(d.sessionId);
     renderPsDevices();
     if (qtyElement) qtyElement.value = "1";
-    alert("تمت إضافة الطلب إلى الفاتورة.");
+    // تمت إزالة التنبيه (alert) هنا بناءً على طلبك
   } catch (e) {
     console.error(e);
     alert("تعذر إضافة الطلب: " + e.message);

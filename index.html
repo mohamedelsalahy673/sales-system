@@ -213,7 +213,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- شاشة المبيعات بتصميم NexPOS الكلاسيكي مع زر الحذف الفعّال -->
+  <!-- شاشة المبيعات بتصميم NexPOS الكلاسيكي بدون علامة الزائد -->
   <div id="salesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    
@@ -233,7 +233,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <!-- الجزء الرئيسي: البحث والجدول -->
     <div class="sahal-main">
      <div class="sahal-search-box">
-      <div style="display:grid;grid-template-columns: 2fr 1fr 1fr auto;gap:8px;align-items:end;">
+      <div style="display:grid;grid-template-columns: 2fr 1fr 1fr;gap:8px;">
        <div>
         <label style="font-size:11px">بحث عن صنف بالاسم أو الباركود</label>
         <input id="saleSearch" placeholder="ابحث هنا..." oninput="searchProducts()" style="margin:4px 0 0;">
@@ -246,9 +246,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
        <div>
         <label style="font-size:11px">سعر البيع</label>
         <input id="salePrice" type="number" min="0" style="margin:4px 0 0;">
-       </div>
-       <div>
-        <button class="sahal-btn sbtn-green" style="height:42px;padding:0 16px;margin-top:4px;" onclick="addToCart()" title="إضافة صنف للفاتورة">+</button>
        </div>
       </div>
      </div>
@@ -265,7 +262,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
         </tr>
        </thead>
        <tbody id="cartTable">
-        <tr><td colspan="5" style="text-align:center;color:#64748b;">اختر صنفاً واضغط (+) أو أضفه للبدء في الفاتورة...</td></tr>
+        <tr><td colspan="5" style="text-align:center;color:#64748b;">اختر صنفاً للبدء في الفاتورة...</td></tr>
        </tbody>
       </table>
      </div>
@@ -692,7 +689,7 @@ function renderProducts(){
  $("productsTable").innerHTML=products.map(p=>`<tr><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
 }
 
-// دالة البحث التفاعلي واختيار الأصناف
+// دالة البحث التفاعلي واختيار الأصناف (عند الضغط عليها يتم إضافتها مباشرة للفاتورة)
 window.searchProducts=()=>{
  const q=$("saleSearch").value.trim().toLowerCase();
  if(!q){ $("searchResults").innerHTML=""; return; }
@@ -706,6 +703,7 @@ window.selectSaleProduct=id=>{
  $("saleSearch").value=selectedProduct.name;
  $("salePrice").value=selectedProduct.price;
  $("searchResults").innerHTML="";
+ addToCart();
 };
 
 window.addToCart=()=>{

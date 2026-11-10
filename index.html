@@ -98,37 +98,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .inline-form{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .inline-form button{width:100%}
 .mode-note{background:#eff6ff;color:#1d4ed8;border-radius:8px;padding:9px;font-size:12px;margin:8px 0}
-
-/* تصميم النافذة المنبثقة المنتصفة للشاشة */
-.custom-modal-overlay {
-  position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
-  z-index: 99999; animation: fadeIn 0.2s ease-out;
-}
-.custom-modal-card {
-  background: #ffffff; border-radius: 20px; padding: 25px; width: 90%; max-width: 440px;
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); direction: rtl; font-family: Arial, sans-serif;
-}
-.modal-header {
-  text-align: center; border-bottom: 2px dashed #e2e8f0; padding-bottom: 12px; margin-bottom: 15px;
-}
-.modal-title { font-size: 18px; font-weight: bold; color: #1e293b; }
-.modal-body { font-size: 15px; color: #334155; line-height: 1.8; }
-.modal-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 14px; background: #f8fafc; border-radius: 10px; margin-bottom: 8px;
-}
-.modal-row.total {
-  background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; font-size: 17px; font-weight: bold;
-}
-.modal-footer { display: flex; gap: 10px; margin-top: 20px; }
-.modal-btn {
-  flex: 1; padding: 12px; border-radius: 10px; border: 0; font-weight: bold; cursor: pointer; font-size: 14px;
-}
-.btn-confirm { background: #16a34a; color: white; }
-.btn-cancel { background: #f1f5f9; color: #475569; }
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
 @media(max-width:950px){.sahal-layout{grid-template-columns:1fr}.sahal-sidebar{display:grid;grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}}
 @media(max-width:600px){.sale-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.sale-fields .search-container{grid-column:1/-1}.sahal-sidebar{grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}.ps-item-form{grid-template-columns:1fr 1fr}.ps-item-form input:first-child{grid-column:1/-1}.ps-item-form button{grid-column:1/-1}}
 @media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
@@ -137,7 +106,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <body>
 <div class="wrap">
 <header class="top">
- <div><div class="brand">NexPOS PRO</div><div class="system-desc">منصة إدارة الأنشطة والخدمات</div><span class="version">MULTI SYSTEM V18</span></div>
+ <div><div class="brand">NexPOS PRO</div><div class="system-desc">منصة إدارة الأنشطة والخدمات</div><span class="version">MULTI SYSTEM V17</span></div>
  <div><span id="networkStatus" class="tag good">متصل بالخادم</span> <button class="secondary" onclick="support()">الدعم الفني</button></div>
 </header>
 
@@ -191,7 +160,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button id="psDrinksTab" onclick="showPsSection('drinks')">🥤 المشروبات</button>
    <button id="psSandwichesTab" onclick="showPsSection('sandwiches')">🥪 السندوتشات</button>
    <button id="psSessionsTab" onclick="showPsSection('sessions')">📄 سجل الجلسات</button>
-   <button id="psSubTab" onclick="showPsSection('subscription')">💎 اشتراكي والدعم</button>
   </div>
 
   <div id="psDevicesSection">
@@ -223,24 +191,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <h3>قائمة السندوتشات</h3><div class="tablewrap"><table><thead><tr><th>السندوتش</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psSandwichesTable"></tbody></table></div>
   </div>
   <div id="psSessionsSection" class="hidden"><div class="card"><div class="top"><h3>سجل الجلسات والفواتير</h3><button class="secondary" onclick="loadPlaystationData()">تحديث السجل</button></div><div class="grid"><div class="stat">عدد الجلسات<strong id="psSessionsTotal">0</strong></div><div class="stat">إجمالي الإيرادات<strong id="psSessionsRevenue2">0 جنيه</strong></div></div><div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>الجهاز</th><th>البداية</th><th>النهاية</th><th>المدة</th><th>اللعب</th><th>الإضافات</th><th>الإجمالي</th><th>الفاتورة</th></tr></thead><tbody id="psSessionsTable"></tbody></table></div></div></div>
-  <div id="psSubscriptionSection" class="hidden">
-   <div class="card" style="max-width:700px;margin:20px auto;text-align:center">
-    <h2>💎 تفاصيل اشتراكي والدعم الفني</h2>
-    <p class="muted">معلومات باقتك الحالية وطرق التواصل المباشر مع المطور</p>
-    <div id="psSubPageDetails" class="card" style="background:#f8fafc;padding:20px;text-align:right;line-height:2.2;margin:15px 0">
-     جاري تحميل بيانات الاشتراك...
-    </div>
-    <div class="card" style="background:#f1f5f9;padding:20px;text-align:center">
-     <h3>📞 قنوات التواصل الاجتماعي والدعم</h3>
-     <p class="muted">للتواصل الفوري، التجديد، أو الاستفسارات:</p>
-     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:15px">
-      <button class="green big" style="flex:1;min-width:180px" onclick="window.open('https://wa.me/201062883414','_blank')">💬 تواصل واتساب</button>
-      <button class="big" style="flex:1;min-width:180px;background:#1877f2" onclick="window.open('https://www.facebook.com/share/1KXSCGweg6/?mibextid=wwXIfr','_blank')">👥 تواصل فيسبوك</button>
-      <button class="big" style="flex:1;min-width:180px;background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af,#515bd4)" onclick="window.open('https://www.instagram.com/mhmd.elsalahy?srtk=a2F2c2M1ajc1dzRj&utm_source=qr','_blank')">📸 تواصل انستغرام</button>
-     </div>
-    </div>
-   </div>
-  </div>
  </div>
 </section>
 
@@ -268,35 +218,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <div id="settingsPage" class="hidden"><button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button><h3>إعدادات الحساب</h3><div class="card" style="max-width:600px"><h3>تعديل اسم المحل</h3><input id="settingsShopName"><button class="big" onclick="updateShopNameSetting()">حفظ اسم المحل</button></div><div class="card" style="max-width:600px"><h3>تعديل البريد الإلكتروني</h3><input id="settingsEmail" type="email"><button class="big purple" onclick="updateCustomerEmailSetting()">تغيير البريد</button></div><div class="card" style="max-width:600px"><h3>تغيير كلمة المرور</h3><input id="newCustomerPassword" type="password"><button class="big dark" onclick="updateCustomerPassword()">تغيير كلمة المرور</button></div></div>
  </div>
 </section>
-
-<!-- نافذة تأكيد إنهاء الجلسة في منتصف الشاشة -->
-<div id="customConfirmModal" class="custom-modal-overlay hidden">
-  <div class="custom-modal-card">
-    <div class="modal-header">
-      <div class="modal-title" id="modalDeviceTitle">تفاصيل حساب الجلسة</div>
-    </div>
-    <div class="modal-body">
-      <div class="modal-row">
-        <span>🎮 سعر اللعب (وقت الجلسة):</span>
-        <strong id="modalPlayTotal">0.00 جنيه</strong>
-      </div>
-      <div class="modal-row">
-        <span>🥤 إجمالي الإضافات:</span>
-        <strong id="modalOrdersTotal">0.00 جنيه</strong>
-      </div>
-      <div class="modal-row total">
-        <span>💰 الإجمالي النهائي المطلوب:</span>
-        <strong id="modalGrandTotal">0.00 جنيه</strong>
-      </div>
-      <p style="text-align: center; margin-top: 15px; color: #64748b; font-size: 13px;">هل تريد إنهاء الجلسة وتسجيل الفاتورة الآن؟</p>
-    </div>
-    <div class="modal-footer">
-      <button class="modal-btn btn-confirm" id="modalConfirmBtn">نعم، إنهاء الفاتورة</button>
-      <button class="modal-btn btn-cancel" id="modalCancelBtn">إلغاء</button>
-    </div>
-  </div>
-</div>
-
 <div id="printArea" class="hidden"></div>
 <footer class="muted" style="text-align:center;padding:20px">تم التطوير بواسطة المهندس | محمد الصلاحي</footer>
 </div>
@@ -306,6 +227,7 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-
 import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {getFirestore,doc,setDoc,getDoc,updateDoc,collection,addDoc,getDocs,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
+// تعريف الدالة عالمياً لمنع خطأ getDeviceType is not defined
 window.getDeviceType = function(device) {
     return (device && device.deviceType === "vip") ? "vip" : "room";
 };
@@ -386,14 +308,7 @@ window.register=async()=>{
 };
 window.sendWhatsAppActivation=()=>{
  const d=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:"",phone:"",system:selectedSystem,plan:"غير محددة",price:""};
- const msg=encodeURIComponent(`طلب تفعيل جديد في NexPOS PRO
-اسم العميل: ${d.name}
-النشاط: ${d.shop}
-الهاتف: ${d.phone}
-البريد: ${d.email}
-النظام: ${d.system}
-الباقة: ${d.plan}
-السعر: ${d.price} جنيه`);
+ const msg=encodeURIComponent(`طلب تفعيل جديد في NexPOS PRO\nاسم العميل: ${d.name}\nالنشاط: ${d.shop}\nالهاتف: ${d.phone}\nالبريد: ${d.email}\nالنظام: ${d.system}\nالباقة: ${d.plan}\nالسعر: ${d.price} جنيه`);
  window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
 };
 window.logout=async()=>{if(psTimer)clearInterval(psTimer);await signOut(auth);location.reload();};
@@ -413,24 +328,6 @@ onAuthStateChanged(auth,async user=>{
   else{$("customerPanel").classList.remove("hidden");$("shopTitle").textContent=profile.shopName||"نظام المبيعات";$("sahalShopTitle").textContent=profile.shopName||"متجري";$("settingsShopName").value=profile.shopName||"";$("settingsEmail").value=profile.email||user.email||"";checkCustomerSubscription(info);await loadBusiness();await checkAndSettleDailySales();}
  }catch(e){console.error(e);alert("حدث خطأ أثناء تحميل الحساب: "+e.message);}
 });
-
-function renderPsSubscriptionDetails(){
- const info=systemInfo(profile,"playstation");
- const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():(info.expiryDate?new Date(info.expiryDate):null);
- const days=expiry?Math.ceil((expiry-new Date())/86400000):0;
- const active=subscriptionActive(info);
- $("psSubPageDetails").innerHTML=`
-  <b>اسم النشاط:</b> ${escapeHTML(profile?.shopName||"—")}<br>
-  <b>المالك:</b> ${escapeHTML(profile?.customerName||"—")}<br>
-  <b>رقم الهاتف:</b> ${escapeHTML(profile?.phone||"—")}<br>
-  <b>البريد الإلكتروني:</b> ${escapeHTML(profile?.email||"—")}<br>
-  <b>الباقة الحالية:</b> ${escapeHTML(info.plan||"غير محدد")}<br>
-  <b>تاريخ انتهاء الاشتراك:</b> ${expiry?expiry.toLocaleDateString("ar-EG"):"—"}<br>
-  <b>الأيام المتبقية:</b> ${Math.max(0,days)} يوم<br>
-  <b>حالة الاشتراك:</b> <span class="tag ${active?"good":""}">${active?"نشط وساري":"غير نشط أو منتهي"}</span>
- `;
-}
-
 function renderPsSubscription(info){const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():new Date(info.expiryDate);const days=Math.ceil((expiry-new Date())/86400000);$("psSubDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(profile.shopName||"—")}<br><b>الباقة:</b> ${escapeHTML(info.plan||"—")}<br><b>المتبقي:</b> ${Math.max(0,days)} يوم<br><span class="tag good">الاشتراك نشط</span>`;}
 function checkCustomerSubscription(info){
  const details=$("subPageDetails"),action=$("subPageActionBox"),tiles=$("mainTilesContainer");
@@ -470,15 +367,14 @@ window.deleteUser=async id=>{if(!confirm("حذف بيانات الحساب من 
 
 /* =============== البلايستيشن: الرومات وVIP =============== */
 window.showPsSection=which=>{
- const sections=["devices","vip","drinks","sandwiches","sessions","subscription"];
+ const sections=["devices","vip","drinks","sandwiches","sessions"];
  sections.forEach(s=>{
-  const sectionId=s==="vip"?"psVipSection":(s==="subscription"?"psSubscriptionSection":"ps"+s[0].toUpperCase()+s.slice(1)+"Section");
-  const tabId=s==="vip"?"psVipTab":(s==="subscription"?"psSubTab":"ps"+s[0].toUpperCase()+s.slice(1)+"Tab");
+  const sectionId=s==="vip"?"psVipSection":"ps"+s[0].toUpperCase()+s.slice(1)+"Section";
+  const tabId=s==="vip"?"psVipTab":"ps"+s[0].toUpperCase()+s.slice(1)+"Tab";
   $(sectionId).classList.toggle("hidden",s!==which);
   $(tabId).classList.toggle("active",s===which);
  });
  if(which==="sessions")renderPsSessions();
- if(which==="subscription")renderPsSubscriptionDetails();
 };
 
 window.loadPlaystationData = async function(){
@@ -523,7 +419,7 @@ window.deletePsDevice=async id=>{
  try{await deleteDoc(docRef("devices",id));await loadPlaystationData();}catch(e){alert(e.message);}
 };
 
-/* بدء الجلسة */
+/* بدء الجلسة: مدة لا تقل عن 30 دقيقة أو مبلغ أو حساب تلقائي */
 window.startPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status==="running")return alert("الجهاز غير متاح.");
@@ -590,69 +486,14 @@ window.extendPsDevice=async id=>{
  }catch(e){alert("تعذر التمديد: "+e.message);}
 };
 
-/* فتح النافذة المنبثقة المنتصفة لإنهاء الجلسة */
 window.stopPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status!=="running")return;
-
- const now=Date.now();
- const startedAt=Number(d.startedAt)||now;
- const elapsedMs=Math.max(0,now-startedAt);
- const elapsedMinutes=Math.max(1,Math.ceil(elapsedMs/60000));
- const rate=Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
-
- let playTotal=0;
- if(d.sessionMode==="amount"){
-  const minimumAmount=rate*PS_MIN_SESSION_MINUTES/60;
-  playTotal=Math.max(minimumAmount,Number(d.sessionAmount||0));
- }else if(d.sessionMode==="auto"){
-  const halfHourBlocks=Math.max(1,Math.ceil(elapsedMs/(PS_MIN_SESSION_MINUTES*60000)));
-  const chargedMinutes=halfHourBlocks*PS_MIN_SESSION_MINUTES;
-  playTotal=Number((chargedMinutes/60*rate).toFixed(2));
- }else{
-  const chargedMinutes=Math.max(PS_MIN_SESSION_MINUTES,elapsedMinutes);
-  playTotal=Number((chargedMinutes/60*rate).toFixed(2));
- }
-
- const orders=d.currentOrders||psSessions.find(s=>s.id===d.sessionId)?.orders||[];
- const ordersTotal=Number(orders.reduce((sum,o)=>sum+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0).toFixed(2));
- const grandTotal=Number((playTotal+ordersTotal).toFixed(2));
-
- document.getElementById("modalDeviceTitle").textContent=`تفاصيل حساب الجلسة للجهاز (${d.name})`;
- document.getElementById("modalPlayTotal").textContent=`${money(playTotal)} جنيه`;
- document.getElementById("modalOrdersTotal").textContent=`${money(ordersTotal)} جنيه`;
- document.getElementById("modalGrandTotal").textContent=`${money(grandTotal)} جنيه`;
-
- const modal=document.getElementById("customConfirmModal");
- modal.classList.remove("hidden");
-
- return new Promise((resolve)=>{
-  const confirmBtn=document.getElementById("modalConfirmBtn");
-  const cancelBtn=document.getElementById("modalCancelBtn");
-
-  const onConfirm=async()=>{
-   cleanup();
-   modal.classList.add("hidden");
-   await finalizePsSession(d,"manual");
-   resolve(true);
-  };
-
-  const onCancel=()=>{
-   cleanup();
-   modal.classList.add("hidden");
-   resolve(false);
-  };
-
-  function cleanup(){
-   confirmBtn.removeEventListener("click",onConfirm);
-   cancelBtn.removeEventListener("click",onCancel);
-  }
-
-  confirmBtn.addEventListener("click",onConfirm);
-  cancelBtn.addEventListener("click",onCancel);
- });
+ if(!confirm("إنهاء الجلسة وتسجيل الفاتورة؟"))return;
+ await finalizePsSession(d,"manual");
 };
 
+/* إضافة الطلبات إلى فاتورة الجهاز (الدالة المصححة بدقة) */
 window.addOrderToRoom = async (deviceId) => {
   const d = psDevices.find(x => x.id === deviceId);
   if (!d || d.status !== "running" || !d.sessionId) return alert("لا توجد جلسة نشطة على هذا الجهاز.");
@@ -723,6 +564,7 @@ window.removeRoomOrder=async(deviceId,index)=>{
  }catch(e){alert(e.message);}
 };
 
+/* إنهاء الجلسة وتسجيل إيراد واحد فقط */
 async function finalizePsSession(device,reason="manual"){
  if(!currentUser||!device||psEndingDevices.has(device.id))return;
  psEndingDevices.add(device.id);
@@ -872,6 +714,7 @@ window.togglePsMode=id=>{
  $(`psAutoBox_${id}`).classList.toggle("hidden",mode!=="auto");
 };
 
+/* المؤقت: العد التنازلي للمدة والمبلغ، والعد التصاعدي للتلقائي */
 function startPsTimer(){
  if(psTimer)clearInterval(psTimer);
  psTimer=setInterval(async()=>{
@@ -930,6 +773,7 @@ window.printPsInvoice=id=>{
  window.print();
 };
 
+/* إدارة المشروبات والسندوتشات */
 window.addPsItem=async category=>{
  const drink=category==="drink",name=$(drink?"psDrinkName":"psSandwichName").value.trim();
  const price=Number($(drink?"psDrinkPrice":"psSandwichPrice").value),qty=Number($(drink?"psDrinkQty":"psSandwichQty").value);
@@ -968,6 +812,7 @@ function renderPsStats(){
  $("psSandwichesCount").textContent=psItems.filter(x=>x.category==="sandwich").length;
 }
 
+/* =============== نظام المبيعات =============== */
 window.page=name=>{
  const pages=["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription"];
  pages.forEach(p=>$(p+"Page").classList.add("hidden"));
@@ -1071,7 +916,7 @@ window.completeSale=async()=>{
  }catch(e){alert("حدث خطأ أثناء البيع: "+e.message);}
 };
 window.printInvoiceDirectly=inv=>{
- $("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px"><h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة مبيعات</h3><p>رقم الفاتورة: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr><table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}</table><hr><p>إجمالي الأصناف: ${money(inv.subtotal)} جنيه</p><p>الخصم: -${money(inv.discount)} جنيه</p><p>الإضافة: +${money(inv.addition)} جنيه</p><h2>الإجمالي النهائي: ${money(inv.total)} جنيه</h2><p>شكراً لتعاملكم معنا</p><p>تطوير: محمد الصلاحي</p></div>`;
+ $("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px"><h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة مبيعات</h3><p>رقم الفاتورة: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr><table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}</table><hr><p>إجمالي الأصناف: ${money(inv.subtotal)} جنيه</p><p>الخصم: -${money(inv.discount)} جنيه</p><p>الإضافة: +${money(inv.addition)} جنيه</p><h2>الإجمالي النهائي: ${money(inv.total)} جنيه</h2><p>شكراً لتعاملكم معنا</p><p>تطوير: محمد الصلاحي</p></div>`;
  window.print();
 };
 window.addTreasuryTransaction=async()=>{
@@ -1099,7 +944,7 @@ function renderExpenses(){
  $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات</td></tr>";
 }
 function renderSales(){
- $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printSavedInvoice('${s.id}')">طباعة</button></div></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
+ $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printSavedInvoice('${s.id}')">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
 }
 window.printSavedInvoice=id=>{const inv=sales.find(s=>s.id===id);if(inv)printInvoiceDirectly(inv);};
 function renderStats(){
@@ -1112,4 +957,3 @@ function renderStats(){
 </script>
 </body>
 </html>
-```eof

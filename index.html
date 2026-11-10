@@ -71,7 +71,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  <div>
   <div class="brand">NexPOS PRO</div>
   <div class="system-desc">نظام إدارة المبيعات والمخازن</div>
-  <span class="version">TILES INTERFACE V8</span>
+  <span class="version">TILES INTERFACE V9</span>
  </div>
  <div>
   <span id="networkStatus" class="tag good" style="margin-left:10px;">متصل بالخادم</span>
@@ -168,13 +168,12 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
      <div class="tile t-dark" onclick="page('expenses')"><h3>المصروفات اليومية</h3><p>تسجيل المصاريف التشغيلية</p></div>
      <div class="tile t-teal" onclick="page('reports')"><h3>التقارير المالية</h3><p>تقارير الأرباح وصافي الدخل</p></div>
      <div class="tile t-red" onclick="page('settings')"><h3>الإعدادات والباسورد</h3><p>تعديل بيانات الحساب والمحل</p></div>
-     <!-- خانة اشتراكي الجديدة المضافة مع الأقسام -->
      <div class="tile" style="background:linear-gradient(135deg,#0284c7,#0369a1)" onclick="page('subscription')"><h3>📦 اشتراكي</h3><p>متابعة الباقة والأيام المتبقية وسعر الاشتراك</p></div>
     </div>
    </div>
   </div>
 
-  <!-- صفحة اشتراكي الجديدة -->
+  <!-- صفحة اشتراكي -->
   <div id="subscriptionPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>تفاصيل اشتراكي وباقتك الحالية</h3>
@@ -267,7 +266,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- صفحة الإعدادات المحدثة لتعديل اسم المحل، البريد، وكلمة المرور -->
+  <!-- صفحة الإعدادات -->
   <div id="settingsPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    <h3>إعدادات الحساب والمحل</h3>
@@ -423,16 +422,55 @@ onAuthStateChanged(auth,async user=>{
   $("customerPanel").classList.remove("hidden");
   $("shopTitle").textContent=profile.shopName||"نظام المبيعات والمخزون";
   
-  // تعبئة حقول الإعدادات بالبيانات الحالية للعميل
   if($("settingsShopName")) $("settingsShopName").value = profile.shopName || "";
   if($("settingsEmail")) $("settingsEmail").value = profile.email || user.email || "";
 
-  // فحص حالة الاشتراك وإدارتها بالخلفية
   checkCustomerSubscription(profile);
 
   await loadBusiness();
+  
+  // تفعيل التحقق من إغلاق الوردية بعد منتصف الليل أوتوماتيك
+  checkAndSettleDailySales();
+
  }catch(e){console.error(e);}
 });
+
+// دالة ترحيل مبيعات اليوم للخزينة وتصفيرها بعد منتصف الليل أوتوماتيك
+async function checkAndSettleDailySales(){
+ try{
+  const userDocRef = doc(db,"users",currentUser.uid);
+  const userSnap = await getDoc(userDocRef);
+  if(!userSnap.exists()) return;
+  const userData = userSnap.data();
+
+  const todayStr = new Date().toISOString().slice(0, 10); // صيغة YYYY-MM-DD
+  const lastSettled = userData.lastSettledDate || "";
+
+  // لو اليوم الحالي مختلف عن آخر يوم تم إغلاقه وتصفيره فيه
+  if(lastSettled !== todayStr){
+   // نحسب مبيعات الأيام السابقة أو إجمالي مبيعات الفواتير التي لم ترحل
+   const rev = sales.reduce((s,x)=>s+Number(x.total||0),0);
+   
+   // لو في مبيعات، نسجلها كإيراد وارد في الخزينة أوتوماتيك
+   if(rev > 0){
+    // ملاحظة: نتحقق إذا لم تسجل مبيعات هذا اليوم مسبقاً في الخزينة
+    await addDoc(col("treasury"),{
+     type: "in",
+     amount: rev,
+     note: `إغلاق وردية ومبيعات يوم: ${lastSettled || todayStr}`,
+     date: new Date().toLocaleString("ar-EG")
+    });
+   }
+
+   // تحديث تاريخ آخر تصفير في قاعدة بيانات المستخدم لكي لا يتكرر اليوم
+   await updateDoc(userDocRef, { lastSettledDate: todayStr });
+   await loadTreasury();
+   renderStats();
+  }
+ }catch(e){
+  console.error("خطأ في الترحيل التلقائي:", e);
+ }
+}
 
 // دوال تعديل الإعدادات (اسم المحل، البريد، كلمة المرور)
 window.updateShopNameSetting=async()=>{
@@ -674,7 +712,8 @@ window.completeSale=async()=>{
    if(p)await updateDoc(docRef("products",item.productId),{qty:p.qty-item.qty});
   }
   await addDoc(col("sales"),invoice);
-  await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoice.number}`,date:invoice.date});
+  // ملاحظة: مبيعات اليوم يتم تسجيلها تفصيلياً في جدول الفواتير وتضاف أوتوماتيك للخزينة بعد منتصف الليل
+  renderStats();
   cart=[];renderCart();await loadBusiness();alert(`تمت عملية البيع بنجاح وتحصيل ${money(total)} جنيه!`);
  }catch(e){alert("خطأ أثناء إتمام البيع: "+e.message)}
 };

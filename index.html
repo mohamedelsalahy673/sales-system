@@ -213,7 +213,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- شاشة المبيعات بتصميم NexPOS الكلاسيكي المرتب -->
+  <!-- شاشة المبيعات بتصميم NexPOS الكلاسيكي مع خانات الخصم والإضافة الفعالة -->
   <div id="salesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    
@@ -225,15 +225,17 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="sahal-shortcuts">
     <button class="sahal-sc-btn" onclick="document.getElementById('saleQty').focus()">الكمية</button>
     <button class="sahal-sc-btn" onclick="document.getElementById('salePrice').focus()">السعر</button>
+    <button class="sahal-sc-btn" onclick="document.getElementById('saleDiscount').focus()">خصم</button>
+    <button class="sahal-sc-btn" onclick="document.getElementById('saleAddition').focus()">إضافة</button>
     <button class="sahal-sc-btn" onclick="clearCart()">حذف</button>
     <button class="sahal-sc-btn" onclick="completeSale()" style="background:#dcfce7;border-color:#16a34a;color:#166534;">حفظ | بيع</button>
    </div>
 
    <div class="sahal-layout">
-    <!-- الجزء الرئيسي: البحث والجدول -->
+    <!-- الجزء الرئيسي: البحث والحقول والجدول -->
     <div class="sahal-main">
      <div class="sahal-search-box">
-      <div style="display:grid;grid-template-columns: 2fr 1fr 1fr;gap:8px;">
+      <div style="display:grid;grid-template-columns: 2fr 1fr 1fr 1fr 1fr;gap:8px;">
        <div>
         <label style="font-size:11px">بحث عن صنف بالاسم أو الباركود</label>
         <input id="saleSearch" placeholder="ابحث هنا..." oninput="searchProducts()" style="margin:4px 0 0;">
@@ -246,6 +248,14 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
        <div>
         <label style="font-size:11px">سعر البيع</label>
         <input id="salePrice" type="number" min="0" style="margin:4px 0 0;">
+       </div>
+       <div>
+        <label style="font-size:11px">خصم (-)</label>
+        <input id="saleDiscount" type="number" min="0" value="0" style="margin:4px 0 0;" oninput="renderCart()">
+       </div>
+       <div>
+        <label style="font-size:11px">إضافة (+)</label>
+        <input id="saleAddition" type="number" min="0" value="0" style="margin:4px 0 0;" oninput="renderCart()">
        </div>
       </div>
      </div>
@@ -689,7 +699,7 @@ function renderProducts(){
  $("productsTable").innerHTML=products.map(p=>`<tr><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
 }
 
-// دالة البحث التفاعلي واختيار الأصناف (إضافة تلقائية للفاتورة)
+// دالة البحث التفاعلي واختيار الأصناف
 window.searchProducts=()=>{
  const q=$("saleSearch").value.trim().toLowerCase();
  if(!q){ $("searchResults").innerHTML=""; return; }
@@ -714,7 +724,7 @@ window.addToCart=()=>{
  let p=selectedProduct;
  if(!p){
   p=products.find(x=>(x.name||"").toLowerCase()===q.toLowerCase());
-}
+ }
  if(!p) return alert("اختر منتجاً صالحاً من قائمة البحث أو اكتب اسمه الصحيح.");
  if(qty>p.qty) return alert("الكمية المطلوبة غير متوفرة في المخزن.");
 
@@ -742,7 +752,10 @@ function renderCart(){
   </tr>
  `).join("")||"<tr><td colspan='5' style='text-align:center;color:#788397;'>السلة فارغة، أضف أصنافاً للبدء</td></tr>";
  
- const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
+ const subtotal=cart.reduce((s,x)=>s+x.qty*x.price,0);
+ const discount = Number($("saleDiscount") ? $("saleDiscount").value : 0) || 0;
+ const addition = Number($("saleAddition") ? $("saleAddition").value : 0) || 0;
+ const total = Math.max(0, subtotal - discount + addition);
  $("cartTotalDisplay").textContent=money(total);
 }
 
@@ -753,14 +766,20 @@ window.removeCartItem=(index)=>{
 
 window.clearCart=()=>{
  cart=[];
+ if($("saleDiscount")) $("saleDiscount").value="0";
+ if($("saleAddition")) $("saleAddition").value="0";
  renderCart();
 };
 
 // إتمام البيع وإصدار الفاتورة
 window.completeSale=async()=>{
  if(!cart.length) return alert("سلة المبيعات فارغة.");
- const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
- const invoice={number:"INV-"+Date.now().toString().slice(-6), total, items:[...cart], date:new Date().toLocaleString("ar-EG")};
+ const subtotal=cart.reduce((s,x)=>s+x.qty*x.price,0);
+ const discount = Number($("saleDiscount") ? $("saleDiscount").value : 0) || 0;
+ const addition = Number($("saleAddition") ? $("saleAddition").value : 0) || 0;
+ const total=Math.max(0, subtotal - discount + addition);
+ 
+ const invoice={number:"INV-"+Date.now().toString().slice(-6), total, discount, addition, items:[...cart], date:new Date().toLocaleString("ar-EG")};
 
  try{
   for(const item of cart){
@@ -776,6 +795,8 @@ window.completeSale=async()=>{
   }
 
   cart=[];
+  if($("saleDiscount")) $("saleDiscount").value="0";
+  if($("saleAddition")) $("saleAddition").value="0";
   renderCart();
   await loadBusiness();
   alert(`تمت عملية البيع بنجاح وتحصيل ${money(total)} جنيه!`);
@@ -795,6 +816,8 @@ function printInvoiceDirectly(inv){
     ${inv.items.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}
    </table>
    <hr style="border:1px dashed #000;">
+   ${inv.discount ? `<p>الخصم: -${money(inv.discount)} جنيه</p>` : ''}
+   ${inv.addition ? `<p>الإضافة: +${money(inv.addition)} جنيه</p>` : ''}
    <h4>الإجمالي الكلي: ${money(inv.total)} جنيه</h4>
    <p style="font-size:11px; margin-top:15px;">شكراً لتعاملكم معنا — تطوير: محمد الصلاحي</p>
   </div>
@@ -817,7 +840,7 @@ function renderTreasury(){
   return `<tr><td><span class="tag ${t.type==='in'?'good':''}">${t.type==='in'?'وارد':'صادر'}</span></td><td>${money(t.amount)} ج</td><td>${t.note}</td><td>${t.date}</td></tr>`;
  }).join("")||"<tr><td colspan='4'>لا توجد حركات</td></tr>";
  $("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" جنيه";
-};
+}
 
 window.addExpense=async()=>{
  const name=$("expenseName").value.trim(), amount=Number($("expenseAmount").value)||0;

@@ -3,341 +3,272 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NexPOS PRO</title>
+<title>NexPOS PRO - ELSALAHY</title>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f3f5fa;color:#1c2940;font-family:Arial,sans-serif}
+body{margin:0;background:#e2e8f0;color:#1e293b;font-family:Arial,sans-serif}
 button,input,select,textarea{font:inherit}
-button{border:0;border-radius:9px;padding:9px 14px;background:#2458d3;color:white;cursor:pointer}
-button:hover{opacity:.9}
-input,select,textarea{width:100%;padding:11px;border:1px solid #dce2ed;border-radius:9px;margin:6px 0 13px;background:white}
-textarea{min-height:75px}
-label{font-size:13px;font-weight:bold}
-h2,h3{margin-top:0}
-.wrap{max-width:1350px;margin:auto;padding:15px}
-.card{background:white;padding:18px;border-radius:14px;margin:12px 0;box-shadow:0 3px 15px #1822380b}
-.brand{font-size:26px;font-weight:bold;color:#2458d3}
-.system-desc{font-size:15px;font-weight:bold;color:#334155;margin-top:4px}
-.version{display:block;color:#fff;background:#2458d3;border-radius:5px;padding:3px 8px;font-size:10px;width:max-content;margin-top:6px;letter-spacing:1px}
-.muted{font-size:13px;color:#788397}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
-.stat{background:white;padding:18px;border-radius:13px}
-.stat strong{display:block;font-size:25px;margin-top:9px}
-nav{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}
-nav button{background:#e8edfa;color:#29416f}
-nav button.active{background:#2458d3;color:white}
-.big{width:100%;margin:5px 0}
-.secondary{background:#e8edfa;color:#29416f}
-.red{background:#b72f3b}
-.green{background:#178653}
-.purple{background:#7c3aed}
-.dark{background:#202c43}
+button{border:0;cursor:pointer;border-radius:4px}
+input{padding:8px;border:1px solid #cbd5e1;border-radius:4px;background:white;width:100%}
+
+/* شريط القوائم العلوي المطابق للصورة */
+.top-bar{background:#15803d;color:white;display:flex;justify-content:space-between;align-items:center;padding:5px 15px;font-size:13px;flex-wrap:wrap}
+.top-bar-left{display:flex;gap:15px;align-items:center}
+.top-bar-right{display:flex;gap:10px;align-items:center}
+.top-bar a{color:white;text-decoration:none;padding:3px 8px;border-radius:3px}
+.top-bar a:hover{background:rgba(255,255,255,0.2)}
+
+/* شريط الأسرار العلوي (F5, F6, F7, F8) */
+.shortcuts-bar{background:#f1f5f9;border-bottom:1px solid #cbd5e1;padding:6px 15px;display:flex;justify-content:flex-end;gap:8px;align-items:center}
+.shortcut-btn{background:#e2e8f0;color:#334155;border:1px solid #cbd5e1;padding:5px 12px;font-size:12px;font-weight:bold;border-radius:4px;display:flex;flex-direction:column;align-items:center}
+.shortcut-btn span{font-size:10px;color:#64748b}
+
+/* تخطيط شاشة المبيعات الكلاسيكي */
+.pos-container{display:grid;grid-template-columns: 280px 1fr;height:calc(100vh - 85px);background:#f8fafc}
+@media(max-width:900px){.pos-container{grid-template-columns:1fr;height:auto}}
+
+/* اللوحة اليمنى (لوحة الأزرار والإجماليات المطابقة تماماً) */
+.pos-sidebar{background:#f1f5f9;border-left:1px solid #cbd5e1;padding:12px;display:flex;flex-direction:column;gap:10px}
+.total-box{background:#15803d;color:white;padding:12px;border-radius:6px;text-align:center}
+.total-box h2{margin:0;font-size:28px}
+.total-box span{font-size:12px;opacity:.9}
+
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.action-btn{padding:10px;font-weight:bold;font-size:13px;border-radius:4px;text-align:center;color:white}
+.btn-green{background:#16a34a}
+.btn-blue{background:#2563eb}
+.btn-orange{background:#d97706}
+.btn-red{background:#dc2626}
+.btn-dark{background:#334155}
+.btn-yellow{background:#ca8a04;color:black}
+
+/* لوحة الجدول ومنطقة البحث */
+.pos-main{display:flex;flex-direction:column;padding:10px;overflow:hidden}
+.search-section{background:#e2e8f0;padding:10px;border-radius:6px;margin-bottom:10px;border:1px solid #cbd5e1}
+.table-wrap{flex:1;overflow:auto;background:white;border:1px solid #cbd5e1;border-radius:6px}
+table{width:100%;border-collapse:collapse}
+th{background:#15803d;color:white;padding:10px;font-size:13px;text-align:right}
+td{padding:8px 10px;border-bottom:1px solid #f1f5f9;font-size:13px;text-align:right}
+
+.card{background:white;padding:15px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.05);margin:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.tag{padding:4px 8px;border-radius:12px;font-size:11px;background:#fef08a;color:#713f12}
+.tag.good{background:#dcfce7;color:#166534}
 .hidden{display:none!important}
-.tablewrap{overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:600px}
-td,th{padding:11px;border-bottom:1px solid #edf0f5;text-align:right;font-size:13px}
-.tag{border-radius:20px;padding:5px 9px;background:#fff0d3;color:#885900;font-size:12px}
-.tag.good{background:#e0f6e9;color:#167445}
-.rowbtn{padding:7px 10px;margin:2px;font-size:12px}
-.msg{padding:10px;border-radius:8px;background:#fef2f2;color:#991b1b;margin-top:10px;font-size:13px;border:1px solid #fecaca}
-hr{border:0;border-top:1px solid #eee;margin:18px 0}
-.result{display:block;width:100%;text-align:right;margin:4px 0}
-
-.tiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:20px}
-.tile{padding:24px;border-radius:16px;color:white;cursor:pointer;transition:transform .2s,opacity .2s;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;justify-content:space-between;min-height:140px}
-.tile:hover{transform:translateY(-3px);opacity:.95}
-.tile h3{margin:0 0 8px 0;font-size:19px}
-.tile p{margin:0;font-size:13px;opacity:.9}
-.t-blue{background:linear-gradient(135deg,#2458d3,#3b71f3)}
-.t-green{background:linear-gradient(135deg,#178653,#22b070)}
-.t-orange{background:linear-gradient(135deg,#d97706,#f59e0b)}
-.t-purple{background:linear-gradient(135deg,#7c3aed,#9333ea)}
-.t-dark{background:linear-gradient(135deg,#1e293b,#334155)}
-.t-teal{background:linear-gradient(135deg,#0d9488,#14b8a6)}
-.t-red{background:linear-gradient(135deg,#b72f3b,#dc2626)}
-
-@media print{
- body *{visibility:hidden!important}
- #printArea,#printArea *{visibility:visible!important}
- #printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}
-}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header class="top">
- <div>
-  <div class="brand">NexPOS PRO</div>
-  <div class="system-desc">نظام إدارة المبيعات والمخازن</div>
-  <span class="version">TILES INTERFACE V11</span>
+
+<!-- الشريط العلوي المطابق للصورة تماماً -->
+<div class="top-bar">
+ <div class="top-bar-left">
+  <span>برنامج سهل</span>
+  <span>|</span>
+  <span id="topShopName">High Store : شركة</span>
+  <span>|</span>
+  <span>نسخة مراجعة</span>
+  <span>|</span>
+  <span>53644</span>
+  <span>|</span>
+  <span>الهاتف : 01060600554</span>
  </div>
- <div>
-  <span id="networkStatus" class="tag good" style="margin-left:10px;">متصل بالخادم</span>
-  <button class="secondary" onclick="support()">الدعم الفني</button>
+ <div class="top-bar-right">
+  <a href="#" onclick="page('dashboard')">لوحة الإدارة الشاملة</a>
+  <a href="#" onclick="page('sales')">المبيعات</a>
+  <a href="#" onclick="page('products')">المخزون</a>
+  <a href="#" onclick="page('treasury')">الخزينة</a>
+  <a href="#" onclick="page('expenses')">المصروفات</a>
+  <a href="#" onclick="page('reports')">التقارير</a>
+  <a href="#" onclick="page('settings')">الإعدادات</a>
+  <a href="#" onclick="page('subscription')">📦 اشتراكي</a>
+  <a href="#" onclick="logout()" style="color:#fca5a5;">خروج</a>
  </div>
-</header>
+</div>
+
+<!-- شريط الاختصارات العلوي F5, F6, F7, F8 -->
+<div class="shortcuts-bar">
+ <button class="shortcut-btn" onclick="setQuickInput('qty')">الكمية <span>F5</span></button>
+ <button class="shortcut-btn" onclick="setQuickInput('price')">السعر <span>F6</span></button>
+ <button class="shortcut-btn" onclick="setQuickInput('tax')">الضريبة <span>F7</span></button>
+ <button class="shortcut-btn" onclick="clearCart()">حذف <span>F8</span></button>
+ <button class="shortcut-btn" onclick="printLast()">طباعة <span>F4</span></button>
+ <button class="shortcut-btn" onclick="addNewProductPrompt()">جديد <span>F10</span></button>
+ <button class="shortcut-btn" onclick="completeSale()" style="background:#dcfce7;border-color:#16a34a;color:#166534;">حفظ | بيع <span>F9</span></button>
+</div>
 
 <!-- شاشة تسجيل الدخول -->
-<section id="auth">
- <div class="card" style="max-width:500px;margin:30px auto">
-  <h2>مرحبًا بك في NexPOS PRO</h2>
-  <p class="muted">سجل الدخول لإدارة نشاطك التجاري</p>
-  <nav>
-   <button id="tabLogin" class="active" onclick="showAuth('login')">تسجيل الدخول</button>
-   <button id="tabRegister" onclick="showAuth('register')">إنشاء حساب جديد</button>
-   <button id="tabOwner" onclick="showAuth('owner')">لوحة التحكم</button>
-  </nav>
-
-  <div id="loginBox">
-   <label>البريد الإلكتروني</label><input id="loginEmail" type="email">
-   <label>كلمة المرور</label><input id="loginPassword" type="password">
-   <button class="big" onclick="login()">دخول للنظام</button>
-  </div>
-
-  <div id="registerBox" class="hidden">
-   <label>اسم النشاط التجاري</label><input id="regShop">
-   <label>اسم المسؤول</label><input id="regName">
-   <label>رقم الهاتف</label><input id="regPhone">
-   <label>البريد الإلكتروني</label><input id="regEmail" type="email">
-   <label>كلمة المرور</label><input id="regPassword" type="password">
-   <button class="big green" onclick="register()">إنشاء الحساب وتواصل مع المطور للاستلام والدفع والتفعيل</button>
-  </div>
-
-  <div id="ownerBox" class="hidden">
-   <label>اسم المستخدم الإداري</label><input id="ownerUsername">
-   <label>كلمة المرور</label><input id="ownerPassword" type="password">
-   <button class="big dark" onclick="ownerLogin()">دخول لوحة التحكم الشاملة</button>
-  </div>
-  <p id="authMsg" class="msg hidden"></p>
+<section id="auth" style="max-width:450px;margin:50px auto;">
+ <div class="card">
+  <h2>تسجيل الدخول - NexPOS PRO</h2>
+  <label>البريد الإلكتروني</label><input id="loginEmail" type="email">
+  <label>كلمة المرور</label><input id="loginPassword" type="password">
+  <button class="action-btn btn-blue" style="width:100%;margin-top:10px;" onclick="login()">دخول للنظام</button>
+  <p id="authMsg" class="hidden" style="color:red;font-size:12px;margin-top:8px;"></p>
  </div>
 </section>
 
 <!-- شاشة الانتظار -->
-<section id="pendingScreen" class="hidden">
- <div class="card" style="max-width:550px;margin:40px auto;text-align:center;">
-  <h2>تم إنشاء حسابك بنجاح! 🚀</h2>
-  <p class="muted" style="line-height:1.8;">حسابك قيد المراجعة. تواصل مع المطور (محمد الصلاحي) عبر واتساب للتفعيل الفوري.</p>
-  <button class="big green" onclick="sendWhatsAppActivation()" style="margin:15px 0;">💬 تواصل مع المطور للتفعيل</button>
-  <button class="big secondary" onclick="location.reload()">العودة لتسجيل الدخول</button>
+<section id="pendingScreen" class="hidden" style="max-width:500px;margin:50px auto;text-align:center;">
+ <div class="card">
+  <h2>حسابك قيد المراجعة 🚀</h2>
+  <p style="font-size:14px;color:#475569;">تواصل مع المطور (محمد الصلاحي) عبر واتساب للتفعيل الفوري.</p>
+  <button class="action-btn btn-green" style="width:100%;margin:10px 0;" onclick="sendWhatsAppActivation()">💬 تواصل عبر واتساب للتفعيل</button>
+  <button class="action-btn btn-blue" style="width:100%;" onclick="location.reload()">تسجيل الخروج</button>
  </div>
 </section>
 
-<!-- لوحة المالك -->
-<section id="ownerPanel" class="hidden">
- <div class="card">
-  <div class="top">
-   <div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة المتاجر وتفعيل الاشتراكات</span></div>
-   <button class="red" onclick="logout()">تسجيل الخروج</button>
-  </div>
+<!-- لوحة التحكم الرئيسية والتقارير والإعدادات -->
+<section id="dashboardArea" class="hidden" style="padding:15px;max-width:1200px;margin:auto;">
+ <div id="pageDashboard" class="card">
+  <h3>لوحة المؤشرات العامة</h3>
   <div class="grid">
-   <div class="stat">إجمالي المتاجر المسجلة<strong id="totalUsers">0</strong></div>
+   <div class="card">إجمالي المنتجات<strong id="statProducts" style="display:block;font-size:22px;color:#15803d;margin-top:5px">0</strong></div>
+   <div class="card">عدد الفواتير<strong id="statSales" style="display:block;font-size:22px;color:#2563eb;margin-top:5px">0</strong></div>
+   <div class="card">مبيعات اليوم<strong id="statRevenue" style="display:block;font-size:22px;color:#d97706;margin-top:5px">0 جنيه</strong></div>
+   <div class="card">رصيد الخزينة<strong id="statTreasuryBalance" style="display:block;font-size:22px;color:#334155;margin-top:5px">0 جنيه</strong></div>
   </div>
-  <h3>قائمة العملاء والمتاجر والاشتراكات</h3>
-  <div class="tablewrap"><table>
-   <thead><tr><th>المتجر</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة والاشتراك</th><th>إجراءات التفعيل والإدارة</th></tr></thead>
-   <tbody id="usersTable"></tbody>
-  </table></div>
  </div>
-</section>
 
-<!-- لوحة العميل (النظام الرئيسي) -->
-<section id="customerPanel" class="hidden">
- <div class="card">
-  <div class="top">
-   <div><h2 id="shopTitle">نظام المبيعات والمخزون</h2><span class="muted">لوحة الإدارة الشاملة</span></div>
-   <button class="red" onclick="logout()">تسجيل الخروج</button>
+ <div id="pageProducts" class="card hidden">
+  <h3>إدارة المخزون والمنتجات</h3>
+  <input id="pName" placeholder="اسم الصنف الجديد" style="margin-bottom:8px">
+  <div class="grid">
+   <input id="pCost" type="number" placeholder="سعر الشراء">
+   <input id="pPrice" type="number" placeholder="سعر البيع">
+   <input id="pQty" type="number" placeholder="الكمية" value="10">
   </div>
-
-  <div id="dashboardPage">
-   <div class="grid">
-    <div class="stat">إجمالي المنتجات<strong id="statProducts">0</strong></div>
-    <div class="stat">عدد الفواتير<strong id="statSales">0</strong></div>
-    <div class="stat">مبيعات اليوم<strong id="statRevenue">0 جنيه</strong></div>
-    <div class="stat">رصيد الخزينة<strong id="statTreasuryBalance">0 جنيه</strong></div>
-   </div>
-
-   <div class="card">
-    <h3>اختر القسم للبدء</h3>
-    <div class="tiles-grid" id="mainTilesContainer">
-     <div class="tile t-blue" onclick="page('sales')"><h3>شاشة المبيعات (POS)</h3><p>إصدار الفواتير بالباركود</p></div>
-     <div class="tile t-green" onclick="page('products')"><h3>المنتجات والمخزون</h3><p>إدارة الأصناف والأسعار</p></div>
-     <div class="tile t-orange" onclick="page('treasury')"><h3>الخزينة والحسابات</h3><p>متابعة النقدية والأرباح</p></div>
-     <div class="tile t-purple" onclick="page('history')"><h3>الفواتير السابقة</h3><p>استعراض وطباعة الفواتير</p></div>
-     <div class="tile t-dark" onclick="page('expenses')"><h3>المصروفات اليومية</h3><p>تسجيل المصاريف التشغيلية</p></div>
-     <div class="tile t-teal" onclick="page('reports')"><h3>التقارير المالية</h3><p>تقارير الأرباح وصافي الدخل</p></div>
-     <div class="tile t-red" onclick="page('settings')"><h3>الإعدادات والباسورد</h3><p>تعديل بيانات الحساب والمحل</p></div>
-     <div class="tile" style="background:linear-gradient(135deg,#0284c7,#0369a1)" onclick="page('subscription')"><h3>📦 اشتراكي</h3><p>متابعة الباقة والأيام المتبقية وسعر الاشتراك</p></div>
-    </div>
-   </div>
+  <button class="action-btn btn-green" style="margin-top:10px;" onclick="saveProduct()">حفظ الصنف بالمخزن</button>
+  <div class="table-wrap" style="margin-top:15px;">
+   <table><thead><tr><th>الصنف</th><th>شراء</th><th>بيع</th><th>المخزون</th><th>حذف</th></tr></thead><tbody id="productsTable"></tbody></table>
   </div>
-
-  <!-- صفحة اشتراكي -->
-  <div id="subscriptionPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>تفاصيل اشتراكي وباقتك الحالية</h3>
-   <div class="card" style="max-width:600px; margin:auto; text-align:center; padding:25px;">
-    <h2 style="color:#0284c7; margin-bottom:15px;">حالة باقة الاشتراك</h2>
-    <div id="subPageDetails" style="font-size:16px; line-height:2; margin-bottom:20px;">
-     جاري تحميل تفاصيل الباقة...
-    </div>
-    <div id="subPageActionBox"></div>
-   </div>
-  </div>
-
-  <!-- صفحة المبيعات بتصميم الصورة الكلاسيكي المظبوط -->
-  <div id="salesPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>شاشة نقاط البيع (POS)</h3>
-   
-   <div class="card">
-    <div class="grid" style="grid-template-columns: 2fr 1fr 1fr; align-items: center;">
-     <div>
-      <label>بحث عن صنف بالاسم أو الباركود</label>
-      <input id="saleSearch" placeholder="ابحث هنا..." oninput="searchProducts()">
-      <div id="searchResults" style="position:absolute;z-index:10;background:white;width:300px;box-shadow:0 4px 10px rgba(0,0,0,0.1)"></div>
-     </div>
-     <div>
-      <label>الكمية</label>
-      <input id="saleQty" type="number" min="1" value="1">
-     </div>
-     <div>
-      <label>سعر البيع</label>
-      <input id="salePrice" type="number" min="0">
-     </div>
-    </div>
-    <button class="big green" onclick="addToCart()" style="margin-top:10px;">إضافة للسلة</button>
-   </div>
-
-   <div class="card">
-    <div class="top" style="margin-bottom:10px;">
-     <h3>سلة المبيعات الحالية</h3>
-     <div style="display:flex; align-items:center; gap:8px;">
-      <input type="checkbox" id="autoPrintToggle" checked style="width:18px;height:18px;margin:0;cursor:pointer;">
-      <label for="autoPrintToggle" style="cursor:pointer;font-size:14px;color:#1e293b;">طباعة الفاتورة تلقائياً عند إتمام البيع</label>
-     </div>
-    </div>
-    <div class="tablewrap">
-     <table>
-      <thead>
-       <tr>
-        <th>الصنف</th>
-        <th>الكمية</th>
-        <th>السعر</th>
-        <th>الإجمالي</th>
-        <th>حذف</th>
-       </tr>
-      </thead>
-      <tbody id="cartTable">
-       <tr><td colspan="5" style="text-align:center;color:#788397;">السلة فارغة، أضف أصنافاً للبدء</td></tr>
-      </tbody>
-     </table>
-    </div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; flex-wrap:wrap; gap:10px;">
-     <h3 style="margin:0;">الإجمالي الكلي: <span id="cartTotal" style="color:#2458d3;">0</span> جنيه</h3>
-     <div style="display:flex; gap:10px;">
-      <button class="red" onclick="clearCart()">حذف الفاتورة</button>
-      <button class="green" style="padding:11px 25px; font-size:16px;" onclick="completeSale()">إتمام البيع وطباعة الفاتورة</button>
-     </div>
-    </div>
-   </div>
-  </div>
-
-  <!-- صفحة المنتجات -->
-  <div id="productsPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>إدارة المنتجات والمخزون</h3>
-   <div class="card">
-    <input id="pName" placeholder="اسم المنتج">
-    <div class="grid">
-     <div><label>سعر الشراء</label><input id="pCost" type="number" min="0" value="0"></div>
-     <div><label>سعر البيع</label><input id="pPrice" type="number" min="0" value="0"></div>
-     <div><label>الكمية الحالية</label><input id="pQty" type="number" min="0" value="10"></div>
-    </div>
-    <button onclick="saveProduct()">حفظ المنتج</button>
-   </div>
-   <div class="tablewrap"><table><thead><tr><th>المنتج</th><th>شراء</th><th>بيع</th><th>المخزون</th><th>إجراء</th></tr></thead><tbody id="productsTable"></tbody></table></div>
-  </div>
-
-  <!-- صفحة الخزينة -->
-  <div id="treasuryPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>الخزينة والحسابات</h3>
-   <div class="grid"><div class="stat">رصيد الخزينة المتاح<strong id="treasuryBalanceDisplay">0 جنيه</strong></div></div>
-   <div class="card">
-    <h3>سند قبض أو صرف</h3>
-    <label>نوع الحركة</label><select id="tType"><option value="in">وارد (إيداع)</option><option value="out">صادر (صرف)</option></select>
-    <label>المبلغ</label><input id="tAmount" type="number" min="0">
-    <label>البيان</label><input id="tNote" placeholder="التفاصيل">
-    <button class="big green" onclick="addTreasuryTransaction()">تسجيل الحركة</button>
-   </div>
-   <div style="margin: 15px 0;">
-    <button class="red" onclick="clearTreasuryData()">🗑️ تصفير ومسح حركات الخزينة القديمة</button>
-   </div>
-   <div class="tablewrap"><table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
-  </div>
-
-  <!-- صفحة الفواتير -->
-  <div id="historyPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>سجل الفواتير</h3>
-   <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>الإجمالي</th><th>إجراء</th></tr></thead><tbody id="salesTable"></tbody></table></div>
-  </div>
-
-  <!-- صفحة المصروفات -->
-  <div id="expensesPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>المصروفات اليومية</h3>
-   <div class="card"><label>بيان المصروف</label><input id="expenseName"><label>المبلغ</label><input id="expenseAmount" type="number" min="0"><button onclick="addExpense()">حفظ المصروف</button></div>
-   <div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div>
-  </div>
-
-  <!-- صفحة التقارير -->
-  <div id="reportsPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>التقارير المالية</h3>
-   <div class="grid">
-    <div class="stat">إجمالي المبيعات<strong id="reportRevenue">0 جنيه</strong></div>
-    <div class="stat">إجمالي المصروفات<strong id="reportExpenses">0 جنيه</strong></div>
-    <div class="stat">صافي الربح<strong id="reportNet">0 جنيه</strong></div>
-   </div>
-  </div>
-
-  <!-- صفحة الإعدادات -->
-  <div id="settingsPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>إعدادات الحساب والمحل</h3>
-   
-   <div class="card" style="max-width:600px;">
-    <h3 style="color:#2458d3;">تعديل اسم المحل التجاري</h3>
-    <label>اسم المحل الجديد</label><input id="settingsShopName" type="text" placeholder="أدخل اسم المحل الجديد">
-    <button class="big" onclick="updateShopNameSetting()">حفظ اسم المحل</button>
-   </div>
-
-   <div class="card" style="max-width:600px;">
-    <h3 style="color:#2458d3;">تعديل البريد الإلكتروني (Gmail)</h3>
-    <label>البريد الإلكتروني الجديد</label><input id="settingsEmail" type="email" placeholder="أدخل البريد الجديد">
-    <button class="big purple" onclick="updateCustomerEmailSetting()">تغيير البريد الإلكتروني</button>
-   </div>
-
-   <div class="card" style="max-width:600px;">
-    <h3 style="color:#2458d3;">تغيير كلمة المرور</h3>
-    <label>كلمة المرور الجديدة</label><input id="newCustomerPassword" type="password" placeholder="أدخل كلمة المرور الجديدة (6 أحرف على الأقل)">
-    <button class="big dark" onclick="updateCustomerPassword()">تغيير كلمة المرور</button>
-   </div>
-  </div>
-
  </div>
-</section>
+
+ <div id="pageTreasury" class="card hidden">
+  <h3>الخزينة والحسابات</h3>
+  <div class="card">رصيد الخزينة الحالي: <strong id="treasuryBalanceDisplay" style="color:#15803d">0 جنيه</strong></div>
+  <label>نوع الحركة</label><select id="tType"><option value="in">إيداع (وارد)</option><option value="out">صرف (صادر)</option></select>
+  <label>المبلغ</label><input id="tAmount" type="number">
+  <label>البيان</label><input id="tNote" placeholder="تفاصيل الحركة">
+  <button class="action-btn btn-green" style="margin-top:10px" onclick="addTreasuryTransaction()">تسجيل الحركة</button>
+  <button class="action-btn btn-red" style="margin-top:10px" onclick="clearTreasuryData()">تصفير الخزينة</button>
+  <div class="table-wrap" style="margin-top:15px;">
+   <table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table>
+  </div>
+ </div>
+
+ <div id="pageHistory" class="card hidden">
+  <h3>سجل الفواتير السابقة</h3>
+  <div class="table-wrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>الإجمالي</th><th>طباعة</th></tr></thead><tbody id="salesTable"></tbody></table></div>
+ </div>
+
+ <div id="pageExpenses" class="card hidden">
+  <h3>المصروفات اليومية</h3>
+  <input id="expenseName" placeholder="بيان المصروف" style="margin-bottom:8px">
+  <input id="expenseAmount" type="number" placeholder="المبلغ" style="margin-bottom:8px">
+  <button class="action-btn btn-green" onclick="addExpense()">حفظ المصروف</button>
+  <div class="table-wrap" style="margin-top:15px;">
+   <table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table>
+  </div>
+ </div>
+
+ <div id="pageReports" class="card hidden">
+  <h3>التقارير المالية</h3>
+  <div class="grid">
+   <div class="card">إجمالي الإيرادات<strong id="reportRevenue" style="display:block;font-size:20px;color:#15803d">0</strong></div>
+   <div class="card">إجمالي المصروفات<strong id="reportExpenses" style="display:block;font-size:20px;color:#dc2626">0</strong></div>
+   <div class="card">صافي الأرباح<strong id="reportNet" style="display:block;font-size:20px;color:#2563eb">0</strong></div>
+  </div>
+ </div>
+
+ <div id="pageSettings" class="card hidden">
+  <h3>إعدادات المحل والحساب</h3>
+  <label>اسم المحل الجديد</label><input id="settingsShopName" type="text">
+  <button class="action-btn btn-blue" style="margin-top:8px" onclick="updateShopNameSetting()">حفظ اسم المحل</button>
+  <hr style="margin:15px 0">
+  <label>البريد الإلكتروني الجديد</label><input id="settingsEmail" type="email">
+  <button class="action-btn btn-orange" style="margin-top:8px" onclick="updateCustomerEmailSetting()">تحديث البريد</button>
+  <hr style="margin:15px 0">
+  <label>كلمة المرور الجديدة</label><input id="newCustomerPassword" type="password">
+  <button class="action-btn btn-dark" style="margin-top:8px" onclick="updateCustomerPassword()">تغيير كلمة المرور</button>
+ </div>
+
+ <div id="pageSubscription" class="card hidden" style="text-align:center;max-width:600px;margin:auto;">
+  <h3 style="color:#0284c7">حالة باقة الاشتراك</h3>
+  <div id="subPageDetails" style="font-size:15px;line-height:2;margin:15px 0;">جاري التحميل...</div>
+  <div id="subPageActionBox"></div>
+ </div>
+</div>
+
+<!-- واجهة المبيعات الكلاسيكية المطابقة للصورة بالمللي -->
+<div id="salesArea" class="pos-container">
+ <!-- القسم الأيمن: لوحة التحكم الجانبية والأزرار -->
+ <div class="pos-sidebar">
+  <div class="total-box">
+   <span>إجمالي الفاتورة</span>
+   <h2 id="cartTotalDisplay">0.00</h2>
+  </div>
+
+  <div class="action-grid">
+   <button class="action-btn btn-green" onclick="completeSale()">بيع (F9)</button>
+   <button class="action-btn btn-orange" onclick="clearCart()">حذف الفاتورة</button>
+   <button class="action-btn btn-blue" onclick="page('products')">إدارة المخزن</button>
+   <button class="action-btn btn-dark" onclick="page('treasury')">الخزينة</button>
+  </div>
+
+  <div style="background:white;padding:10px;border-radius:6px;border:1px solid #cbd5e1;margin-top:auto;">
+   <div style="display:flex;align-items:center;gap:8px;">
+    <input type="checkbox" id="autoPrintToggle" checked style="width:18px;height:18px;cursor:pointer;">
+    <label for="autoPrintToggle" style="font-size:12px;cursor:pointer;">طباعة الفاتورة تلقائياً عند البيع</label>
+   </div>
+  </div>
+ </div>
+
+ <!-- القسم الأيسر: جدول الأصناف ومنطقة البحث السريع -->
+ <div class="pos-main">
+  <div class="search-section">
+   <div style="display:grid;grid-template-columns: 2fr 1fr 1fr;gap:8px;">
+    <div>
+     <label style="font-size:11px">بحث عن صنف (بالاسم أو الباركود)</label>
+     <input id="saleSearch" placeholder="ابحث هنا..." oninput="searchProducts()">
+     <div id="searchResults" style="position:absolute;z-index:100;background:white;width:350px;box-shadow:0 4px 10px rgba(0,0,0,0.15)"></div>
+    </div>
+    <div>
+     <label style="font-size:11px">الكمية (F5)</label>
+     <input id="saleQty" type="number" min="1" value="1">
+    </div>
+    <div>
+     <label style="font-size:11px">سعر البيع (F6)</label>
+     <input id="salePrice" type="number" min="0">
+    </div>
+   </div>
+  </div>
+
+  <div class="table-wrap">
+   <table>
+    <thead>
+     <tr>
+      <th>الصنف</th>
+      <th>الكمية</th>
+      <th>السعر</th>
+      <th>الإجمالي</th>
+      <th>حذف</th>
+     </tr>
+    </thead>
+    <tbody id="cartTable">
+     <tr><td colspan="5" style="text-align:center;color:#64748b;">ابدأ بالبحث عن صنف أو ادخل كود الصنف للبيع الفوري...</td></tr>
+    </tbody>
+   </table>
+  </div>
+ </div>
+</div>
 
 <div id="printArea" class="hidden"></div>
-<footer class="muted" style="text-align:center;padding:20px">تم التطوير بواسطة المهندس | محمد الصلاحي</footer>
-</div>
+<footer style="text-align:center;padding:8px;background:#cbd5e1;font-size:11px;color:#334155;">تم التطوير بواسطة المهندس | محمد الصلاحي</footer>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {getAuth,signInWithEmailAndPassword,signOut,updatePassword,updateEmail,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {getFirestore,doc,setDoc,getDoc,updateDoc,collection,addDoc,getDocs,deleteDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 const firebaseConfig={
@@ -350,8 +281,6 @@ const firebaseConfig={
  appId:"1:932284131293:web:00d6237b1f155ae5daf834"
 };
 const OWNER_EMAIL="melsalahy689@gmail.com";
-const OWNER_USERNAME="elsalahy";
-const SUPPORT_PHONE="201062883414";
 
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app), db=getFirestore(app);
@@ -365,14 +294,7 @@ const shopRef=()=>`shops/${currentUser.uid}`;
 const col=name=>collection(db,shopRef(),name);
 const docRef=(name,id)=>doc(db,shopRef(),name,id);
 
-function message(t){$("authMsg").textContent=t;$("authMsg").classList.remove("hidden")}
-
-window.showAuth=function(which){
- ["loginBox","registerBox","ownerBox"].forEach(x=>$(x).classList.add("hidden"));
- ["tabLogin","tabRegister","tabOwner"].forEach(x=>$(x).classList.remove("active"));
- const m={login:["loginBox","tabLogin"],register:["registerBox","tabRegister"],owner:["ownerBox","tabOwner"]};
- $(m[which][0]).classList.remove("hidden");$(m[which][1]).classList.add("active");$("authMsg").classList.add("hidden");
-};
+function message(t){$("authMsg").textContent=t;$("authMsg").classList.remove("hidden");}
 
 window.login=async()=>{
  try{
@@ -383,87 +305,42 @@ window.login=async()=>{
    const s = await getDoc(doc(db,"users",cred.user.uid));
    if(s.exists() && s.data().status === "pending"){
     await signOut(auth);
-    return message("حسابك قيد المراجعة ولم يتم تفعيله بعد. تواصل مع المطور للدفع والتفعيل.");
+    return message("حسابك قيد المراجعة ولم يتم تفعيله بعد.");
    }
   }
- }catch(e){message("تعذر الدخول: تأكد من صحة البريد وكلمة المرور.");}
-};
-
-window.ownerLogin=async()=>{
- try{
-  if($("ownerUsername").value.trim().toLowerCase()!==OWNER_USERNAME)return message("اسم المستخدم الإداري غير صحيح.");
-  const p=$("ownerPassword").value;if(!p)return message("أدخل كلمة المرور.");
-  await signInWithEmailAndPassword(auth,OWNER_EMAIL,p);
- }catch(e){message("تعذر الدخول كمدير: تأكد من كلمة مرور المالك.");}
-};
-
-window.register=async()=>{
- const shop=$("regShop").value.trim(), name=$("regName").value.trim(), phone=$("regPhone").value.trim(), email=$("regEmail").value.trim(), password=$("regPassword").value;
- if(!shop||!name||!phone||!email||!password)return message("أكمل جميع البيانات المطلوبة.");
- try{
-  const cred=await createUserWithEmailAndPassword(auth,email,password);
-  await setDoc(doc(db,"users",cred.user.uid),{
-   shopName:shop,
-   customerName:name,
-   phone,
-   email,
-   role:"customer",
-   status:"pending",
-   plan:"غير محدد",
-   expiryDate: null,
-   createdAt:serverTimestamp()
-  });
-  lastRegisteredUser={name,shop,email};
-  await signOut(auth);
-  $("auth").classList.add("hidden");
-  $("pendingScreen").classList.remove("hidden");
- }catch(e){message("تعذر التسجيل: "+e.message)}
-};
-
-let lastRegisteredUser=null;
-window.sendWhatsAppActivation=()=>{
- const data=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:""};
- const msg=encodeURIComponent(`مرحبًا، أنا ${data.name} صاحب نشاط "${data.shop}"، قمت بإنشاء حساب جديد وبريدي هو: ${data.email}، وأرغب في دفع الاشتراك وتفعيل الحساب والاستلام.`);
- window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
+ }catch(e){message("تعذر الدخول: تأكد من صحة البيانات.");}
 };
 
 window.logout=async()=>{await signOut(auth);window.location.reload();};
-window.support=()=>window.open(`https://wa.me/${SUPPORT_PHONE}`,"_blank");
 
 onAuthStateChanged(auth,async user=>{
  currentUser=user;
  if(!user){
-  $("customerPanel").classList.add("hidden");
-  $("ownerPanel").classList.add("hidden");
-  $("pendingScreen").classList.add("hidden");
   $("auth").classList.remove("hidden");
+  $("pendingScreen").classList.add("hidden");
+  $("dashboardArea").classList.add("hidden");
+  $("salesArea").classList.add("hidden");
   return;
  }
  try{
-  if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){
-   $("auth").classList.add("hidden");
-   $("pendingScreen").classList.add("hidden");
-   $("ownerPanel").classList.remove("hidden");
-   await loadUsers();
-   return;
-  }
   const s=await getDoc(doc(db,"users",user.uid));
-  if(!s.exists())return;
-  profile=s.data();
-  if(profile.status==="pending"){
-   await signOut(auth);
-   $("auth").classList.remove("hidden");
-   return message("حسابك في انتظار تفعيل المطور.");
+  if(s.exists()){
+   profile=s.data();
+   if(profile.status==="pending" && user.email.toLowerCase()!==OWNER_EMAIL.toLowerCase()){
+    await signOut(auth);
+    $("auth").classList.add("hidden");
+    $("pendingScreen").classList.remove("hidden");
+    return;
+   }
+   if($("topShopName")) $("topShopName").textContent = (profile.shopName || "متجري") + " : شركة";
+   if($("settingsShopName")) $("settingsShopName").value = profile.shopName || "";
+   if($("settingsEmail")) $("settingsEmail").value = profile.email || user.email || "";
   }
   $("auth").classList.add("hidden");
   $("pendingScreen").classList.add("hidden");
-  $("customerPanel").classList.remove("hidden");
-  $("shopTitle").textContent=profile.shopName||"نظام المبيعات والمخزون";
-  
-  if($("settingsShopName")) $("settingsShopName").value = profile.shopName || "";
-  if($("settingsEmail")) $("settingsEmail").value = profile.email || user.email || "";
+  $("dashboardArea").classList.add("hidden");
+  $("salesArea").classList.remove("hidden");
 
-  checkCustomerSubscription(profile);
   await loadBusiness();
   checkAndSettleDailySales();
  }catch(e){console.error(e);}
@@ -476,137 +353,35 @@ async function checkAndSettleDailySales(){
   if(!userSnap.exists()) return;
   const userData = userSnap.data();
   const todayStr = new Date().toISOString().slice(0, 10);
-  const lastSettled = userData.lastSettledDate || "";
-
-  if(lastSettled !== todayStr){
+  if(userData.lastSettledDate !== todayStr){
    const rev = sales.reduce((s,x)=>s+Number(x.total||0),0);
    if(rev > 0){
-    await addDoc(col("treasury"),{
-     type: "in",
-     amount: rev,
-     note: `إغلاق وردية ومبيعات يوم: ${lastSettled || todayStr}`,
-     date: new Date().toLocaleString("ar-EG")
-    });
+    await addDoc(col("treasury"),{type:"in", amount:rev, note:`إغلاق وردية ومبيعات يوم: ${userData.lastSettledDate || todayStr}`, date:new Date().toLocaleString("ar-EG")});
    }
-   await updateDoc(userDocRef, { lastSettledDate: todayStr });
+   await updateDoc(userDocRef, {lastSettledDate: todayStr});
    await loadTreasury();
    renderStats();
   }
- }catch(e){console.error(e);}
-}
-
-window.updateShopNameSetting=async()=>{
- const newShopName = $("settingsShopName").value.trim();
- if(!newShopName) return alert("أدخل اسم المحل الجديد.");
- try{
-  await updateDoc(doc(db,"users",currentUser.uid),{ shopName: newShopName });
-  profile.shopName = newShopName;
-  $("shopTitle").textContent = newShopName;
-  alert("تم تحديث اسم المحل بنجاح!");
- }catch(e){alert("خطأ: " + e.message);}
-};
-
-window.updateCustomerEmailSetting=async()=>{
- const newEmail = $("settingsEmail").value.trim();
- if(!newEmail) return alert("أدخل البريد الإلكتروني الجديد.");
- try{
-  await updateEmail(auth.currentUser, newEmail);
-  await updateDoc(doc(db,"users",currentUser.uid),{ email: newEmail });
-  profile.email = newEmail;
-  alert("تم تحديث البريد الإلكتروني بنجاح!");
- }catch(e){alert("خطأ: " + e.message);}
-};
-
-window.updateCustomerPassword=async()=>{
- const newPass=$("newCustomerPassword").value;
- if(!newPass || newPass.length<6)return alert("كلمة المرور يجب ألا تقل عن 6 أحرف.");
- try{
-  await updatePassword(auth.currentUser, newPass);
-  $("newCustomerPassword").value="";
-  alert("تم تحديث كلمة المرور بنجاح!");
- }catch(e){alert("خطأ في تحديث كلمة المرور.");}
-};
-
-function checkCustomerSubscription(pData){
- const detailsBox = $("subPageDetails");
- const actionBox = $("subPageActionBox");
- const tilesContainer = $("mainTilesContainer");
-
- if(!pData.expiryDate){
-  detailsBox.innerHTML = `⚠️ الباقة غير مفعلة أو انتهت صلاحيتها.<br><b>الباقة الحالية:</b> غير محددة`;
-  actionBox.innerHTML = `<button class="green big" onclick="requestRenewal()">💬 اطلب تفعيل الاشتراك الآن</button>`;
-  lockSystem(tilesContainer);
-  return;
- }
-
- const expiryDate = pData.expiryDate.toDate ? pData.expiryDate.toDate() : new Date(pData.expiryDate);
- const today = new Date();
- const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
-
- if(diffDays > 0){
-  detailsBox.innerHTML = `📋 <b>اسم الباقة:</b> ${pData.plan || 'نشطة'}<br>⏳ <b>الوقت المتبقي:</b> <span style="color:#0284c7;font-weight:bold;">${diffDays} يوم</span><br>🟢 <b>حالة الاشتراك: ساري ويعمل بانتظام</b>`;
-  actionBox.innerHTML = `<span class="tag good" style="font-size:14px; padding:8px 15px;">الباقة نشطة</span>`;
-  unlockSystem(tilesContainer);
- } else {
-  detailsBox.innerHTML = `❌ <span style="color:#b72f3b;font-weight:bold;">انتهت صلاحية باقة الاشتراك!</span>`;
-  actionBox.innerHTML = `<button class="green big" onclick="requestRenewal()">💬 تجديد الاشتراك فوراً</button>`;
-  lockSystem(tilesContainer);
- }
-}
-
-function lockSystem(container){ container.style.pointerEvents="none"; container.style.opacity="0.4"; }
-function unlockSystem(container){ container.style.pointerEvents="auto"; container.style.opacity="1"; }
-
-window.requestRenewal=()=>{
- const shop = profile.shopName || "متجري";
- const msg=encodeURIComponent(`مرحبًا مطور محمد الصلاحي، أرغب في تجديد باقة الاشتراك لنشاطي "${shop}".`);
- window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
-};
-
-window.loadUsers=async()=>{
- try{
-  const s=await getDocs(collection(db,"users"));
-  const list=s.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
-  $("totalUsers").textContent=list.length;
-  $("usersTable").innerHTML=list.map(u=>`<tr>
-   <td>${u.shopName||""}</td><td>${u.customerName||""}</td><td>${u.email||""}</td><td>${u.phone||""}</td>
-   <td><span class="tag ${u.status==='active'?'good':''}">${u.status||""}</span><br><small>الخطة: ${u.plan||'غير محدد'}</small></td>
-   <td>
-    <select id="plan_${u.id}" style="width:140px;padding:6px;margin:2px;display:inline-block;">
-     <option value="30">شهري (30 يوم - 100ج)</option>
-     <option value="90">3 شهور (90 يوم - 250ج)</option>
-     <option value="365">سنوي (سنة - 900ج)</option>
-     <option value="36500">دائم (مدى الحياة - 3000ج)</option>
-    </select>
-    <button class="rowbtn green" onclick="activateUserWithPlan('${u.id}')">تفعيل</button>
-    <button class="rowbtn red" onclick="deleteUser('${u.id}')">حذف</button>
-   </td>
-  </tr>`).join("");
  }catch(e){}
-};
-
-window.activateUserWithPlan=async(id)=>{
- const days = Number(document.getElementById(`plan_${id}`).value);
- let planName = days===30?"شهري":days===90?"3 شهور":days===365?"سنوي":"دائم";
- const expiryDate = new Date();
- expiryDate.setDate(expiryDate.getDate() + days);
- try{
-  await updateDoc(doc(db,"users",id),{status:"active", plan:planName, expiryDate});
-  alert("تم التفعيل بنجاح!");
-  loadUsers();
- }catch(e){alert("خطأ: "+e.message);}
-};
-
-window.deleteUser=async id=>{
- if(!confirm("حذف الحساب؟"))return;
- await deleteDoc(doc(db,"users",id));
- loadUsers();
-};
+}
 
 window.page=function(name){
- ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription"].forEach(p=>$(p+"Page").classList.add("hidden"));
- $(name+"Page").classList.remove("hidden");
- if(name==="dashboard"||name==="reports")renderStats();
+ $("auth").classList.add("hidden");
+ $("pendingScreen").classList.add("hidden");
+ if(name==="sales"){
+  $("dashboardArea").classList.add("hidden");
+  $("salesArea").classList.remove("hidden");
+  return;
+ }
+ $("salesArea").classList.add("hidden");
+ $("dashboardArea").classList.remove("hidden");
+ ["Dashboard","Products","Treasury","History","Expenses","Reports","Settings","Subscription"].forEach(p=>{
+  const el=$("page"+p);
+  if(el) el.classList.add("hidden");
+ });
+ const target=$("page"+name.charAt(0).toUpperCase()+name.slice(1));
+ if(target) target.classList.remove("hidden");
+ if(name==="dashboard"||name==="reports") renderStats();
 };
 
 async function loadBusiness(){
@@ -619,32 +394,24 @@ async function loadSales(){const s=await getDocs(col("sales"));sales=s.docs.map(
 async function loadExpenses(){const s=await getDocs(col("expenses"));expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();}
 async function loadTreasury(){const s=await getDocs(col("treasury"));treasury=s.docs.map(d=>({id:d.id,...d.data()}));renderTreasury();}
 
-window.clearTreasuryData=async()=>{
- if(!confirm("مسح حركات الخزينة؟"))return;
- const snap=await getDocs(col("treasury"));
- for(const dDoc of snap.docs) await deleteDoc(docRef("treasury",dDoc.id));
- await loadTreasury(); renderStats(); alert("تم التصفير بنجاح!");
-};
-
 window.saveProduct=async()=>{
  const name=$("pName").value.trim();
  const cost=Number($("pCost").value)||0, price=Number($("pPrice").value)||0, qty=Number($("pQty").value)||0;
- if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع.");
+ if(!name||price<=0)return alert("أدخل اسم الصنف وسعر البيع.");
  await addDoc(col("products"),{name,cost,price,qty,createdAt:serverTimestamp()});
  $("pName").value=""; $("pCost").value=""; $("pPrice").value=""; $("pQty").value="10";
- await loadProducts(); renderStats(); alert("تم حفظ المنتج.");
+ await loadProducts(); alert("تم حفظ الصنف بنجاح.");
 };
 
 function renderProducts(){
- $("productsTable").innerHTML=products.map(p=>`<tr><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
+ $("productsTable").innerHTML=products.map(p=>`<tr><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="action-btn btn-red" style="padding:4px 8px;font-size:11px;" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='5' style='text-align:center;'>لا توجد أصناف</td></tr>";
 }
 
-// دالة البحث التفاعلي في شاشة المبيعات الكلاسيكية
 window.searchProducts=()=>{
  const q=$("saleSearch").value.trim().toLowerCase();
- if(!q){ $("searchResults").innerHTML=""; return; }
+ if(!q){$("searchResults").innerHTML="";return;}
  const matches=products.filter(p=>(p.name||"").toLowerCase().includes(q)&&p.qty>0).slice(0,5);
- $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" style="background:#fff; color:#1c2940; font-weight:bold; padding:10px; border-bottom:1px solid #eee; text-align:right;" onclick="selectSaleProduct('${p.id}')">${p.name} — السعر: ${money(p.price)} ج (المتاح: ${p.qty})</button>`).join("");
+ $("searchResults").innerHTML=matches.map(p=>`<div style="padding:10px;background:white;border-bottom:1px solid #e2e8f0;cursor:pointer;font-weight:bold;" onclick="selectSaleProduct('${p.id}')">${p.name} — ${money(p.price)} ج (متاح: ${p.qty})</div>`).join("");
 };
 
 window.selectSaleProduct=id=>{
@@ -653,6 +420,7 @@ window.selectSaleProduct=id=>{
  $("saleSearch").value=selectedProduct.name;
  $("salePrice").value=selectedProduct.price;
  $("searchResults").innerHTML="";
+ addToCart();
 };
 
 window.addToCart=()=>{
@@ -661,11 +429,9 @@ window.addToCart=()=>{
  const price=Number($("salePrice").value);
 
  let p=selectedProduct;
- if(!p){
-  p=products.find(x=>(x.name||"").toLowerCase()===q.toLowerCase());
- }
- if(!p) return alert("اختر منتجاً صالحاً من قائمة البحث أو اكتب اسمه الصحيح.");
- if(qty>p.qty) return alert("الكمية المطلوبة غير متوفرة في المخزن.");
+ if(!p) p=products.find(x=>(x.name||"").toLowerCase()===q.toLowerCase());
+ if(!p) return;
+ if(qty>p.qty) return alert("الكمية المطلوبة غير متوفرة بالمخزن.");
 
  const finalPrice = price>0 ? price : p.price;
  const old=cart.find(x=>x.productId===p.id);
@@ -687,22 +453,17 @@ function renderCart(){
    <td>${x.qty}</td>
    <td>${money(x.price)} ج</td>
    <td><b>${money(x.qty*x.price)} ج</b></td>
-   <td><button class="rowbtn red" onclick="cart.splice(${i},1);renderCart()">حذف</button></td>
+   <td><button class="action-btn btn-red" style="padding:3px 7px;font-size:11px;" onclick="cart.splice(${i},1);renderCart()">حذف</button></td>
   </tr>
- `).join("")||"<tr><td colspan='5' style='text-align:center;color:#788397;'>السلة فارغة، أضف أصنافاً للبدء</td></tr>";
- 
+ `).join("")||"<tr><td colspan='5' style='text-align:center;color:#64748b;'>السلة فارغة</td></tr>";
  const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
- $("cartTotal").textContent=money(total);
+ $("cartTotalDisplay").textContent=money(total);
 }
 
-window.clearCart=()=>{
- cart=[];
- renderCart();
-};
+window.clearCart=()=>{ cart=[]; renderCart(); };
 
-// إتمام البيع وإصدار الفاتورة الكلاسيكية
 window.completeSale=async()=>{
- if(!cart.length) return alert("سلة المبيعات فارغة.");
+ if(!cart.length) return alert("السلة فارغة.");
  const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
  const invoice={number:"INV-"+Date.now().toString().slice(-6), total, items:[...cart], date:new Date().toLocaleString("ar-EG")};
 
@@ -714,70 +475,49 @@ window.completeSale=async()=>{
   await addDoc(col("sales"),invoice);
   await addDoc(col("treasury"),{type:"in", amount:total, note:`فاتورة مبيعات #${invoice.number}`, date:invoice.date});
 
-  const autoPrint = $("autoPrintToggle") ? $("autoPrintToggle").checked : true;
-  if(autoPrint){
+  if($("autoPrintToggle") && $("autoPrintToggle").checked){
    printInvoiceDirectly(invoice);
   }
 
   cart=[];
   renderCart();
   await loadBusiness();
-  alert(`تمت عملية البيع بنجاح وتحصيل ${money(total)} جنيه!`);
- }catch(e){alert("خطأ أثناء إتمام البيع: "+e.message);}
+  alert(`تم إتمام البيع بنجاح وتحصيل ${money(total)} جنيه!`);
+ }catch(e){alert("خطأ: "+e.message);}
 };
 
 function printInvoiceDirectly(inv){
- const shop = profile?.shopName || "متجري";
+ const shop = profile?.shopName || "High Store";
  $("printArea").innerHTML = `
-  <div style="text-align:center; font-family:Arial,sans-serif; padding:10px;">
+  <div style="text-align:center; font-family:Arial; padding:10px;">
    <h3>${shop}</h3>
    <p>فاتورة مبيعات: ${inv.number}</p>
-   <p>التاريخ: ${inv.date}</p>
-   <hr style="border:1px dashed #000;">
-   <table style="width:100%; text-align:right; font-size:12px;">
-    <tr><th>الصنف</th><th>كمية</th><th>السعر</th><th>الإجمالي</th></tr>
-    ${inv.items.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}
+   <p>${inv.date}</p>
+   <hr>
+   <table style="width:100%;text-align:right;font-size:12px;">
+    <tr><th>الصنف</th><th>كمية</th><th>السعر</th></tr>
+    ${inv.items.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>${money(i.price)}</td></tr>`).join("")}
    </table>
-   <hr style="border:1px dashed #000;">
-   <h4>الإجمالي الكلي: ${money(inv.total)} جنيه</h4>
-   <p style="font-size:11px; margin-top:15px;">شكراً لتعاملكم معنا — تطوير: محمد الصلاحي</p>
+   <hr>
+   <h4>الإجمالي: ${money(inv.total)} جنيه</h4>
+   <p style="font-size:10px;">تطوير: محمد الصلاحي</p>
   </div>
  `;
  window.print();
 }
 
-window.addTreasuryTransaction=async()=>{
- const type=$("tType").value, amount=Number($("tAmount").value)||0, note=$("tNote").value.trim();
- if(amount<=0)return alert("أدخل مبلغاً صحيحاً.");
- await addDoc(col("treasury"),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});
- $("tAmount").value=""; $("tNote").value="";
- await loadTreasury(); renderStats(); alert("تم تسجيل الحركة.");
+window.setQuickInput=type=>{
+ if(type==='qty') $("saleQty").focus();
+ if(type==='price') $("salePrice").focus();
 };
 
-function renderTreasury(){
- let tIn=0,tOut=0;
- $("treasuryTable").innerHTML=treasury.map(t=>{
-  if(t.type==="in")tIn+=Number(t.amount)||0; else tOut+=Number(t.amount)||0;
-  return `<tr><td><span class="tag ${t.type==='in'?'good':''}">${t.type==='in'?'وارد':'صادر'}</span></td><td>${money(t.amount)} ج</td><td>${t.note}</td><td>${t.date}</td></tr>`;
- }).join("")||"<tr><td colspan='4'>لا توجد حركات</td></tr>";
- $("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" جنيه";
-}
-
-window.addExpense=async()=>{
- const name=$("expenseName").value.trim(), amount=Number($("expenseAmount").value)||0;
- if(!name||amount<=0)return alert("أدخل اسم المصروف والمبلغ.");
- await addDoc(col("expenses"),{name,amount,date:new Date().toLocaleString("ar-EG")});
- await addDoc(col("treasury"),{type:"out",amount,note:`مصروف: ${name}`,date:new Date().toLocaleString("ar-EG")});
- $("expenseName").value=""; $("expenseAmount").value="";
- await loadBusiness(); alert("تم حفظ المصروف.");
-};
-
-function renderExpenses(){
- $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${e.name}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات</td></tr>";
-}
-
-window.renderSales=function(){
- $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printInvoiceDirectly(${JSON.stringify(s).replace(/"/g, '&quot;')})">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
+window.updateShopNameSetting=async()=>{
+ const n=$("settingsShopName").value.trim();
+ if(!n)return;
+ await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});
+ profile.shopName=n;
+ $("topShopName").textContent = n + " : شركة";
+ alert("تم التحديث!");
 };
 
 window.renderStats=function(){
@@ -789,9 +529,13 @@ window.renderStats=function(){
  $("statSales").textContent=sales.length;
  $("statRevenue").textContent=money(rev)+" جنيه";
  $("statTreasuryBalance").textContent=money(tIn-tOut)+" جنيه";
- $("reportRevenue").textContent=money(rev)+" جنيه";
- $("reportExpenses").textContent=money(exp)+" جنيه";
- $("reportNet").textContent=money(rev-exp)+" جنيه";
+ $("reportRevenue").textContent=money(rev);
+ $("reportExpenses").textContent=money(exp);
+ $("reportNet").textContent=money(rev-exp);
+};
+
+window.sendWhatsAppActivation=()=>{
+ window.open(`https://wa.me/201062883414?text=`+encodeURIComponent("مرحبًا مطور محمد الصلاحي، أرغب في تفعيل الحساب والاستلام."),"_blank");
 };
 </script>
 </body>

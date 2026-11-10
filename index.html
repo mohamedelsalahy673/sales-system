@@ -58,7 +58,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .t-teal{background:linear-gradient(135deg,#0d9488,#14b8a6)}
 .t-red{background:linear-gradient(135deg,#b72f3b,#dc2626)}
 
-/* تنسيقات شاشة المبيعات الكلاسيكية بدون حروف F */
+/* تنسيقات شاشة المبيعات الكلاسيكية لبرنامج NexPOS */
 .sahal-header{background:#15803d;color:white;padding:6px 12px;font-size:13px;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;align-items:center}
 .sahal-shortcuts{background:#f1f5f9;border-bottom:1px solid #cbd5e1;padding:6px 12px;display:flex;justify-content:flex-end;gap:6px}
 .sahal-sc-btn{background:#e2e8f0;color:#334155;border:1px solid #cbd5e1;padding:4px 14px;font-size:12px;font-weight:bold;border-radius:4px;cursor:pointer}
@@ -213,7 +213,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- شاشة المبيعات بتصميم NexPOS الكلاسيكي المحدث بدون حروف F -->
+  <!-- شاشة المبيعات بتصميم NexPOS الكلاسيكي مع زر الإضافة (+) -->
   <div id="salesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    
@@ -233,7 +233,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <!-- الجزء الرئيسي: البحث والجدول -->
     <div class="sahal-main">
      <div class="sahal-search-box">
-      <div style="display:grid;grid-template-columns: 2fr 1fr 1fr;gap:8px;">
+      <div style="display:grid;grid-template-columns: 2fr 1fr 1fr auto;gap:8px;align-items:end;">
        <div>
         <label style="font-size:11px">بحث عن صنف بالاسم أو الباركود</label>
         <input id="saleSearch" placeholder="ابحث هنا..." oninput="searchProducts()" style="margin:4px 0 0;">
@@ -247,6 +247,9 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
         <label style="font-size:11px">سعر البيع</label>
         <input id="salePrice" type="number" min="0" style="margin:4px 0 0;">
        </div>
+       <div>
+        <button class="sahal-btn sbtn-green" style="height:42px;padding:0 16px;margin-top:4px;" onclick="addToCart()" title="إضافة صنف للفاتورة">+</button>
+       </div>
       </div>
      </div>
 
@@ -258,11 +261,11 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
          <th>الكمية</th>
          <th>السعر</th>
          <th>الإجمالي</th>
-         <th>حذف</th>
+         <th>إجراء</th>
         </tr>
        </thead>
        <tbody id="cartTable">
-        <tr><td colspan="5" style="text-align:center;color:#64748b;">اختر صنفاً للبدء في الفاتورة...</td></tr>
+        <tr><td colspan="5" style="text-align:center;color:#64748b;">اختر صنفاً واضغط (+) أو أضفه للبدء في الفاتورة...</td></tr>
        </tbody>
       </table>
      </div>
@@ -703,7 +706,6 @@ window.selectSaleProduct=id=>{
  $("saleSearch").value=selectedProduct.name;
  $("salePrice").value=selectedProduct.price;
  $("searchResults").innerHTML="";
- addToCart();
 };
 
 window.addToCart=()=>{

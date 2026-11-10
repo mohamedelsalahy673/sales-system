@@ -73,7 +73,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <div class="brand">NexPOS PRO</div>
   <div class="sub-brand">ELSALAHY</div>
   <div class="system-desc">نظام إدارة المبيعات والمخازن</div>
-  <span class="version">TILES INTERFACE V7</span>
+  <span class="version">TILES INTERFACE V8</span>
  </div>
  <div>
   <span id="networkStatus" class="tag good" style="margin-left:10px;">متصل بالخادم</span>
@@ -152,15 +152,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button class="red" onclick="logout()">تسجيل الخروج</button>
   </div>
 
-  <!-- خانة اشتراكي المضافة حديثاً -->
-  <div class="card" style="background: linear-gradient(135deg, #1e293b, #334155); color: white; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-   <div>
-     <h3 style="margin:0; color: #38bdf8;">📦 خانة اشتراكي</h3>
-     <p id="subscriptionStatusText" style="margin: 5px 0 0 0; font-size: 14px;">جاري التحقق من حالة الاشتراك...</p>
-   </div>
-   <div id="renewalActionBox"></div>
-  </div>
-
   <div id="dashboardPage">
    <div class="grid">
     <div class="stat">إجمالي المنتجات<strong id="statProducts">0</strong></div>
@@ -179,7 +170,22 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
      <div class="tile t-dark" onclick="page('expenses')"><h3>المصروفات اليومية</h3><p>تسجيل المصاريف التشغيلية</p></div>
      <div class="tile t-teal" onclick="page('reports')"><h3>التقارير المالية</h3><p>تقارير الأرباح وصافي الدخل</p></div>
      <div class="tile t-red" onclick="page('settings')"><h3>الإعدادات والباسورد</h3><p>تغيير كلمة المرور</p></div>
+     <!-- خانة اشتراكي الجديدة المضافة مع الأقسام -->
+     <div class="tile" style="background:linear-gradient(135deg,#0284c7,#0369a1)" onclick="page('subscription')"><h3>📦 اشتراكي</h3><p>متابعة الباقة والأيام المتبقية وسعر الاشتراك</p></div>
     </div>
+   </div>
+  </div>
+
+  <!-- صفحة اشتراكي الجديدة -->
+  <div id="subscriptionPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
+   <h3>تفاصيل اشتراكي وباقتك الحالية</h3>
+   <div class="card" style="max-width:600px; margin:auto; text-align:center; padding:25px;">
+    <h2 style="color:#0284c7; margin-bottom:15px;">حالة باقة الاشتراك</h2>
+    <div id="subPageDetails" style="font-size:16px; line-height:2; margin-bottom:20px;">
+     جاري تحميل تفاصيل الباقة...
+    </div>
+    <div id="subPageActionBox"></div>
    </div>
   </div>
 
@@ -348,7 +354,6 @@ window.register=async()=>{
  if(!shop||!name||!phone||!email||!password)return message("أكمل جميع البيانات المطلوبة.");
  try{
   const cred=await createUserWithEmailAndPassword(auth,email,password);
-  // إضافة expiryDate افتراضي قديم أو غير موجود لكي يبدأ مقفلاً حتى يتم تفعيله
   await setDoc(doc(db,"users",cred.user.uid),{
    shopName:shop,
    customerName:name,
@@ -406,22 +411,22 @@ onAuthStateChanged(auth,async user=>{
   $("customerPanel").classList.remove("hidden");
   $("shopTitle").textContent=profile.shopName||"نظام المبيعات والمخزون";
   
-  // فحص وتشغيل خانة اشتراكي والعداد
+  // فحص حالة الاشتراك وإدارتها بالخلفية
   checkCustomerSubscription(profile);
 
   await loadBusiness();
  }catch(e){console.error(e);}
 });
 
-// دالة فحص اشتراكي والتحكم في إيقاف/تشغيل السيستم للعميل
+// دالة فحص اشتراكي وعرض التفاصيل داخل صفحة اشتراكي وتأمين السيستم
 function checkCustomerSubscription(pData){
- const statusBox = $("subscriptionStatusText");
- const actionBox = $("renewalActionBox");
+ const detailsBox = $("subPageDetails");
+ const actionBox = $("subPageActionBox");
  const tilesContainer = $("mainTilesContainer");
 
  if(!pData.expiryDate){
-  statusBox.innerHTML = `⚠️ الباقة غير مفعلة أو انتهت صلاحيتها.`;
-  actionBox.innerHTML = `<button class="green" onclick="requestRenewal()">💬 اطلب التجديد الآن</button>`;
+  detailsBox.innerHTML = `⚠️ الباقة غير مفعلة أو انتهت صلاحيتها.<br><b>الباقة الحالية:</b> غير محددة<br><b>سعر الاشتراك:</b> --`;
+  actionBox.innerHTML = `<button class="green big" onclick="requestRenewal()">💬 اطلب تفعيل الاشتراك الآن</button>`;
   lockSystem(tilesContainer);
   return;
  }
@@ -431,13 +436,32 @@ function checkCustomerSubscription(pData){
  const diffTime = expiryDate - today;
  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+ // تحديد السعر بناءً على اسم الباقة المخزنة أو المدة
+ let planPrice = "غير متوفر";
+ const planName = pData.plan || "غير محدد";
+ if(planName.includes("30") || planName.includes("شهر")) planPrice = "100 جنيه";
+ else if(planName.includes("90") || planName.includes("3 شهور")) planPrice = "250 جنيه";
+ else if(planName.includes("365") || planName.includes("سنوي")) planPrice = "900 جنيه";
+ else if(planName.includes("دائم")) planPrice = "3000 جنيه (مدى الحياة)";
+
  if(diffDays > 0){
-  statusBox.innerHTML = `✅ باقتك سارية (${pData.plan || 'نشطة'}) — متبقي: <b style="color:#38bdf8; font-size:16px;">${diffDays} يوم</b> على الانتهاء.`;
-  actionBox.innerHTML = `<span class="tag good">الحالة: تعمل بانتظام</span>`;
+  detailsBox.innerHTML = `
+   📋 <b>اسم الباقة:</b> ${planName}<br>
+   💰 <b>قيمة الاشتراك:</b> ${planPrice}<br>
+   ⏳ <b>الوقت المتبقي:</b> <span style="color:#0284c7; font-size:18px; font-weight:bold;">${diffDays} يوم</span><br>
+   📅 <b>تاريخ الانتهاء:</b> ${expiryDate.toLocaleDateString("ar-EG")}<br>
+   🟢 <span style="color:#178653; font-weight:bold;">حالة الاشتراك: ساري ويعمل بانتظام</span>
+  `;
+  actionBox.innerHTML = `<span class="tag good" style="font-size:14px; padding:8px 15px;">الباقة نشطة ولا توجد مشكلة</span>`;
   unlockSystem(tilesContainer);
  } else {
-  statusBox.innerHTML = `❌ انتهت صلاحية باقة الاشتراك الخاصة بك! يرجى التواصل مع المطور للتجديد.`;
-  actionBox.innerHTML = `<button class="green" onclick="requestRenewal()">💬 تجديد الاشتراك فوراً</button>`;
+  detailsBox.innerHTML = `
+   📋 <b>اسم الباقة:</b> ${planName}<br>
+   💰 <b>قيمة الاشتراك:</b> ${planPrice}<br>
+   ❌ <span style="color:#b72f3b; font-size:18px; font-weight:bold;">انتهت صلاحية باقة الاشتراك الخاصة بك!</span><br>
+   📅 تاريخ الانتهاء كان: ${expiryDate.toLocaleDateString("ar-EG")}
+  `;
+  actionBox.innerHTML = `<button class="green big" onclick="requestRenewal()">💬 تجديد الاشتراك فوراً مع المطور</button>`;
   lockSystem(tilesContainer);
  }
 }
@@ -484,16 +508,15 @@ window.loadUsers=async()=>{
 window.activateUserWithPlan=async(id)=>{
  const selectElement = document.getElementById(`plan_${id}`);
  const days = Number(selectElement.value);
- let planName = "شهري (100 ج)";
- if(days === 90) planName = "3 شهور (250 ج)";
- else if(days === 365) planName = "سنوي (900 ج)";
- else if(days === 36500) planName = "دائم (مدى الحياة)";
+ let planName = "شهري (30 يوم - 100 ج)";
+ if(days === 90) planName = "3 شهور (90 يوم - 250 ج)";
+ else if(days === 365) planName = "سنوي (سنة - 900 ج)";
+ else if(days === 36500) planName = "دائم (مدى الحياة - 3000 ج)";
 
  const expiryDate = new Date();
  expiryDate.setDate(expiryDate.getDate() + days);
 
  try{
-  // حفظ تاريخ الانتهاء كـ Timestamp في فايربيس ليعمل مع الـ Rules والعداد
   await updateDoc(doc(db,"users",id),{
    status:"active",
    plan: planName,
@@ -508,7 +531,6 @@ window.activateUserWithPlan=async(id)=>{
 
 window.updateUserStatus=async(id,status,planText)=>{
  try{
-  // عند الإيقاف نجعل expiryDate يساوي تاريخ قديم ليقف السيستم فوراً للعميل
   const oldDate = new Date();
   oldDate.setDate(oldDate.getDate() - 1);
   await updateDoc(doc(db,"users",id),{status, plan:planText, expiryDate: oldDate});
@@ -532,7 +554,7 @@ window.updateCustomerPassword=async()=>{
 };
 
 window.page=function(name){
- ["dashboard","sales","products","treasury","history","expenses","reports","settings"].forEach(p=>$(p+"Page").classList.add("hidden"));
+ ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription"].forEach(p=>$(p+"Page").classList.add("hidden"));
  $(name+"Page").classList.remove("hidden");
  if(name==="dashboard"||name==="reports")renderStats();
 };
@@ -598,7 +620,7 @@ window.addToCart=()=>{
 function renderCart(){
  $("cartTable").innerHTML=cart.map((x,i)=>`<tr><td>${x.name}</td><td>${x.qty}</td><td>${money(x.price)} ج</td><td>${money(x.qty*x.price)} ج</td><td><button class="rowbtn red" onclick="cart.splice(${i},1);renderCart()">حذف</button></td></tr>`).join("");
  $("cartTotal").textContent=money(cart.reduce((s,x)=>s+x.qty*x.price,0));
-}
+};
 
 window.completeSale=async()=>{
  if(!cart.length)return alert("سلة المبيعات فارغة.");
@@ -647,7 +669,7 @@ window.addExpense=async()=>{
 
 function renderExpenses(){
  $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${e.name}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات مسجلة</td></tr>";
-}
+};
 
 window.renderSales=function(){
  $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="alert('تفاصيل الفاتورة #${s.number}')">عرض</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير سابقة</td></tr>";

@@ -561,8 +561,8 @@ async function finalizePsSession(device,reason="manual"){
     const chargedMinutes=halfHourBlocks*PS_MIN_SESSION_MINUTES;
     playTotal=Number((chargedMinutes/60*rate).toFixed(2));
    }else{
-    /* المدة المحددة: العميل يحاسب على المدة المختارة حتى لو أنهى قبلها */
-    const chargedMinutes=Math.max(PS_MIN_SESSION_MINUTES,Number(s.plannedMinutes||current.lastDuration||elapsedMinutes));
+    /* المدة المحددة: الحد الأدنى نصف ساعة، وبعدها الحساب حسب وقت اللعب الفعلي */
+    const chargedMinutes=Math.max(PS_MIN_SESSION_MINUTES,elapsedMinutes);
     playTotal=Number((chargedMinutes/60*rate).toFixed(2));
    }
 

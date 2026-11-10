@@ -71,7 +71,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  <div>
   <div class="brand">NexPOS PRO</div>
   <div class="system-desc">نظام إدارة المبيعات والمخازن</div>
-  <span class="version">TILES INTERFACE V10</span>
+  <span class="version">TILES INTERFACE V11</span>
  </div>
  <div>
   <span id="networkStatus" class="tag good" style="margin-left:10px;">متصل بالخادم</span>
@@ -186,24 +186,61 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- صفحة المبيعات المحدثة بالبيع الفوري واختيار الطباعة -->
+  <!-- صفحة المبيعات بتصميم الصورة الكلاسيكي المظبوط -->
   <div id="salesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>شاشة نقاط البيع (المبيعات السريعة)</h3>
+   <h3>شاشة نقاط البيع (POS)</h3>
+   
    <div class="card">
-    <label>بحث واختيار منتج (بمجرد النقر يتم إتمام البيع فورا)</label>
-    <input id="saleSearch" placeholder="اكتب اسم المنتج للبحث..." oninput="searchProducts()">
-    <div id="searchResults" style="margin-bottom:15px;"></div>
-
-    <div style="background:#f8fafc; padding:12px; border-radius:10px; display:flex; align-items:center; gap:10px; margin-bottom:15px;">
-     <input type="checkbox" id="autoPrintToggle" checked style="width:20px;height:20px;margin:0;cursor:pointer;">
-     <label for="autoPrintToggle" style="cursor:pointer;font-size:15px;color:#1e293b;">طباعة الفاتورة تلقائياً عند اختيار المنتج وإتمام البيع</label>
+    <div class="grid" style="grid-template-columns: 2fr 1fr 1fr; align-items: center;">
+     <div>
+      <label>بحث عن صنف بالاسم أو الباركود</label>
+      <input id="saleSearch" placeholder="ابحث هنا..." oninput="searchProducts()">
+      <div id="searchResults" style="position:absolute;z-index:10;background:white;width:300px;box-shadow:0 4px 10px rgba(0,0,0,0.1)"></div>
+     </div>
+     <div>
+      <label>الكمية</label>
+      <input id="saleQty" type="number" min="1" value="1">
+     </div>
+     <div>
+      <label>سعر البيع</label>
+      <input id="salePrice" type="number" min="0">
+     </div>
     </div>
+    <button class="big green" onclick="addToCart()" style="margin-top:10px;">إضافة للسلة</button>
    </div>
 
    <div class="card">
-    <h3>آخر فاتورة أو السلة الحالية</h3>
-    <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead><tbody id="cartTable"><tr><td colspan="4" style="text-align:center;color:#788397;">اختر منتجاً من أعلى ليتم البيع فوراً</td></tr></tbody></table></div>
+    <div class="top" style="margin-bottom:10px;">
+     <h3>سلة المبيعات الحالية</h3>
+     <div style="display:flex; align-items:center; gap:8px;">
+      <input type="checkbox" id="autoPrintToggle" checked style="width:18px;height:18px;margin:0;cursor:pointer;">
+      <label for="autoPrintToggle" style="cursor:pointer;font-size:14px;color:#1e293b;">طباعة الفاتورة تلقائياً عند إتمام البيع</label>
+     </div>
+    </div>
+    <div class="tablewrap">
+     <table>
+      <thead>
+       <tr>
+        <th>الصنف</th>
+        <th>الكمية</th>
+        <th>السعر</th>
+        <th>الإجمالي</th>
+        <th>حذف</th>
+       </tr>
+      </thead>
+      <tbody id="cartTable">
+       <tr><td colspan="5" style="text-align:center;color:#788397;">السلة فارغة، أضف أصنافاً للبدء</td></tr>
+      </tbody>
+     </table>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; flex-wrap:wrap; gap:10px;">
+     <h3 style="margin:0;">الإجمالي الكلي: <span id="cartTotal" style="color:#2458d3;">0</span> جنيه</h3>
+     <div style="display:flex; gap:10px;">
+      <button class="red" onclick="clearCart()">حذف الفاتورة</button>
+      <button class="green" style="padding:11px 25px; font-size:16px;" onclick="completeSale()">إتمام البيع وطباعة الفاتورة</button>
+     </div>
+    </div>
    </div>
   </div>
 
@@ -319,7 +356,8 @@ const SUPPORT_PHONE="201062883414";
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app), db=getFirestore(app);
 
-let currentUser=null, profile=null, products=[], sales=[], expenses=[], treasury=[];
+let currentUser=null, profile=null, products=[], sales=[], expenses=[], treasury=[], cart=[];
+let selectedProduct=null;
 
 const $=id=>document.getElementById(id);
 const money=n=>(Number(n)||0).toLocaleString("ar-EG",{maximumFractionDigits:2});
@@ -601,43 +639,90 @@ function renderProducts(){
  $("productsTable").innerHTML=products.map(p=>`<tr><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
 }
 
-// دالة البحث المباشر وإتمام البيع فوراً بمجرد الضغط على المنتج
+// دالة البحث التفاعلي في شاشة المبيعات الكلاسيكية
 window.searchProducts=()=>{
  const q=$("saleSearch").value.trim().toLowerCase();
  if(!q){ $("searchResults").innerHTML=""; return; }
  const matches=products.filter(p=>(p.name||"").toLowerCase().includes(q)&&p.qty>0).slice(0,5);
- $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" style="background:#e8edfa; color:#2458d3; font-weight:bold; padding:12px; margin:4px 0;" onclick="quickSell('${p.id}')">${p.name} — السعر: ${money(p.price)} ج (المتاح: ${p.qty})</button>`).join("");
+ $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" style="background:#fff; color:#1c2940; font-weight:bold; padding:10px; border-bottom:1px solid #eee; text-align:right;" onclick="selectSaleProduct('${p.id}')">${p.name} — السعر: ${money(p.price)} ج (المتاح: ${p.qty})</button>`).join("");
 };
 
-// إتمام البيع فوراً بنقرة واحدة
-window.quickSell=async(id)=>{
- const p = products.find(x=>x.id===id);
- if(!p || p.qty<=0) return alert("المنتج غير متوفر أو نفذ من المخزن.");
+window.selectSaleProduct=id=>{
+ selectedProduct=products.find(p=>p.id===id);
+ if(!selectedProduct)return;
+ $("saleSearch").value=selectedProduct.name;
+ $("salePrice").value=selectedProduct.price;
+ $("searchResults").innerHTML="";
+};
+
+window.addToCart=()=>{
+ const q=$("saleSearch").value.trim();
+ const qty=Number($("saleQty").value)||1;
+ const price=Number($("salePrice").value);
+
+ let p=selectedProduct;
+ if(!p){
+  p=products.find(x=>(x.name||"").toLowerCase()===q.toLowerCase());
+ }
+ if(!p) return alert("اختر منتجاً صالحاً من قائمة البحث أو اكتب اسمه الصحيح.");
+ if(qty>p.qty) return alert("الكمية المطلوبة غير متوفرة في المخزن.");
+
+ const finalPrice = price>0 ? price : p.price;
+ const old=cart.find(x=>x.productId===p.id);
+ if(old) old.qty+=qty;
+ else cart.push({productId:p.id, name:p.name, qty, price:finalPrice, cost:p.cost||0});
+
+ selectedProduct=null;
+ $("saleSearch").value="";
+ $("saleQty").value=1;
+ $("salePrice").value="";
+ $("searchResults").innerHTML="";
+ renderCart();
+};
+
+function renderCart(){
+ $("cartTable").innerHTML=cart.map((x,i)=>`
+  <tr>
+   <td>${x.name}</td>
+   <td>${x.qty}</td>
+   <td>${money(x.price)} ج</td>
+   <td><b>${money(x.qty*x.price)} ج</b></td>
+   <td><button class="rowbtn red" onclick="cart.splice(${i},1);renderCart()">حذف</button></td>
+  </tr>
+ `).join("")||"<tr><td colspan='5' style='text-align:center;color:#788397;'>السلة فارغة، أضف أصنافاً للبدء</td></tr>";
  
- const item = {productId: p.id, name: p.name, qty: 1, price: p.price, cost: p.cost||0};
- const invoice = {number:"INV-"+Date.now().toString().slice(-6), total: p.price, items: [item], date: new Date().toLocaleString("ar-EG")};
+ const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
+ $("cartTotal").textContent=money(total);
+}
+
+window.clearCart=()=>{
+ cart=[];
+ renderCart();
+};
+
+// إتمام البيع وإصدار الفاتورة الكلاسيكية
+window.completeSale=async()=>{
+ if(!cart.length) return alert("سلة المبيعات فارغة.");
+ const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
+ const invoice={number:"INV-"+Date.now().toString().slice(-6), total, items:[...cart], date:new Date().toLocaleString("ar-EG")};
 
  try{
-  // خصم الكمية من المخزن
-  await updateDoc(docRef("products", p.id), {qty: p.qty - 1});
-  // تسجيل الفاتورة وحركة الخزينة
-  await addDoc(col("sales"), invoice);
-  await addDoc(col("treasury"), {type:"in", amount: p.price, note:`فاتورة مبيعات فوري #${invoice.number}`, date: invoice.date});
+  for(const item of cart){
+   const p=products.find(x=>x.id===item.productId);
+   if(p) await updateDoc(docRef("products",item.productId),{qty:p.qty-item.qty});
+  }
+  await addDoc(col("sales"),invoice);
+  await addDoc(col("treasury"),{type:"in", amount:total, note:`فاتورة مبيعات #${invoice.number}`, date:invoice.date});
 
-  // عرض الفاتورة في الجدول المؤقت
-  $("cartTable").innerHTML=`<tr><td>${p.name}</td><td>1</td><td>${money(p.price)} ج</td><td><b>${money(p.price)} ج</b></td></tr>`;
-  $("saleSearch").value="";
-  $("searchResults").innerHTML="";
-
-  await loadBusiness();
-
-  // فحص هل زر الطباعة التلقائية مفعل أم لا
   const autoPrint = $("autoPrintToggle") ? $("autoPrintToggle").checked : true;
   if(autoPrint){
    printInvoiceDirectly(invoice);
   }
 
-  alert(`تم إتمام البيع بنجاح وتحصيل ${money(p.price)} جنيه!`);
+  cart=[];
+  renderCart();
+  await loadBusiness();
+  alert(`تمت عملية البيع بنجاح وتحصيل ${money(total)} جنيه!`);
  }catch(e){alert("خطأ أثناء إتمام البيع: "+e.message);}
 };
 
@@ -646,16 +731,16 @@ function printInvoiceDirectly(inv){
  $("printArea").innerHTML = `
   <div style="text-align:center; font-family:Arial,sans-serif; padding:10px;">
    <h3>${shop}</h3>
-   <p>فاتورة مبيعات سريعة: ${inv.number}</p>
+   <p>فاتورة مبيعات: ${inv.number}</p>
    <p>التاريخ: ${inv.date}</p>
    <hr style="border:1px dashed #000;">
    <table style="width:100%; text-align:right; font-size:12px;">
-    <tr><th>الصنف</th><th>كمية</th><th>السعر</th></tr>
-    ${inv.items.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>${money(i.price)}</td></tr>`).join("")}
+    <tr><th>الصنف</th><th>كمية</th><th>السعر</th><th>الإجمالي</th></tr>
+    ${inv.items.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}
    </table>
    <hr style="border:1px dashed #000;">
    <h4>الإجمالي الكلي: ${money(inv.total)} جنيه</h4>
-   <p style="font-size:11px; margin-top:15px;">شكراً لزيارتكم — تطوير: محمد الصلاحي</p>
+   <p style="font-size:11px; margin-top:15px;">شكراً لتعاملكم معنا — تطوير: محمد الصلاحي</p>
   </div>
  `;
  window.print();

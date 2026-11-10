@@ -184,7 +184,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="stat">السندوتشات<strong id="psSandwichesCount">0</strong></div>
    <div class="stat">إيرادات الجلسات<strong id="psSessionsRevenue">0 جنيه</strong></div>
   </div>
-  <div class="card" style="text-align:center"><div id="psSubDetails" style="line-height:2">جاري تحميل الاشتراك...</div><button class="big green" onclick="requestRenewal()">طلب تجديد / تفعيل الاشتراك</button></div>
+  
   <div class="ps-tabs">
    <button id="psDevicesTab" class="active" onclick="showPsSection('devices')">🎮 أجهزة الرومات</button>
    <button id="psVipTab" onclick="showPsSection('vip')">⭐ أجهزة صالة VIP</button>
@@ -421,9 +421,6 @@ function renderPsSubscriptionDetails(){
  const active=subscriptionActive(info);
  $("psSubPageDetails").innerHTML=`
   <b>اسم النشاط:</b> ${escapeHTML(profile?.shopName||"—")}<br>
-  <b>المالك:</b> ${escapeHTML(profile?.customerName||"—")}<br>
-  <b>رقم الهاتف:</b> ${escapeHTML(profile?.phone||"—")}<br>
-  <b>البريد الإلكتروني:</b> ${escapeHTML(profile?.email||"—")}<br>
   <b>الباقة الحالية:</b> ${escapeHTML(info.plan||"غير محدد")}<br>
   <b>تاريخ انتهاء الاشتراك:</b> ${expiry?expiry.toLocaleDateString("ar-EG"):"—"}<br>
   <b>الأيام المتبقية:</b> ${Math.max(0,days)} يوم<br>
@@ -431,7 +428,9 @@ function renderPsSubscriptionDetails(){
  `;
 }
 
-function renderPsSubscription(info){const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():new Date(info.expiryDate);const days=Math.ceil((expiry-new Date())/86400000);$("psSubDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(profile.shopName||"—")}<br><b>الباقة:</b> ${escapeHTML(info.plan||"—")}<br><b>المتبقي:</b> ${Math.max(0,days)} يوم<br><span class="tag good">الاشتراك نشط</span>`;}
+function renderPsSubscription(info){
+ // تم إزالة عرض البطاقة العلوية للاشتراك بناءً على طلبك
+}
 function checkCustomerSubscription(info){
  const details=$("subPageDetails"),action=$("subPageActionBox"),tiles=$("mainTilesContainer");
  if(!subscriptionActive(info)){details.innerHTML="الباقة غير مفعلة أو انتهت صلاحيتها.";action.innerHTML='<button class="green big" onclick="requestRenewal()">طلب تفعيل الاشتراك</button>';tiles.style.pointerEvents="none";tiles.style.opacity=".4";return;}

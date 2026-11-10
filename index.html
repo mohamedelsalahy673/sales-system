@@ -432,7 +432,7 @@ window.activateUserWithPlan=async(id)=>{
   alert(`تم تفعيل الحساب بنجاح باقة "${planName}"!`);
   loadUsers();
  }catch(e){
-  alert("خطأ في التفعيل: تأكد من تعديل قواعد الفايربيس (Firestore Rules) للسماح للمالك بالكتابة. الخطأ: "+e.message);
+  alert("خطأ في التفعيل: تأكد من تعديل قواعد الفايربيس (Firestore Rules) في الكونسول لتسمح للمالك بالكتابة. التفاصيل: "+e.message);
  }
 };
 

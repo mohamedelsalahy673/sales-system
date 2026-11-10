@@ -227,7 +227,6 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-
 import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {getFirestore,doc,setDoc,getDoc,updateDoc,collection,addDoc,getDocs,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-// تعريف الدالة عالمياً لمنع خطأ getDeviceType is not defined
 window.getDeviceType = function(device) {
     return (device && device.deviceType === "vip") ? "vip" : "room";
 };
@@ -308,7 +307,14 @@ window.register=async()=>{
 };
 window.sendWhatsAppActivation=()=>{
  const d=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:"",phone:"",system:selectedSystem,plan:"غير محددة",price:""};
- const msg=encodeURIComponent(`طلب تفعيل جديد في NexPOS PRO\nاسم العميل: ${d.name}\nالنشاط: ${d.shop}\nالهاتف: ${d.phone}\nالبريد: ${d.email}\nالنظام: ${d.system}\nالباقة: ${d.plan}\nالسعر: ${d.price} جنيه`);
+ const msg=encodeURIComponent(`طلب تفعيل جديد في NexPOS PRO
+اسم العميل: ${d.name}
+النشاط: ${d.shop}
+الهاتف: ${d.phone}
+البريد: ${d.email}
+النظام: ${d.system}
+الباقة: ${d.plan}
+السعر: ${d.price} جنيه`);
  window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
 };
 window.logout=async()=>{if(psTimer)clearInterval(psTimer);await signOut(auth);location.reload();};
@@ -486,10 +492,44 @@ window.extendPsDevice=async id=>{
  }catch(e){alert("تعذر التمديد: "+e.message);}
 };
 
+/* إنهاء الجلسة وعرض تفاصيل الحساب والإضافات للتأكيد */
 window.stopPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status!=="running")return;
- if(!confirm("إنهاء الجلسة وتسجيل الفاتورة؟"))return;
+
+ const now=Date.now();
+ const startedAt=Number(d.startedAt)||now;
+ const elapsedMs=Math.max(0,now-startedAt);
+ const elapsedMinutes=Math.max(1,Math.ceil(elapsedMs/60000));
+ const rate=Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
+
+ let playTotal=0;
+ if(d.sessionMode==="amount"){
+  const minimumAmount=rate*PS_MIN_SESSION_MINUTES/60;
+  playTotal=Math.max(minimumAmount,Number(d.sessionAmount||0));
+ }else if(d.sessionMode==="auto"){
+  const halfHourBlocks=Math.max(1,Math.ceil(elapsedMs/(PS_MIN_SESSION_MINUTES*60000)));
+  const chargedMinutes=halfHourBlocks*PS_MIN_SESSION_MINUTES;
+  playTotal=Number((chargedMinutes/60*rate).toFixed(2));
+ }else{
+  const chargedMinutes=Math.max(PS_MIN_SESSION_MINUTES,elapsedMinutes);
+  playTotal=Number((chargedMinutes/60*rate).toFixed(2));
+ }
+
+ const orders=d.currentOrders||psSessions.find(s=>s.id===d.sessionId)?.orders||[];
+ const ordersTotal=Number(orders.reduce((sum,o)=>sum+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0).toFixed(2));
+ const grandTotal=Number((playTotal+ordersTotal).toFixed(2));
+
+ const confirmMsg=
+  `تفاصيل حساب الجلسة للجهاز (${d.name}):\n`+
+  `-----------------------------------\n`+
+  `🎮 سعر اللعب (وقت الجلسة): ${money(playTotal)} جنيه\n`+
+  `🥤 إجمالي الإضافات (المشروبات والسندوتشات): ${money(ordersTotal)} جنيه\n`+
+  `-----------------------------------\n`+
+  `💰 الإجمالي النهائي المطلوب: ${money(grandTotal)} جنيه\n\n`+
+  `هل تريد إنهاء الجلسة وتسجيل الفاتورة الآن؟`;
+
+ if(!confirm(confirmMsg))return;
  await finalizePsSession(d,"manual");
 };
 
@@ -916,7 +956,7 @@ window.completeSale=async()=>{
  }catch(e){alert("حدث خطأ أثناء البيع: "+e.message);}
 };
 window.printInvoiceDirectly=inv=>{
- $("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px"><h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة مبيعات</h3><p>رقم الفاتورة: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr><table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}</table><hr><p>إجمالي الأصناف: ${money(inv.subtotal)} جنيه</p><p>الخصم: -${money(inv.discount)} جنيه</p><p>الإضافة: +${money(inv.addition)} جنيه</p><h2>الإجمالي النهائي: ${money(inv.total)} جنيه</h2><p>شكراً لتعاملكم معنا</p><p>تطوير: محمد الصلاحي</p></div>`;
+ $("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px"><h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة مبيعات</h3><p>رقم الفاتورة: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr><table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}</table><hr><p>إجمالي الأصناف: ${money(inv.subtotal)} جنيه</p><p>الخصم: -${money(inv.discount)} جنيه</p><p>الإضافة: +${money(inv.addition)} جنيه</p><h2>الإجمالي النهائي: ${money(inv.total)} جنيه</h2><p>شكراً لتعاملكم معنا</p><p>تطوير: محمد الصلاحي</p></div>`;
  window.print();
 };
 window.addTreasuryTransaction=async()=>{

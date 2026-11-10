@@ -213,7 +213,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- شاشة المبيعات بتصميم NexPOS الكلاسيكي بدون علامة الزائد -->
+  <!-- شاشة المبيعات بتصميم NexPOS الكلاسيكي المرتب -->
   <div id="salesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    
@@ -689,7 +689,7 @@ function renderProducts(){
  $("productsTable").innerHTML=products.map(p=>`<tr><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
 }
 
-// دالة البحث التفاعلي واختيار الأصناف (عند الضغط عليها يتم إضافتها مباشرة للفاتورة)
+// دالة البحث التفاعلي واختيار الأصناف (إضافة تلقائية للفاتورة)
 window.searchProducts=()=>{
  const q=$("saleSearch").value.trim().toLowerCase();
  if(!q){ $("searchResults").innerHTML=""; return; }
@@ -714,7 +714,7 @@ window.addToCart=()=>{
  let p=selectedProduct;
  if(!p){
   p=products.find(x=>(x.name||"").toLowerCase()===q.toLowerCase());
- }
+}
  if(!p) return alert("اختر منتجاً صالحاً من قائمة البحث أو اكتب اسمه الصحيح.");
  if(qty>p.qty) return alert("الكمية المطلوبة غير متوفرة في المخزن.");
 
@@ -817,7 +817,7 @@ function renderTreasury(){
   return `<tr><td><span class="tag ${t.type==='in'?'good':''}">${t.type==='in'?'وارد':'صادر'}</span></td><td>${money(t.amount)} ج</td><td>${t.note}</td><td>${t.date}</td></tr>`;
  }).join("")||"<tr><td colspan='4'>لا توجد حركات</td></tr>";
  $("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" جنيه";
-}
+};
 
 window.addExpense=async()=>{
  const name=$("expenseName").value.trim(), amount=Number($("expenseAmount").value)||0;

@@ -98,6 +98,37 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .inline-form{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .inline-form button{width:100%}
 .mode-note{background:#eff6ff;color:#1d4ed8;border-radius:8px;padding:9px;font-size:12px;margin:8px 0}
+
+/* تصميم النافذة المنبثقة المخصصة في منتصف الشاشة */
+.custom-modal-overlay {
+  position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
+  z-index: 99999; animation: fadeIn 0.2s ease-out;
+}
+.custom-modal-card {
+  background: #ffffff; border-radius: 20px; padding: 25px; width: 90%; max-width: 440px;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); direction: rtl; font-family: Arial, sans-serif;
+}
+.modal-header {
+  text-align: center; border-bottom: 2px dashed #e2e8f0; padding-bottom: 12px; margin-bottom: 15px;
+}
+.modal-title { font-size: 18px; font-weight: bold; color: #1e293b; }
+.modal-body { font-size: 15px; color: #334155; line-height: 1.8; }
+.modal-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px; background: #f8fafc; border-radius: 10px; margin-bottom: 8px;
+}
+.modal-row.total {
+  background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; font-size: 17px; font-weight: bold;
+}
+.modal-footer { display: flex; gap: 10px; margin-top: 20px; }
+.modal-btn {
+  flex: 1; padding: 12px; border-radius: 10px; border: 0; font-weight: bold; cursor: pointer; font-size: 14px;
+}
+.btn-confirm { background: #16a34a; color: white; }
+.btn-cancel { background: #f1f5f9; color: #475569; }
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
 @media(max-width:950px){.sahal-layout{grid-template-columns:1fr}.sahal-sidebar{display:grid;grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}}
 @media(max-width:600px){.sale-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.sale-fields .search-container{grid-column:1/-1}.sahal-sidebar{grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}.ps-item-form{grid-template-columns:1fr 1fr}.ps-item-form input:first-child{grid-column:1/-1}.ps-item-form button{grid-column:1/-1}}
 @media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
@@ -137,7 +168,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  <div class="grid"><div class="stat">إجمالي الحسابات<strong id="totalUsers">0</strong></div><div class="stat">حسابات المبيعات<strong id="salesUsersCount">0</strong></div><div class="stat">حسابات البلايستيشن<strong id="psUsersCount">0</strong></div><div class="stat">طلبات في انتظار التفعيل<strong id="pendingUsersCount">0</strong></div></div>
  <nav><button id="ownerSalesTab" class="active" onclick="ownerSection('sales')">سيستم المبيعات</button><button id="ownerPsTab" onclick="ownerSection('playstation')">سيستم البلايستيشن</button></nav>
  <div id="ownerSalesSection"><h3>عملاء وااشتراكات سيستم المبيعات</h3><div class="tablewrap"><table><thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة</th><th>الإدارة</th></tr></thead><tbody id="salesUsersTable"></tbody></table></div></div>
- <div id="ownerPsSection" class="hidden"><h3>عملاء واشتراكات سيستم البلايستيشن</h3><div class="tablewrap"><table><thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة</th><th>الإدارة</th></tr></thead><tbody id="psUsersTable"></tbody></table></div></div>
+ <div id="ownerPsSection" class="hidden"><h3>عملاء وااشتراكات سيستم البلايستيشن</h3><div class="tablewrap"><table><thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة</th><th>الإدارة</th></tr></thead><tbody id="psUsersTable"></tbody></table></div></div>
  <button class="secondary big" onclick="loadUsers()">تحديث قائمة العملاء</button></div>
 </section>
 
@@ -218,6 +249,35 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <div id="settingsPage" class="hidden"><button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button><h3>إعدادات الحساب</h3><div class="card" style="max-width:600px"><h3>تعديل اسم المحل</h3><input id="settingsShopName"><button class="big" onclick="updateShopNameSetting()">حفظ اسم المحل</button></div><div class="card" style="max-width:600px"><h3>تعديل البريد الإلكتروني</h3><input id="settingsEmail" type="email"><button class="big purple" onclick="updateCustomerEmailSetting()">تغيير البريد</button></div><div class="card" style="max-width:600px"><h3>تغيير كلمة المرور</h3><input id="newCustomerPassword" type="password"><button class="big dark" onclick="updateCustomerPassword()">تغيير كلمة المرور</button></div></div>
  </div>
 </section>
+
+<!-- النافذة المنبثقة المخصصة بمنتصف الشاشة -->
+<div id="customConfirmModal" class="custom-modal-overlay hidden">
+  <div class="custom-modal-card">
+    <div class="modal-header">
+      <div class="modal-title" id="modalDeviceTitle">تفاصيل حساب الجلسة</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <span>🎮 سعر اللعب (وقت الجلسة):</span>
+        <strong id="modalPlayTotal">0.00 جنيه</strong>
+      </div>
+      <div class="modal-row">
+        <span>🥤 إجمالي الإضافات:</span>
+        <strong id="modalOrdersTotal">0.00 جنيه</strong>
+      </div>
+      <div class="modal-row total">
+        <span>💰 الإجمالي النهائي المطلوب:</span>
+        <strong id="modalGrandTotal">0.00 جنيه</strong>
+      </div>
+      <p style="text-align: center; margin-top: 15px; color: #64748b; font-size: 13px;">هل تريد إنهاء الجلسة وتسجيل الفاتورة الآن؟</p>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn btn-confirm" id="modalConfirmBtn">نعم، إنهاء الفاتورة</button>
+      <button class="modal-btn btn-cancel" id="modalCancelBtn">إلغاء</button>
+    </div>
+  </div>
+</div>
+
 <div id="printArea" class="hidden"></div>
 <footer class="muted" style="text-align:center;padding:20px">تم التطوير بواسطة المهندس | محمد الصلاحي</footer>
 </div>
@@ -492,7 +552,7 @@ window.extendPsDevice=async id=>{
  }catch(e){alert("تعذر التمديد: "+e.message);}
 };
 
-/* إنهاء الجلسة وعرض تفاصيل الحساب والإضافات للتأكيد */
+/* إنهاء الجلسة وعرض النافذة المنبثقة المخصصة في منتصف الشاشة */
 window.stopPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status!=="running")return;
@@ -520,17 +580,39 @@ window.stopPsDevice=async id=>{
  const ordersTotal=Number(orders.reduce((sum,o)=>sum+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0).toFixed(2));
  const grandTotal=Number((playTotal+ordersTotal).toFixed(2));
 
- const confirmMsg=
-  `تفاصيل حساب الجلسة للجهاز (${d.name}):\n`+
-  `-----------------------------------\n`+
-  `🎮 سعر اللعب (وقت الجلسة): ${money(playTotal)} جنيه\n`+
-  `🥤 إجمالي الإضافات (المشروبات والسندوتشات): ${money(ordersTotal)} جنيه\n`+
-  `-----------------------------------\n`+
-  `💰 الإجمالي النهائي المطلوب: ${money(grandTotal)} جنيه\n\n`+
-  `هل تريد إنهاء الجلسة وتسجيل الفاتورة الآن؟`;
+ document.getElementById("modalDeviceTitle").textContent=`تفاصيل حساب الجلسة للجهاز (${d.name})`;
+ document.getElementById("modalPlayTotal").textContent=`${money(playTotal)} جنيه`;
+ document.getElementById("modalOrdersTotal").textContent=`${money(ordersTotal)} جنيه`;
+ document.getElementById("modalGrandTotal").textContent=`${money(grandTotal)} جنيه`;
 
- if(!confirm(confirmMsg))return;
- await finalizePsSession(d,"manual");
+ const modal=document.getElementById("customConfirmModal");
+ modal.classList.remove("hidden");
+
+ return new Promise((resolve)=>{
+  const confirmBtn=document.getElementById("modalConfirmBtn");
+  const cancelBtn=document.getElementById("modalCancelBtn");
+
+  const onConfirm=async()=>{
+   cleanup();
+   modal.classList.add("hidden");
+   await finalizePsSession(d,"manual");
+   resolve(true);
+  };
+
+  const onCancel=()=>{
+   cleanup();
+   modal.classList.add("hidden");
+   resolve(false);
+  };
+
+  function cleanup(){
+   confirmBtn.removeEventListener("click",onConfirm);
+   cancelBtn.removeEventListener("click",onCancel);
+  }
+
+  confirmBtn.addEventListener("click",onConfirm);
+  cancelBtn.addEventListener("click",onCancel);
+ });
 };
 
 /* إضافة الطلبات إلى فاتورة الجهاز */

@@ -81,6 +81,25 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .search-container{position:relative;min-width:0}
 #searchResults{position:absolute;top:100%;right:0;width:100%;z-index:100;background:white;box-shadow:0 4px 12px #0002;border-radius:6px;overflow:auto;max-height:220px}
 #searchResults button{border-radius:0!important}
+
+/* إضافات إدارة البلايستيشن */
+.ps-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.ps-tabs button{flex:1;min-width:120px}
+.ps-tabs button.active{background:#178653;color:white}
+.ps-device-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px;margin-top:15px}
+.ps-device-card{background:#fff;border:1px solid #e2e8f0;border-radius:15px;padding:16px;box-shadow:0 3px 12px #1822380b;min-width:0}
+.ps-device-card.running{border:2px solid #16a34a}
+.ps-device-card h3{margin:0 0 8px}
+.ps-device-time{font-size:30px;font-weight:bold;color:#178653;text-align:center;padding:12px 5px;direction:ltr}
+.ps-device-idle{color:#64748b}
+.ps-device-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ps-device-actions select{grid-column:1/-1;margin-bottom:3px}
+.ps-device-actions button{font-size:12px;padding:9px 5px}
+.ps-item-form{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end}
+.ps-item-form input{margin-bottom:0}
+.ps-item-form button{margin-bottom:0;white-space:nowrap}
+.ps-section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ps-empty{text-align:center;padding:25px;color:#788397;background:#f8fafc;border-radius:10px}
 @media(max-width:950px){.sahal-layout{grid-template-columns:1fr}.sahal-sidebar{display:grid;grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}}
 @media(max-width:600px){
  .wrap{padding:7px}.card{padding:12px}
@@ -90,6 +109,9 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  .sahal-total-card{grid-column:1/-1}.sahal-total-card h2{font-size:27px}
  .sahal-shortcuts{justify-content:center}.sahal-sc-btn{flex:1;min-width:65px;padding:8px 4px}
  .sahal-table-wrap{max-height:230px}
+ .ps-item-form{grid-template-columns:1fr 1fr}
+ .ps-item-form input:first-child{grid-column:1/-1}
+ .ps-item-form button{grid-column:1/-1}
 }
 @media(max-width:380px){.sahal-sidebar{grid-template-columns:1fr}.sahal-total-card{grid-column:auto}}
 @media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
@@ -217,18 +239,86 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  </div>
 </section>
 
+<!-- لوحة البلايستيشن المطورة -->
 <section id="playstationPanel" class="hidden">
  <div class="card">
   <div class="top">
-   <div><h2>سيستم البلايستيشن</h2><span class="muted" id="psShopTitle">إدارة اشتراك نشاطك</span></div>
+   <div><h2>سيستم البلايستيشن</h2><span class="muted" id="psShopTitle">إدارة نشاطك</span></div>
    <button class="red" onclick="logout()">تسجيل الخروج</button>
   </div>
-  <div class="card" style="text-align:center;max-width:650px;margin:25px auto">
-   <h2>مرحبًا بك في سيستم البلايستيشن</h2>
-   <p class="muted">تم تسجيل الدخول إلى حساب البلايستيشن الخاص بك.</p>
-   <div id="psSubDetails" style="line-height:2;margin:20px 0">جاري تحميل الاشتراك...</div>
+
+  <div class="grid">
+   <div class="stat">إجمالي الأجهزة<strong id="psTotalDevices">0</strong></div>
+   <div class="stat">أجهزة تعمل الآن<strong id="psRunningDevices">0</strong></div>
+   <div class="stat">إجمالي المشروبات<strong id="psDrinksCount">0</strong></div>
+   <div class="stat">إجمالي السندوتشات<strong id="psSandwichesCount">0</strong></div>
+  </div>
+
+  <div class="card" style="text-align:center">
+   <div id="psSubDetails" style="line-height:2">جاري تحميل الاشتراك...</div>
    <button class="big green" onclick="requestRenewal()">طلب تجديد / تفعيل الاشتراك</button>
-   <p class="muted">وظائف إدارة جلسات اللعب والخدمات والحسابات قيد التجهيز.</p>
+  </div>
+
+  <div class="ps-tabs">
+   <button id="psDevicesTab" class="active" onclick="showPsSection('devices')">🎮 الأجهزة</button>
+   <button id="psDrinksTab" onclick="showPsSection('drinks')">🥤 المشروبات</button>
+   <button id="psSandwichesTab" onclick="showPsSection('sandwiches')">🥪 السندوتشات</button>
+  </div>
+
+  <div id="psDevicesSection">
+   <div class="card">
+    <h3>إضافة جهاز جديد</h3>
+    <div class="grid">
+     <div>
+      <label>اسم الجهاز</label>
+      <input id="psNewDeviceName" placeholder="مثال: PlayStation 1">
+     </div>
+     <div style="display:flex;align-items:end">
+      <button class="big green" onclick="addPsDevice()">إضافة الجهاز</button>
+     </div>
+    </div>
+   </div>
+   <div class="ps-section-title">
+    <h3>إدارة الأجهزة والعدادات</h3>
+    <button class="secondary" onclick="loadPlaystationData()">تحديث الأجهزة</button>
+   </div>
+   <div id="psDevicesList" class="ps-device-grid">
+    <div class="ps-empty">جاري تحميل الأجهزة...</div>
+   </div>
+  </div>
+
+  <div id="psDrinksSection" class="hidden">
+   <div class="card">
+    <h3>إضافة مشروب</h3>
+    <div class="ps-item-form">
+     <div><label>اسم المشروب</label><input id="psDrinkName" placeholder="مثال: بيبسي"></div>
+     <div><label>السعر</label><input id="psDrinkPrice" type="number" min="0" placeholder="السعر"></div>
+     <div><label>الكمية</label><input id="psDrinkQty" type="number" min="0" value="1"></div>
+     <button class="green" onclick="addPsItem('drink')">إضافة</button>
+    </div>
+   </div>
+   <h3>قائمة المشروبات</h3>
+   <div class="tablewrap"><table>
+    <thead><tr><th>المشروب</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead>
+    <tbody id="psDrinksTable"></tbody>
+   </table></div>
+  </div>
+
+  <div id="psSandwichesSection" class="hidden">
+   <div class="card">
+    <h3>إضافة سندوتش</h3>
+    <div class="ps-item-form">
+     <div><label>اسم السندوتش</label><input id="psSandwichName" placeholder="مثال: سندوتش بطاطس"></div>
+     <div><label>السعر</label><input id="psSandwichPrice" type="number" min="0" placeholder="السعر"></div>
+     <div><label>الكمية</label><input id="psSandwichQty" type="number" min="0" value="1"></div>
+     <button class="green" onclick="addPsItem('sandwich')">إضافة</button>
+    </div>
+   </div>
+   <h3>قائمة السندوتشات</h3>
+   <div class="tablewrap"><table>
+    <thead><tr><th>السندوتش</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead>
+    <tbody id="psSandwichesTable"></tbody>
+   </table></div>
   </div>
  </div>
 </section>
@@ -415,7 +505,7 @@ import {
  addDoc,getDocs,deleteDoc,serverTimestamp
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-/* إعدادات Firebase الصحيحة */
+/* إعدادات Firebase */
 const firebaseConfig={
  apiKey:"AIzaSyABpb7h1WXzodOKoxoRvvkXZSrPQ6UgZiA",
  authDomain:"nexpos-14155.firebaseapp.com",
@@ -440,6 +530,12 @@ let selectedSystem="sales",activeSystem="sales";
 let registeringNow=false;
 let products=[],sales=[],expenses=[],treasury=[],cart=[];
 let selectedProduct=null,lastRegisteredUser=null;
+
+/* بيانات البلايستيشن */
+let psDevices=[];
+let psItems=[];
+let psTimer=null;
+let psEndingDevices=new Set();
 
 const $=id=>document.getElementById(id);
 const money=n=>(Number(n)||0).toLocaleString("ar-EG",{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -517,7 +613,6 @@ window.login=async()=>{
  }
 };
 
-/* دخول المالك مع إظهار كود الخطأ الحقيقي */
 window.ownerLogin=async()=>{
  try{
   if($("ownerUsername").value.trim().toLowerCase()!==OWNER_USERNAME)
@@ -575,13 +670,17 @@ window.sendWhatsAppActivation=()=>{
  window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
 };
 
-window.logout=async()=>{await signOut(auth);location.reload();};
+window.logout=async()=>{
+ if(psTimer){clearInterval(psTimer);psTimer=null;}
+ await signOut(auth);location.reload();
+};
 window.support=()=>window.open(`https://wa.me/${SUPPORT_PHONE}`,"_blank");
 
 onAuthStateChanged(auth,async user=>{
  currentUser=user;
  if(registeringNow)return;
  if(!user){
+  if(psTimer){clearInterval(psTimer);psTimer=null;}
   ["customerPanel","ownerPanel","playstationPanel","pendingScreen"].forEach(x=>$(x).classList.add("hidden"));
   $("auth").classList.remove("hidden");
   return;
@@ -609,6 +708,8 @@ onAuthStateChanged(auth,async user=>{
    $("playstationPanel").classList.remove("hidden");
    $("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";
    renderPsSubscription(info);
+   await loadPlaystationData();
+   startPsTimer();
   }else{
    $("customerPanel").classList.remove("hidden");
    $("shopTitle").textContent=profile.shopName||"نظام المبيعات";
@@ -706,7 +807,7 @@ window.loadUsers=async()=>{
 };
 
 function escapeHTML(s){
- return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
 window.activateUserWithPlan=async(id,system)=>{
@@ -741,6 +842,315 @@ window.deleteUser=async id=>{
  try{await deleteDoc(doc(db,"users",id));await loadUsers();}
  catch(e){alert("تعذر حذف الحساب: "+e.message);}
 };
+
+/* ============================
+   وظائف إدارة البلايستيشن
+============================ */
+
+window.showPsSection=which=>{
+ const sections=["devices","drinks","sandwiches"];
+ sections.forEach(s=>{
+  $(`ps${s.charAt(0).toUpperCase()+s.slice(1)}Section`).classList.toggle("hidden",s!==which);
+  $(`ps${s.charAt(0).toUpperCase()+s.slice(1)}Tab`).classList.toggle("active",s===which);
+ });
+};
+
+async function loadPlaystationData(){
+ if(!currentUser)return;
+ try{
+  const [devicesSnap,itemsSnap]=await Promise.all([
+   getDocs(col("devices")),
+   getDocs(col("psItems"))
+  ]);
+
+  psDevices=devicesSnap.docs.map(d=>({id:d.id,...d.data()}));
+  psItems=itemsSnap.docs.map(d=>({id:d.id,...d.data()}));
+
+  /* إنهاء أي جلسة انتهى وقتها أثناء إغلاق الصفحة */
+  const now=Date.now();
+  for(const device of psDevices){
+   if(device.status==="running"&&Number(device.endAt)<=now){
+    await updateDoc(docRef("devices",device.id),{
+     status:"idle",
+     endedAt:now,
+     endAt:null
+    });
+    device.status="idle";
+    device.endAt=null;
+   }
+  }
+
+  renderPsDevices();
+  renderPsItems();
+  renderPsStats();
+ }catch(e){
+  console.error(e);
+  alert("تعذر تحميل بيانات البلايستيشن: "+e.message);
+ }
+}
+
+window.addPsDevice=async()=>{
+ const name=$("psNewDeviceName").value.trim();
+ if(!name)return alert("اكتب اسم الجهاز أولاً.");
+ try{
+  await addDoc(col("devices"),{
+   name,
+   status:"idle",
+   startedAt:null,
+   endAt:null,
+   createdAt:Date.now()
+  });
+  $("psNewDeviceName").value="";
+  await loadPlaystationData();
+  alert("تمت إضافة الجهاز بنجاح.");
+ }catch(e){
+  alert("تعذر إضافة الجهاز: "+e.message);
+ }
+};
+
+window.deletePsDevice=async id=>{
+ const device=psDevices.find(d=>d.id===id);
+ if(!device)return;
+ if(device.status==="running")return alert("لا يمكن حذف جهاز يعمل. أنهِ الجلسة أولاً.");
+ if(!confirm("هل تريد حذف هذا الجهاز؟"))return;
+ try{
+  await deleteDoc(docRef("devices",id));
+  await loadPlaystationData();
+ }catch(e){
+  alert("تعذر حذف الجهاز: "+e.message);
+ }
+};
+
+window.startPsDevice=async id=>{
+ const device=psDevices.find(d=>d.id===id);
+ if(!device)return alert("الجهاز غير موجود.");
+ if(device.status==="running")return alert("الجهاز يعمل بالفعل.");
+ const select=$(`psDuration_${id}`);
+ const minutes=Number(select?.value||30);
+ if(![30,60,120,180].includes(minutes))return alert("اختر مدة صحيحة.");
+ const now=Date.now();
+ const endAt=now+(minutes*60*1000);
+ try{
+  await updateDoc(docRef("devices",id),{
+   status:"running",
+   startedAt:now,
+   endAt,
+   lastDuration:minutes
+  });
+  device.status="running";
+  device.startedAt=now;
+  device.endAt=endAt;
+  device.lastDuration=minutes;
+  renderPsDevices();
+  renderPsStats();
+ }catch(e){
+  alert("تعذر بدء الجلسة: "+e.message);
+ }
+};
+
+window.extendPsDevice=async id=>{
+ const device=psDevices.find(d=>d.id===id);
+ if(!device||device.status!=="running")return alert("الجهاز غير مشغل.");
+ const select=$(`psExtend_${id}`);
+ const minutes=Number(select?.value||30);
+ if(![30,60,120,180].includes(minutes))return alert("اختر مدة صحيحة.");
+ const newEndAt=Math.max(Date.now(),Number(device.endAt)||0)+(minutes*60*1000);
+ try{
+  await updateDoc(docRef("devices",id),{
+   endAt:newEndAt,
+   lastExtendedAt:Date.now()
+  });
+  device.endAt=newEndAt;
+  renderPsDevices();
+  alert("تم تمديد وقت الجهاز بنجاح.");
+ }catch(e){
+  alert("تعذر تمديد الوقت: "+e.message);
+ }
+};
+
+window.stopPsDevice=async id=>{
+ const device=psDevices.find(d=>d.id===id);
+ if(!device||device.status!=="running")return;
+ if(!confirm("هل تريد إنهاء جلسة "+device.name+"؟"))return;
+ try{
+  await updateDoc(docRef("devices",id),{
+   status:"idle",
+   endAt:null,
+   endedAt:Date.now()
+  });
+  device.status="idle";
+  device.endAt=null;
+  device.startedAt=null;
+  renderPsDevices();
+  renderPsStats();
+ }catch(e){
+  alert("تعذر إنهاء الجلسة: "+e.message);
+ }
+};
+
+function formatPsTime(ms){
+ const total=Math.max(0,Math.floor(ms/1000));
+ const hours=Math.floor(total/3600);
+ const minutes=Math.floor((total%3600)/60);
+ const seconds=total%60;
+ return [hours,minutes,seconds].map(v=>String(v).padStart(2,"0")).join(":");
+}
+
+function renderPsDevices(){
+ const box=$("psDevicesList");
+ if(!psDevices.length){
+  box.innerHTML='<div class="ps-empty">لا توجد أجهزة حتى الآن. أضف أول جهاز من الأعلى.</div>';
+  return;
+ }
+
+ box.innerHTML=psDevices.map(device=>{
+  const running=device.status==="running"&&Number(device.endAt)>Date.now();
+  const time=running?formatPsTime(Number(device.endAt)-Date.now()):"00:00:00";
+  return `<div class="ps-device-card ${running?"running":""}">
+   <div class="top">
+    <h3>🎮 ${escapeHTML(device.name)}</h3>
+    <span class="tag ${running?"good":""}">${running?"يعمل الآن":"متوقف"}</span>
+   </div>
+   <div class="ps-device-time ${running?"":"ps-device-idle"}" id="psClock_${device.id}">${time}</div>
+   <p class="muted" style="text-align:center">${running?"الوقت المتبقي":"الجهاز جاهز لبدء جلسة جديدة"}</p>
+   <div class="ps-device-actions">
+    ${running?`
+     <select id="psExtend_${device.id}">
+      <option value="30">تمديد 30 دقيقة</option>
+      <option value="60">تمديد ساعة</option>
+      <option value="120">تمديد ساعتين</option>
+      <option value="180">تمديد 3 ساعات</option>
+     </select>
+     <button class="green" onclick="extendPsDevice('${device.id}')">تمديد الوقت</button>
+     <button class="red" onclick="stopPsDevice('${device.id}')">إنهاء الجلسة</button>
+    `:`
+     <select id="psDuration_${device.id}">
+      <option value="30">30 دقيقة</option>
+      <option value="60">ساعة واحدة</option>
+      <option value="120">ساعتان</option>
+      <option value="180">3 ساعات</option>
+     </select>
+     <button class="green" onclick="startPsDevice('${device.id}')">▶ بدء الجلسة</button>
+     <button class="red" onclick="deletePsDevice('${device.id}')">حذف الجهاز</button>
+    `}
+   </div>
+  </div>`;
+ }).join("");
+}
+
+function startPsTimer(){
+ if(psTimer)clearInterval(psTimer);
+ psTimer=setInterval(async()=>{
+  const now=Date.now();
+  let changed=false;
+
+  for(const device of psDevices){
+   if(device.status!=="running")continue;
+
+   const remaining=Number(device.endAt)-now;
+   const clock=$(`psClock_${device.id}`);
+
+   if(remaining<=0){
+    if(clock)clock.textContent="00:00:00";
+    if(!psEndingDevices.has(device.id)){
+     psEndingDevices.add(device.id);
+     device.status="idle";
+     device.endAt=null;
+     changed=true;
+     updateDoc(docRef("devices",device.id),{
+      status:"idle",
+      endAt:null,
+      endedAt:now
+     }).catch(e=>console.error("تعذر تحديث حالة الجهاز:",e))
+       .finally(()=>psEndingDevices.delete(device.id));
+    }
+   }else if(clock){
+    clock.textContent=formatPsTime(remaining);
+   }
+  }
+
+  if(changed){
+   renderPsDevices();
+   renderPsStats();
+  }
+ },1000);
+}
+
+window.addPsItem=async category=>{
+ const isDrink=category==="drink";
+ const name=$(isDrink?"psDrinkName":"psSandwichName").value.trim();
+ const price=Number($(isDrink?"psDrinkPrice":"psSandwichPrice").value);
+ const qty=Number($(isDrink?"psDrinkQty":"psSandwichQty").value);
+
+ if(!name)return alert("اكتب اسم الصنف.");
+ if(!Number.isFinite(price)||price<=0)return alert("أدخل سعرًا صحيحًا.");
+ if(!Number.isInteger(qty)||qty<0)return alert("أدخل كمية صحيحة.");
+
+ try{
+  await addDoc(col("psItems"),{
+   category,
+   name,
+   price,
+   qty,
+   createdAt:Date.now()
+  });
+
+  $(isDrink?"psDrinkName":"psSandwichName").value="";
+  $(isDrink?"psDrinkPrice":"psSandwichPrice").value="";
+  $(isDrink?"psDrinkQty":"psSandwichQty").value="1";
+
+  await loadPlaystationData();
+  alert("تمت إضافة الصنف بنجاح.");
+ }catch(e){
+  alert("تعذر إضافة الصنف: "+e.message);
+ }
+};
+
+window.deletePsItem=async id=>{
+ if(!confirm("هل تريد حذف هذا الصنف؟"))return;
+ try{
+  await deleteDoc(docRef("psItems",id));
+  await loadPlaystationData();
+ }catch(e){
+  alert("تعذر حذف الصنف: "+e.message);
+ }
+};
+
+function renderPsItems(){
+ const drinks=psItems.filter(x=>x.category==="drink");
+ const sandwiches=psItems.filter(x=>x.category==="sandwich");
+
+ $("psDrinksTable").innerHTML=drinks.map(item=>`
+  <tr>
+   <td>${escapeHTML(item.name)}</td>
+   <td>${money(item.price)} ج</td>
+   <td>${Number(item.qty)||0}</td>
+   <td><button class="rowbtn red" onclick="deletePsItem('${item.id}')">حذف</button></td>
+  </tr>`).join("")||'<tr><td colspan="4">لا توجد مشروبات مضافة</td></tr>';
+
+ $("psSandwichesTable").innerHTML=sandwiches.map(item=>`
+  <tr>
+   <td>${escapeHTML(item.name)}</td>
+   <td>${money(item.price)} ج</td>
+   <td>${Number(item.qty)||0}</td>
+   <td><button class="rowbtn red" onclick="deletePsItem('${item.id}')">حذف</button></td>
+  </tr>`).join("")||'<tr><td colspan="4">لا توجد سندوتشات مضافة</td></tr>';
+
+ renderPsStats();
+}
+
+function renderPsStats(){
+ if($("psTotalDevices")){
+  $("psTotalDevices").textContent=psDevices.length;
+  $("psRunningDevices").textContent=psDevices.filter(d=>d.status==="running"&&Number(d.endAt)>Date.now()).length;
+  $("psDrinksCount").textContent=psItems.filter(x=>x.category==="drink").length;
+  $("psSandwichesCount").textContent=psItems.filter(x=>x.category==="sandwich").length;
+ }
+}
+
+/* ============================
+   نظام المبيعات الأصلي
+============================ */
 
 window.page=function(name){
  const pages=["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription"];

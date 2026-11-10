@@ -98,6 +98,14 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .inline-form{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .inline-form button{width:100%}
 .mode-note{background:#eff6ff;color:#1d4ed8;border-radius:8px;padding:9px;font-size:12px;margin:8px 0}
+/* Modal Styles for Sub */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal-box{background:white;padding:22px;border-radius:16px;max-width:450px;width:90%;box-shadow:0 4px 20px #0003}
+.social-links{display:flex;gap:10px;justify-content:center;margin-top:15px;flex-wrap:wrap}
+.social-links a{padding:8px 12px;border-radius:8px;color:white;text-decoration:none;font-size:13px;font-weight:bold}
+.btn-whatsapp{background:#25D366}
+.btn-facebook{background:#1877F2}
+.btn-insta{background:radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%)}
 @media(max-width:950px){.sahal-layout{grid-template-columns:1fr}.sahal-sidebar{display:grid;grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}}
 @media(max-width:600px){.sale-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.sale-fields .search-container{grid-column:1/-1}.sahal-sidebar{grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}.ps-item-form{grid-template-columns:1fr 1fr}.ps-item-form input:first-child{grid-column:1/-1}.ps-item-form button{grid-column:1/-1}}
 @media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
@@ -153,13 +161,14 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="stat">السندوتشات<strong id="psSandwichesCount">0</strong></div>
    <div class="stat">إيرادات الجلسات<strong id="psSessionsRevenue">0 جنيه</strong></div>
   </div>
-  <div class="card" style="text-align:center"><div id="psSubDetails" style="line-height:2">جاري تحميل الاشتراك...</div><button class="big green" onclick="requestRenewal()">طلب تجديد / تفعيل الاشتراك</button></div>
+  
   <div class="ps-tabs">
    <button id="psDevicesTab" class="active" onclick="showPsSection('devices')">🎮 أجهزة الرومات</button>
    <button id="psVipTab" onclick="showPsSection('vip')">⭐ أجهزة صالة VIP</button>
    <button id="psDrinksTab" onclick="showPsSection('drinks')">🥤 المشروبات</button>
    <button id="psSandwichesTab" onclick="showPsSection('sandwiches')">🥪 السندوتشات</button>
    <button id="psSessionsTab" onclick="showPsSection('sessions')">📄 سجل الجلسات</button>
+   <button id="psMySubTab" onclick="openPsSubscriptionModal()">⭐ اشتراكي</button>
   </div>
 
   <div id="psDevicesSection">
@@ -194,6 +203,24 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  </div>
 </section>
 
+<!-- Modal نافذة اشتراكي للبلايستيشن -->
+<div id="psSubModal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="top"><h3>تفاصيل اشتراكي</h3><button class="secondary" onclick="closePsSubscriptionModal()">إغلاق</button></div>
+    <div id="psSubModalContent" style="line-height:2; margin:15px 0; text-align:center;">جاري التحميل...</div>
+    <div style="text-align:center; margin-bottom:15px;">
+      <button class="big green" onclick="requestRenewal()">طلب تجديد / تفعيل الاشتراك</button>
+    </div>
+    <hr>
+    <h4 style="text-align:center; margin:10px 0;">تواصل والدعم الفني</h4>
+    <div class="social-links">
+      <a class="btn-whatsapp" href="https://wa.me/201062883414" target="_blank">واتساب: 01062883414</a>
+      <a class="btn-facebook" href="https://www.facebook.com/share/1KNgaKhfXq/?mibextid=wwXIfr" target="_blank">فيسبوك</a>
+      <a class="btn-insta" href="https://www.instagram.com/mhmd.elsalahy?dlrf=a2F2c2M1ajc1dzRj&utm_source=qr" target="_blank">انستجرام</a>
+    </div>
+  </div>
+</div>
+
 <section id="customerPanel" class="hidden">
  <div class="card">
   <div class="top"><div><h2 id="shopTitle">نظام المبيعات والمخزون</h2><span class="muted">لوحة الإدارة الشاملة</span></div><button class="red" onclick="logout()">تسجيل الخروج</button></div>
@@ -227,7 +254,6 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-
 import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {getFirestore,doc,setDoc,getDoc,updateDoc,collection,addDoc,getDocs,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-// تعريف الدالة عالمياً لمنع خطأ getDeviceType is not defined
 window.getDeviceType = function(device) {
     return (device && device.deviceType === "vip") ? "vip" : "room";
 };
@@ -266,7 +292,7 @@ window.openAuth=(system,mode)=>{
  selectedSystem=system;$("authForm").classList.remove("hidden");
  $("customerLoginBox").classList.toggle("hidden",mode!=="login"||system==="owner");
  $("registerBox").classList.toggle("hidden",mode!=="register");$("ownerBox").classList.toggle("hidden",system!=="owner");
- $("authFormTitle").textContent=system==="owner"?"دخول لوحة التحكم":(system==="sales"?"سيستم المبيعات":"سيستم البلايستيشن")+" - "+(mode==="login"?"تسجيل الدخول":"إنشاء حساب");
+ $("authFormTitle").textContent=system==="owner"?"دخول لوحة التحكم":(system==="sales"?"سيستم المبيعات":"سيستم البلايستيشن")+" - "+(mode==="login"?"تسجيل الدخول":"إنشاء حساب؛");
  $("authMsg").classList.add("hidden");
 };
 window.backToGate=()=>{$("authForm").classList.add("hidden");$("authMsg").classList.add("hidden");};
@@ -324,11 +350,27 @@ onAuthStateChanged(auth,async user=>{
   profile=snap.data();const system=selectedSystem,info=systemInfo(profile,system);
   if(info.status==="not_registered"||!subscriptionActive(info)){await signOut(auth);$("auth").classList.remove("hidden");message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");return;}
   activeSystem=system;$("auth").classList.add("hidden");$("pendingScreen").classList.add("hidden");
-  if(system==="playstation"){$("playstationPanel").classList.remove("hidden");$("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";renderPsSubscription(info);await loadPlaystationData();startPsTimer();}
+  if(system==="playstation"){$("playstationPanel").classList.remove("hidden");$("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";await loadPlaystationData();startPsTimer();}
   else{$("customerPanel").classList.remove("hidden");$("shopTitle").textContent=profile.shopName||"نظام المبيعات";$("sahalShopTitle").textContent=profile.shopName||"متجري";$("settingsShopName").value=profile.shopName||"";$("settingsEmail").value=profile.email||user.email||"";checkCustomerSubscription(info);await loadBusiness();await checkAndSettleDailySales();}
  }catch(e){console.error(e);alert("حدث خطأ أثناء تحميل الحساب: "+e.message);}
 });
-function renderPsSubscription(info){const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():new Date(info.expiryDate);const days=Math.ceil((expiry-new Date())/86400000);$("psSubDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(profile.shopName||"—")}<br><b>الباقة:</b> ${escapeHTML(info.plan||"—")}<br><b>المتبقي:</b> ${Math.max(0,days)} يوم<br><span class="tag good">الاشتراك نشط</span>`;}
+
+window.openPsSubscriptionModal = () => {
+ const info = systemInfo(profile, "playstation");
+ const expiry = info.expiryDate?.toDate ? info.expiryDate.toDate() : (info.expiryDate ? new Date(info.expiryDate) : null);
+ const days = expiry ? Math.ceil((expiry - new Date()) / 86400000) : 0;
+ $("psSubModalContent").innerHTML = `
+   <b>النشاط:</b> ${escapeHTML(profile.shopName || "—")}<br>
+   <b>الباقة:</b> ${escapeHTML(info.plan || "—")}<br>
+   <b>المتبقي:</b> ${Math.max(0, days)} يوم<br>
+   <span class="tag good">الاشتراك نشط</span>
+ `;
+ $("psSubModal").classList.remove("hidden");
+};
+window.closePsSubscriptionModal = () => {
+ $("psSubModal").classList.add("hidden");
+};
+
 function checkCustomerSubscription(info){
  const details=$("subPageDetails"),action=$("subPageActionBox"),tiles=$("mainTilesContainer");
  if(!subscriptionActive(info)){details.innerHTML="الباقة غير مفعلة أو انتهت صلاحيتها.";action.innerHTML='<button class="green big" onclick="requestRenewal()">طلب تفعيل الاشتراك</button>';tiles.style.pointerEvents="none";tiles.style.opacity=".4";return;}
@@ -365,7 +407,6 @@ window.activateUserWithPlan=async(id,system)=>{
 window.deactivateSystem=async(id,system)=>{if(!confirm("هل تريد إيقاف الاشتراك؟"))return;try{await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"pending"});await loadUsers();alert("تم إيقاف الاشتراك.");}catch(e){alert(e.message);}};
 window.deleteUser=async id=>{if(!confirm("حذف بيانات الحساب من قاعدة البيانات؟"))return;try{await deleteDoc(doc(db,"users",id));await loadUsers();}catch(e){alert(e.message);}};
 
-/* =============== البلايستيشن: الرومات وVIP =============== */
 window.showPsSection=which=>{
  const sections=["devices","vip","drinks","sandwiches","sessions"];
  sections.forEach(s=>{
@@ -419,7 +460,6 @@ window.deletePsDevice=async id=>{
  try{await deleteDoc(docRef("devices",id));await loadPlaystationData();}catch(e){alert(e.message);}
 };
 
-/* بدء الجلسة: مدة لا تقل عن 30 دقيقة أو مبلغ أو حساب تلقائي */
 window.startPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status==="running")return alert("الجهاز غير متاح.");
@@ -493,7 +533,6 @@ window.stopPsDevice=async id=>{
  await finalizePsSession(d,"manual");
 };
 
-/* إضافة الطلبات إلى فاتورة الجهاز (الدالة المصححة بدقة) */
 window.addOrderToRoom = async (deviceId) => {
   const d = psDevices.find(x => x.id === deviceId);
   if (!d || d.status !== "running" || !d.sessionId) return alert("لا توجد جلسة نشطة على هذا الجهاز.");
@@ -564,7 +603,6 @@ window.removeRoomOrder=async(deviceId,index)=>{
  }catch(e){alert(e.message);}
 };
 
-/* إنهاء الجلسة وتسجيل إيراد واحد فقط */
 async function finalizePsSession(device,reason="manual"){
  if(!currentUser||!device||psEndingDevices.has(device.id))return;
  psEndingDevices.add(device.id);
@@ -714,7 +752,6 @@ window.togglePsMode=id=>{
  $(`psAutoBox_${id}`).classList.toggle("hidden",mode!=="auto");
 };
 
-/* المؤقت: العد التنازلي للمدة والمبلغ، والعد التصاعدي للتلقائي */
 function startPsTimer(){
  if(psTimer)clearInterval(psTimer);
  psTimer=setInterval(async()=>{
@@ -773,7 +810,6 @@ window.printPsInvoice=id=>{
  window.print();
 };
 
-/* إدارة المشروبات والسندوتشات */
 window.addPsItem=async category=>{
  const drink=category==="drink",name=$(drink?"psDrinkName":"psSandwichName").value.trim();
  const price=Number($(drink?"psDrinkPrice":"psSandwichPrice").value),qty=Number($(drink?"psDrinkQty":"psSandwichQty").value);
@@ -812,7 +848,6 @@ function renderPsStats(){
  $("psSandwichesCount").textContent=psItems.filter(x=>x.category==="sandwich").length;
 }
 
-/* =============== نظام المبيعات =============== */
 window.page=name=>{
  const pages=["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription"];
  pages.forEach(p=>$(p+"Page").classList.add("hidden"));

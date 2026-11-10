@@ -4,10 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NexPOS PRO - Full System</title>
-<!-- تحميل مكتبات Firebase القياسية لضمان العمل على GitHub Pages وجميع المتصفحات -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f3f5fa;color:#1c2940;font-family:Arial,sans-serif}
@@ -320,8 +316,16 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <div id="printArea" class="hidden"></div>
 <footer class="muted" style="text-align:center;padding:20px">تم التطوير بواسطة المهندس | محمد الصلاحي</footer>
 </div>
-<script>
-// إعداد Firebase وتثبيت الاتصال العام Standard Compatibility
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {getFirestore,doc,setDoc,getDoc,updateDoc,collection,addDoc,getDocs,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+window.getDeviceType = function(device) {
+if (!device) return "room";
+if (device.deviceType === "vip") return "vip";
+if (device.deviceType === "arabic") return "arabic";
+return "room";
+};
 const firebaseConfig={
 apiKey:"AIzaSyABpb7h1WXzodOKoxoRvvkXZSrPQ6UgZiA",
 authDomain:"nexpos-14155.firebaseapp.com",
@@ -332,14 +336,12 @@ messagingSenderId:"932284131293",
 appId:"1:932284131293:web:00d6237b1f155ae5daf834",
 measurementId:"G-ND249T5PTN"
 };
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
 const OWNER_EMAIL="melsalahy689@gmail.com";
 const OWNER_USERNAME="elsalahy";
 const SUPPORT_PHONE="201062883414";
 const PS_DEFAULT_HOURLY_RATE=40;
 const PS_MIN_SESSION_MINUTES=30;
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 let currentUser=null,profile=null,selectedSystem="sales",activeSystem="sales",registeringNow=false;
 let products=[],sales=[],expenses=[],treasury=[],cart=[],selectedProduct=null,lastRegisteredUser=null;
 let psDevices=[],psItems=[],psSessions=[],psTimer=null,psEndingDevices=new Set();
@@ -347,179 +349,84 @@ let pendingDeviceToFinalize=null;
 const $=id=>document.getElementById(id);
 const money=n=>(Number(n)||0).toLocaleString("ar-EG",{minimumFractionDigits:2,maximumFractionDigits:2});
 const shopRef=()=>⁠shops/${currentUser.uid}⁠;
-const col=name=>db.collection(shopRef()+"/"+name);
-const docRef=(name,id)=>db.doc(shopRef()+"/"+name+"/"+id);
+const col=name=>collection(db,shopRef(),name);
+const docRef=(name,id)=>doc(db,shopRef(),name,id);
 const PLANS={30:{name:"شهري",price:100},90:{name:"3 شهور",price:250},365:{name:"سنوي",price:900},36500:{name:"دائم",price:3000}};
-function message(t){
-const el=$("authMsg");
-if(!el) return;
-el.textContent=t;
-el.classList.remove("hidden");
-}
+function message(t){const el=$("authMsg");if(!el)return;el.textContent=t;el.classList.remove("hidden");}
 function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':""","'":"'"}[c]));}
-function systemInfo(p,system){
-if(!p) return {status:"not_registered",plan:"غير محدد",expiryDate:null};
-const s=p.systems?.[system];
-if(s) return s;
-if(system==="sales"&&(p.status||p.expiryDate||p.plan)) return {status:p.status||"pending",plan:p.plan||"غير محدد",expiryDate:p.expiryDate||null};
-return {status:"not_registered",plan:"غير محدد",expiryDate:null};
-}
-function subscriptionActive(data){
-if(!data||data.status!=="active"||!data.expiryDate) return false;
-const exp=data.expiryDate.toDate?data.expiryDate.toDate():new Date(data.expiryDate);
-return exp>new Date();
-}
-window.getDeviceType = function(device) {
-if (!device) return "room";
-if (device.deviceType === "vip") return "vip";
-if (device.deviceType === "arabic") return "arabic";
-return "room";
-};
+function systemInfo(p,system){const s=p?.systems?.[system];if(s)return s;if(system==="sales"&&(p?.status||p?.expiryDate||p?.plan))return {status:p.status||"pending",plan:p.plan||"غير محدد",expiryDate:p.expiryDate||null};return {status:"not_registered",plan:"غير محدد",expiryDate:null};}
+function subscriptionActive(data){if(!data||data.status!=="active"||!data.expiryDate)return false;const exp=data.expiryDate.toDate?data.expiryDate.toDate():new Date(data.expiryDate);return exp>new Date();}
 window.openAuth=(system,mode)=>{
-selectedSystem=system;
-$("authForm").classList.remove("hidden");
-$("customerLoginBox").classList.toggle("hidden",mode!"login"||system="owner");
-$("registerBox").classList.toggle("hidden",mode!"register");
-$("ownerBox").classList.toggle("hidden",system!"owner");
-$("authFormTitle").textContent=(system==="owner"?"دخول لوحة التحكم":(system==="sales"?"سيستم المبيعات":"سيستم البلايستيشن"))+" - "+(mode==="login"?"تسجيل الدخول":"إنشاء حساب جديد");
-$("authMsg").classList.add("hidden");
+selectedSystem=system;$("authForm").classList.remove("hidden");
+￼
+￼
+￼
+￼
 };
-window.backToGate=()=>{("authForm").classList.add("hidden");("authMsg").classList.add("hidden");};
+window.backToGate=()=>{$("authForm").classList.add("hidden");("authMsg").classList.add("hidden");};
 window.login=async()=>{
 const btn=￼
 try{
 ￼("loginEmail").value.trim(),password=$("loginPassword").value;
-if(!email||!password) return message("أدخل البريد وكلمة المرور.");
-if(btn) btn.disabled=true;
-const cred=await auth.signInWithEmailAndPassword(email,password);
-if(cred.user.email?.toLowerCase()=OWNER_EMAIL.toLowerCase()){
-if(btn) btn.disabled=false;
-return;
-}
-const snap=await db.collection("users").doc(cred.user.uid).get();
-if(!snap.exists){
-await auth.signOut();
-if(btn) btn.disabled=false;
-return message("لا توجد بيانات حساب لهذا المستخدم في قاعدة البيانات.");
-}
+if(!email||!password)return message("أدخل البريد وكلمة المرور.");
+if(btn)btn.disabled=true;
+const cred=await signInWithEmailAndPassword(auth,email,password);
+if(cred.user.email?.toLowerCase()=OWNER_EMAIL.toLowerCase()){if(btn)btn.disabled=false;return;}
+const snap=await getDoc(doc(db,"users",cred.user.uid));
+if(!snap.exists()){await signOut(auth);if(btn)btn.disabled=false;return message("لا توجد بيانات حساب لهذا المستخدم.");}
 const si=systemInfo(snap.data(),selectedSystem);
-if(si.status="not_registered"){
-await auth.signOut();
-if(btn) btn.disabled=false;
-return message("هذا الحساب غير مسجل في النظام الذي اخترته.");
-}
-if(!subscriptionActive(si)){
-await auth.signOut();
-if(btn) btn.disabled=false;
-return message(si.status==="pending"?"حسابك قيد المراجعة ولم يتم تفعيل الاشتراك.":"اشتراك هذا النظام غير نشط أو انتهت صلاحيته.");
-}
-}catch(e){
-console.error("Detailed Login Error:", e);
-let errText = e.message;
-if(e.code==="auth/invalid-credential" || e.code==="auth/user-not-found" || e.code==="auth/wrong-password") errText="البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-else if(e.code==="auth/too-many-requests") errText="تم حظر المحاولات مؤقتا بسبب التكرار. حاول لاحقا.";
-message("خطأ بالدخول: " + errText + " (" + (e.code||"") + ")");
-} finally {
-if(btn) btn.disabled=false;
-}
+if(si.status="not_registered"){await signOut(auth);if(btn)btn.disabled=false;return message("هذا الحساب غير مسجل في النظام الذي اخترته.");}
+if(!subscriptionActive(si)){await signOut(auth);if(btn)btn.disabled=false;return message(si.status==="pending"?"حسابك قيد المراجعة ولم يتم تفعيل الاشتراك.":"اشتراك هذا النظام غير نشط أو انتهت صلاحيته.");}
+}catch(e){console.error(e);if(btn)btn.disabled=false;message("تعذر الدخول: "+(e.code||e.message));}
+finally{if(btn)btn.disabled=false;}
 };
 window.ownerLogin=async()=>{
 const btn=￼
 try{
-￼("ownerUsername").value.trim().toLowerCase()!==OWNER_USERNAME) return message("اسم المستخدم الإداري غير صحيح.");
-const p=$("ownerPassword").value;
-if(!p) return message("أدخل كلمة المرور.");
-if(btn) btn.disabled=true;
-await auth.signInWithEmailAndPassword(OWNER_EMAIL,p);
-}catch(e){
-console.error("Owner Login Error:", e);
-message("تعذر الدخول إلى لوحة المالك: "+(e.message||e.code));
-}finally{
-if(btn) btn.disabled=false;
-}
+￼("ownerUsername").value.trim().toLowerCase()!==OWNER_USERNAME)return message("اسم المستخدم الإداري غير صحيح.");
+const p=$("ownerPassword").value;if(!p)return message("أدخل كلمة المرور.");
+if(btn)btn.disabled=true;
+await signInWithEmailAndPassword(auth,OWNER_EMAIL,p);
+}catch(e){console.error(e);if(btn)btn.disabled=false;message("تعذر الدخول إلى لوحة المالك. "+(e.code||""));}
+finally{if(btn)btn.disabled=false;}
 };
 window.register=async()=>{
 const btn=￼
-￼("regShop").value.trim(),name=￼("regPhone").value.trim(),email=￼("regPassword").value,days=Number($("regPlan").value);
-if(!shop||!name||!phone||!email||!password) return message("أكمل جميع البيانات.");
-if(password.length<6) return message("كلمة المرور يجب ألا تقل عن 6 أحرف.");
-const selectedPlan=PLANS[days];
-if(!selectedPlan) return message("اختر باقة صحيحة.");
+￼("regShop").value.trim(),name=￼("regPhone").value.trim(),email=￼("regPassword").value,days=Number(￼
+￼
+￼
+￼
 try{
-if(btn) btn.disabled=true;
-registeringNow=true;
-const cred=await auth.createUserWithEmailAndPassword(email,password);
-const systemData={status:"pending",plan:"غير مفعل",requestedPlan:selectedPlan.name,requestedPrice:selectedPlan.price,requestedDays:days,expiryDate:null,requestedAt:firebase.firestore.FieldValue.serverTimestamp()};
-const systems={};
-systems[selectedSystem]=systemData;
-await db.collection("users").doc(cred.user.uid).set({shopName:shop,customerName:name,phone,email,role:"customer",systems,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-lastRegisteredUser={name,shop,email,phone,system:selectedSystem,plan:selectedPlan.name,price:selectedPlan.price};
-$("pendingDetails").innerHTML=⁠<b>النشاط:</b> ${escapeHTML(shop)}<br><b>النظام:</b> ${selectedSystem==="sales"?"المبيعات":"البلايستيشن"}<br><b>الباقة:</b> ${selectedPlan.name}<br><b>السعر:</b> ${selectedPlan.price} جنيه⁠;
-await auth.signOut();
-registeringNow=false;
-$("auth").classList.add("hidden");
-$("pendingScreen").classList.remove("hidden");
-}catch(e){
-registeringNow=false;
-console.error("Register Detailed Error:", e);
-let msgTxt = e.message;
-if(e.code==="auth/email-already-in-use") msgTxt="البريد الإلكتروني مسجل بالفعل.";
-message("تعذر إنشاء الحساب: " + msgTxt + " ("+(e.code||"")+")");
-}finally{
-if(btn) btn.disabled=false;
-}
+￼
+￼
+￼
+￼
+￼
+￼
+￼
+￼("pendingScreen").classList.remove("hidden");
+}catch(e){registeringNow=false;if(btn)btn.disabled=false;console.error(e);message(e.code==="auth/email-already-in-use"?"البريد مسجل بالفعل.":"تعذر التسجيل: "+(e.code||e.message));}
+finally{if(btn)btn.disabled=false;}
 };
 window.sendWhatsAppActivation=()=>{
 const d=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:"",phone:"",system:selectedSystem,plan:"غير محددة",price:""};
 const msg=encodeURIComponent(⁠طلب تفعيل جديد في NexPOS PRO اسم العميل: ${d.name} النشاط: ${d.shop} الهاتف: ${d.phone} البريد: ${d.email} النظام: ${d.system} الباقة: ${d.plan} السعر: ${d.price} جنيه⁠);
 window.open(⁠https://wa.me/${SUPPORT_PHONE}?text=${msg}⁠,"_blank");
 };
-window.logout=async()=>{if(psTimer)clearInterval(psTimer);await auth.signOut();location.reload();};
+window.logout=async()=>{if(psTimer)clearInterval(psTimer);await signOut(auth);location.reload();};
 window.support=()=>window.open(⁠https://wa.me/${SUPPORT_PHONE}⁠,"_blank");
-auth.onAuthStateChanged(async user=>{
+onAuthStateChanged(auth,async user=>{
 currentUser=user;
 if(registeringNow)return;
-if(!user){
-if(psTimer)clearInterval(psTimer);
-["customerPanel","ownerPanel","playstationPanel","pendingScreen"].forEach(x=>$(x).classList.add("hidden"));
-$("auth").classList.remove("hidden");
-return;
-}
+if(!user){if(psTimer)clearInterval(psTimer);["customerPanel","ownerPanel","playstationPanel","pendingScreen"].forEach(x=>￼("auth").classList.remove("hidden");return;}
 try{
-if(user.email?.toLowerCase()=OWNER_EMAIL.toLowerCase()){
-$("auth").classList.add("hidden");
-$("ownerPanel").classList.remove("hidden");
-await window.loadUsers();
-return;
-}
-const snap=await db.collection("users").doc(user.uid).get();
-if(!snap.exists){await auth.signOut();return;}
-profile=snap.data();
-const system=selectedSystem,info=systemInfo(profile,system);
-if(info.status="not_registered"||!subscriptionActive(info)){
-await auth.signOut();
-$("auth").classList.remove("hidden");
-message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");
-return;
-}
-activeSystem=system;
-$("auth").classList.add("hidden");
-$("pendingScreen").classList.add("hidden");
-if(system==="playstation"){
-$("playstationPanel").classList.remove("hidden");
-$("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";
-await window.loadPlaystationData();
-startPsTimer();
-}else{
-$("customerPanel").classList.remove("hidden");
-$("shopTitle").textContent=profile.shopName||"نظام المبيعات والمخزون";
-$("sahalShopTitle").textContent=profile.shopName||"متجري";
-$("settingsShopName").value=profile.shopName||"";
-$("settingsEmail").value=profile.email||user.email||"";
-checkCustomerSubscription(info);
-await loadBusiness();
-await checkAndSettleDailySales();
-}
+if(user.email?.toLowerCase()=OWNER_EMAIL.toLowerCase()){￼("ownerPanel").classList.remove("hidden");await window.loadUsers();return;}
+const snap=await getDoc(doc(db,"users",user.uid));if(!snap.exists()){await signOut(auth);return;}
+profile=snap.data();const system=selectedSystem,info=systemInfo(profile,system);
+if(info.status="not_registered"||!subscriptionActive(info)){await signOut(auth);￼("auth").classList.remove("hidden");message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");return;}
+activeSystem=system;￼("pendingScreen").classList.add("hidden");
+if(system==="playstation"){￼("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";await window.loadPlaystationData();startPsTimer();}
+else{￼("shopTitle").textContent=profile.shopName||"نظام المبيعات والمخزون";￼("settingsShopName").value=profile.shopName||"";$("settingsEmail").value=profile.email||user.email||"";checkCustomerSubscription(info);await loadBusiness();await checkAndSettleDailySales();}
 }catch(e){console.error(e);alert("حدث خطأ أثناء تحميل الحساب: "+e.message);}
 });
 window.openPsSubscriptionModal = () => {
@@ -531,44 +438,23 @@ $("psSubModal").classList.remove("hidden");
 };
 window.closePsSubscriptionModal = () => { $("psSubModal").classList.add("hidden"); };
 function checkCustomerSubscription(info){
-const details=￼("subPageActionBox"),tiles=$("mainTilesContainer");
-if(!subscriptionActive(info)){
-details.innerHTML="الباقة غير مفعلة أو انتهت صلاحيتها.";
-action.innerHTML='<button class="green big" onclick="window.requestRenewal()">طلب تفعيل الاشتراك</button>';
-tiles.style.pointerEvents="none";
-tiles.style.opacity=".4";
-return;
+const details=￼("subPageActionBox"),tiles=￼
+￼
+￼
+￼
 }
-const expiry=info.expiryDate.toDate?info.expiryDate.toDate():new Date(info.expiryDate),diff=Math.ceil((expiry-new Date())/86400000);
-details.innerHTML=⁠<b>الباقة:</b> ${escapeHTML(info.plan||"نشطة")}<br><b>المتبقي:</b> ${diff} يوم<br><b>الحالة:</b> ساري⁠;
-action.innerHTML='<span class="tag good">الباقة نشطة</span>';
-tiles.style.pointerEvents="auto";
-tiles.style.opacity="1";
-}
-window.requestRenewal=()=>{
-const sys=activeSystem==="playstation"?"البلايستيشن":"المبيعات";
-const msg=encodeURIComponent(⁠مرحبًا، أرغب في تجديد اشتراك سيستم ${sys} لنشاط ${profile?.shopName||"متجري"}.⁠);
-window.open(⁠https://wa.me/${SUPPORT_PHONE}?text=${msg}⁠,"_blank");
-};
-window.ownerSection=which=>{
-$("ownerSalesSection").classList.toggle("hidden",which!"sales");
-$("ownerPsSection").classList.toggle("hidden",which!"playstation");
-$("ownerSalesTab").classList.toggle("active",which==="sales");
-$("ownerPsTab").classList.toggle("active",which==="playstation");
-};
+￼
+window.ownerSection=which=>{("ownerSalesSection").classList.toggle("hidden",which!"sales");$("ownerPsSection").classList.toggle("hidden",which!"playstation");￼("ownerPsTab").classList.toggle("active",which==="playstation");};
 function planControls(u,system){
-const info=systemInfo(u,system);
-if(info.status==="not_registered")return ⁠<span class="muted">غير مسجل</span>⁠;
+const info=systemInfo(u,system);if(info.status==="not_registered")return ⁠<span class="muted">غير مسجل</span>⁠;
 const requestedDays=Number(info.requestedDays)||30;
 return ⁠<select id="plan_${system}_${u.id}" style="width:140px"><option value="30" ${requestedDays===30?"selected":""}>شهري (100ج)</option><option value="90" ${requestedDays===90?"selected":""}>3 شهور (250ج)</option><option value="365" ${requestedDays===365?"selected":""}>سنوي (900ج)</option><option value="36500" ${requestedDays===36500?"selected":""}>دائم (3000ج)</option></select><button class="rowbtn green" onclick="window.activateUserWithPlan('${u.id}','${system}')">تفعيل</button><button class="rowbtn red" onclick="window.deactivateSystem('${u.id}','${system}')">إيقاف</button><button class="rowbtn dark" onclick="window.deleteUser('${u.id}')">حذف</button>⁠;
 }
 window.loadUsers=async()=>{
 try{
-const snap=await db.collection("users").get(),list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!"owner");
-$("totalUsers").textContent=list.length;
-const salesList=list.filter(u=>systemInfo(u,"sales").status!"not_registered"),psList=list.filter(u=>systemInfo(u,"playstation").status!"not_registered");
-$("salesUsersCount").textContent=salesList.length;
-$("psUsersCount").textContent=psList.length;
+const snap=await getDocs(collection(db,"users")),list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!"owner");
+$("totalUsers").textContent=list.length;const salesList=list.filter(u=>systemInfo(u,"sales").status!"not_registered"),psList=list.filter(u=>systemInfo(u,"playstation").status!"not_registered");
+￼("psUsersCount").textContent=psList.length;
 $("pendingUsersCount").textContent=list.reduce((c,u)=>c+(systemInfo(u,"sales").status="pending"?1:0)+(systemInfo(u,"playstation").status==="pending"?1:0),0);
 const render=(arr,system)=>arr.map(u=>{
 const info=systemInfo(u,system),expiry=info.expiryDate?.toDate?info.expiryDate.toDate():info.expiryDate,expired=expiry&&new Date(expiry)<new Date();
@@ -576,38 +462,16 @@ let statusText="قيد المراجعة",good=false;if(info.status==="active"&&!
 return ⁠<tr><td>${escapeHTML(u.shopName||"")}</td><td>${escapeHTML(u.customerName||"")}</td><td>${escapeHTML(u.email||"")}</td><td>${escapeHTML(u.phone||"")}</td><td><span class="tag ${good?"good":""}">${statusText}</span></td><td>${escapeHTML(info.requestedPlan||info.plan||"غير محدد")} ${Number(info.requestedPrice)?⁠
 ${Number(info.requestedPrice)} جنيه⁠:""}</td><td>${planControls(u,system)}</td></tr>⁠;
 }).join("")||'<tr><td colspan="7">لا يوجد عملاء</td></tr>';
-$("salesUsersTable").innerHTML=render(salesList,"sales");
-$("psUsersTable").innerHTML=render(psList,"playstation");
+￼("psUsersTable").innerHTML=render(psList,"playstation");
 }catch(e){console.error(e);alert("تعذر تحميل العملاء: "+e.message);}
 };
 window.activateUserWithPlan=async(id,system)=>{
-const select=$(⁠plan_${system}_${id}⁠);
-if(!select)return;
-const days=Number(select.value),plan=PLANS[days];
-if(!plan)return alert("اختر باقة صحيحة.");
-const expiry=new Date();
-expiry.setDate(expiry.getDate()+days);
-try{
-await db.collection("users").doc(id).update({[⁠systems.${system}.status⁠]:"active",[⁠systems.${system}.plan⁠]:plan.name,[⁠systems.${system}.price⁠]:plan.price,[⁠systems.${system}.expiryDate⁠]:expiry,[⁠systems.${system}.activatedAt⁠]:firebase.firestore.FieldValue.serverTimestamp()});
-alert("تم التفعيل بنجاح.");
-await window.loadUsers();
-}catch(e){alert("خطأ: "+e.message);}
+const select=$(⁠plan_${system}_${id}⁠);if(!select)return;const days=Number(select.value),plan=PLANS[days];if(!plan)return alert("اختر باقة صحيحة.");
+const expiry=new Date();expiry.setDate(expiry.getDate()+days);
+try{await updateDoc(doc(db,"users",id),{[⁠systems.${system}.status⁠]:"active",[⁠systems.${system}.plan⁠]:plan.name,[⁠systems.${system}.price⁠]:plan.price,[⁠systems.${system}.expiryDate⁠]:expiry,[⁠systems.${system}.activatedAt⁠]:serverTimestamp()});alert("تم التفعيل بنجاح.");await window.loadUsers();}catch(e){alert("خطأ: "+e.message);}
 };
-window.deactivateSystem=async(id,system)=>{
-if(!confirm("هل تريد إيقاف الاشتراك؟"))return;
-try{
-await db.collection("users").doc(id).update({[⁠systems.${system}.status⁠]:"pending"});
-await window.loadUsers();
-alert("تم إيقاف الاشتراك.");
-}catch(e){alert(e.message);}
-};
-window.deleteUser=async id=>{
-if(!confirm("حذف بيانات الحساب من قاعدة البيانات؟"))return;
-try{
-await db.collection("users").doc(id).delete();
-await window.loadUsers();
-}catch(e){alert(e.message);}
-};
+window.deactivateSystem=async(id,system)=>{if(!confirm("هل تريد إيقاف الاشتراك؟"))return;try{await updateDoc(doc(db,"users",id),{[⁠systems.${system}.status⁠]:"pending"});await window.loadUsers();alert("تم إيقاف الاشتراك.");}catch(e){alert(e.message);}};
+window.deleteUser=async id=>{if(!confirm("حذف بيانات الحساب من قاعدة البيانات؟"))return;try{await deleteDoc(doc(db,"users",id));await window.loadUsers();}catch(e){alert(e.message);}};
 window.showPsSection=which=>{
 const sections=["devices","arabic","vip","drinks","sandwiches","sessions"];
 sections.forEach(s=>{
@@ -621,7 +485,7 @@ if(which==="sessions")renderPsSessions();
 window.loadPlaystationData = async function(){
 if(!currentUser)return;
 try{
-const [ds,is,ss]=await Promise.all([col("devices").get(),col("psItems").get(),col("psSessions").get()]);
+const [ds,is,ss]=await Promise.all([getDocs(col("devices")),getDocs(col("psItems")),getDocs(col("psSessions"))]);
 psDevices=ds.docs.map(d=>({id:d.id,...d.data()}));
 psItems=is.docs.map(d=>({id:d.id,...d.data()}));
 psSessions=ss.docs.map(d=>({id:d.id,...d.data()}));
@@ -630,14 +494,9 @@ if(d.status==="running"&&d.sessionMode!=="auto"&&Number(d.endAt)>0&&Number(d.end
 await finalizePsSession(d,"automatic");
 }
 }
-const refreshed=await col("devices").get();
-psDevices=refreshed.docs.map(d=>({id:d.id,...d.data()}));
-const sessions=await col("psSessions").get();
-psSessions=sessions.docs.map(d=>({id:d.id,...d.data()}));
-renderPsDevices();
-renderPsItems();
-renderPsStats();
-renderPsSessions();
+const refreshed=await getDocs(col("devices"));psDevices=refreshed.docs.map(d=>({id:d.id,...d.data()}));
+const sessions=await getDocs(col("psSessions"));psSessions=sessions.docs.map(d=>({id:d.id,...d.data()}));
+renderPsDevices();renderPsItems();renderPsStats();renderPsSessions();
 }catch(e){console.error(e);alert("تعذر تحميل بيانات البلايستيشن: "+e.message);}
 };
 window.addPsDevice=async type=>{
@@ -649,7 +508,7 @@ if(!name)return alert(isArabic?"اكتب اسم القاعدة العربي.":(i
 if(!Number.isFinite(rate)||rate<=0)return alert("أدخل سعر ساعة صحيح.");
 try{
 const dType = isArabic ? "arabic" : (isVip ? "vip" : "room");
-await col("devices").add({name,deviceType:dType,status:"idle",startedAt:null,endAt:null,hourlyRate:rate,createdAt:Date.now()});
+await addDoc(col("devices"),{name,deviceType:dType,status:"idle",startedAt:null,endAt:null,hourlyRate:rate,createdAt:Date.now()});
 ￼(rateInputId).value="";
 await window.loadPlaystationData();
 alert(isArabic?"تمت إضافة القاعدة العربي بنجاح.":(isVip?"تمت إضافة جهاز VIP بنجاح.":"تمت إضافة الروم بنجاح."));
@@ -658,22 +517,14 @@ alert(isArabic?"تمت إضافة القاعدة العربي بنجاح.":(isVi
 window.updatePsRate=async id=>{
 const input=$(⁠psRate_${id}⁠),rate=Number(input?.value);
 if(!Number.isFinite(rate)||rate<=0)return alert("أدخل سعر ساعة صحيح.");
-try{
-await docRef("devices",id).update({hourlyRate:rate});
-const d=psDevices.find(x=>x.id===id);
-if(d)d.hourlyRate=rate;
-renderPsDevices();
-alert("تم تحديث سعر الساعة.");
-}catch(e){alert("تعذر تعديل السعر: "+e.message);}
+try{await updateDoc(docRef("devices",id),{hourlyRate:rate});const d=psDevices.find(x=>x.id===id);if(d)d.hourlyRate=rate;renderPsDevices();alert("تم تحديث سعر الساعة.");}
+catch(e){alert("تعذر تعديل السعر: "+e.message);}
 };
 window.deletePsDevice=async id=>{
 const d=psDevices.find(x=>x.id=id);if(!d)return;
 if(d.status="running")return alert("لا يمكن حذف جهاز يعمل. أنهِ الجلسة أولاً.");
 if(!confirm("هل تريد حذف هذا العنصر؟"))return;
-try{
-await docRef("devices",id).delete();
-await window.loadPlaystationData();
-}catch(e){alert(e.message);}
+try{await deleteDoc(docRef("devices",id));await window.loadPlaystationData();}catch(e){alert(e.message);}
 };
 window.startPsDevice=async id=>{
 const d=psDevices.find(x=>x.id=id);
@@ -696,15 +547,15 @@ endAt=now+minutes*60000;
 minutes=0;
 endAt=null;
 }else return alert("اختر طريقة حساب صحيحة.");
-const sessionRef=col("psSessions").doc(),sessionId=sessionRef.id;
+const sessionRef=doc(col("psSessions")),sessionId=sessionRef.id;
 try{
-await sessionRef.set({
+await setDoc(sessionRef,{
 deviceId:id,deviceName:d.name,deviceType:window.getDeviceType(d),
 startedAt:now,endAt,plannedMinutes:minutes,hourlyRate:rate,
 sessionMode:mode,plannedAmount:mode==="amount"?plannedAmount:0,
 orders:[],finalized:false,createdAt:now
 });
-await docRef("devices",id).update({
+await updateDoc(docRef("devices",id),{
 status:"running",startedAt:now,endAt,lastDuration:minutes,
 hourlyRate:rate,sessionId,sessionMode:mode,
 sessionAmount:mode==="amount"?plannedAmount:0
@@ -723,9 +574,9 @@ const now=Date.now(),newEndAt=Math.max(now,Number(d.endAt)||0)+minutes*60000;
 try{
 if(!d.sessionId)throw new Error("لا يوجد رقم جلسة للجهاز.");
 const sRef=docRef("psSessions",d.sessionId);
-await db.runTransaction(async tx=>{
+await runTransaction(db,async tx=>{
 const ss=await tx.get(sRef);
-if(!ss.exists||ss.data().finalized)throw new Error("الجلسة غير متاحة للتمديد.");
+if(!ss.exists()||ss.data().finalized)throw new Error("الجلسة غير متاحة للتمديد.");
 const old=ss.data(),addAmount=(minutes/60)*Number(old.hourlyRate||d.hourlyRate||PS_DEFAULT_HOURLY_RATE);
 tx.update(sRef,{
 endAt:newEndAt,plannedMinutes:Number(old.plannedMinutes||0)+minutes,
@@ -733,10 +584,8 @@ plannedAmount:Number(old.plannedAmount||0)+(old.sessionMode==="amount"?addAmount
 lastExtendedAt:now
 });
 });
-await docRef("devices",id).update({endAt:newEndAt,lastExtendedAt:now});
-d.endAt=newEndAt;
-await window.loadPlaystationData();
-alert("تم تمديد وقت الجهاز.");
+await updateDoc(docRef("devices",id),{endAt:newEndAt,lastExtendedAt:now});
+d.endAt=newEndAt;await window.loadPlaystationData();alert("تم تمديد وقت الجهاز.");
 }catch(e){alert("تعذر التمديد: "+e.message);}
 };
 window.stopPsDevice = async id => {
@@ -752,8 +601,8 @@ const sessionId = device.sessionId;
 const sRef = sessionId ? docRef("psSessions", sessionId) : null;
 let sData = {};
 if (sRef) {
-const snap = await sRef.get();
-if (snap.exists) sData = snap.data();
+const snap = await getDoc(sRef);
+if (snap.exists()) sData = snap.data();
 }
 const startedAt = Number(sData.startedAt || device.startedAt) || now;
 const elapsedMs = Math.max(0, now - startedAt);
@@ -834,9 +683,9 @@ const price = Number(item.price) || 0;
 if (price < 0) return alert("سعر الصنف غير صحيح.");
 const sRef = docRef("psSessions", d.sessionId);
 try {
-await db.runTransaction(async tx => {
+await runTransaction(db, async tx => {
 const snap = await tx.get(sRef);
-if (!snap.exists || snap.data().finalized) throw new Error("الجلسة انتهت بالفعل.");
+if (!snap.exists() || snap.data().finalized) throw new Error("الجلسة انتهت بالفعل.");
 const old = snap.data();
 const orders = Array.isArray(old.orders) ? [...old.orders] : [];
 orders.push({
@@ -859,27 +708,22 @@ alert("تعذر إضافة الطلب: " + e.message);
 }
 };
 async function refreshCurrentSession(id){
-const snap=await docRef("psSessions",id).get();
-if(!snap.exists)return;
+const snap=await getDoc(docRef("psSessions",id));if(!snap.exists())return;
 const s=snap.data(),d=psDevices.find(x=>x.sessionId=id);
 if(d)d.currentOrders=s.orders||[];
 psSessions=psSessions.map(x=>x.id=id?{id,...s}:x);
 }
 window.removeRoomOrder=async(deviceId,index)=>{
-const d=psDevices.find(x=>x.id===deviceId);
-if(!d?.sessionId)return;
+const d=psDevices.find(x=>x.id===deviceId);if(!d?.sessionId)return;
 if(!confirm("حذف هذا الطلب من الفاتورة؟"))return;
 try{
 const ref=docRef("psSessions",d.sessionId);
-await db.runTransaction(async tx=>{
+await runTransaction(db,async tx=>{
 const snap=await tx.get(ref);
-if(!snap.exists||snap.data().finalized)throw new Error("الجلسة انتهت.");
-const orders=[...(snap.data().orders||[])];
-orders.splice(index,1);
-tx.update(ref,{orders});
+if(!snap.exists()||snap.data().finalized)throw new Error("الجلسة انتهت.");
+const orders=[...(snap.data().orders||[])];orders.splice(index,1);tx.update(ref,{orders});
 });
-await refreshCurrentSession(d.sessionId);
-renderPsDevices();
+await refreshCurrentSession(d.sessionId);renderPsDevices();
 }catch(e){alert(e.message);}
 };
 async function finalizePsSession(device,reason="manual"){
@@ -887,16 +731,16 @@ if(!currentUser||!device||psEndingDevices.has(device.id))return;
 psEndingDevices.add(device.id);
 try{
 const now=Date.now(),sessionId=device.sessionId||("legacy_"+device.id+"_"+(device.startedAt||now));
-const sRef=docRef("psSessions",sessionId),dRef=docRef("devices",device.id),tRef=col("psTreasury").doc();
-await db.runTransaction(async tx=>{
+const sRef=docRef("psSessions",sessionId),dRef=docRef("devices",device.id),tRef=doc(col("psTreasury"));
+await runTransaction(db,async tx=>{
 const [ss,ds]=await Promise.all([tx.get(sRef),tx.get(dRef)]);
-if(!ds.exists)throw new Error("بيانات الجهاز غير موجودة.");
+if(!ds.exists())throw new Error("بيانات الجهاز غير موجودة.");
 const current=ds.data();
-if(ss.exists&&ss.data().finalized){
+if(ss.exists()&&ss.data().finalized){
 tx.update(dRef,{status:"idle",endAt:null,sessionId:null,startedAt:null,sessionMode:null,sessionAmount:null});
 return;
 }
-const s=ss.exists?ss.data():{};
+const s=ss.exists()?ss.data():{};
 const startedAt=Number(s.startedAt||current.startedAt)||now;
 const elapsedMs=Math.max(0,now-startedAt);
 const elapsedMinutes=Math.max(1,Math.ceil(elapsedMs/60000));
@@ -944,12 +788,10 @@ sessionMode:null,sessionAmount:null,endedAt:now,
 lastSessionId:sessionId,lastSessionTotal:total
 });
 });
-const [updated,sessions]=await Promise.all([dRef.get(),col("psSessions").get()]);
-if(updated.exists)Object.assign(device,updated.data());
+const [updated,sessions]=await Promise.all([getDoc(dRef),getDocs(col("psSessions"))]);
+if(updated.exists())Object.assign(device,updated.data());
 psSessions=sessions.docs.map(x=>({id:x.id,...x.data()}));
-renderPsDevices();
-renderPsStats();
-renderPsSessions();
+renderPsDevices();renderPsStats();renderPsSessions();
 }catch(e){console.error(e);alert("تعذر تسجيل الفاتورة: "+e.message);}
 finally{psEndingDevices.delete(device.id);}
 }
@@ -1091,8 +933,7 @@ const drink=category==="drink",name=￼
 try{
 ￼
 ￼(drink?"psDrinkQty":"psSandwichQty").value="1";
-await window.loadPlaystationData();
-alert("تمت إضافة الصنف.");
+await window.loadPlaystationData();alert("تمت إضافة الصنف.");
 }catch(e){alert(e.message);}
 };
 window.editPsItem=async id=>{
@@ -1101,25 +942,17 @@ const name=prompt("اسم الصنف:",item.name);if(name=null)return;
 const price=prompt("السعر الجديد:",item.price);if(price=null)return;
 const qty=prompt("الكمية:",item.qty??0);if(qty=null)return;
 if(!name.trim()||!Number.isFinite(Number(price))||Number(price)<=0||!Number.isInteger(Number(qty))||Number(qty)<0)return alert("بيانات غير صحيحة.");
-try{
-await docRef("psItems",id).update({name:name.trim(),price:Number(price),qty:Number(qty),updatedAt:Date.now()});
-await window.loadPlaystationData();
-alert("تم تعديل الصنف.");
-}catch(e){alert(e.message);}
+try{await updateDoc(docRef("psItems",id),{name:name.trim(),price:Number(price),qty:Number(qty),updatedAt:Date.now()});await window.loadPlaystationData();alert("تم تعديل الصنف.");}
+catch(e){alert(e.message);}
 };
 window.deletePsItem=async id=>{
 if(!confirm("هل تريد حذف هذا الصنف؟"))return;
-try{
-await docRef("psItems",id).delete();
-await window.loadPlaystationData();
-}catch(e){alert(e.message);}
+try{await deleteDoc(docRef("psItems",id));await window.loadPlaystationData();}catch(e){alert(e.message);}
 };
 function renderPsItems(){
 const drinks=psItems.filter(x=>x.category==="drink"),sandwiches=psItems.filter(x=>x.category==="sandwich");
 const render=arr=>arr.map(i=>⁠<tr><td>${escapeHTML(i.name)}</td><td>${money(i.price)} ج</td><td>${Number(i.qty)||0}</td><td><button class="rowbtn secondary" onclick="window.editPsItem('${i.id}')">تعديل</button><button class="rowbtn red" onclick="window.deletePsItem('${i.id}')">حذف</button></td></tr>⁠).join("")||'<tr><td colspan="4">لا توجد أصناف</td></tr>';
-$("psDrinksTable").innerHTML=render(drinks);
-$("psSandwichesTable").innerHTML=render(sandwiches);
-renderPsStats();
+￼("psSandwichesTable").innerHTML=render(sandwiches);renderPsStats();
 }
 function renderPsStats(){
 const rooms=psDevices.filter(d=>window.getDeviceType(d)="room");
@@ -1142,65 +975,48 @@ if(name==="sales")window.renderCart();
 };
 async function checkAndSettleDailySales(){
 try{
-const ref=db.collection("users").doc(currentUser.uid),snap=await ref.get();if(!snap.exists)return;
+const ref=doc(db,"users",currentUser.uid),snap=await getDoc(ref);if(!snap.exists())return;
 const data=snap.data(),today=new Date().toISOString().slice(0,10),last=data.lastSettledDate||"";
 if(last!==today){
 const rev=sales.reduce((s,x)=>s+Number(x.total||0),0);
-if(rev>0)await col("treasury").add({type:"in",amount:rev,note:⁠إغلاق وردية ومبيعات يوم: ${last||today}⁠,date:new Date().toLocaleString("ar-EG")});
-await ref.update({lastSettledDate:today});
-await loadTreasury();
-renderStats();
+if(rev>0)await addDoc(col("treasury"),{type:"in",amount:rev,note:⁠إغلاق وردية ومبيعات يوم: ${last||today}⁠,date:new Date().toLocaleString("ar-EG")});
+await updateDoc(ref,{lastSettledDate:today});await loadTreasury();renderStats();
 }
 }catch(e){console.error(e);}
 }
 window.updateShopNameSetting=async()=>{
-const n=$("settingsShopName").value.trim();if(!n)return alert("أدخل اسم المحل.");
-try{
-await db.collection("users").doc(currentUser.uid).update({shopName:n});
-profile.shopName=n;
-$("shopTitle").textContent=n;
-$("sahalShopTitle").textContent=n;
-alert("تم تحديث الاسم.");
-}catch(e){alert(e.message);}
+const n=￼
+try{await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;("shopTitle").textContent=n;$("sahalShopTitle").textContent=n;alert("تم تحديث الاسم.");}
+catch(e){alert(e.message);}
 };
 window.updateCustomerEmailSetting=async()=>{
 const n=$("settingsEmail").value.trim();if(!n)return alert("أدخل البريد الجديد.");
-try{
-await auth.currentUser.updateEmail(n);
-await db.collection("users").doc(currentUser.uid).update({email:n});
-profile.email=n;
-alert("تم تحديث البريد.");
-}catch(e){alert(e.message);}
+try{await updateEmail(auth.currentUser,n);await updateDoc(doc(db,"users",currentUser.uid),{email:n});profile.email=n;alert("تم تحديث البريد.");}
+catch(e){alert(e.message);}
 };
 window.updateCustomerPassword=async()=>{
-const p=$("newCustomerPassword").value;if(!p||p.length<6)return alert("كلمة المرور يجب ألا تقل عن 6 أحرف.");
-try{
-await auth.currentUser.updatePassword(p);
-$("newCustomerPassword").value="";
-alert("تم تحديث كلمة المرور.");
-}catch(e){alert("تعذر تحديث كلمة المرور. قد تحتاج إلى تسجيل الدخول مجدداً.");}
+const p=￼
+try{await updatePassword(auth.currentUser,p);("newCustomerPassword").value="";alert("تم تحديث كلمة المرور.");}
+catch(e){alert("تعذر تحديث كلمة المرور. قد تحتاج إلى تسجيل الدخول مجدداً.");}
 };
 async function loadBusiness(){await Promise.all([loadProducts(),loadSales(),loadExpenses(),loadTreasury()]);renderStats();}
-async function loadProducts(){const s=await col("products").get();products=s.docs.map(d=>({id:d.id,...d.data()}));renderProducts();}
-async function loadSales(){const s=await col("sales").get();sales=s.docs.map(d=>({id:d.id,...d.data()}));renderSales();}
-async function loadExpenses(){const s=await col("expenses").get();expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();}
-async function loadTreasury(){const s=await col("treasury").get();treasury=s.docs.map(d=>({id:d.id,...d.data()}));renderTreasury();}
+async function loadProducts(){const s=await getDocs(col("products"));products=s.docs.map(d=>({id:d.id,...d.data()}));renderProducts();}
+async function loadSales(){const s=await getDocs(col("sales"));sales=s.docs.map(d=>({id:d.id,...d.data()}));renderSales();}
+async function loadExpenses(){const s=await getDocs(col("expenses"));expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();}
+async function loadTreasury(){const s=await getDocs(col("treasury"));treasury=s.docs.map(d=>({id:d.id,...d.data()}));renderTreasury();}
 window.clearTreasuryData=async()=>{
 if(!confirm("هل تريد مسح حركات الخزينة؟"))return;
-const snap=await col("treasury").get();for(const d of snap.docs)await docRef("treasury",d.id).delete();
+const snap=await getDocs(col("treasury"));for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));
 await loadTreasury();renderStats();alert("تم التصفير.");
 };
 window.saveProduct=async()=>{
 const name=￼("pCost").value)||0,price=Number(￼("pQty").value)||0;
 if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع.");
-await col("products").add({name,cost,price,qty,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-￼("pCost").value="";￼("pQty").value=10;
-await loadProducts();renderStats();alert("تم حفظ المنتج.");
+await addDoc(col("products"),{name,cost,price,qty,createdAt:serverTimestamp()});
+￼("pCost").value="";￼("pQty").value=10;await loadProducts();renderStats();alert("تم حفظ المنتج.");
 };
 window.deleteProduct=async id=>{
-if(!confirm("حذف المنتج؟"))return;
-await docRef("products",id).delete();
-await loadProducts();renderStats();
+if(!confirm("حذف المنتج؟"))return;await deleteDoc(docRef("products",id));await loadProducts();renderStats();
 };
 function renderProducts(){
 $("productsTable").innerHTML=products.map(p=>⁠<tr><td>${escapeHTML(p.name)}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td>${p.qty}</td><td><button class="rowbtn red" onclick="window.deleteProduct('${p.id}')">حذف</button></td></tr>⁠).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
@@ -1213,10 +1029,7 @@ $("searchResults").innerHTML=matches.map(p=>⁠<button class="result secondary" 
 };
 window.selectSaleProduct=id=>{
 selectedProduct=products.find(p=>p.id===id);if(!selectedProduct)return;
-$("saleSearch").value=selectedProduct.name;
-$("salePrice").value=selectedProduct.price;
-$("searchResults").innerHTML="";
-window.addToCart();
+￼("salePrice").value=selectedProduct.price;$("searchResults").innerHTML="";window.addToCart();
 };
 window.addToCart=()=>{
 const qty=Number(￼("salePrice").value;
@@ -1227,35 +1040,19 @@ if(price<0||!Number.isFinite(price))return alert("أدخل سعر بيع صحي�
 const old=cart.find(x=>x.productId===p.id),already=old?old.qty:0;
 if(qty+already>Number(p.qty))return alert("الكمية المطلوبة أكبر من المخزون.");
 if(old){old.qty+=qty;old.price=price;}else cart.push({productId:p.id,name:p.name,qty,price,cost:p.cost||0});
-selectedProduct=null;
-$("saleSearch").value="";
-$("saleQty").value="1";
-$("salePrice").value="";
-$("searchResults").innerHTML="";
-window.renderCart();
-$("saleSearch").focus();
+selectedProduct=null;￼("saleQty").value="1";￼("searchResults").innerHTML="";window.renderCart();$("saleSearch").focus();
 };
 function renderCart(){
 ￼
 ￼("saleDiscount").value)||0),addition=Math.max(0,Number($("saleAddition").value)||0),total=Math.max(0,subtotal-discount+addition);
-$("cartTotalDisplay").textContent=money(total);
-return {subtotal,discount,addition,total};
+$("cartTotalDisplay").textContent=money(total);return {subtotal,discount,addition,total};
 }
 window.renderCart=renderCart;
-$("saleDiscount").addEventListener("input",renderCart);
-$("saleAddition").addEventListener("input",renderCart);
+￼("saleAddition").addEventListener("input",renderCart);
 window.removeCartItem=i=>{cart.splice(i,1);renderCart();};
 window.clearCart=()=>{
 if(cart.length&&!confirm("هل تريد إلغاء الفاتورة؟"))return;
-cart=[];
-$("saleDiscount").value="0";
-$("saleAddition").value="0";
-$("saleSearch").value="";
-$("saleQty").value="1";
-$("salePrice").value="";
-$("searchResults").innerHTML="";
-selectedProduct=null;
-renderCart();
+cart=[];￼("saleAddition").value="0";￼("saleQty").value="1";￼("searchResults").innerHTML="";selectedProduct=null;renderCart();
 };
 window.completeSale=async()=>{
 if(!cart.length)return alert("الفاتورة فارغة.");
@@ -1264,19 +1061,10 @@ if(discount>subtotal+addition)return alert("الخصم أكبر من الإجم�
 for(const item of cart){const p=products.find(x=>x.id=item.productId);if(!p||Number(p.qty)<item.qty)return alert("المخزون غير كافٍ: "+item.name);}
 const invoice={number:"INV-"+Date.now().toString().slice(-6),subtotal,discount,addition,total,items:[...cart],date:new Date().toLocaleString("ar-EG")};
 try{
-for(const item of cart){const p=products.find(x=>x.id=item.productId);await docRef("products",item.productId).update({qty:Number(p.qty)-Number(item.qty)});}
-await col("sales").add(invoice);
-await col("treasury").add({type:"in",amount:total,note:⁠فاتورة مبيعات #${invoice.number}⁠,date:invoice.date});
-if($("autoPrintToggle").checked)window.printInvoiceDirectly(invoice);
-cart=[];
-$("saleDiscount").value="0";
-$("saleAddition").value="0";
-$("saleSearch").value="";
-$("saleQty").value="1";
-$("salePrice").value="";
-selectedProduct=null;
-renderCart();
-await loadBusiness();
+for(const item of cart){const p=products.find(x=>x.id=item.productId);await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});}
+await addDoc(col("sales"),invoice);await addDoc(col("treasury"),{type:"in",amount:total,note:⁠فاتورة مبيعات #${invoice.number}⁠,date:invoice.date});
+if(￼
+￼("saleDiscount").value="0";￼("saleSearch").value="";￼("salePrice").value="";selectedProduct=null;renderCart();await loadBusiness();
 alert("تم البيع بنجاح. الإجمالي: "+money(total)+" جنيه");
 }catch(e){alert("حدث خطأ أثناء البيع: "+e.message);}
 };
@@ -1287,12 +1075,8 @@ window.print();
 window.addTreasuryTransaction=async()=>{
 const type=￼("tAmount").value)||0,note=$("tNote").value.trim();
 if(amount<=0)return alert("أدخل مبلغاً صحيحاً.");
-await col("treasury").add({type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});
-$("tAmount").value="";
-$("tNote").value="";
-await loadTreasury();
-renderStats();
-alert("تم تسجيل الحركة.");
+await addDoc(col("treasury"),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});
+￼("tNote").value="";await loadTreasury();renderStats();alert("تم تسجيل الحركة.");
 };
 function renderTreasury(){
 let tIn=0,tOut=0;
@@ -1306,12 +1090,8 @@ window.addExpense=async()=>{
 const name=￼("expenseAmount").value)||0;
 if(!name||amount<=0)return alert("أدخل اسم المصروف والمبلغ.");
 const date=new Date().toLocaleString("ar-EG");
-await col("expenses").add({name,amount,date});
-await col("treasury").add({type:"out",amount,note:"مصروف: "+name,date});
-$("expenseName").value="";
-$("expenseAmount").value="";
-await loadBusiness();
-alert("تم حفظ المصروف.");
+await addDoc(col("expenses"),{name,amount,date});await addDoc(col("treasury"),{type:"out",amount,note:"مصروف: "+name,date});
+￼("expenseAmount").value="";await loadBusiness();alert("تم حفظ المصروف.");
 };
 function renderExpenses(){
 $("expensesTable").innerHTML=expenses.map(e=>⁠<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>⁠).join("")||"<tr><td colspan='3'>لا توجد مصروفات</td></tr>";
@@ -1322,14 +1102,10 @@ $("salesTable").innerHTML=sales.map(s=>⁠<tr><td>${s.number}</td><td>${s.date}<
 window.printSavedInvoice=id=>{const inv=sales.find(s=>s.id===id);if(inv)window.printInvoiceDirectly(inv);};
 function renderStats(){
 const rev=sales.reduce((s,x)=>s+Number(x.total||0),0),exp=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
-const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(s.amount||0),0),tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(s.amount||0),0);
-$("statProducts").textContent=products.length;
-$("statSales").textContent=sales.length;
-$("statRevenue").textContent=money(rev)+" جنيه";
-$("statTreasuryBalance").textContent=money(tIn-tOut)+" جنيه";
-$("reportRevenue").textContent=money(rev)+" جنيه";
-$("reportExpenses").textContent=money(exp)+" جنيه";
-$("reportNet").textContent=money(rev-exp)+" جنيه";
+const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0),tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(x.amount||0),0);
+￼("statSales").textContent=sales.length;
+￼("statTreasuryBalance").textContent=money(tIn-tOut)+" جنيه";
+￼("reportExpenses").textContent=money(exp)+" جنيه";$("reportNet").textContent=money(rev-exp)+" جنيه";
 }
 </script>
 </body>

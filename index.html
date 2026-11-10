@@ -58,11 +58,10 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .t-teal{background:linear-gradient(135deg,#0d9488,#14b8a6)}
 .t-red{background:linear-gradient(135deg,#b72f3b,#dc2626)}
 
-/* تنسيقات واجهة مبيعات سهل الكلاسيكية */
+/* تنسيقات شاشة المبيعات الكلاسيكية بدون حروف F */
 .sahal-header{background:#15803d;color:white;padding:6px 12px;font-size:13px;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;align-items:center}
 .sahal-shortcuts{background:#f1f5f9;border-bottom:1px solid #cbd5e1;padding:6px 12px;display:flex;justify-content:flex-end;gap:6px}
-.sahal-sc-btn{background:#e2e8f0;color:#334155;border:1px solid #cbd5e1;padding:4px 10px;font-size:12px;font-weight:bold;border-radius:4px;display:flex;flex-direction:column;align-items:center;cursor:pointer}
-.sahal-sc-btn span{font-size:10px;color:#64748b}
+.sahal-sc-btn{background:#e2e8f0;color:#334155;border:1px solid #cbd5e1;padding:4px 14px;font-size:12px;font-weight:bold;border-radius:4px;cursor:pointer}
 
 .sahal-layout{display:grid;grid-template-columns:1fr 280px;gap:12px;background:#f8fafc;padding:10px;border-radius:0 0 8px 8px;border:1px solid #cbd5e1}
 @media(max-width:900px){.sahal-layout{grid-template-columns:1fr}}
@@ -214,20 +213,20 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- شاشة المبيعات الجديدة المطابقة لبرنامج سهل -->
+  <!-- شاشة المبيعات بتصميم NexPOS الكلاسيكي المحدث بدون حروف F -->
   <div id="salesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
    
    <div class="sahal-header">
-    <div><b>برنامج سهل - شاشة المبيعات الكلاسيكية</b></div>
+    <div><b>NexPOS - شاشة المبيعات الكلاسيكية</b></div>
     <div id="sahalShopTitle">شركة | High Store</div>
    </div>
 
    <div class="sahal-shortcuts">
-    <button class="sahal-sc-btn" onclick="document.getElementById('saleQty').focus()">الكمية <span>F5</span></button>
-    <button class="sahal-sc-btn" onclick="document.getElementById('salePrice').focus()">السعر <span>F6</span></button>
-    <button class="sahal-sc-btn" onclick="clearCart()">حذف <span>F8</span></button>
-    <button class="sahal-sc-btn" onclick="completeSale()" style="background:#dcfce7;border-color:#16a34a;color:#166534;">حفظ | بيع <span>F9</span></button>
+    <button class="sahal-sc-btn" onclick="document.getElementById('saleQty').focus()">الكمية</button>
+    <button class="sahal-sc-btn" onclick="document.getElementById('salePrice').focus()">السعر</button>
+    <button class="sahal-sc-btn" onclick="clearCart()">حذف</button>
+    <button class="sahal-sc-btn" onclick="completeSale()" style="background:#dcfce7;border-color:#16a34a;color:#166534;">حفظ | بيع</button>
    </div>
 
    <div class="sahal-layout">
@@ -277,7 +276,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
      </div>
 
      <div class="sahal-btn-grid">
-      <button class="sahal-btn sbtn-green" onclick="completeSale()">بيع (F9)</button>
+      <button class="sahal-btn sbtn-green" onclick="completeSale()">بيع</button>
       <button class="sahal-btn sbtn-orange" onclick="clearCart()">إلغاء الفاتورة</button>
       <button class="sahal-btn sbtn-blue" onclick="page('products')">المخزن</button>
       <button class="sahal-btn sbtn-dark" onclick="page('treasury')">الخزينة</button>
@@ -501,7 +500,7 @@ onAuthStateChanged(auth,async user=>{
   profile=s.data();
   if(profile.status==="pending"){
    await signOut(auth);
-   $("auth").classList.remove("hidden");
+   $("auth").classList.add("hidden");
    return message("حسابك في انتظار تفعيل المطور.");
   }
   $("auth").classList.add("hidden");
@@ -826,7 +825,7 @@ window.addExpense=async()=>{
 
 function renderExpenses(){
  $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${e.name}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات</td></tr>";
-}
+};
 
 window.renderSales=function(){
  $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printInvoiceDirectly(${JSON.stringify(s).replace(/"/g, '&quot;')})">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";

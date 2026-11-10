@@ -1,228 +1,3 @@
-
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NexPOS PRO</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#f3f5fa;color:#1c2940;font-family:Arial,sans-serif}
-button,input,select{font:inherit}
-button{border:0;border-radius:9px;padding:9px 14px;background:#2458d3;color:white;cursor:pointer}
-button:hover{opacity:.9}
-input,select{width:100%;padding:11px;border:1px solid #dce2ed;border-radius:9px;margin:6px 0 13px;background:white}
-label{font-size:13px;font-weight:bold}
-h2,h3{margin-top:0}
-.wrap{max-width:1450px;margin:auto;padding:15px;width:100%}
-.card{background:white;padding:18px;border-radius:14px;margin:12px 0;box-shadow:0 3px 15px #1822380b}
-.brand{font-size:26px;font-weight:bold;color:#2458d3}
-.system-desc{font-size:15px;font-weight:bold;color:#334155;margin-top:4px}
-.version{display:block;color:#fff;background:#2458d3;border-radius:5px;padding:3px 8px;font-size:10px;width:max-content;margin-top:6px}
-.muted{font-size:13px;color:#788397}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
-.stat{background:white;padding:18px;border-radius:13px}
-.stat strong{display:block;font-size:25px;margin-top:9px}
-nav{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}
-nav button{background:#e8edfa;color:#29416f}
-nav button.active{background:#2458d3;color:white}
-.big{width:100%;margin:5px 0}
-.secondary{background:#e8edfa;color:#29416f}
-.red{background:#b72f3b}.green{background:#178653}.purple{background:#7c3aed}.dark{background:#202c43}
-.hidden{display:none!important}
-.tablewrap{overflow:auto;width:100%}
-table{width:100%;border-collapse:collapse;min-width:600px}
-td,th{padding:11px;border-bottom:1px solid #edf0f5;text-align:right;font-size:13px}
-.tag{border-radius:20px;padding:5px 9px;background:#fff0d3;color:#885900;font-size:12px;display:inline-block}
-.tag.good{background:#e0f6e9;color:#167445}
-.rowbtn{padding:7px 10px;margin:2px;font-size:12px}
-.msg{padding:10px;border-radius:8px;background:#fef2f2;color:#991b1b;margin-top:10px;font-size:13px;border:1px solid #fecaca}
-hr{border:0;border-top:1px solid #eee;margin:18px 0}
-.result{display:block;width:100%;text-align:right;margin:0;border-radius:0}
-.tiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:20px}
-.tile{padding:24px;border-radius:16px;color:white;cursor:pointer;box-shadow:0 4px 12px #00000014;min-height:140px}
-.tile h3{margin:0 0 8px;font-size:19px}.tile p{margin:0;font-size:13px}
-.t-blue{background:linear-gradient(135deg,#2458d3,#3b71f3)}
-.t-green{background:linear-gradient(135deg,#178653,#22b070)}
-.t-orange{background:linear-gradient(135deg,#d97706,#f59e0b)}
-.t-purple{background:linear-gradient(135deg,#7c3aed,#9333ea)}
-.t-dark{background:linear-gradient(135deg,#1e293b,#334155)}
-.t-teal{background:linear-gradient(135deg,#0d9488,#14b8a6)}
-.t-red{background:linear-gradient(135deg,#b72f3b,#dc2626)}
-.auth-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:20px}
-.auth-card{background:white;border:1px solid #e1e7f0;border-radius:16px;padding:20px;box-shadow:0 4px 18px #1822380b}
-.auth-card h3{margin-bottom:6px}.auth-icon{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:#eaf0ff;color:#2458d3;font-size:23px;margin-bottom:12px}
-.auth-card.ps .auth-icon{background:#e2f8ed;color:#178653}
-.auth-card.owner .auth-icon{background:#f1eaff;color:#7c3aed}
-.auth-card button{margin-top:5px}
-@media(max-width:800px){.auth-grid{grid-template-columns:1fr}.wrap{padding:8px}}
-.sahal-header{background:#15803d;color:white;padding:12px;font-size:14px;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.sahal-shortcuts{background:#f1f5f9;border-bottom:1px solid #cbd5e1;padding:8px;display:flex;gap:6px;flex-wrap:wrap}
-.sahal-sc-btn{background:#e2e8f0;color:#334155;border:1px solid #cbd5e1;padding:8px 12px;font-size:12px;font-weight:bold}
-.sahal-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:12px;background:#f8fafc;padding:10px;border:1px solid #cbd5e1}
-.sahal-main{display:flex;flex-direction:column;gap:10px;min-width:0}
-.sahal-search-box{background:#e2e8f0;padding:10px;border-radius:6px}
-.sale-fields{display:grid;grid-template-columns:minmax(180px,2fr) repeat(4,minmax(75px,1fr));gap:8px}
-.sale-fields input{margin-bottom:5px}
-.sahal-table-wrap{background:white;border:1px solid #cbd5e1;max-height:260px;overflow:auto}
-.sahal-table{width:100%;border-collapse:collapse;min-width:350px}
-.sahal-table th{background:#15803d;color:white;padding:10px;position:sticky;top:0}
-.sahal-table td{padding:9px;border-bottom:1px solid #f1f5f9}
-.sahal-sidebar{display:flex;flex-direction:column;gap:10px}
-.sahal-total-card{background:#15803d;color:white;padding:16px;text-align:center}
-.sahal-total-card h2{margin:7px 0;font-size:30px;color:white}
-.sahal-btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.sahal-btn{padding:12px 7px;font-weight:bold;font-size:13px}
-.sbtn-green{background:#16a34a}.sbtn-blue{background:#2563eb}.sbtn-orange{background:#d97706}.sbtn-red{background:#dc2626}.sbtn-dark{background:#334155}
-.search-container{position:relative;min-width:0}
-#searchResults{position:absolute;top:100%;right:0;width:100%;z-index:100;background:white;box-shadow:0 4px 12px #0002;max-height:220px;overflow:auto}
-.ps-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
-.ps-tabs button{flex:1;min-width:120px}
-.ps-tabs button.active{background:#178653}
-.ps-device-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-top:15px}
-.ps-device-card{background:#fff;border:1px solid #e2e8f0;border-radius:15px;padding:16px;box-shadow:0 3px 12px #1822380b;min-width:0}
-.ps-device-card.running{border:2px solid #16a34a}
-.ps-device-card.vip-card{border-top:4px solid #7c3aed}
-.ps-device-card h3{margin:0 0 8px}
-.ps-device-time{font-size:28px;font-weight:bold;color:#178653;text-align:center;padding:12px 5px;direction:ltr}
-.ps-device-idle{color:#64748b}
-.ps-device-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.ps-device-actions select{grid-column:1/-1;margin-bottom:3px}
-.ps-device-actions button{font-size:12px;padding:9px 5px}
-.ps-item-form{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end}
-.ps-item-form input{margin-bottom:0}
-.ps-section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.ps-empty{text-align:center;padding:25px;color:#788397;background:#f8fafc;border-radius:10px}
-.order-list{background:#f8fafc;border-radius:9px;padding:10px;margin-top:10px}
-.order-line{display:flex;justify-content:space-between;align-items:center;gap:5px;padding:7px 0;border-bottom:1px solid #e5e7eb;font-size:12px}
-.inline-form{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.inline-form button{width:100%}
-.mode-note{background:#eff6ff;color:#1d4ed8;border-radius:8px;padding:9px;font-size:12px;margin:8px 0}
-@media(max-width:950px){.sahal-layout{grid-template-columns:1fr}.sahal-sidebar{display:grid;grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}}
-@media(max-width:600px){.sale-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.sale-fields .search-container{grid-column:1/-1}.sahal-sidebar{grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}.ps-item-form{grid-template-columns:1fr 1fr}.ps-item-form input:first-child{grid-column:1/-1}.ps-item-form button{grid-column:1/-1}}
-@media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
-</style>
-</head>
-<body>
-<div class="wrap">
-<header class="top">
- <div><div class="brand">NexPOS PRO</div><div class="system-desc">منصة إدارة الأنشطة والخدمات</div><span class="version">MULTI SYSTEM V17</span></div>
- <div><span id="networkStatus" class="tag good">متصل بالخادم</span> <button class="secondary" onclick="support()">الدعم الفني</button></div>
-</header>
-
-<section id="auth">
- <div style="text-align:center;margin:28px 0 12px"><h2>مرحبًا بك في NexPOS PRO</h2><p class="muted">اختر النظام الذي تريد الدخول إليه أو إنشاء حساب جديد</p></div>
- <div class="auth-grid">
-  <div class="auth-card"><div class="auth-icon">▦</div><h3>سيستم المبيعات</h3><p class="muted">إدارة المبيعات والمخازن والفواتير والخزينة</p><button class="big" onclick="openAuth('sales','login')">تسجيل الدخول</button><button class="big secondary" onclick="openAuth('sales','register')">إنشاء حساب جديد</button></div>
-  <div class="auth-card ps"><div class="auth-icon">🎮</div><h3>سيستم البلايستيشن</h3><p class="muted">إدارة الرومات وصالة VIP والجلسات والمشروبات والسندوتشات</p><button class="big green" onclick="openAuth('playstation','login')">تسجيل الدخول</button><button class="big secondary" onclick="openAuth('playstation','register')">إنشاء حساب جديد</button></div>
-  <div class="auth-card owner"><div class="auth-icon">⚙</div><h3>لوحة التحكم المركزية</h3><p class="muted">إدارة العملاء والاشتراكات</p><button class="big purple" onclick="openAuth('owner','login')">دخول لوحة التحكم</button></div>
- </div>
- <div id="authForm" class="card hidden" style="max-width:520px;margin:20px auto">
-  <div class="top"><h3 id="authFormTitle">تسجيل الدخول</h3><button class="secondary" onclick="backToGate()">رجوع</button></div>
-  <div id="customerLoginBox"><label>البريد الإلكتروني</label><input id="loginEmail" type="email"><label>كلمة المرور</label><input id="loginPassword" type="password"><button class="big" onclick="login()">دخول للنظام</button></div>
-  <div id="registerBox" class="hidden">
-   <label>اسم النشاط التجاري</label><input id="regShop"><label>اسم المسؤول</label><input id="regName"><label>رقم الهاتف</label><input id="regPhone"><label>البريد الإلكتروني</label><input id="regEmail" type="email"><label>كلمة المرور</label><input id="regPassword" type="password">
-   <label>اختر الباقة المطلوبة</label><select id="regPlan"><option value="30">الباقة الشهرية - 100 جنيه</option><option value="90">باقة 3 شهور - 250 جنيه</option><option value="365">الباقة السنوية - 900 جنيه</option><option value="36500">الباقة الدائمة - 3000 جنيه</option></select>
-   <button class="big green" onclick="register()">إنشاء الحساب</button><p class="muted">لن يتم تفعيل الحساب إلا بعد موافقة المالك.</p>
-  </div>
-  <div id="ownerBox" class="hidden"><label>اسم المستخدم الإداري</label><input id="ownerUsername"><label>كلمة المرور</label><input id="ownerPassword" type="password"><button class="big dark" onclick="ownerLogin()">دخول لوحة التحكم</button></div>
-  <p id="authMsg" class="msg hidden"></p>
- </div>
-</section>
-
-<section id="pendingScreen" class="hidden"><div class="card" style="max-width:550px;margin:40px auto;text-align:center"><h2>تم إنشاء حسابك بنجاح!</h2><p class="muted">تم إرسال بياناتك إلى لوحة التحكم. انتظر موافقة المالك.</p><div id="pendingDetails" style="line-height:2;margin:15px 0"></div><button class="big green" onclick="sendWhatsAppActivation()">تواصل مع المطور</button><button class="big secondary" onclick="location.reload()">العودة</button></div></section>
-
-<section id="ownerPanel" class="hidden">
- <div class="card"><div class="top"><div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة العملاء والاشتراكات</span></div><button class="red" onclick="logout()">تسجيل الخروج</button></div>
- <div class="grid"><div class="stat">إجمالي الحسابات<strong id="totalUsers">0</strong></div><div class="stat">حسابات المبيعات<strong id="salesUsersCount">0</strong></div><div class="stat">حسابات البلايستيشن<strong id="psUsersCount">0</strong></div><div class="stat">طلبات في انتظار التفعيل<strong id="pendingUsersCount">0</strong></div></div>
- <nav><button id="ownerSalesTab" class="active" onclick="ownerSection('sales')">سيستم المبيعات</button><button id="ownerPsTab" onclick="ownerSection('playstation')">سيستم البلايستيشن</button></nav>
- <div id="ownerSalesSection"><h3>عملاء واشتراكات سيستم المبيعات</h3><div class="tablewrap"><table><thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة</th><th>الإدارة</th></tr></thead><tbody id="salesUsersTable"></tbody></table></div></div>
- <div id="ownerPsSection" class="hidden"><h3>عملاء واشتراكات سيستم البلايستيشن</h3><div class="tablewrap"><table><thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة</th><th>الإدارة</th></tr></thead><tbody id="psUsersTable"></tbody></table></div></div>
- <button class="secondary big" onclick="loadUsers()">تحديث قائمة العملاء</button></div>
-</section>
-
-<section id="playstationPanel" class="hidden">
- <div class="card">
-  <div class="top"><div><h2>سيستم البلايستيشن</h2><span class="muted" id="psShopTitle">إدارة نشاطك</span></div><button class="red" onclick="logout()">تسجيل الخروج</button></div>
-  <div class="grid">
-   <div class="stat">إجمالي الأجهزة<strong id="psTotalDevices">0</strong></div>
-   <div class="stat">أجهزة الرومات<strong id="psRoomDevices">0</strong></div>
-   <div class="stat">أجهزة VIP<strong id="psVipDevices">0</strong></div>
-   <div class="stat">الأجهزة تعمل الآن<strong id="psRunningDevices">0</strong></div>
-   <div class="stat">المشروبات<strong id="psDrinksCount">0</strong></div>
-   <div class="stat">السندوتشات<strong id="psSandwichesCount">0</strong></div>
-   <div class="stat">إيرادات الجلسات<strong id="psSessionsRevenue">0 جنيه</strong></div>
-  </div>
-  <div class="card" style="text-align:center"><div id="psSubDetails" style="line-height:2">جاري تحميل الاشتراك...</div><button class="big green" onclick="requestRenewal()">طلب تجديد / تفعيل الاشتراك</button></div>
-  <div class="ps-tabs">
-   <button id="psDevicesTab" class="active" onclick="showPsSection('devices')">🎮 أجهزة الرومات</button>
-   <button id="psVipTab" onclick="showPsSection('vip')">⭐ أجهزة صالة VIP</button>
-   <button id="psDrinksTab" onclick="showPsSection('drinks')">🥤 المشروبات</button>
-   <button id="psSandwichesTab" onclick="showPsSection('sandwiches')">🥪 السندوتشات</button>
-   <button id="psSessionsTab" onclick="showPsSection('sessions')">📄 سجل الجلسات</button>
-  </div>
-
-  <div id="psDevicesSection">
-   <div class="card"><h3>إضافة جهاز روم جديد</h3><div class="grid">
-    <div><label>اسم الروم</label><input id="psNewDeviceName" placeholder="مثال: روم 1"></div>
-    <div><label>سعر الساعة بالجنيه</label><input id="psNewDeviceRate" type="number" min=".01" step=".01" placeholder="اكتب السعر"></div>
-    <div style="display:flex;align-items:end"><button class="big green" onclick="addPsDevice('room')">إضافة الروم</button></div>
-   </div></div>
-   <div class="ps-section-title"><h3>إدارة أجهزة الرومات</h3><button class="secondary" onclick="loadPlaystationData()">تحديث</button></div>
-   <div id="psDevicesList" class="ps-device-grid"><div class="ps-empty">جاري تحميل الرومات...</div></div>
-  </div>
-
-  <div id="psVipSection" class="hidden">
-   <div class="card"><h3>إضافة جهاز إلى صالة VIP</h3><div class="grid">
-    <div><label>اسم جهاز VIP</label><input id="psNewVipName" placeholder="مثال: VIP 1"></div>
-    <div><label>سعر الساعة بالجنيه</label><input id="psNewVipRate" type="number" min=".01" step=".01" placeholder="حدد سعر VIP"></div>
-    <div style="display:flex;align-items:end"><button class="big purple" onclick="addPsDevice('vip')">إضافة جهاز VIP</button></div>
-   </div></div>
-   <div class="ps-section-title"><h3>إدارة أجهزة صالة VIP</h3><button class="secondary" onclick="loadPlaystationData()">تحديث</button></div>
-   <div id="psVipDevicesList" class="ps-device-grid"><div class="ps-empty">لا توجد أجهزة VIP حتى الآن.</div></div>
-  </div>
-
-  <div id="psDrinksSection" class="hidden">
-   <div class="card"><h3>إضافة مشروب</h3><div class="ps-item-form"><div><label>اسم المشروب</label><input id="psDrinkName" placeholder="مثال: بيبسي"></div><div><label>السعر</label><input id="psDrinkPrice" type="number" min="0" step=".01"></div><div><label>الكمية</label><input id="psDrinkQty" type="number" min="0" value="1"></div><button class="green" onclick="addPsItem('drink')">إضافة</button></div></div>
-   <h3>قائمة المشروبات</h3><div class="tablewrap"><table><thead><tr><th>المشروب</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psDrinksTable"></tbody></table></div>
-  </div>
-  <div id="psSandwichesSection" class="hidden">
-   <div class="card"><h3>إضافة سندوتش</h3><div class="ps-item-form"><div><label>اسم السندوتش</label><input id="psSandwichName" placeholder="مثال: سندوتش بطاطس"></div><div><label>السعر</label><input id="psSandwichPrice" type="number" min="0" step=".01"></div><div><label>الكمية</label><input id="psSandwichQty" type="number" min="0" value="1"></div><button class="green" onclick="addPsItem('sandwich')">إضافة</button></div></div>
-   <h3>قائمة السندوتشات</h3><div class="tablewrap"><table><thead><tr><th>السندوتش</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psSandwichesTable"></tbody></table></div>
-  </div>
-  <div id="psSessionsSection" class="hidden"><div class="card"><div class="top"><h3>سجل الجلسات والفواتير</h3><button class="secondary" onclick="loadPlaystationData()">تحديث السجل</button></div><div class="grid"><div class="stat">عدد الجلسات<strong id="psSessionsTotal">0</strong></div><div class="stat">إجمالي الإيرادات<strong id="psSessionsRevenue2">0 جنيه</strong></div></div><div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>الجهاز</th><th>البداية</th><th>النهاية</th><th>المدة</th><th>اللعب</th><th>الإضافات</th><th>الإجمالي</th><th>الفاتورة</th></tr></thead><tbody id="psSessionsTable"></tbody></table></div></div></div>
- </div>
-</section>
-
-<section id="customerPanel" class="hidden">
- <div class="card">
-  <div class="top"><div><h2 id="shopTitle">نظام المبيعات والمخزون</h2><span class="muted">لوحة الإدارة الشاملة</span></div><button class="red" onclick="logout()">تسجيل الخروج</button></div>
-  <div id="dashboardPage">
-   <div class="grid"><div class="stat">إجمالي المنتجات<strong id="statProducts">0</strong></div><div class="stat">عدد الفواتير<strong id="statSales">0</strong></div><div class="stat">مبيعات اليوم<strong id="statRevenue">0 جنيه</strong></div><div class="stat">رصيد الخزينة<strong id="statTreasuryBalance">0 جنيه</strong></div></div>
-   <div class="card"><h3>اختر القسم للبدء</h3><div class="tiles-grid" id="mainTilesContainer">
-    <div class="tile t-blue" onclick="page('sales')"><h3>شاشة المبيعات (POS)</h3><p>إصدار الفواتير</p></div><div class="tile t-green" onclick="page('products')"><h3>المنتجات والمخزون</h3><p>إدارة الأصناف والأسعار</p></div><div class="tile t-orange" onclick="page('treasury')"><h3>الخزينة والحسابات</h3><p>متابعة النقدية</p></div><div class="tile t-purple" onclick="page('history')"><h3>الفواتير السابقة</h3><p>استعراض وطباعة الفواتير</p></div><div class="tile t-dark" onclick="page('expenses')"><h3>المصروفات اليومية</h3><p>تسجيل المصاريف</p></div><div class="tile t-teal" onclick="page('reports')"><h3>التقارير المالية</h3><p>تقارير الأرباح</p></div><div class="tile t-red" onclick="page('settings')"><h3>الإعدادات والباسورد</h3><p>تعديل بيانات الحساب</p></div><div class="tile" style="background:#0284c7" onclick="page('subscription')"><h3>اشتراكي</h3><p>الباقة والأيام المتبقية</p></div>
-   </div></div>
-  </div>
-  <div id="subscriptionPage" class="hidden"><button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button><h3>تفاصيل اشتراكي</h3><div class="card" style="max-width:600px;margin:auto;text-align:center"><h2>حالة الاشتراك</h2><div id="subPageDetails">جاري التحميل...</div><div id="subPageActionBox"></div></div></div>
-  <div id="salesPage" class="hidden">
-   <button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button><div class="sahal-header"><b>NexPOS - شاشة المبيعات</b><b id="sahalShopTitle">اسم المتجر</b></div>
-   <div class="sahal-shortcuts"><button class="sahal-sc-btn" onclick="$('saleQty').focus()">الكمية</button><button class="sahal-sc-btn" onclick="$('salePrice').focus()">السعر</button><button class="sahal-sc-btn" onclick="$('saleDiscount').focus()">خصم</button><button class="sahal-sc-btn" onclick="$('saleAddition').focus()">إضافة</button><button class="sahal-sc-btn" onclick="clearCart()">حذف الكل</button><button class="sahal-sc-btn" onclick="completeSale()">حفظ وبيع</button></div>
-   <div class="sahal-layout"><div class="sahal-main"><div class="sahal-search-box"><div class="sale-fields"><div class="search-container"><label>بحث عن صنف أو باركود</label><input id="saleSearch" placeholder="اكتب اسم المنتج..." oninput="searchProducts()"><div id="searchResults"></div></div><div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1"></div><div><label>سعر البيع</label><input id="salePrice" type="number" min="0"></div><div><label>الخصم (-)</label><input id="saleDiscount" type="number" min="0" value="0"></div><div><label>الإضافة (+)</label><input id="saleAddition" type="number" min="0" value="0"></div></div></div><div class="sahal-table-wrap"><table class="sahal-table"><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead><tbody id="cartTable"></tbody></table></div></div>
-   <div class="sahal-sidebar"><div class="sahal-total-card"><span>الإجمالي النهائي</span><h2 id="cartTotalDisplay">0.00</h2><span>جنيه مصري</span></div><div class="sahal-btn-grid"><button class="sahal-btn sbtn-green" onclick="completeSale()">بيع وحفظ</button><button class="sahal-btn sbtn-orange" onclick="clearCart()">إلغاء الفاتورة</button><button class="sahal-btn sbtn-blue" onclick="page('products')">المخزن</button><button class="sahal-btn sbtn-dark" onclick="page('treasury')">الخزينة</button></div><div class="card"><label><input type="checkbox" id="autoPrintToggle" checked style="width:18px"> طباعة الفاتورة تلقائياً</label></div></div></div>
-  </div>
-  <div id="productsPage" class="hidden"><button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button><h3>إدارة المنتجات والمخزون</h3><div class="card"><input id="pName" placeholder="اسم المنتج"><div class="grid"><div><label>سعر الشراء</label><input id="pCost" type="number" value="0"></div><div><label>سعر البيع</label><input id="pPrice" type="number" value="0"></div><div><label>الكمية الحالية</label><input id="pQty" type="number" value="10"></div></div><button onclick="saveProduct()">حفظ المنتج</button></div><div class="tablewrap"><table><thead><tr><th>المنتج</th><th>شراء</th><th>بيع</th><th>المخزون</th><th>إجراء</th></tr></thead><tbody id="productsTable"></tbody></table></div></div>
-  <div id="treasuryPage" class="hidden"><button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button><h3>الخزينة والحسابات</h3><div class="grid"><div class="stat">رصيد الخزينة<strong id="treasuryBalanceDisplay">0 جنيه</strong></div></div><div class="card"><h3>سند قبض أو صرف</h3><label>نوع الحركة</label><select id="tType"><option value="in">وارد</option><option value="out">صادر</option></select><label>المبلغ</label><input id="tAmount" type="number"><label>البيان</label><input id="tNote"><button class="big green" onclick="addTreasuryTransaction()">تسجيل الحركة</button></div><button class="red" onclick="clearTreasuryData()">مسح حركات الخزينة</button><div class="tablewrap"><table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table></div></div>
-  <div id="historyPage" class="hidden"><button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button><h3>سجل الفواتير</h3><div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>الإجمالي</th><th>إجراء</th></tr></thead><tbody id="salesTable"></tbody></table></div></div>
-  <div id="expensesPage" class="hidden"><button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button><h3>المصروفات اليومية</h3><div class="card"><label>بيان المصروف</label><input id="expenseName"><label>المبلغ</label><input id="expenseAmount" type="number"><button onclick="addExpense()">حفظ المصروف</button></div><div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div></div>
-  <div id="reportsPage" class="hidden"><button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button><h3>التقارير المالية</h3><div class="grid"><div class="stat">إجمالي المبيعات<strong id="reportRevenue">0 جنيه</strong></div><div class="stat">إجمالي المصروفات<strong id="reportExpenses">0 جنيه</strong></div><div class="stat">صافي الربح<strong id="reportNet">0 جنيه</strong></div></div></div>
-  <div id="settingsPage" class="hidden"><button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button><h3>إعدادات الحساب</h3><div class="card" style="max-width:600px"><h3>تعديل اسم المحل</h3><input id="settingsShopName"><button class="big" onclick="updateShopNameSetting()">حفظ اسم المحل</button></div><div class="card" style="max-width:600px"><h3>تعديل البريد الإلكتروني</h3><input id="settingsEmail" type="email"><button class="big purple" onclick="updateCustomerEmailSetting()">تغيير البريد</button></div><div class="card" style="max-width:600px"><h3>تغيير كلمة المرور</h3><input id="newCustomerPassword" type="password"><button class="big dark" onclick="updateCustomerPassword()">تغيير كلمة المرور</button></div></div>
- </div>
-</section>
-<div id="printArea" class="hidden"></div>
-<footer class="muted" style="text-align:center;padding:20px">تم التطوير بواسطة المهندس | محمد الصلاحي</footer>
-</div>
-
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
@@ -242,25 +17,39 @@ const OWNER_EMAIL="melsalahy689@gmail.com";
 const OWNER_USERNAME="elsalahy";
 const SUPPORT_PHONE="201062883414";
 const PS_DEFAULT_HOURLY_RATE=40;
+const PS_MIN_SESSION_MINUTES=30;
+const PS_BILLING_BLOCK_MINUTES=30;
+
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 let currentUser=null,profile=null,selectedSystem="sales",activeSystem="sales",registeringNow=false;
 let products=[],sales=[],expenses=[],treasury=[],cart=[],selectedProduct=null,lastRegisteredUser=null;
 let psDevices=[],psItems=[],psSessions=[],psTimer=null,psEndingDevices=new Set();
+
 const $=id=>document.getElementById(id);
 const money=n=>(Number(n)||0).toLocaleString("ar-EG",{minimumFractionDigits:2,maximumFractionDigits:2});
 const shopRef=()=>`shops/${currentUser.uid}`;
 const col=name=>collection(db,shopRef(),name);
 const docRef=(name,id)=>doc(db,shopRef(),name,id);
 const PLANS={30:{name:"شهري",price:100},90:{name:"3 شهور",price:250},365:{name:"سنوي",price:900},36500:{name:"دائم",price:3000}};
+
 function message(t){$("authMsg").textContent=t;$("authMsg").classList.remove("hidden");}
 function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function systemInfo(p,system){const s=p.systems?.[system];if(s)return s;if(system==="sales"&&(p.status||p.expiryDate||p.plan))return {status:p.status||"pending",plan:p.plan||"غير محدد",expiryDate:p.expiryDate||null};return {status:"not_registered",plan:"غير محدد",expiryDate:null};}
-function subscriptionActive(data){if(!data||data.status!=="active"||!data.expiryDate)return false;const exp=data.expiryDate.toDate?data.expiryDate.toDate():new Date(data.expiryDate);return exp>new Date();}
+function systemInfo(p,system){
+ const s=p.systems?.[system];if(s)return s;
+ if(system==="sales"&&(p.status||p.expiryDate||p.plan))return {status:p.status||"pending",plan:p.plan||"غير محدد",expiryDate:p.expiryDate||null};
+ return {status:"not_registered",plan:"غير محدد",expiryDate:null};
+}
+function subscriptionActive(data){
+ if(!data||data.status!=="active"||!data.expiryDate)return false;
+ const exp=data.expiryDate.toDate?data.expiryDate.toDate():new Date(data.expiryDate);
+ return exp>new Date();
+}
 
 window.openAuth=(system,mode)=>{
  selectedSystem=system;$("authForm").classList.remove("hidden");
  $("customerLoginBox").classList.toggle("hidden",mode!=="login"||system==="owner");
- $("registerBox").classList.toggle("hidden",mode!=="register");$("ownerBox").classList.toggle("hidden",system!=="owner");
+ $("registerBox").classList.toggle("hidden",mode!=="register");
+ $("ownerBox").classList.toggle("hidden",system!=="owner");
  $("authFormTitle").textContent=system==="owner"?"دخول لوحة التحكم":(system==="sales"?"سيستم المبيعات":"سيستم البلايستيشن")+" - "+(mode==="login"?"تسجيل الدخول":"إنشاء حساب");
  $("authMsg").classList.add("hidden");
 };
@@ -276,7 +65,10 @@ window.login=async()=>{
   if(!snap.exists()){await signOut(auth);return message("لا توجد بيانات حساب لهذا المستخدم.");}
   const si=systemInfo(snap.data(),selectedSystem);
   if(si.status==="not_registered"){await signOut(auth);return message("هذا الحساب غير مسجل في النظام الذي اخترته.");}
-  if(!subscriptionActive(si)){await signOut(auth);return message(si.status==="pending"?"حسابك قيد المراجعة ولم يتم تفعيل الاشتراك.":"اشتراك هذا النظام غير نشط أو انتهت صلاحيته.");}
+  if(!subscriptionActive(si)){
+   await signOut(auth);
+   return message(si.status==="pending"?"حسابك قيد المراجعة ولم يتم تفعيل الاشتراك.":"اشتراك هذا النظام غير نشط أو انتهت صلاحيته.");
+  }
  }catch(e){console.error(e);message("تعذر الدخول: "+(e.code||e.message));}
 };
 window.ownerLogin=async()=>{
@@ -292,13 +84,15 @@ window.register=async()=>{
  if(password.length<6)return message("كلمة المرور يجب ألا تقل عن 6 أحرف.");
  const selectedPlan=PLANS[days];if(!selectedPlan)return message("اختر باقة صحيحة.");
  try{
-  registeringNow=true;const cred=await createUserWithEmailAndPassword(auth,email,password);
+  registeringNow=true;
+  const cred=await createUserWithEmailAndPassword(auth,email,password);
   const systemData={status:"pending",plan:"غير مفعل",requestedPlan:selectedPlan.name,requestedPrice:selectedPlan.price,requestedDays:days,expiryDate:null,requestedAt:serverTimestamp()};
   const systems={};systems[selectedSystem]=systemData;
   await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",systems,createdAt:serverTimestamp()});
   lastRegisteredUser={name,shop,email,phone,system:selectedSystem,plan:selectedPlan.name,price:selectedPlan.price};
   $("pendingDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(shop)}<br><b>النظام:</b> ${selectedSystem==="sales"?"المبيعات":"البلايستيشن"}<br><b>الباقة:</b> ${selectedPlan.name}<br><b>السعر:</b> ${selectedPlan.price} جنيه`;
-  await signOut(auth);registeringNow=false;$("auth").classList.add("hidden");$("pendingScreen").classList.remove("hidden");
+  await signOut(auth);registeringNow=false;
+  $("auth").classList.add("hidden");$("pendingScreen").classList.remove("hidden");
  }catch(e){registeringNow=false;console.error(e);message(e.code==="auth/email-already-in-use"?"البريد مسجل بالفعل.":"تعذر التسجيل: "+(e.code||e.message));}
 };
 window.sendWhatsAppActivation=()=>{
@@ -312,26 +106,66 @@ window.support=()=>window.open(`https://wa.me/${SUPPORT_PHONE}`,"_blank");
 onAuthStateChanged(auth,async user=>{
  currentUser=user;
  if(registeringNow)return;
- if(!user){if(psTimer)clearInterval(psTimer);["customerPanel","ownerPanel","playstationPanel","pendingScreen"].forEach(x=>$(x).classList.add("hidden"));$("auth").classList.remove("hidden");return;}
+ if(!user){
+  if(psTimer)clearInterval(psTimer);
+  ["customerPanel","ownerPanel","playstationPanel","pendingScreen"].forEach(x=>$(x).classList.add("hidden"));
+  $("auth").classList.remove("hidden");return;
+ }
  try{
-  if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){$("auth").classList.add("hidden");$("ownerPanel").classList.remove("hidden");await loadUsers();return;}
-  const snap=await getDoc(doc(db,"users",user.uid));if(!snap.exists()){await signOut(auth);return;}
+  if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){
+   $("auth").classList.add("hidden");$("ownerPanel").classList.remove("hidden");await loadUsers();return;
+  }
+  const snap=await getDoc(doc(db,"users",user.uid));
+  if(!snap.exists()){await signOut(auth);return;}
   profile=snap.data();const system=selectedSystem,info=systemInfo(profile,system);
-  if(info.status==="not_registered"||!subscriptionActive(info)){await signOut(auth);$("auth").classList.remove("hidden");message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");return;}
+  if(info.status==="not_registered"||!subscriptionActive(info)){
+   await signOut(auth);$("auth").classList.remove("hidden");
+   message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");return;
+  }
   activeSystem=system;$("auth").classList.add("hidden");$("pendingScreen").classList.add("hidden");
-  if(system==="playstation"){$("playstationPanel").classList.remove("hidden");$("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";renderPsSubscription(info);await loadPlaystationData();startPsTimer();}
-  else{$("customerPanel").classList.remove("hidden");$("shopTitle").textContent=profile.shopName||"نظام المبيعات";$("sahalShopTitle").textContent=profile.shopName||"متجري";$("settingsShopName").value=profile.shopName||"";$("settingsEmail").value=profile.email||user.email||"";checkCustomerSubscription(info);await loadBusiness();await checkAndSettleDailySales();}
+  if(system==="playstation"){
+   $("playstationPanel").classList.remove("hidden");
+   $("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";
+   renderPsSubscription(info);await loadPlaystationData();startPsTimer();
+  }else{
+   $("customerPanel").classList.remove("hidden");
+   $("shopTitle").textContent=profile.shopName||"نظام المبيعات";
+   $("sahalShopTitle").textContent=profile.shopName||"متجري";
+   $("settingsShopName").value=profile.shopName||"";
+   $("settingsEmail").value=profile.email||user.email||"";
+   checkCustomerSubscription(info);await loadBusiness();await checkAndSettleDailySales();
+  }
  }catch(e){console.error(e);alert("حدث خطأ أثناء تحميل الحساب: "+e.message);}
 });
-function renderPsSubscription(info){const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():new Date(info.expiryDate);const days=Math.ceil((expiry-new Date())/86400000);$("psSubDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(profile.shopName||"—")}<br><b>الباقة:</b> ${escapeHTML(info.plan||"—")}<br><b>المتبقي:</b> ${Math.max(0,days)} يوم<br><span class="tag good">الاشتراك نشط</span>`;}
+
+function renderPsSubscription(info){
+ const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():new Date(info.expiryDate);
+ const days=Math.ceil((expiry-new Date())/86400000);
+ $("psSubDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(profile.shopName||"—")}<br><b>الباقة:</b> ${escapeHTML(info.plan||"—")}<br><b>المتبقي:</b> ${Math.max(0,days)} يوم<br><span class="tag good">الاشتراك نشط</span>`;
+}
 function checkCustomerSubscription(info){
  const details=$("subPageDetails"),action=$("subPageActionBox"),tiles=$("mainTilesContainer");
- if(!subscriptionActive(info)){details.innerHTML="الباقة غير مفعلة أو انتهت صلاحيتها.";action.innerHTML='<button class="green big" onclick="requestRenewal()">طلب تفعيل الاشتراك</button>';tiles.style.pointerEvents="none";tiles.style.opacity=".4";return;}
+ if(!subscriptionActive(info)){
+  details.innerHTML="الباقة غير مفعلة أو انتهت صلاحيتها.";
+  action.innerHTML='<button class="green big" onclick="requestRenewal()">طلب تفعيل الاشتراك</button>';
+  tiles.style.pointerEvents="none";tiles.style.opacity=".4";return;
+ }
  const expiry=info.expiryDate.toDate?info.expiryDate.toDate():new Date(info.expiryDate),diff=Math.ceil((expiry-new Date())/86400000);
- details.innerHTML=`<b>الباقة:</b> ${escapeHTML(info.plan||"نشطة")}<br><b>المتبقي:</b> ${diff} يوم<br><b>الحالة:</b> ساري`;action.innerHTML='<span class="tag good">الباقة نشطة</span>';tiles.style.pointerEvents="auto";tiles.style.opacity="1";
+ details.innerHTML=`<b>الباقة:</b> ${escapeHTML(info.plan||"نشطة")}<br><b>المتبقي:</b> ${diff} يوم<br><b>الحالة:</b> ساري`;
+ action.innerHTML='<span class="tag good">الباقة نشطة</span>';
+ tiles.style.pointerEvents="auto";tiles.style.opacity="1";
 }
-window.requestRenewal=()=>{const sys=activeSystem==="playstation"?"البلايستيشن":"المبيعات";const msg=encodeURIComponent(`مرحبًا، أرغب في تجديد اشتراك سيستم ${sys} لنشاط ${profile?.shopName||"متجري"}.`);window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");};
-window.ownerSection=which=>{$("ownerSalesSection").classList.toggle("hidden",which!=="sales");$("ownerPsSection").classList.toggle("hidden",which!=="playstation");$("ownerSalesTab").classList.toggle("active",which==="sales");$("ownerPsTab").classList.toggle("active",which==="playstation");};
+window.requestRenewal=()=>{
+ const sys=activeSystem==="playstation"?"البلايستيشن":"المبيعات";
+ const msg=encodeURIComponent(`مرحبًا، أرغب في تجديد اشتراك سيستم ${sys} لنشاط ${profile?.shopName||"متجري"}.`);
+ window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
+};
+window.ownerSection=which=>{
+ $("ownerSalesSection").classList.toggle("hidden",which!=="sales");
+ $("ownerPsSection").classList.toggle("hidden",which!=="playstation");
+ $("ownerSalesTab").classList.toggle("active",which==="sales");
+ $("ownerPsTab").classList.toggle("active",which==="playstation");
+};
 
 function planControls(u,system){
  const info=systemInfo(u,system);if(info.status==="not_registered")return `<span class="muted">غير مسجل</span>`;
@@ -341,24 +175,48 @@ function planControls(u,system){
 window.loadUsers=async()=>{
  try{
   const snap=await getDocs(collection(db,"users")),list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
-  $("totalUsers").textContent=list.length;const salesList=list.filter(u=>systemInfo(u,"sales").status!=="not_registered"),psList=list.filter(u=>systemInfo(u,"playstation").status!=="not_registered");
+  $("totalUsers").textContent=list.length;
+  const salesList=list.filter(u=>systemInfo(u,"sales").status!=="not_registered");
+  const psList=list.filter(u=>systemInfo(u,"playstation").status!=="not_registered");
   $("salesUsersCount").textContent=salesList.length;$("psUsersCount").textContent=psList.length;
   $("pendingUsersCount").textContent=list.reduce((c,u)=>c+(systemInfo(u,"sales").status==="pending"?1:0)+(systemInfo(u,"playstation").status==="pending"?1:0),0);
   const render=(arr,system)=>arr.map(u=>{
    const info=systemInfo(u,system),expiry=info.expiryDate?.toDate?info.expiryDate.toDate():info.expiryDate,expired=expiry&&new Date(expiry)<new Date();
-   let statusText="قيد المراجعة",good=false;if(info.status==="active"&&!expired){statusText="نشط";good=true;}else if(info.status==="active"&&expired)statusText="منتهي";else if(info.status==="pending")statusText="طلب جديد";
+   let statusText="قيد المراجعة",good=false;
+   if(info.status==="active"&&!expired){statusText="نشط";good=true;}
+   else if(info.status==="active"&&expired)statusText="منتهي";
+   else if(info.status==="pending")statusText="طلب جديد";
    return `<tr><td>${escapeHTML(u.shopName||"")}</td><td>${escapeHTML(u.customerName||"")}</td><td>${escapeHTML(u.email||"")}</td><td>${escapeHTML(u.phone||"")}</td><td><span class="tag ${good?"good":""}">${statusText}</span></td><td>${escapeHTML(info.requestedPlan||info.plan||"غير محدد")} ${Number(info.requestedPrice)?`<br>${Number(info.requestedPrice)} جنيه`:""}</td><td>${planControls(u,system)}</td></tr>`;
   }).join("")||'<tr><td colspan="7">لا يوجد عملاء</td></tr>';
-  $("salesUsersTable").innerHTML=render(salesList,"sales");$("psUsersTable").innerHTML=render(psList,"playstation");
+  $("salesUsersTable").innerHTML=render(salesList,"sales");
+  $("psUsersTable").innerHTML=render(psList,"playstation");
  }catch(e){console.error(e);alert("تعذر تحميل العملاء: "+e.message);}
 };
 window.activateUserWithPlan=async(id,system)=>{
- const select=$(`plan_${system}_${id}`);if(!select)return;const days=Number(select.value),plan=PLANS[days];if(!plan)return alert("اختر باقة صحيحة.");
+ const select=$(`plan_${system}_${id}`);if(!select)return;
+ const days=Number(select.value),plan=PLANS[days];if(!plan)return alert("اختر باقة صحيحة.");
  const expiry=new Date();expiry.setDate(expiry.getDate()+days);
- try{await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"active",[ `systems.${system}.plan`]:plan.name,[`systems.${system}.price`]:plan.price,[`systems.${system}.expiryDate`]:expiry,[`systems.${system}.activatedAt`]:serverTimestamp()});alert("تم التفعيل بنجاح.");await loadUsers();}catch(e){alert("خطأ: "+e.message);}
+ try{
+  await updateDoc(doc(db,"users",id),{
+   [`systems.${system}.status`]:"active",
+   [`systems.${system}.plan`]:plan.name,
+   [`systems.${system}.price`]:plan.price,
+   [`systems.${system}.expiryDate`]:expiry,
+   [`systems.${system}.activatedAt`]:serverTimestamp()
+  });
+  alert("تم التفعيل بنجاح.");await loadUsers();
+ }catch(e){alert("خطأ: "+e.message);}
 };
-window.deactivateSystem=async(id,system)=>{if(!confirm("هل تريد إيقاف الاشتراك؟"))return;try{await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"pending"});await loadUsers();alert("تم إيقاف الاشتراك.");}catch(e){alert(e.message);}};
-window.deleteUser=async id=>{if(!confirm("حذف بيانات الحساب من قاعدة البيانات؟"))return;try{await deleteDoc(doc(db,"users",id));await loadUsers();}catch(e){alert(e.message);}};
+window.deactivateSystem=async(id,system)=>{
+ if(!confirm("هل تريد إيقاف الاشتراك؟"))return;
+ try{await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"pending"});await loadUsers();alert("تم إيقاف الاشتراك.");}
+ catch(e){alert(e.message);}
+};
+window.deleteUser=async id=>{
+ if(!confirm("حذف بيانات الحساب من قاعدة البيانات؟"))return;
+ try{await deleteDoc(doc(db,"users",id));await loadUsers();}
+ catch(e){alert(e.message);}
+};
 
 /* =============== البلايستيشن: الرومات وVIP =============== */
 window.showPsSection=which=>{
@@ -380,41 +238,66 @@ async function loadPlaystationData(){
   psItems=is.docs.map(d=>({id:d.id,...d.data()}));
   psSessions=ss.docs.map(d=>({id:d.id,...d.data()}));
 
-  /* لا يتم إنهاء الجلسة التلقائية بسبب عدم وجود endAt */
   for(const d of [...psDevices]){
    if(d.status==="running"&&d.sessionMode!=="auto"&&Number(d.endAt)>0&&Number(d.endAt)<=Date.now()){
     await finalizePsSession(d,"automatic");
    }
   }
-  const refreshed=await getDocs(col("devices"));psDevices=refreshed.docs.map(d=>({id:d.id,...d.data()}));
-  const sessions=await getDocs(col("psSessions"));psSessions=sessions.docs.map(d=>({id:d.id,...d.data()}));
+  const refreshed=await getDocs(col("devices"));
+  psDevices=refreshed.docs.map(d=>({id:d.id,...d.data()}));
+  const sessions=await getDocs(col("psSessions"));
+  psSessions=sessions.docs.map(d=>({id:d.id,...d.data()}));
   renderPsDevices();renderPsItems();renderPsStats();renderPsSessions();
  }catch(e){console.error(e);alert("تعذر تحميل بيانات البلايستيشن: "+e.message);}
 }
 function getDeviceType(device){return device.deviceType==="vip"?"vip":"room";}
 
 window.addPsDevice=async type=>{
- const isVip=type==="vip",name=$(isVip?"psNewVipName":"psNewDeviceName").value.trim(),rate=Number($(isVip?"psNewVipRate":"psNewDeviceRate").value);
+ const isVip=type==="vip";
+ const name=$(isVip?"psNewVipName":"psNewDeviceName").value.trim();
+ const rate=Number($(isVip?"psNewVipRate":"psNewDeviceRate").value);
  if(!name)return alert(isVip?"اكتب اسم جهاز VIP.":"اكتب اسم الروم.");
  if(!Number.isFinite(rate)||rate<=0)return alert("أدخل سعر ساعة صحيح.");
  try{
   await addDoc(col("devices"),{name,deviceType:isVip?"vip":"room",status:"idle",startedAt:null,endAt:null,hourlyRate:rate,createdAt:Date.now()});
-  $(isVip?"psNewVipName":"psNewDeviceName").value="";$(isVip?"psNewVipRate":"psNewDeviceRate").value="";
+  $(isVip?"psNewVipName":"psNewDeviceName").value="";
+  $(isVip?"psNewVipRate":"psNewDeviceRate").value="";
   await loadPlaystationData();alert(isVip?"تمت إضافة جهاز VIP بنجاح.":"تمت إضافة الروم بنجاح.");
  }catch(e){alert("تعذر إضافة الجهاز: "+e.message);}
 };
 window.updatePsRate=async id=>{
  const input=$(`psRate_${id}`),rate=Number(input?.value);
  if(!Number.isFinite(rate)||rate<=0)return alert("أدخل سعر ساعة صحيح.");
- try{await updateDoc(docRef("devices",id),{hourlyRate:rate});const d=psDevices.find(x=>x.id===id);if(d)d.hourlyRate=rate;renderPsDevices();alert("تم تحديث سعر الساعة.");}
- catch(e){alert("تعذر تعديل السعر: "+e.message);}
+ try{
+  await updateDoc(docRef("devices",id),{hourlyRate:rate});
+  const d=psDevices.find(x=>x.id===id);if(d)d.hourlyRate=rate;
+  renderPsDevices();alert("تم تحديث سعر الساعة.");
+ }catch(e){alert("تعذر تعديل السعر: "+e.message);}
 };
 window.deletePsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);if(!d)return;
  if(d.status==="running")return alert("لا يمكن حذف جهاز يعمل. أنهِ الجلسة أولاً.");
  if(!confirm("هل تريد حذف الجهاز؟"))return;
- try{await deleteDoc(docRef("devices",id));await loadPlaystationData();}catch(e){alert(e.message);}
+ try{await deleteDoc(docRef("devices",id));await loadPlaystationData();}
+ catch(e){alert(e.message);}
 };
+
+/* تقريب المدة لأعلى إلى أقرب نصف ساعة، مع حد أدنى 30 دقيقة */
+function roundUpToBillingBlock(minutes){
+ const value=Math.max(PS_MIN_SESSION_MINUTES,Number(minutes)||0);
+ return Math.ceil(value/PS_BILLING_BLOCK_MINUTES)*PS_BILLING_BLOCK_MINUTES;
+}
+function minimumHalfHourPrice(rate){
+ return Number((Number(rate)*PS_MIN_SESSION_MINUTES/60).toFixed(2));
+}
+function calculateAutoPlayTotal(elapsedMs,rate){
+ const elapsedMinutes=Math.max(0,elapsedMs/60000);
+ const chargedMinutes=roundUpToBillingBlock(elapsedMinutes);
+ return {
+  chargedMinutes,
+  playTotal:Number((chargedMinutes/60*rate).toFixed(2))
+ };
+}
 
 /* بدء الجلسة: مدة محددة أو حساب تلقائي أو مبلغ */
 window.startPsDevice=async id=>{
@@ -425,16 +308,19 @@ window.startPsDevice=async id=>{
 
  if(mode==="duration"){
   minutes=Number($(`psDuration_${id}`).value);
-  if(!Number.isFinite(minutes)||minutes<=0)return alert("اختر مدة صحيحة.");
+  if(!Number.isFinite(minutes)||minutes<PS_MIN_SESSION_MINUTES)return alert("أقل مدة للجلسة نصف ساعة.");
+  minutes=roundUpToBillingBlock(minutes);
   endAt=now+minutes*60000;
  }else if(mode==="amount"){
   plannedAmount=Number($(`psAmount_${id}`).value);
-  if(!Number.isFinite(plannedAmount)||plannedAmount<=0)return alert("أدخل مبلغًا صحيحًا.");
-  minutes=Math.max(1,Math.round(plannedAmount/rate*60));
+  const minAmount=minimumHalfHourPrice(rate);
+  if(!Number.isFinite(plannedAmount)||plannedAmount<minAmount){
+   return alert(`أقل مبلغ للجلسة هو ${money(minAmount)} جنيه، قيمة نصف ساعة.`);
+  }
+  minutes=roundUpToBillingBlock(plannedAmount/rate*60);
   endAt=now+minutes*60000;
  }else if(mode==="auto"){
-  minutes=0;
-  endAt=null;
+  minutes=0;endAt=null;
  }else return alert("اختر طريقة حساب صحيحة.");
 
  const sessionRef=doc(col("psSessions")),sessionId=sessionRef.id;
@@ -460,17 +346,18 @@ window.extendPsDevice=async id=>{
  if(!d||d.status!=="running")return alert("الجهاز غير مشغل.");
  if(d.sessionMode==="auto")return alert("الجلسة تعمل بالحساب التلقائي، لا تحتاج إلى تمديد. أنهِ الجلسة عند الانتهاء.");
  const minutes=Number($(`psExtend_${id}`).value);
- if(!Number.isFinite(minutes)||minutes<=0)return alert("اختر مدة صحيحة.");
- const now=Date.now(),newEndAt=Math.max(now,Number(d.endAt)||0)+minutes*60000;
+ if(!Number.isFinite(minutes)||minutes<PS_MIN_SESSION_MINUTES)return alert("أقل مدة تمديد نصف ساعة.");
+ const validMinutes=roundUpToBillingBlock(minutes);
+ const now=Date.now(),newEndAt=Math.max(now,Number(d.endAt)||0)+validMinutes*60000;
  try{
   if(!d.sessionId)throw new Error("لا يوجد رقم جلسة للجهاز.");
   const sRef=docRef("psSessions",d.sessionId);
   await runTransaction(db,async tx=>{
    const ss=await tx.get(sRef);
    if(!ss.exists()||ss.data().finalized)throw new Error("الجلسة غير متاحة للتمديد.");
-   const old=ss.data(),addAmount=(minutes/60)*Number(old.hourlyRate||d.hourlyRate||PS_DEFAULT_HOURLY_RATE);
+   const old=ss.data(),addAmount=(validMinutes/60)*Number(old.hourlyRate||d.hourlyRate||PS_DEFAULT_HOURLY_RATE);
    tx.update(sRef,{
-    endAt:newEndAt,plannedMinutes:Number(old.plannedMinutes||0)+minutes,
+    endAt:newEndAt,plannedMinutes:Number(old.plannedMinutes||0)+validMinutes,
     plannedAmount:Number(old.plannedAmount||0)+(old.sessionMode==="amount"?addAmount:0),
     lastExtendedAt:now
    });
@@ -542,34 +429,45 @@ async function finalizePsSession(device,reason="manual"){
     tx.update(dRef,{status:"idle",endAt:null,sessionId:null,startedAt:null,sessionMode:null,sessionAmount:null});
     return;
    }
+
    const s=ss.exists()?ss.data():{};
    const startedAt=Number(s.startedAt||current.startedAt)||now;
    const elapsedMs=Math.max(0,now-startedAt);
-   const elapsedMinutes=Math.max(1,Math.ceil(elapsedMs/60000));
+   const elapsedMinutes=Math.max(0,elapsedMs/60000);
    const rate=Number(s.hourlyRate||current.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
-   let playTotal=0;
+
+   let playTotal=0,chargedMinutes=PS_MIN_SESSION_MINUTES;
+
    if(s.sessionMode==="amount"){
-    playTotal=Number(s.plannedAmount||current.sessionAmount||0);
+    const minAmount=minimumHalfHourPrice(rate);
+    playTotal=Math.max(Number(s.plannedAmount||current.sessionAmount||0),minAmount);
+    chargedMinutes=roundUpToBillingBlock(Number(s.plannedMinutes||current.lastDuration||PS_MIN_SESSION_MINUTES));
    }else if(s.sessionMode==="auto"){
-    playTotal=Number((elapsedMs/3600000*rate).toFixed(2));
+    const calculated=calculateAutoPlayTotal(elapsedMs,rate);
+    playTotal=calculated.playTotal;
+    chargedMinutes=calculated.chargedMinutes;
    }else{
-    const chargedMinutes=Number(s.plannedMinutes||current.lastDuration||elapsedMinutes);
+    chargedMinutes=roundUpToBillingBlock(Number(s.plannedMinutes||current.lastDuration||elapsedMinutes));
     playTotal=Number((chargedMinutes/60*rate).toFixed(2));
    }
+
    const orders=Array.isArray(s.orders)?s.orders:[];
    const ordersTotal=Number(orders.reduce((sum,o)=>sum+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0).toFixed(2));
    const total=Number((playTotal+ordersTotal).toFixed(2));
    const invoiceNumber="PS-"+now.toString().slice(-8);
+
    const invoice={
     invoiceNumber,deviceId:device.id,deviceName:current.name||device.name,
     deviceType:current.deviceType||device.deviceType||"room",
-    startedAt,endedAt:now,elapsedMinutes,hourlyRate:rate,
+    startedAt,endedAt:now,elapsedMinutes:Math.ceil(elapsedMinutes),
+    chargedMinutes,hourlyRate:rate,
     sessionMode:s.sessionMode||"duration",plannedMinutes:Number(s.plannedMinutes||0),
     plannedAmount:Number(s.plannedAmount||0),
     playTotal,orders,ordersTotal,total,paymentMethod:"cash",
     paymentStatus:"paid",finalized:true,reason,
     date:new Date(now).toLocaleString("ar-EG"),createdAt:now
    };
+
    tx.set(sRef,invoice);
    tx.set(tRef,{
     type:"in",amount:total,
@@ -583,6 +481,7 @@ async function finalizePsSession(device,reason="manual"){
     lastSessionId:sessionId,lastSessionTotal:total
    });
   });
+
   const [updated,sessions]=await Promise.all([getDoc(dRef),getDocs(col("psSessions"))]);
   if(updated.exists())Object.assign(device,updated.data());
   psSessions=sessions.docs.map(x=>({id:x.id,...x.data()}));
@@ -604,12 +503,14 @@ function buildPsDeviceCard(d){
  const orderTotal=orders.reduce((a,o)=>a+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0);
  const itemOptions=psItems.map(i=>`<option value="${i.id}">${escapeHTML(i.name)} - ${money(i.price)} ج</option>`).join("");
  const typeLabel=isVip?"جهاز صالة VIP":"جهاز روم";
+
  return `<div class="ps-device-card ${running?"running":""} ${isVip?"vip-card":""}">
   <div class="top"><h3>${isVip?"⭐":"🎮"} ${escapeHTML(d.name)}</h3><span class="tag ${running?"good":""}">${running?"يعمل الآن":typeLabel}</span></div>
   <div class="ps-device-time ${running?"":"ps-device-idle"}" id="psClock_${d.id}">${time}</div>
   <p class="muted" style="text-align:center" id="psClockLabel_${d.id}">${running?(autoMode?"الوقت المنقضي - حساب تلقائي":"الوقت المتبقي"):"الجهاز جاهز لجلسة جديدة"}</p>
   <label>سعر الساعة بالجنيه</label>
   <div class="inline-form"><input id="psRate_${d.id}" type="number" min=".01" step=".01" value="${Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE}"><button class="secondary" onclick="updatePsRate('${d.id}')">حفظ السعر</button></div>
+
   ${running?`
    <div class="card" style="padding:10px;margin:10px 0">
     <b>إضافة طلبات إلى فاتورة ${isVip?"VIP":"الروم"}</b>
@@ -622,9 +523,15 @@ function buildPsDeviceCard(d){
      <p><b>إجمالي الإضافات: ${money(orderTotal)} جنيه</b></p>
     </div>
    </div>
-   ${autoMode?'<div class="mode-note">حساب تلقائي: سيستمر العداد في حساب وقت اللعب حتى تضغط إنهاء الجلسة.</div>':`
+   ${autoMode?'<div class="mode-note">حساب تلقائي: أقل محاسبة نصف ساعة، وبعدها يتم التقريب لأعلى كل نصف ساعة حتى إنهاء الجلسة.</div>':`
     <div class="ps-device-actions">
-     <select id="psExtend_${d.id}"><option value="15">تمديد 15 دقيقة</option><option value="30">30 دقيقة</option><option value="60">ساعة</option><option value="120">ساعتان</option><option value="180">3 ساعات</option></select>
+     <select id="psExtend_${d.id}">
+      <option value="30">تمديد نصف ساعة</option>
+      <option value="60">ساعة</option>
+      <option value="90">ساعة ونصف</option>
+      <option value="120">ساعتان</option>
+      <option value="180">3 ساعات</option>
+     </select>
      <button class="green" onclick="extendPsDevice('${d.id}')">تمديد الوقت</button>
     </div>
    `}
@@ -639,7 +546,6 @@ function buildPsDeviceCard(d){
    <div id="psDurationBox_${d.id}">
     <label>اختر مدة اللعب</label>
     <select id="psDuration_${d.id}">
-     <option value="15">ربع ساعة (15 دقيقة)</option>
      <option value="30">نصف ساعة (30 دقيقة)</option>
      <option value="60">ساعة واحدة</option>
      <option value="90">ساعة ونصف</option>
@@ -648,13 +554,15 @@ function buildPsDeviceCard(d){
      <option value="240">4 ساعات</option>
      <option value="300">5 ساعات</option>
     </select>
-    <div class="mode-note">سيتم حساب سعر اللعب حسب المدة وسعر الساعة، وتنتهي الجلسة تلقائيًا عند انتهاء الوقت.</div>
+    <div class="mode-note">أقل مدة مدفوعة نصف ساعة. إذا أنهى الزبون الجلسة قبل مرور نصف ساعة، يتم احتساب نصف ساعة كاملة.</div>
    </div>
-   <div id="psAutoBox_${d.id}" class="hidden"><div class="mode-note">سيبدأ العداد من لحظة التشغيل، ويحسب السعر حسب الوقت الفعلي. اضغط إنهاء الجلسة عند مغادرة العميل.</div></div>
+   <div id="psAutoBox_${d.id}" class="hidden">
+    <div class="mode-note">سيبدأ العداد من لحظة التشغيل. أقل محاسبة نصف ساعة، وبعدها التقريب لأعلى كل نصف ساعة.</div>
+   </div>
    <div id="psAmountBox_${d.id}" class="hidden">
     <label>مبلغ الجلسة بالجنيه</label>
-    <input id="psAmount_${d.id}" type="number" min=".01" step=".01" placeholder="اكتب المبلغ الذي تريده">
-    <div class="mode-note">سيتم حساب مدة اللعب حسب سعر ساعة الجهاز، ويُسجل المبلغ الذي أدخلته كقيمة اللعب.</div>
+    <input id="psAmount_${d.id}" type="number" min="${minimumHalfHourPrice(Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE)}" step=".01" placeholder="اكتب المبلغ الذي تريده">
+    <div class="mode-note">أقل مبلغ مسموح هو قيمة نصف ساعة حسب سعر الجهاز. سيتم حساب مدة اللعب حسب المبلغ وسعر الساعة.</div>
    </div>
    <div class="ps-device-actions"><button class="green" onclick="startPsDevice('${d.id}')">▶ بدء الجلسة</button><button class="red" onclick="deletePsDevice('${d.id}')">حذف الجهاز</button></div>
   `}
@@ -662,7 +570,8 @@ function buildPsDeviceCard(d){
 }
 
 function renderPsDevices(){
- const rooms=psDevices.filter(d=>getDeviceType(d)==="room"),vips=psDevices.filter(d=>getDeviceType(d)==="vip");
+ const rooms=psDevices.filter(d=>getDeviceType(d)==="room");
+ const vips=psDevices.filter(d=>getDeviceType(d)==="vip");
  $("psDevicesList").innerHTML=rooms.map(buildPsDeviceCard).join("")||'<div class="ps-empty">لا توجد رومات. أضف أول روم من الأعلى.</div>';
  $("psVipDevicesList").innerHTML=vips.map(buildPsDeviceCard).join("")||'<div class="ps-empty">لا توجد أجهزة VIP. أضف أول جهاز من الأعلى.</div>';
 }
@@ -673,7 +582,7 @@ window.togglePsMode=id=>{
  $(`psAutoBox_${id}`).classList.toggle("hidden",mode!=="auto");
 };
 
-/* المؤقت: العد التنازلي للمدة والمبلغ، والعد التصاعدي للتلقائي */
+/* المؤقت */
 function startPsTimer(){
  if(psTimer)clearInterval(psTimer);
  psTimer=setInterval(async()=>{
@@ -704,10 +613,17 @@ function renderPsSessions(){
  $("psSessionsRevenue2").textContent=money(total)+" جنيه";
  table.innerHTML=sorted.map(s=>{
   const type=s.deviceType==="vip"?"VIP":"روم";
-  return `<tr><td>${escapeHTML(s.invoiceNumber||"—")}</td><td>${escapeHTML(s.deviceName||"—")} <span class="tag">${type}</span></td>
-   <td>${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</td><td>${s.endedAt?new Date(s.endedAt).toLocaleString("ar-EG"):"—"}</td>
-   <td>${Number(s.elapsedMinutes)||0} دقيقة</td><td>${money(s.playTotal??s.total)} ج</td><td>${money(s.ordersTotal||0)} ج</td><td><b>${money(s.total)} ج</b></td>
-   <td><button class="rowbtn secondary" onclick="printPsInvoice('${s.id}')">طباعة</button></td></tr>`;
+  return `<tr>
+   <td>${escapeHTML(s.invoiceNumber||"—")}</td>
+   <td>${escapeHTML(s.deviceName||"—")} <span class="tag">${type}</span></td>
+   <td>${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</td>
+   <td>${s.endedAt?new Date(s.endedAt).toLocaleString("ar-EG"):"—"}</td>
+   <td>${Number(s.elapsedMinutes)||0} دقيقة</td>
+   <td>${money(s.playTotal??s.total)} ج</td>
+   <td>${money(s.ordersTotal||0)} ج</td>
+   <td><b>${money(s.total)} ج</b></td>
+   <td><button class="rowbtn secondary" onclick="printPsInvoice('${s.id}')">طباعة</button></td>
+  </tr>`;
  }).join("")||'<tr><td colspan="9">لا توجد جلسات مسجلة</td></tr>';
 }
 
@@ -718,11 +634,14 @@ window.printPsInvoice=id=>{
  $("printArea").innerHTML=`
  <div style="font-family:Arial;text-align:center;padding:10px;direction:rtl">
   <h2>${escapeHTML(profile?.shopName||"نشاط البلايستيشن")}</h2><h3>فاتورة جلسة ${type}</h3><hr>
-  <p>رقم الفاتورة: ${escapeHTML(s.invoiceNumber||"—")}</p><p>نوع الجهاز: ${type}</p><p>الجهاز: ${escapeHTML(s.deviceName||"—")}</p>
+  <p>رقم الفاتورة: ${escapeHTML(s.invoiceNumber||"—")}</p>
+  <p>نوع الجهاز: ${type}</p><p>الجهاز: ${escapeHTML(s.deviceName||"—")}</p>
   <p>طريقة الحساب: ${modeLabel}</p>
   <p>بداية الجلسة: ${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</p>
   <p>نهاية الجلسة: ${s.endedAt?new Date(s.endedAt).toLocaleString("ar-EG"):"—"}</p>
-  <p>مدة التشغيل الفعلية: ${Number(s.elapsedMinutes)||0} دقيقة</p><p>سعر الساعة: ${money(s.hourlyRate)} جنيه</p><hr>
+  <p>مدة التشغيل الفعلية: ${Number(s.elapsedMinutes)||0} دقيقة</p>
+  <p>مدة المحاسبة: ${Number(s.chargedMinutes||s.plannedMinutes)||0} دقيقة</p>
+  <p>سعر الساعة: ${money(s.hourlyRate)} جنيه</p><hr>
   <h3>قيمة اللعب: ${money(s.playTotal??s.total)} جنيه</h3><h3>المشروبات والسندوتشات</h3>
   <table style="width:100%;min-width:0"><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead>
    <tbody>${orders.map(o=>`<tr><td>${escapeHTML(o.name)}</td><td>${Number(o.qty)||0}</td><td>${money(o.price)} ج</td><td>${money(o.lineTotal??(o.price*o.qty))} ج</td></tr>`).join("")||'<tr><td colspan="4">لا توجد إضافات</td></tr>'}</tbody>
@@ -741,7 +660,9 @@ window.addPsItem=async category=>{
  if(!Number.isInteger(qty)||qty<0)return alert("أدخل كمية صحيحة.");
  try{
   await addDoc(col("psItems"),{category,name,price,qty,createdAt:Date.now()});
-  $(drink?"psDrinkName":"psSandwichName").value="";$(drink?"psDrinkPrice":"psSandwichPrice").value="";$(drink?"psDrinkQty":"psSandwichQty").value="1";
+  $(drink?"psDrinkName":"psSandwichName").value="";
+  $(drink?"psDrinkPrice":"psSandwichPrice").value="";
+  $(drink?"psDrinkQty":"psSandwichQty").value="1";
   await loadPlaystationData();alert("تمت إضافة الصنف.");
  }catch(e){alert(e.message);}
 };
@@ -751,21 +672,28 @@ window.editPsItem=async id=>{
  const price=prompt("السعر الجديد:",item.price);if(price===null)return;
  const qty=prompt("الكمية:",item.qty??0);if(qty===null)return;
  if(!name.trim()||!Number.isFinite(Number(price))||Number(price)<=0||!Number.isInteger(Number(qty))||Number(qty)<0)return alert("بيانات غير صحيحة.");
- try{await updateDoc(docRef("psItems",id),{name:name.trim(),price:Number(price),qty:Number(qty),updatedAt:Date.now()});await loadPlaystationData();alert("تم تعديل الصنف.");}
- catch(e){alert(e.message);}
+ try{
+  await updateDoc(docRef("psItems",id),{name:name.trim(),price:Number(price),qty:Number(qty),updatedAt:Date.now()});
+  await loadPlaystationData();alert("تم تعديل الصنف.");
+ }catch(e){alert(e.message);}
 };
 window.deletePsItem=async id=>{
  if(!confirm("هل تريد حذف هذا الصنف؟"))return;
- try{await deleteDoc(docRef("psItems",id));await loadPlaystationData();}catch(e){alert(e.message);}
+ try{await deleteDoc(docRef("psItems",id));await loadPlaystationData();}
+ catch(e){alert(e.message);}
 };
 function renderPsItems(){
  const drinks=psItems.filter(x=>x.category==="drink"),sandwiches=psItems.filter(x=>x.category==="sandwich");
  const render=arr=>arr.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${money(i.price)} ج</td><td>${Number(i.qty)||0}</td><td><button class="rowbtn secondary" onclick="editPsItem('${i.id}')">تعديل</button><button class="rowbtn red" onclick="deletePsItem('${i.id}')">حذف</button></td></tr>`).join("")||'<tr><td colspan="4">لا توجد أصناف</td></tr>';
- $("psDrinksTable").innerHTML=render(drinks);$("psSandwichesTable").innerHTML=render(sandwiches);renderPsStats();
+ $("psDrinksTable").innerHTML=render(drinks);
+ $("psSandwichesTable").innerHTML=render(sandwiches);
+ renderPsStats();
 }
 function renderPsStats(){
  const rooms=psDevices.filter(d=>getDeviceType(d)==="room"),vips=psDevices.filter(d=>getDeviceType(d)==="vip");
- $("psTotalDevices").textContent=psDevices.length;$("psRoomDevices").textContent=rooms.length;$("psVipDevices").textContent=vips.length;
+ $("psTotalDevices").textContent=psDevices.length;
+ $("psRoomDevices").textContent=rooms.length;
+ $("psVipDevices").textContent=vips.length;
  $("psRunningDevices").textContent=psDevices.filter(d=>d.status==="running").length;
  $("psDrinksCount").textContent=psItems.filter(x=>x.category==="drink").length;
  $("psSandwichesCount").textContent=psItems.filter(x=>x.category==="sandwich").length;
@@ -792,8 +720,10 @@ async function checkAndSettleDailySales(){
 }
 window.updateShopNameSetting=async()=>{
  const n=$("settingsShopName").value.trim();if(!n)return alert("أدخل اسم المحل.");
- try{await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;$("shopTitle").textContent=n;$("sahalShopTitle").textContent=n;alert("تم تحديث الاسم.");}
- catch(e){alert(e.message);}
+ try{
+  await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;
+  $("shopTitle").textContent=n;$("sahalShopTitle").textContent=n;alert("تم تحديث الاسم.");
+ }catch(e){alert(e.message);}
 };
 window.updateCustomerEmailSetting=async()=>{
  const n=$("settingsEmail").value.trim();if(!n)return alert("أدخل البريد الجديد.");
@@ -801,7 +731,8 @@ window.updateCustomerEmailSetting=async()=>{
  catch(e){alert(e.message);}
 };
 window.updateCustomerPassword=async()=>{
- const p=$("newCustomerPassword").value;if(!p||p.length<6)return alert("كلمة المرور يجب ألا تقل عن 6 أحرف.");
+ const p=$("newCustomerPassword").value;
+ if(!p||p.length<6)return alert("كلمة المرور يجب ألا تقل عن 6 أحرف.");
  try{await updatePassword(auth.currentUser,p);$("newCustomerPassword").value="";alert("تم تحديث كلمة المرور.");}
  catch(e){alert("تعذر تحديث كلمة المرور. قد تحتاج إلى تسجيل الدخول مجدداً.");}
 };
@@ -812,17 +743,20 @@ async function loadExpenses(){const s=await getDocs(col("expenses"));expenses=s.
 async function loadTreasury(){const s=await getDocs(col("treasury"));treasury=s.docs.map(d=>({id:d.id,...d.data()}));renderTreasury();}
 window.clearTreasuryData=async()=>{
  if(!confirm("هل تريد مسح حركات الخزينة؟"))return;
- const snap=await getDocs(col("treasury"));for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));
+ const snap=await getDocs(col("treasury"));
+ for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));
  await loadTreasury();renderStats();alert("تم التصفير.");
 };
 window.saveProduct=async()=>{
  const name=$("pName").value.trim(),cost=Number($("pCost").value)||0,price=Number($("pPrice").value)||0,qty=Number($("pQty").value)||0;
  if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع.");
  await addDoc(col("products"),{name,cost,price,qty,createdAt:serverTimestamp()});
- $("pName").value="";$("pCost").value="";$("pPrice").value="";$("pQty").value=10;await loadProducts();renderStats();alert("تم حفظ المنتج.");
+ $("pName").value="";$("pCost").value="";$("pPrice").value="";$("pQty").value=10;
+ await loadProducts();renderStats();alert("تم حفظ المنتج.");
 };
 window.deleteProduct=async id=>{
- if(!confirm("حذف المنتج؟"))return;await deleteDoc(docRef("products",id));await loadProducts();renderStats();
+ if(!confirm("حذف المنتج؟"))return;
+ await deleteDoc(docRef("products",id));await loadProducts();renderStats();
 };
 function renderProducts(){
  $("productsTable").innerHTML=products.map(p=>`<tr><td>${escapeHTML(p.name)}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td>${p.qty}</td><td><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
@@ -845,8 +779,10 @@ window.addToCart=()=>{
  if(price<0||!Number.isFinite(price))return alert("أدخل سعر بيع صحيح.");
  const old=cart.find(x=>x.productId===p.id),already=old?old.qty:0;
  if(qty+already>Number(p.qty))return alert("الكمية المطلوبة أكبر من المخزون.");
- if(old){old.qty+=qty;old.price=price;}else cart.push({productId:p.id,name:p.name,qty,price,cost:p.cost||0});
- selectedProduct=null;$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";renderCart();$("saleSearch").focus();
+ if(old){old.qty+=qty;old.price=price;}
+ else cart.push({productId:p.id,name:p.name,qty,price,cost:p.cost||0});
+ selectedProduct=null;$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";
+ renderCart();$("saleSearch").focus();
 };
 function renderCart(){
  $("cartTable").innerHTML=cart.map((x,i)=>`<tr><td>${escapeHTML(x.name)}</td><td>${x.qty}</td><td>${money(x.price)} ج</td><td><b>${money(x.qty*x.price)} ج</b></td><td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td></tr>`).join("")||'<tr><td colspan="5" style="text-align:center">الفاتورة فارغة</td></tr>';
@@ -854,28 +790,45 @@ function renderCart(){
  $("cartTotalDisplay").textContent=money(total);return {subtotal,discount,addition,total};
 }
 window.renderCart=renderCart;
-$("saleDiscount").addEventListener("input",renderCart);$("saleAddition").addEventListener("input",renderCart);
+$("saleDiscount").addEventListener("input",renderCart);
+$("saleAddition").addEventListener("input",renderCart);
 window.removeCartItem=i=>{cart.splice(i,1);renderCart();};
 window.clearCart=()=>{
  if(cart.length&&!confirm("هل تريد إلغاء الفاتورة؟"))return;
- cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";selectedProduct=null;renderCart();
+ cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";
+ $("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";selectedProduct=null;renderCart();
 };
 window.completeSale=async()=>{
  if(!cart.length)return alert("الفاتورة فارغة.");
  const {subtotal,discount,addition,total}=renderCart();
  if(discount>subtotal+addition)return alert("الخصم أكبر من الإجمالي.");
- for(const item of cart){const p=products.find(x=>x.id===item.productId);if(!p||Number(p.qty)<item.qty)return alert("المخزون غير كافٍ: "+item.name);}
+ for(const item of cart){
+  const p=products.find(x=>x.id===item.productId);
+  if(!p||Number(p.qty)<item.qty)return alert("المخزون غير كافٍ: "+item.name);
+ }
  const invoice={number:"INV-"+Date.now().toString().slice(-6),subtotal,discount,addition,total,items:[...cart],date:new Date().toLocaleString("ar-EG")};
  try{
-  for(const item of cart){const p=products.find(x=>x.id===item.productId);await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});}
-  await addDoc(col("sales"),invoice);await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoice.number}`,date:invoice.date});
+  for(const item of cart){
+   const p=products.find(x=>x.id===item.productId);
+   await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});
+  }
+  await addDoc(col("sales"),invoice);
+  await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoice.number}`,date:invoice.date});
   if($("autoPrintToggle").checked)printInvoiceDirectly(invoice);
-  cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";selectedProduct=null;renderCart();await loadBusiness();
-  alert("تم البيع بنجاح. الإجمالي: "+money(total)+" جنيه");
+  cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";
+  $("saleQty").value="1";$("salePrice").value="";selectedProduct=null;renderCart();
+  await loadBusiness();alert("تم البيع بنجاح. الإجمالي: "+money(total)+" جنيه");
  }catch(e){alert("حدث خطأ أثناء البيع: "+e.message);}
 };
 window.printInvoiceDirectly=inv=>{
- $("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px"><h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة مبيعات</h3><p>رقم الفاتورة: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr><table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}</table><hr><p>إجمالي الأصناف: ${money(inv.subtotal)} جنيه</p><p>الخصم: -${money(inv.discount)} جنيه</p><p>الإضافة: +${money(inv.addition)} جنيه</p><h2>الإجمالي النهائي: ${money(inv.total)} جنيه</h2><p>شكراً لتعاملكم معنا</p><p>تطوير: محمد الصلاحي</p></div>`;
+ $("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px">
+ <h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة مبيعات</h3>
+ <p>رقم الفاتورة: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr>
+ <table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>
+ ${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}</table>
+ <hr><p>إجمالي الأصناف: ${money(inv.subtotal)} جنيه</p><p>الخصم: -${money(inv.discount)} جنيه</p>
+ <p>الإضافة: +${money(inv.addition)} جنيه</p><h2>الإجمالي النهائي: ${money(inv.total)} جنيه</h2>
+ <p>شكراً لتعاملكم معنا</p><p>تطوير: محمد الصلاحي</p></div>`;
  window.print();
 };
 window.addTreasuryTransaction=async()=>{
@@ -896,7 +849,8 @@ window.addExpense=async()=>{
  const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value)||0;
  if(!name||amount<=0)return alert("أدخل اسم المصروف والمبلغ.");
  const date=new Date().toLocaleString("ar-EG");
- await addDoc(col("expenses"),{name,amount,date});await addDoc(col("treasury"),{type:"out",amount,note:"مصروف: "+name,date});
+ await addDoc(col("expenses"),{name,amount,date});
+ await addDoc(col("treasury"),{type:"out",amount,note:"مصروف: "+name,date});
  $("expenseName").value="";$("expenseAmount").value="";await loadBusiness();alert("تم حفظ المصروف.");
 };
 function renderExpenses(){
@@ -908,10 +862,14 @@ function renderSales(){
 window.printSavedInvoice=id=>{const inv=sales.find(s=>s.id===id);if(inv)printInvoiceDirectly(inv);};
 function renderStats(){
  const rev=sales.reduce((s,x)=>s+Number(x.total||0),0),exp=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
- const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0),tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(x.amount||0),0);
+ const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0);
+ const tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(x.amount||0),0);
  $("statProducts").textContent=products.length;$("statSales").textContent=sales.length;
- $("statRevenue").textContent=money(rev)+" جنيه";$("statTreasuryBalance").textContent=money(tIn-tOut)+" جنيه";
- $("reportRevenue").textContent=money(rev)+" جنيه";$("reportExpenses").textContent=money(exp)+" جنيه";$("reportNet").textContent=money(rev-exp)+" جنيه";
+ $("statRevenue").textContent=money(rev)+" جنيه";
+ $("statTreasuryBalance").textContent=money(tIn-tOut)+" جنيه";
+ $("reportRevenue").textContent=money(rev)+" جنيه";
+ $("reportExpenses").textContent=money(exp)+" جنيه";
+ $("reportNet").textContent=money(rev-exp)+" جنيه";
 }
 </script>
 </body>

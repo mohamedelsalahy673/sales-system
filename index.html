@@ -38,7 +38,7 @@ td,th{padding:11px;border-bottom:1px solid #edf0f5;text-align:right;font-size:13
 .tag{border-radius:20px;padding:5px 9px;background:#fff0d3;color:#885900;font-size:12px;display:inline-block}
 .tag.good{background:#e0f6e9;color:#167445}
 .rowbtn{padding:7px 10px;margin:2px;font-size:12px}
-.msg{padding:10px;border-radius:8px;background:#fef2f2;color:#991b1b;margin-top:10px;font-size:13px;border:1px solid #fecaca;white-space:pre-wrap}
+.msg{padding:10px;border-radius:8px;background:#fef2f2;color:#991b1b;margin-top:10px;font-size:13px;border:1px solid #fecaca}
 hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .result{display:block;width:100%;text-align:right;margin:0;border-radius:0}
 .tiles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:20px}
@@ -83,13 +83,13 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 #searchResults button{border-radius:0!important}
 @media(max-width:950px){.sahal-layout{grid-template-columns:1fr}.sahal-sidebar{display:grid;grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}}
 @media(max-width:600px){
-.wrap{padding:7px}.card{padding:12px}
-.sale-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
-.sale-fields .search-container{grid-column:1/-1}
-.sahal-layout{padding:7px}.sahal-sidebar{grid-template-columns:1fr 1fr}
-.sahal-total-card{grid-column:1/-1}.sahal-total-card h2{font-size:27px}
-.sahal-shortcuts{justify-content:center}.sahal-sc-btn{flex:1;min-width:65px;padding:8px 4px}
-.sahal-table-wrap{max-height:230px}
+ .wrap{padding:7px}.card{padding:12px}
+ .sale-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sale-fields .search-container{grid-column:1/-1}
+ .sahal-layout{padding:7px}.sahal-sidebar{grid-template-columns:1fr 1fr}
+ .sahal-total-card{grid-column:1/-1}.sahal-total-card h2{font-size:27px}
+ .sahal-shortcuts{justify-content:center}.sahal-sc-btn{flex:1;min-width:65px;padding:8px 4px}
+ .sahal-table-wrap{max-height:230px}
 }
 @media(max-width:380px){.sahal-sidebar{grid-template-columns:1fr}.sahal-total-card{grid-column:auto}}
 @media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
@@ -98,319 +98,306 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <body>
 <div class="wrap">
 <header class="top">
-<div>
-<div class="brand">NexPOS PRO</div>
-<div class="system-desc">منصة إدارة الأنشطة والخدمات</div>
-<span class="version">MULTI SYSTEM V14</span>
-</div>
-<div>
-<span id="networkStatus" class="tag good">متصل بالخادم</span>
-<button class="secondary" onclick="support()">الدعم الفني</button>
-</div>
+ <div>
+  <div class="brand">NexPOS PRO</div>
+  <div class="system-desc">منصة إدارة الأنشطة والخدمات</div>
+  <span class="version">MULTI SYSTEM V14</span>
+ </div>
+ <div>
+  <span id="networkStatus" class="tag good">متصل بالخادم</span>
+  <button class="secondary" onclick="support()">الدعم الفني</button>
+ </div>
 </header>
 
 <section id="auth">
-<div style="text-align:center;margin:28px 0 12px">
-<h2>مرحبًا بك في NexPOS PRO</h2>
-<p class="muted">اختر النظام الذي تريد الدخول إليه أو إنشاء حساب جديد</p>
-</div>
-<div class="auth-grid">
-<div class="auth-card">
-<div class="auth-icon">▦</div>
-<h3>سيستم المبيعات</h3>
-<p class="muted">إدارة المبيعات والمخازن والفواتير والخزينة</p>
-<button class="big" onclick="openAuth('sales','login')">تسجيل الدخول</button>
-<button class="big secondary" onclick="openAuth('sales','register')">إنشاء حساب جديد</button>
-</div>
-<div class="auth-card ps">
-<div class="auth-icon">🎮</div>
-<h3>سيستم البلايستيشن</h3>
-<p class="muted">إدارة نشاط البلايستيشن والاشتراك الخاص به</p>
-<button class="big green" onclick="openAuth('playstation','login')">تسجيل الدخول</button>
-<button class="big secondary" onclick="openAuth('playstation','register')">إنشاء حساب جديد</button>
-</div>
-<div class="auth-card owner">
-<div class="auth-icon">⚙</div>
-<h3>لوحة التحكم المركزية</h3>
-<p class="muted">إدارة العملاء والاشتراكات لكل نظام بشكل مستقل</p>
-<button class="big purple" onclick="openAuth('owner','login')">دخول لوحة التحكم</button>
-</div>
-</div>
-
-<div id="authForm" class="card hidden" style="max-width:520px;margin:20px auto">
-<div class="top">
-<h3 id="authFormTitle">تسجيل الدخول</h3>
-<button class="secondary" onclick="backToGate()">رجوع</button>
-</div>
-<div id="customerLoginBox">
-<label>البريد الإلكتروني</label>
-<input id="loginEmail" type="email" autocomplete="username">
-<label>كلمة المرور</label>
-<input id="loginPassword" type="password" autocomplete="current-password">
-<button class="big" onclick="login()">دخول للنظام</button>
-</div>
-<div id="registerBox" class="hidden">
-<label>اسم النشاط التجاري</label><input id="regShop">
-<label>اسم المسؤول</label><input id="regName">
-<label>رقم الهاتف</label><input id="regPhone">
-<label>البريد الإلكتروني</label><input id="regEmail" type="email">
-<label>كلمة المرور</label><input id="regPassword" type="password">
-<label>اختر الباقة المطلوبة</label>
-<select id="regPlan">
-<option value="30">الباقة الشهرية - 100 جنيه</option>
-<option value="90">باقة 3 شهور - 250 جنيه</option>
-<option value="365">الباقة السنوية - 900 جنيه</option>
-<option value="36500">الباقة الدائمة - 3000 جنيه</option>
-</select>
-<button class="big green" onclick="register()">إنشاء الحساب</button>
-<p class="muted">سيتم إرسال طلبك إلى لوحة التحكم، ولن يتم تفعيل الحساب إلا بعد موافقة المالك.</p>
-</div>
-<div id="ownerBox" class="hidden">
-<label>اسم المستخدم الإداري</label><input id="ownerUsername" autocomplete="username">
-<label>كلمة المرور</label><input id="ownerPassword" type="password" autocomplete="current-password">
-<button class="big dark" onclick="ownerLogin()">دخول لوحة التحكم</button>
-</div>
-<p id="authMsg" class="msg hidden"></p>
-</div>
+ <div style="text-align:center;margin:28px 0 12px">
+  <h2>مرحبًا بك في NexPOS PRO</h2>
+  <p class="muted">اختر النظام الذي تريد الدخول إليه أو إنشاء حساب جديد</p>
+ </div>
+ <div class="auth-grid">
+  <div class="auth-card">
+   <div class="auth-icon">▦</div>
+   <h3>سيستم المبيعات</h3>
+   <p class="muted">إدارة المبيعات والمخازن والفواتير والخزينة</p>
+   <button class="big" onclick="openAuth('sales','login')">تسجيل الدخول</button>
+   <button class="big secondary" onclick="openAuth('sales','register')">إنشاء حساب جديد</button>
+  </div>
+  <div class="auth-card ps">
+   <div class="auth-icon">🎮</div>
+   <h3>سيستم البلايستيشن</h3>
+   <p class="muted">إدارة نشاط البلايستيشن والاشتراك الخاص به</p>
+   <button class="big green" onclick="openAuth('playstation','login')">تسجيل الدخول</button>
+   <button class="big secondary" onclick="openAuth('playstation','register')">إنشاء حساب جديد</button>
+  </div>
+  <div class="auth-card owner">
+   <div class="auth-icon">⚙</div>
+   <h3>لوحة التحكم المركزية</h3>
+   <p class="muted">إدارة العملاء والاشتراكات لكل نظام بشكل مستقل</p>
+   <button class="big purple" onclick="openAuth('owner','login')">دخول لوحة التحكم</button>
+  </div>
+ </div>
+ <div id="authForm" class="card hidden" style="max-width:520px;margin:20px auto">
+  <div class="top">
+   <h3 id="authFormTitle">تسجيل الدخول</h3>
+   <button class="secondary" onclick="backToGate()">رجوع</button>
+  </div>
+  <div id="customerLoginBox">
+   <label>البريد الإلكتروني</label>
+   <input id="loginEmail" type="email" autocomplete="username">
+   <label>كلمة المرور</label>
+   <input id="loginPassword" type="password" autocomplete="current-password">
+   <button class="big" onclick="login()">دخول للنظام</button>
+  </div>
+  <div id="registerBox" class="hidden">
+   <label>اسم النشاط التجاري</label><input id="regShop">
+   <label>اسم المسؤول</label><input id="regName">
+   <label>رقم الهاتف</label><input id="regPhone">
+   <label>البريد الإلكتروني</label><input id="regEmail" type="email">
+   <label>كلمة المرور</label><input id="regPassword" type="password">
+   <label>اختر الباقة المطلوبة</label>
+   <select id="regPlan">
+    <option value="30">الباقة الشهرية - 100 جنيه</option>
+    <option value="90">باقة 3 شهور - 250 جنيه</option>
+    <option value="365">الباقة السنوية - 900 جنيه</option>
+    <option value="36500">الباقة الدائمة - 3000 جنيه</option>
+   </select>
+   <button class="big green" onclick="register()">إنشاء الحساب</button>
+   <p class="muted">سيتم إرسال طلبك إلى لوحة التحكم، ولن يتم تفعيل الحساب إلا بعد موافقة المالك.</p>
+  </div>
+  <div id="ownerBox" class="hidden">
+   <label>اسم المستخدم الإداري</label><input id="ownerUsername">
+   <label>كلمة المرور</label><input id="ownerPassword" type="password">
+   <button class="big dark" onclick="ownerLogin()">دخول لوحة التحكم</button>
+  </div>
+  <p id="authMsg" class="msg hidden"></p>
+ </div>
 </section>
 
 <section id="pendingScreen" class="hidden">
-<div class="card" style="max-width:550px;margin:40px auto;text-align:center">
-<h2>تم إنشاء حسابك بنجاح!</h2>
-<p class="muted">تم إرسال بياناتك والباقة التي اخترتها إلى لوحة التحكم. انتظر موافقة المالك وتفعيل اشتراكك.</p>
-<div id="pendingDetails" style="line-height:2;margin:15px 0"></div>
-<button class="big green" onclick="sendWhatsAppActivation()">تواصل مع المطور</button>
-<button class="big secondary" onclick="location.reload()">العودة</button>
-</div>
+ <div class="card" style="max-width:550px;margin:40px auto;text-align:center">
+  <h2>تم إنشاء حسابك بنجاح!</h2>
+  <p class="muted">تم إرسال بياناتك والباقة التي اخترتها إلى لوحة التحكم. انتظر موافقة المالك وتفعيل اشتراكك.</p>
+  <div id="pendingDetails" style="line-height:2;margin:15px 0"></div>
+  <button class="big green" onclick="sendWhatsAppActivation()">تواصل مع المطور</button>
+  <button class="big secondary" onclick="location.reload()">العودة</button>
+ </div>
 </section>
 
 <section id="ownerPanel" class="hidden">
-<div class="card">
-<div class="top">
-<div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة العملاء والاشتراكات وطلبات التسجيل</span></div>
-<button class="red" onclick="logout()">تسجيل الخروج</button>
-</div>
-<div class="grid">
-<div class="stat">إجمالي الحسابات<strong id="totalUsers">0</strong></div>
-<div class="stat">حسابات المبيعات<strong id="salesUsersCount">0</strong></div>
-<div class="stat">حسابات البلايستيشن<strong id="psUsersCount">0</strong></div>
-<div class="stat">طلبات في انتظار التفعيل<strong id="pendingUsersCount">0</strong></div>
-</div>
-<nav>
-<button id="ownerSalesTab" class="active" onclick="ownerSection('sales')">سيستم المبيعات</button>
-<button id="ownerPsTab" onclick="ownerSection('playstation')">سيستم البلايستيشن</button>
-</nav>
-<div id="ownerSalesSection">
-<h3>عملاء واشتراكات سيستم المبيعات</h3>
-<div class="tablewrap"><table>
-<thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة المطلوبة</th><th>الإدارة</th></tr></thead>
-<tbody id="salesUsersTable"></tbody>
-</table></div>
-</div>
-<div id="ownerPsSection" class="hidden">
-<h3>عملاء واشتراكات سيستم البلايستيشن</h3>
-<div class="tablewrap"><table>
-<thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة المطلوبة</th><th>الإدارة</th></tr></thead>
-<tbody id="psUsersTable"></tbody>
-</table></div>
-</div>
-<button class="secondary big" onclick="loadUsers()">تحديث قائمة العملاء</button>
-</div>
+ <div class="card">
+  <div class="top">
+   <div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة العملاء والاشتراكات وطلبات التسجيل</span></div>
+   <button class="red" onclick="logout()">تسجيل الخروج</button>
+  </div>
+  <div class="grid">
+   <div class="stat">إجمالي الحسابات<strong id="totalUsers">0</strong></div>
+   <div class="stat">حسابات المبيعات<strong id="salesUsersCount">0</strong></div>
+   <div class="stat">حسابات البلايستيشن<strong id="psUsersCount">0</strong></div>
+   <div class="stat">طلبات في انتظار التفعيل<strong id="pendingUsersCount">0</strong></div>
+  </div>
+  <nav>
+   <button id="ownerSalesTab" class="active" onclick="ownerSection('sales')">سيستم المبيعات</button>
+   <button id="ownerPsTab" onclick="ownerSection('playstation')">سيستم البلايستيشن</button>
+  </nav>
+  <div id="ownerSalesSection">
+   <h3>عملاء واشتراكات سيستم المبيعات</h3>
+   <div class="tablewrap"><table>
+    <thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة المطلوبة</th><th>الإدارة</th></tr></thead>
+    <tbody id="salesUsersTable"></tbody>
+   </table></div>
+  </div>
+  <div id="ownerPsSection" class="hidden">
+   <h3>عملاء واشتراكات سيستم البلايستيشن</h3>
+   <div class="tablewrap"><table>
+    <thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة المطلوبة</th><th>الإدارة</th></tr></thead>
+    <tbody id="psUsersTable"></tbody>
+   </table></div>
+  </div>
+  <button class="secondary big" onclick="loadUsers()">تحديث قائمة العملاء</button>
+ </div>
 </section>
 
 <section id="playstationPanel" class="hidden">
-<div class="card">
-<div class="top">
-<div><h2>سيستم البلايستيشن</h2><span class="muted" id="psShopTitle">إدارة اشتراك نشاطك</span></div>
-<button class="red" onclick="logout()">تسجيل الخروج</button>
-</div>
-<div class="card" style="text-align:center;max-width:650px;margin:25px auto">
-<h2>مرحبًا بك في سيستم البلايستيشن</h2>
-<p class="muted">تم تسجيل الدخول إلى حساب البلايستيشن الخاص بك.</p>
-<div id="psSubDetails" style="line-height:2;margin:20px 0">جاري تحميل الاشتراك...</div>
-<button class="big green" onclick="requestRenewal()">طلب تجديد / تفعيل الاشتراك</button>
-<p class="muted">وظائف إدارة جلسات اللعب والخدمات والحسابات قيد التجهيز.</p>
-</div>
-</div>
+ <div class="card">
+  <div class="top">
+   <div><h2>سيستم البلايستيشن</h2><span class="muted" id="psShopTitle">إدارة اشتراك نشاطك</span></div>
+   <button class="red" onclick="logout()">تسجيل الخروج</button>
+  </div>
+  <div class="card" style="text-align:center;max-width:650px;margin:25px auto">
+   <h2>مرحبًا بك في سيستم البلايستيشن</h2>
+   <p class="muted">تم تسجيل الدخول إلى حساب البلايستيشن الخاص بك.</p>
+   <div id="psSubDetails" style="line-height:2;margin:20px 0">جاري تحميل الاشتراك...</div>
+   <button class="big green" onclick="requestRenewal()">طلب تجديد / تفعيل الاشتراك</button>
+   <p class="muted">وظائف إدارة جلسات اللعب والخدمات والحسابات قيد التجهيز.</p>
+  </div>
+ </div>
 </section>
 
 <section id="customerPanel" class="hidden">
-<div class="card">
-<div class="top">
-<div><h2 id="shopTitle">نظام المبيعات والمخزون</h2><span class="muted">لوحة الإدارة الشاملة</span></div>
-<button class="red" onclick="logout()">تسجيل الخروج</button>
-</div>
+ <div class="card">
+  <div class="top">
+   <div><h2 id="shopTitle">نظام المبيعات والمخزون</h2><span class="muted">لوحة الإدارة الشاملة</span></div>
+   <button class="red" onclick="logout()">تسجيل الخروج</button>
+  </div>
 
-<div id="dashboardPage">
-<div class="grid">
-<div class="stat">إجمالي المنتجات<strong id="statProducts">0</strong></div>
-<div class="stat">عدد الفواتير<strong id="statSales">0</strong></div>
-<div class="stat">مبيعات اليوم<strong id="statRevenue">0 جنيه</strong></div>
-<div class="stat">رصيد الخزينة<strong id="statTreasuryBalance">0 جنيه</strong></div>
-</div>
-<div class="card">
-<h3>اختر القسم للبدء</h3>
-<div class="tiles-grid" id="mainTilesContainer">
-<div class="tile t-blue" onclick="page('sales')"><h3>شاشة المبيعات (POS)</h3><p>إصدار الفواتير</p></div>
-<div class="tile t-green" onclick="page('products')"><h3>المنتجات والمخزون</h3><p>إدارة الأصناف والأسعار</p></div>
-<div class="tile t-orange" onclick="page('treasury')"><h3>الخزينة والحسابات</h3><p>متابعة النقدية</p></div>
-<div class="tile t-purple" onclick="page('history')"><h3>الفواتير السابقة</h3><p>استعراض وطباعة الفواتير</p></div>
-<div class="tile t-dark" onclick="page('expenses')"><h3>المصروفات اليومية</h3><p>تسجيل المصاريف</p></div>
-<div class="tile t-teal" onclick="page('reports')"><h3>التقارير المالية</h3><p>تقارير الأرباح</p></div>
-<div class="tile t-red" onclick="page('settings')"><h3>الإعدادات والباسورد</h3><p>تعديل بيانات الحساب</p></div>
-<div class="tile" style="background:linear-gradient(135deg,#0284c7,#0369a1)" onclick="page('subscription')"><h3>اشتراكي</h3><p>الباقة والأيام المتبقية</p></div>
-</div>
-</div>
-</div>
+  <div id="dashboardPage">
+   <div class="grid">
+    <div class="stat">إجمالي المنتجات<strong id="statProducts">0</strong></div>
+    <div class="stat">عدد الفواتير<strong id="statSales">0</strong></div>
+    <div class="stat">مبيعات اليوم<strong id="statRevenue">0 جنيه</strong></div>
+    <div class="stat">رصيد الخزينة<strong id="statTreasuryBalance">0 جنيه</strong></div>
+   </div>
+   <div class="card">
+    <h3>اختر القسم للبدء</h3>
+    <div class="tiles-grid" id="mainTilesContainer">
+     <div class="tile t-blue" onclick="page('sales')"><h3>شاشة المبيعات (POS)</h3><p>إصدار الفواتير</p></div>
+     <div class="tile t-green" onclick="page('products')"><h3>المنتجات والمخزون</h3><p>إدارة الأصناف والأسعار</p></div>
+     <div class="tile t-orange" onclick="page('treasury')"><h3>الخزينة والحسابات</h3><p>متابعة النقدية</p></div>
+     <div class="tile t-purple" onclick="page('history')"><h3>الفواتير السابقة</h3><p>استعراض وطباعة الفواتير</p></div>
+     <div class="tile t-dark" onclick="page('expenses')"><h3>المصروفات اليومية</h3><p>تسجيل المصاريف</p></div>
+     <div class="tile t-teal" onclick="page('reports')"><h3>التقارير المالية</h3><p>تقارير الأرباح</p></div>
+     <div class="tile t-red" onclick="page('settings')"><h3>الإعدادات والباسورد</h3><p>تعديل بيانات الحساب</p></div>
+     <div class="tile" style="background:linear-gradient(135deg,#0284c7,#0369a1)" onclick="page('subscription')"><h3>اشتراكي</h3><p>الباقة والأيام المتبقية</p></div>
+    </div>
+   </div>
+  </div>
 
-<div id="subscriptionPage" class="hidden">
-<button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
-<h3>تفاصيل اشتراكي</h3>
-<div class="card" style="max-width:600px;margin:auto;text-align:center;padding:25px">
-<h2 style="color:#0284c7">حالة الاشتراك</h2>
-<div id="subPageDetails" style="font-size:16px;line-height:2">جاري التحميل...</div>
-<div id="subPageActionBox"></div>
-</div>
-</div>
+  <div id="subscriptionPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
+   <h3>تفاصيل اشتراكي</h3>
+   <div class="card" style="max-width:600px;margin:auto;text-align:center;padding:25px">
+    <h2 style="color:#0284c7">حالة الاشتراك</h2>
+    <div id="subPageDetails" style="font-size:16px;line-height:2">جاري التحميل...</div>
+    <div id="subPageActionBox"></div>
+   </div>
+  </div>
 
-<div id="salesPage" class="hidden">
-<button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">العودة للرئيسية</button>
-<div class="sahal-header"><b>NexPOS - شاشة المبيعات</b><b id="sahalShopTitle">اسم المتجر</b></div>
-<div class="sahal-shortcuts">
-<button class="sahal-sc-btn" onclick="$('saleQty').focus()">الكمية</button>
-<button class="sahal-sc-btn" onclick="$('salePrice').focus()">السعر</button>
-<button class="sahal-sc-btn" onclick="$('saleDiscount').focus()">خصم</button>
-<button class="sahal-sc-btn" onclick="$('saleAddition').focus()">إضافة</button>
-<button class="sahal-sc-btn" onclick="clearCart()">حذف الكل</button>
-<button class="sahal-sc-btn" onclick="completeSale()" style="background:#dcfce7;color:#166534">حفظ وبيع</button>
-</div>
-<div class="sahal-layout">
-<div class="sahal-main">
-<div class="sahal-search-box">
-<div class="sale-fields">
-<div class="search-container">
-<label>بحث عن صنف أو باركود</label>
-<input id="saleSearch" placeholder="اكتب اسم المنتج..." oninput="searchProducts()" style="margin-bottom:0">
-<div id="searchResults"></div>
-</div>
-<div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1"></div>
-<div><label>سعر البيع</label><input id="salePrice" type="number" min="0"></div>
-<div><label>الخصم (-)</label><input id="saleDiscount" type="number" min="0" value="0"></div>
-<div><label>الإضافة (+)</label><input id="saleAddition" type="number" min="0" value="0"></div>
-</div>
-</div>
-<div class="sahal-table-wrap">
-<table class="sahal-table">
-<thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead>
-<tbody id="cartTable"><tr><td colspan="5" style="text-align:center">الفاتورة فارغة</td></tr></tbody>
-</table>
-</div>
-</div>
-<div class="sahal-sidebar">
-<div class="sahal-total-card"><span>الإجمالي النهائي المستحق</span><h2 id="cartTotalDisplay">0.00</h2><span>جنيه مصري</span></div>
-<div class="sahal-btn-grid">
-<button class="sahal-btn sbtn-green" onclick="completeSale()">بيع وحفظ</button>
-<button class="sahal-btn sbtn-orange" onclick="clearCart()">إلغاء الفاتورة</button>
-<button class="sahal-btn sbtn-blue" onclick="page('products')">المخزن</button>
-<button class="sahal-btn sbtn-dark" onclick="page('treasury')">الخزينة</button>
-</div>
-<div class="card" style="margin:0;padding:12px">
-<label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="autoPrintToggle" checked style="width:18px;margin:0"> طباعة الفاتورة تلقائياً</label>
-</div>
-</div>
-</div>
-</div>
+  <div id="salesPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">العودة للرئيسية</button>
+   <div class="sahal-header"><b>NexPOS - شاشة المبيعات</b><b id="sahalShopTitle">اسم المتجر</b></div>
+   <div class="sahal-shortcuts">
+    <button class="sahal-sc-btn" onclick="$('saleQty').focus()">الكمية</button>
+    <button class="sahal-sc-btn" onclick="$('salePrice').focus()">السعر</button>
+    <button class="sahal-sc-btn" onclick="$('saleDiscount').focus()">خصم</button>
+    <button class="sahal-sc-btn" onclick="$('saleAddition').focus()">إضافة</button>
+    <button class="sahal-sc-btn" onclick="clearCart()">حذف الكل</button>
+    <button class="sahal-sc-btn" onclick="completeSale()" style="background:#dcfce7;color:#166534">حفظ وبيع</button>
+   </div>
+   <div class="sahal-layout">
+    <div class="sahal-main">
+     <div class="sahal-search-box">
+      <div class="sale-fields">
+       <div class="search-container">
+        <label>بحث عن صنف أو باركود</label>
+        <input id="saleSearch" placeholder="اكتب اسم المنتج..." oninput="searchProducts()" style="margin-bottom:0">
+        <div id="searchResults"></div>
+       </div>
+       <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1"></div>
+       <div><label>سعر البيع</label><input id="salePrice" type="number" min="0"></div>
+       <div><label>الخصم (-)</label><input id="saleDiscount" type="number" min="0" value="0"></div>
+       <div><label>الإضافة (+)</label><input id="saleAddition" type="number" min="0" value="0"></div>
+      </div>
+     </div>
+     <div class="sahal-table-wrap">
+      <table class="sahal-table">
+       <thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead>
+       <tbody id="cartTable"><tr><td colspan="5" style="text-align:center">الفاتورة فارغة</td></tr></tbody>
+      </table>
+     </div>
+    </div>
+    <div class="sahal-sidebar">
+     <div class="sahal-total-card"><span>الإجمالي النهائي المستحق</span><h2 id="cartTotalDisplay">0.00</h2><span>جنيه مصري</span></div>
+     <div class="sahal-btn-grid">
+      <button class="sahal-btn sbtn-green" onclick="completeSale()">بيع وحفظ</button>
+      <button class="sahal-btn sbtn-orange" onclick="clearCart()">إلغاء الفاتورة</button>
+      <button class="sahal-btn sbtn-blue" onclick="page('products')">المخزن</button>
+      <button class="sahal-btn sbtn-dark" onclick="page('treasury')">الخزينة</button>
+     </div>
+     <div class="card" style="margin:0;padding:12px">
+      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="autoPrintToggle" checked style="width:18px;margin:0"> طباعة الفاتورة تلقائياً</label>
+     </div>
+    </div>
+   </div>
+  </div>
 
-<div id="productsPage" class="hidden">
-<button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
-<h3>إدارة المنتجات والمخزون</h3>
-<div class="card">
-<input id="pName" placeholder="اسم المنتج">
-<div class="grid">
-<div><label>سعر الشراء</label><input id="pCost" type="number" min="0" value="0"></div>
-<div><label>سعر البيع</label><input id="pPrice" type="number" min="0" value="0"></div>
-<div><label>الكمية الحالية</label><input id="pQty" type="number" min="0" value="10"></div>
-</div>
-<button onclick="saveProduct()">حفظ المنتج</button>
-</div>
-<div class="tablewrap"><table>
-<thead><tr><th>المنتج</th><th>شراء</th><th>بيع</th><th>المخزون</th><th>إجراء</th></tr></thead>
-<tbody id="productsTable"></tbody>
-</table></div>
-</div>
+  <div id="productsPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
+   <h3>إدارة المنتجات والمخزون</h3>
+   <div class="card">
+    <input id="pName" placeholder="اسم المنتج">
+    <div class="grid">
+     <div><label>سعر الشراء</label><input id="pCost" type="number" min="0" value="0"></div>
+     <div><label>سعر البيع</label><input id="pPrice" type="number" min="0" value="0"></div>
+     <div><label>الكمية الحالية</label><input id="pQty" type="number" min="0" value="10"></div>
+    </div>
+    <button onclick="saveProduct()">حفظ المنتج</button>
+   </div>
+   <div class="tablewrap"><table>
+    <thead><tr><th>المنتج</th><th>شراء</th><th>بيع</th><th>المخزون</th><th>إجراء</th></tr></thead>
+    <tbody id="productsTable"></tbody>
+   </table></div>
+  </div>
 
-<div id="treasuryPage" class="hidden">
-<button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
-<h3>الخزينة والحسابات</h3>
-<div class="grid"><div class="stat">رصيد الخزينة<strong id="treasuryBalanceDisplay">0 جنيه</strong></div></div>
-<div class="card">
-<h3>سند قبض أو صرف</h3>
-<label>نوع الحركة</label>
-<select id="tType"><option value="in">وارد (إيداع)</option><option value="out">صادر (صرف)</option></select>
-<label>المبلغ</label><input id="tAmount" type="number" min="0">
-<label>البيان</label><input id="tNote" placeholder="التفاصيل">
-<button class="big green" onclick="addTreasuryTransaction()">تسجيل الحركة</button>
-</div>
-<button class="red" onclick="clearTreasuryData()">مسح حركات الخزينة</button>
-<div class="tablewrap"><table>
-<thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead>
-<tbody id="treasuryTable"></tbody>
-</table></div>
-</div>
+  <div id="treasuryPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
+   <h3>الخزينة والحسابات</h3>
+   <div class="grid"><div class="stat">رصيد الخزينة<strong id="treasuryBalanceDisplay">0 جنيه</strong></div></div>
+   <div class="card">
+    <h3>سند قبض أو صرف</h3>
+    <label>نوع الحركة</label>
+    <select id="tType"><option value="in">وارد (إيداع)</option><option value="out">صادر (صرف)</option></select>
+    <label>المبلغ</label><input id="tAmount" type="number" min="0">
+    <label>البيان</label><input id="tNote" placeholder="التفاصيل">
+    <button class="big green" onclick="addTreasuryTransaction()">تسجيل الحركة</button>
+   </div>
+   <button class="red" onclick="clearTreasuryData()">مسح حركات الخزينة</button>
+   <div class="tablewrap"><table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table></div>
+  </div>
 
-<div id="historyPage" class="hidden">
-<button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
-<h3>سجل الفواتير</h3>
-<div class="tablewrap"><table>
-<thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>الإجمالي</th><th>إجراء</th></tr></thead>
-<tbody id="salesTable"></tbody>
-</table></div>
-</div>
+  <div id="historyPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
+   <h3>سجل الفواتير</h3>
+   <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>التاريخ</th><th>الإجمالي</th><th>إجراء</th></tr></thead><tbody id="salesTable"></tbody></table></div>
+  </div>
 
-<div id="expensesPage" class="hidden">
-<button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
-<h3>المصروفات اليومية</h3>
-<div class="card">
-<label>بيان المصروف</label><input id="expenseName">
-<label>المبلغ</label><input id="expenseAmount" type="number" min="0">
-<button onclick="addExpense()">حفظ المصروف</button>
-</div>
-<div class="tablewrap"><table>
-<thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead>
-<tbody id="expensesTable"></tbody>
-</table></div>
-</div>
+  <div id="expensesPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
+   <h3>المصروفات اليومية</h3>
+   <div class="card">
+    <label>بيان المصروف</label><input id="expenseName">
+    <label>المبلغ</label><input id="expenseAmount" type="number" min="0">
+    <button onclick="addExpense()">حفظ المصروف</button>
+   </div>
+   <div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div>
+  </div>
 
-<div id="reportsPage" class="hidden">
-<button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
-<h3>التقارير المالية</h3>
-<div class="grid">
-<div class="stat">إجمالي المبيعات<strong id="reportRevenue">0 جنيه</strong></div>
-<div class="stat">إجمالي المصروفات<strong id="reportExpenses">0 جنيه</strong></div>
-<div class="stat">صافي الربح<strong id="reportNet">0 جنيه</strong></div>
-</div>
-</div>
+  <div id="reportsPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
+   <h3>التقارير المالية</h3>
+   <div class="grid">
+    <div class="stat">إجمالي المبيعات<strong id="reportRevenue">0 جنيه</strong></div>
+    <div class="stat">إجمالي المصروفات<strong id="reportExpenses">0 جنيه</strong></div>
+    <div class="stat">صافي الربح<strong id="reportNet">0 جنيه</strong></div>
+   </div>
+  </div>
 
-<div id="settingsPage" class="hidden">
-<button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
-<h3>إعدادات الحساب والمحل</h3>
-<div class="card" style="max-width:600px">
-<h3>تعديل اسم المحل</h3>
-<input id="settingsShopName" placeholder="اسم المحل الجديد">
-<button class="big" onclick="updateShopNameSetting()">حفظ اسم المحل</button>
-</div>
-<div class="card" style="max-width:600px">
-<h3>تعديل البريد الإلكتروني</h3>
-<input id="settingsEmail" type="email" placeholder="البريد الجديد">
-<button class="big purple" onclick="updateCustomerEmailSetting()">تغيير البريد</button>
-</div>
-<div class="card" style="max-width:600px">
-<h3>تغيير كلمة المرور</h3>
-<input id="newCustomerPassword" type="password" placeholder="كلمة المرور الجديدة">
-<button class="big dark" onclick="updateCustomerPassword()">تغيير كلمة المرور</button>
-</div>
-</div>
-</div>
+  <div id="settingsPage" class="hidden">
+   <button class="secondary" onclick="page('dashboard')">العودة للرئيسية</button>
+   <h3>إعدادات الحساب والمحل</h3>
+   <div class="card" style="max-width:600px">
+    <h3>تعديل اسم المحل</h3><input id="settingsShopName" placeholder="اسم المحل الجديد">
+    <button class="big" onclick="updateShopNameSetting()">حفظ اسم المحل</button>
+   </div>
+   <div class="card" style="max-width:600px">
+    <h3>تعديل البريد الإلكتروني</h3><input id="settingsEmail" type="email" placeholder="البريد الجديد">
+    <button class="big purple" onclick="updateCustomerEmailSetting()">تغيير البريد</button>
+   </div>
+   <div class="card" style="max-width:600px">
+    <h3>تغيير كلمة المرور</h3><input id="newCustomerPassword" type="password" placeholder="كلمة المرور الجديدة">
+    <button class="big dark" onclick="updateCustomerPassword()">تغيير كلمة المرور</button>
+   </div>
+  </div>
+ </div>
 </section>
 
 <div id="printArea" class="hidden"></div>
@@ -420,22 +407,24 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import {
-getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,
-updatePassword,updateEmail,onAuthStateChanged,signOut
+ getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,
+ updatePassword,updateEmail,onAuthStateChanged,signOut
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {
-getFirestore,doc,setDoc,getDoc,updateDoc,collection,
-addDoc,getDocs,deleteDoc,serverTimestamp
+ getFirestore,doc,setDoc,getDoc,updateDoc,collection,
+ addDoc,getDocs,deleteDoc,serverTimestamp
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
+/* إعدادات Firebase الصحيحة */
 const firebaseConfig={
-apiKey:"AIzaSyABpb7h1WXzodOKoxoRvvkXZSrPQ6UgZi",
-authDomain:"nexpos-14155.firebaseapp.com",
-databaseURL:"https://nexpos-14155-default-rtdb.europe-west1.firebasedatabase.app",
-projectId:"nexpos-14155",
-storageBucket:"nexpos-14155.firebasestorage.app",
-messagingSenderId:"932284131293",
-appId:"1:932284131293:web:00d6237b1f155ae5daf834"
+ apiKey:"AIzaSyABpb7h1WXzodOKoxoRvvkXZSrPQ6UgZiA",
+ authDomain:"nexpos-14155.firebaseapp.com",
+ databaseURL:"https://nexpos-14155-default-rtdb.europe-west1.firebasedatabase.app",
+ projectId:"nexpos-14155",
+ storageBucket:"nexpos-14155.firebasestorage.app",
+ messagingSenderId:"932284131293",
+ appId:"1:932284131293:web:00d6237b1f155ae5daf834",
+ measurementId:"G-ND249T5PTN"
 };
 
 const OWNER_EMAIL="melsalahy689@gmail.com";
@@ -446,10 +435,8 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 
-let currentUser=null;
-let profile=null;
-let selectedSystem="sales";
-let activeSystem="sales";
+let currentUser=null,profile=null;
+let selectedSystem="sales",activeSystem="sales";
 let registeringNow=false;
 let products=[],sales=[],expenses=[],treasury=[],cart=[];
 let selectedProduct=null,lastRegisteredUser=null;
@@ -461,760 +448,530 @@ const col=name=>collection(db,shopRef(),name);
 const docRef=(name,id)=>doc(db,shopRef(),name,id);
 
 const PLANS={
-30:{name:"شهري",price:100},
-90:{name:"3 شهور",price:250},
-365:{name:"سنوي",price:900},
-36500:{name:"دائم",price:3000}
+ 30:{name:"شهري",price:100},
+ 90:{name:"3 شهور",price:250},
+ 365:{name:"سنوي",price:900},
+ 36500:{name:"دائم",price:3000}
 };
 
 function message(t){
-$("authMsg").textContent=t;
-$("authMsg").classList.remove("hidden");
+ $("authMsg").textContent=t;
+ $("authMsg").classList.remove("hidden");
 }
 
 window.openAuth=(system,mode)=>{
-selectedSystem=system;
-$("authForm").classList.remove("hidden");
-$("customerLoginBox").classList.toggle("hidden",mode!=="login"||system==="owner");
-$("registerBox").classList.toggle("hidden",mode!=="register");
-$("ownerBox").classList.toggle("hidden",system!=="owner");
-$("authFormTitle").textContent=system==="owner"?"دخول لوحة التحكم":(system==="sales"?"سيستم المبيعات":"سيستم البلايستيشن")+" - "+(mode==="login"?"تسجيل الدخول":"إنشاء حساب");
-$("authMsg").classList.add("hidden");
+ selectedSystem=system;
+ $("authForm").classList.remove("hidden");
+ $("customerLoginBox").classList.toggle("hidden",mode!=="login"||system==="owner");
+ $("registerBox").classList.toggle("hidden",mode!=="register");
+ $("ownerBox").classList.toggle("hidden",system!=="owner");
+ $("authFormTitle").textContent=system==="owner"?"دخول لوحة التحكم":
+ (system==="sales"?"سيستم المبيعات":"سيستم البلايستيشن")+" - "+(mode==="login"?"تسجيل الدخول":"إنشاء حساب");
+ $("authMsg").classList.add("hidden");
 };
 
 window.backToGate=()=>{
-$("authForm").classList.add("hidden");
-$("authMsg").classList.add("hidden");
+ $("authForm").classList.add("hidden");
+ $("authMsg").classList.add("hidden");
 };
 
 function systemInfo(p,system){
-const s=p.systems?.[system];
-if(s)return s;
-if(system==="sales"&&(p.status||p.expiryDate||p.plan)){
-return {status:p.status||"pending",plan:p.plan||"غير محدد",expiryDate:p.expiryDate||null};
-}
-return {status:"not_registered",plan:"غير محدد",expiryDate:null};
+ const s=p.systems?.[system];
+ if(s)return s;
+ if(system==="sales"&&(p.status||p.expiryDate||p.plan)){
+  return {status:p.status||"pending",plan:p.plan||"غير محدد",expiryDate:p.expiryDate||null};
+ }
+ return {status:"not_registered",plan:"غير محدد",expiryDate:null};
 }
 
 function subscriptionActive(data){
-if(!data||data.status!=="active"||!data.expiryDate)return false;
-const exp=data.expiryDate.toDate?data.expiryDate.toDate():new Date(data.expiryDate);
-return exp>new Date();
+ if(!data||data.status!=="active"||!data.expiryDate)return false;
+ const exp=data.expiryDate.toDate?data.expiryDate.toDate():new Date(data.expiryDate);
+ return exp>new Date();
 }
 
-/* تسجيل دخول العميل */
 window.login=async()=>{
-try{
-const email=$("loginEmail").value.trim();
-const password=$("loginPassword").value;
-if(!email||!password)return message("أدخل البريد وكلمة المرور.");
-const cred=await signInWithEmailAndPassword(auth,email,password);
-if(cred.user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase())return;
-const snap=await getDoc(doc(db,"users",cred.user.uid));
-if(!snap.exists()){
-await signOut(auth);
-return message("لا توجد بيانات حساب لهذا المستخدم.");
-}
-const p=snap.data();
-const si=systemInfo(p,selectedSystem);
-if(si.status==="not_registered"){
-await signOut(auth);
-return message("هذا الحساب غير مسجل في النظام الذي اخترته.");
-}
-if(!subscriptionActive(si)){
-await signOut(auth);
-return message(si.status==="pending"?"حسابك قيد المراجعة ولم يتم تفعيل الاشتراك.":"اشتراك هذا النظام غير نشط أو انتهت صلاحيته.");
-}
-}catch(e){
-console.error("CUSTOMER LOGIN ERROR:",e);
-message("تعذر الدخول: "+(e.code||"خطأ غير معروف")+"\n"+(e.message||""));
-}
+ try{
+  const email=$("loginEmail").value.trim();
+  const password=$("loginPassword").value;
+  if(!email||!password)return message("أدخل البريد وكلمة المرور.");
+  const cred=await signInWithEmailAndPassword(auth,email,password);
+  if(cred.user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase())return;
+  const snap=await getDoc(doc(db,"users",cred.user.uid));
+  if(!snap.exists()){
+   await signOut(auth);
+   return message("لا توجد بيانات حساب لهذا المستخدم.");
+  }
+  const p=snap.data(),si=systemInfo(p,selectedSystem);
+  if(si.status==="not_registered"){
+   await signOut(auth);
+   return message("هذا الحساب غير مسجل في النظام الذي اخترته.");
+  }
+  if(!subscriptionActive(si)){
+   await signOut(auth);
+   return message(si.status==="pending"?"حسابك قيد المراجعة ولم يتم تفعيل الاشتراك.":"اشتراك هذا النظام غير نشط أو انتهت صلاحيته.");
+  }
+ }catch(e){
+  console.error(e);
+  message("تعذر الدخول: "+(e.code||e.message||"تحقق من البريد وكلمة المرور."));
+ }
 };
 
-/* دخول المالك - تم تحسين عرض أخطاء Firebase */
+/* دخول المالك مع إظهار كود الخطأ الحقيقي */
 window.ownerLogin=async()=>{
-try{
-const username=$("ownerUsername").value.trim().toLowerCase();
-const password=$("ownerPassword").value;
-
-if(username!==OWNER_USERNAME)
-return message("اسم المستخدم الإداري غير صحيح.");
-
-if(!password)
-return message("أدخل كلمة المرور.");
-
-message("جاري التحقق من بيانات المالك...");
-
-const credential=await signInWithEmailAndPassword(auth,OWNER_EMAIL,password);
-
-if(credential.user.email?.toLowerCase()!==OWNER_EMAIL.toLowerCase()){
-await signOut(auth);
-return message("هذا الحساب ليس حساب المالك المعتمد.");
-}
-
-$("authMsg").classList.add("hidden");
-
-}catch(e){
-console.error("OWNER LOGIN ERROR:",e);
-
-const errors={
-"auth/invalid-credential":"البريد الإلكتروني أو كلمة المرور غير صحيحة.",
-"auth/user-not-found":"حساب المالك غير موجود في Firebase Authentication.",
-"auth/wrong-password":"كلمة مرور المالك غير صحيحة.",
-"auth/too-many-requests":"محاولات كثيرة. انتظر قليلًا ثم حاول مرة أخرى.",
-"auth/network-request-failed":"تعذر الاتصال. تحقق من الإنترنت.",
-"auth/operation-not-allowed":"تسجيل الدخول بالبريد وكلمة المرور غير مفعل في Firebase.",
-"auth/invalid-email":"البريد الإلكتروني المسجل للمالك غير صحيح.",
-"auth/user-disabled":"حساب المالك معطل في Firebase."
+ try{
+  if($("ownerUsername").value.trim().toLowerCase()!==OWNER_USERNAME)
+   return message("اسم المستخدم الإداري غير صحيح. اكتب elsalahy.");
+  const p=$("ownerPassword").value;
+  if(!p)return message("أدخل كلمة المرور.");
+  await signInWithEmailAndPassword(auth,OWNER_EMAIL,p);
+ }catch(e){
+  console.error(e);
+  let msg="تعذر الدخول إلى لوحة المالك.";
+  if(e.code==="auth/invalid-credential"||e.code==="auth/wrong-password")
+   msg="بيانات الدخول غير صحيحة. تأكد من كلمة مرور Firebase Authentication للمالك.";
+  else if(e.code==="auth/user-not-found")
+   msg="حساب المالك غير موجود في Firebase Authentication. أنشئ الحساب بالبريد "+OWNER_EMAIL;
+  else if(e.code==="auth/too-many-requests")
+   msg="تم إيقاف المحاولات مؤقتًا. حاول لاحقًا أو أعد تعيين كلمة المرور.";
+  else msg+=" رمز الخطأ: "+(e.code||e.message);
+  message(msg);
+ }
 };
 
-message(
-(errors[e.code]||"حدث خطأ أثناء تسجيل الدخول.")+
-"\nرمز الخطأ: "+(e.code||"غير معروف")+
-"\nالتفاصيل: "+(e.message||"لا توجد تفاصيل")
-);
-}
-};
-
-/* إنشاء حساب */
 window.register=async()=>{
-const shop=$("regShop").value.trim();
-const name=$("regName").value.trim();
-const phone=$("regPhone").value.trim();
-const email=$("regEmail").value.trim();
-const password=$("regPassword").value;
-const days=Number($("regPlan").value);
-
-if(!shop||!name||!phone||!email||!password)return message("أكمل جميع البيانات.");
-if(password.length<6)return message("كلمة المرور يجب ألا تقل عن 6 أحرف.");
-
-const selectedPlan=PLANS[days];
-if(!selectedPlan)return message("اختر باقة صحيحة.");
-
-try{
-registeringNow=true;
-const cred=await createUserWithEmailAndPassword(auth,email,password);
-
-const systemData={
-status:"pending",
-plan:"غير مفعل",
-requestedPlan:selectedPlan.name,
-requestedPrice:selectedPlan.price,
-requestedDays:days,
-expiryDate:null,
-requestedAt:serverTimestamp()
-};
-
-const systems={};
-systems[selectedSystem]=systemData;
-
-await setDoc(doc(db,"users",cred.user.uid),{
-shopName:shop,
-customerName:name,
-phone,
-email,
-role:"customer",
-systems,
-createdAt:serverTimestamp()
-});
-
-lastRegisteredUser={name,shop,email,phone,system:selectedSystem,plan:selectedPlan.name,price:selectedPlan.price};
-
-$("pendingDetails").innerHTML=`
-<b>النشاط:</b> ${escapeHTML(shop)}<br>
-<b>النظام:</b> ${selectedSystem==="sales"?"المبيعات":"البلايستيشن"}<br>
-<b>الباقة المطلوبة:</b> ${selectedPlan.name}<br>
-<b>السعر:</b> ${selectedPlan.price} جنيه<br>
-<span class="tag">في انتظار التفعيل</span>`;
-
-await signOut(auth);
-registeringNow=false;
-$("auth").classList.add("hidden");
-$("pendingScreen").classList.remove("hidden");
-
-}catch(e){
-registeringNow=false;
-console.error(e);
-if(e.code==="auth/email-already-in-use")message("البريد مسجل بالفعل. سجل الدخول بالحساب الحالي.");
-else message("تعذر التسجيل: "+(e.code||"")+" "+e.message);
-}
+ const shop=$("regShop").value.trim(),name=$("regName").value.trim();
+ const phone=$("regPhone").value.trim(),email=$("regEmail").value.trim();
+ const password=$("regPassword").value,days=Number($("regPlan").value);
+ if(!shop||!name||!phone||!email||!password)return message("أكمل جميع البيانات.");
+ if(password.length<6)return message("كلمة المرور يجب ألا تقل عن 6 أحرف.");
+ const selectedPlan=PLANS[days];
+ if(!selectedPlan)return message("اختر باقة صحيحة.");
+ try{
+  registeringNow=true;
+  const cred=await createUserWithEmailAndPassword(auth,email,password);
+  const systemData={status:"pending",plan:"غير مفعل",requestedPlan:selectedPlan.name,requestedPrice:selectedPlan.price,requestedDays:days,expiryDate:null,requestedAt:serverTimestamp()};
+  const systems={};systems[selectedSystem]=systemData;
+  await setDoc(doc(db,"users",cred.user.uid),{
+   shopName:shop,customerName:name,phone,email,role:"customer",systems,createdAt:serverTimestamp()
+  });
+  lastRegisteredUser={name,shop,email,phone,system:selectedSystem,plan:selectedPlan.name,price:selectedPlan.price};
+  $("pendingDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(shop)}<br><b>النظام:</b> ${selectedSystem==="sales"?"المبيعات":"البلايستيشن"}<br><b>الباقة المطلوبة:</b> ${selectedPlan.name}<br><b>السعر:</b> ${selectedPlan.price} جنيه<br><span class="tag">في انتظار التفعيل</span>`;
+  await signOut(auth);
+  registeringNow=false;
+  $("auth").classList.add("hidden");
+  $("pendingScreen").classList.remove("hidden");
+ }catch(e){
+  registeringNow=false;console.error(e);
+  if(e.code==="auth/email-already-in-use")message("البريد مسجل بالفعل. سجل الدخول بالحساب الحالي.");
+  else message("تعذر التسجيل: "+(e.code||e.message));
+ }
 };
 
 window.sendWhatsAppActivation=()=>{
-const d=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:"",system:selectedSystem,plan:"غير محددة",price:""};
-const systemName=d.system==="playstation"?"البلايستيشن":"المبيعات";
-const msg=encodeURIComponent(`طلب تفعيل جديد في NexPOS PRO
-اسم العميل: ${d.name}
-اسم النشاط: ${d.shop}
-رقم الهاتف: ${d.phone||""}
-البريد: ${d.email}
-النظام: ${systemName}
-الباقة المطلوبة: ${d.plan}
-السعر: ${d.price} جنيه`);
-window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
+ const d=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:"",phone:"",system:selectedSystem,plan:"غير محددة",price:""};
+ const systemName=d.system==="playstation"?"البلايستيشن":"المبيعات";
+ const msg=encodeURIComponent(`طلب تفعيل جديد في NexPOS PRO\nاسم العميل: ${d.name}\nاسم النشاط: ${d.shop}\nرقم الهاتف: ${d.phone||""}\nالبريد: ${d.email}\nالنظام: ${systemName}\nالباقة المطلوبة: ${d.plan}\nالسعر: ${d.price} جنيه`);
+ window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
 };
 
-window.logout=async()=>{
-await signOut(auth);
-location.reload();
-};
-
+window.logout=async()=>{await signOut(auth);location.reload();};
 window.support=()=>window.open(`https://wa.me/${SUPPORT_PHONE}`,"_blank");
 
-/* مراقبة تسجيل الدخول */
 onAuthStateChanged(auth,async user=>{
-currentUser=user;
-if(registeringNow)return;
-
-if(!user){
-["customerPanel","ownerPanel","playstationPanel","pendingScreen"].forEach(x=>$(x).classList.add("hidden"));
-$("auth").classList.remove("hidden");
-return;
-}
-
-try{
-if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){
-$("auth").classList.add("hidden");
-$("pendingScreen").classList.add("hidden");
-$("customerPanel").classList.add("hidden");
-$("playstationPanel").classList.add("hidden");
-$("ownerPanel").classList.remove("hidden");
-await loadUsers();
-return;
-}
-
-const snap=await getDoc(doc(db,"users",user.uid));
-if(!snap.exists()){
-await signOut(auth);
-return;
-}
-
-profile=snap.data();
-const system=selectedSystem;
-const info=systemInfo(profile,system);
-
-if(info.status==="not_registered"||!subscriptionActive(info)){
-await signOut(auth);
-$("auth").classList.remove("hidden");
-message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");
-return;
-}
-
-activeSystem=system;
-$("auth").classList.add("hidden");
-$("pendingScreen").classList.add("hidden");
-
-if(system==="playstation"){
-$("playstationPanel").classList.remove("hidden");
-$("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";
-renderPsSubscription(info);
-}else{
-$("customerPanel").classList.remove("hidden");
-$("shopTitle").textContent=profile.shopName||"نظام المبيعات";
-$("sahalShopTitle").textContent=profile.shopName||"متجري";
-$("settingsShopName").value=profile.shopName||"";
-$("settingsEmail").value=profile.email||user.email||"";
-checkCustomerSubscription(info);
-await loadBusiness();
-await checkAndSettleDailySales();
-}
-}catch(e){
-console.error(e);
-alert("حدث خطأ أثناء تحميل الحساب: "+e.message);
-}
+ currentUser=user;
+ if(registeringNow)return;
+ if(!user){
+  ["customerPanel","ownerPanel","playstationPanel","pendingScreen"].forEach(x=>$(x).classList.add("hidden"));
+  $("auth").classList.remove("hidden");
+  return;
+ }
+ try{
+  if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){
+   $("auth").classList.add("hidden");
+   $("ownerPanel").classList.remove("hidden");
+   await loadUsers();
+   return;
+  }
+  const snap=await getDoc(doc(db,"users",user.uid));
+  if(!snap.exists()){await signOut(auth);return;}
+  profile=snap.data();
+  const system=selectedSystem,info=systemInfo(profile,system);
+  if(info.status==="not_registered"||!subscriptionActive(info)){
+   await signOut(auth);$("auth").classList.remove("hidden");
+   message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");
+   return;
+  }
+  activeSystem=system;
+  $("auth").classList.add("hidden");
+  $("pendingScreen").classList.add("hidden");
+  if(system==="playstation"){
+   $("playstationPanel").classList.remove("hidden");
+   $("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";
+   renderPsSubscription(info);
+  }else{
+   $("customerPanel").classList.remove("hidden");
+   $("shopTitle").textContent=profile.shopName||"نظام المبيعات";
+   $("sahalShopTitle").textContent=profile.shopName||"متجري";
+   $("settingsShopName").value=profile.shopName||"";
+   $("settingsEmail").value=profile.email||user.email||"";
+   checkCustomerSubscription(info);
+   await loadBusiness();
+   await checkAndSettleDailySales();
+  }
+ }catch(e){console.error(e);alert("حدث خطأ أثناء تحميل الحساب: "+e.message);}
 });
 
 function renderPsSubscription(info){
-const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():new Date(info.expiryDate);
-const days=Math.ceil((expiry-new Date())/86400000);
-$("psSubDetails").innerHTML=`
-<b>النشاط:</b> ${escapeHTML(profile.shopName||"—")}<br>
-<b>الباقة:</b> ${escapeHTML(info.plan||"—")}<br>
-<b>المتبقي:</b> ${Math.max(0,days)} يوم<br>
-<span class="tag good">الاشتراك نشط</span>`;
+ const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():new Date(info.expiryDate);
+ const days=Math.ceil((expiry-new Date())/86400000);
+ $("psSubDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(profile.shopName||"—")}<br><b>الباقة:</b> ${escapeHTML(info.plan||"—")}<br><b>المتبقي:</b> ${Math.max(0,days)} يوم<br><span class="tag good">الاشتراك نشط</span>`;
 }
 
 function checkCustomerSubscription(info){
-const details=$("subPageDetails");
-const action=$("subPageActionBox");
-const tiles=$("mainTilesContainer");
-
-if(!subscriptionActive(info)){
-details.innerHTML="الباقة غير مفعلة أو انتهت صلاحيتها.";
-action.innerHTML='<button class="green big" onclick="requestRenewal()">طلب تفعيل الاشتراك</button>';
-lockSystem(tiles);
-return;
+ const details=$("subPageDetails"),action=$("subPageActionBox"),tiles=$("mainTilesContainer");
+ if(!subscriptionActive(info)){
+  details.innerHTML="الباقة غير مفعلة أو انتهت صلاحيتها.";
+  action.innerHTML='<button class="green big" onclick="requestRenewal()">طلب تفعيل الاشتراك</button>';
+  lockSystem(tiles);return;
+ }
+ const expiry=info.expiryDate.toDate?info.expiryDate.toDate():new Date(info.expiryDate);
+ const diff=Math.ceil((expiry-new Date())/86400000);
+ details.innerHTML=`<b>الباقة:</b> ${escapeHTML(info.plan||"نشطة")}<br><b>المتبقي:</b> <span style="color:#0284c7">${diff} يوم</span><br><b>الحالة:</b> ساري`;
+ action.innerHTML='<span class="tag good">الباقة نشطة</span>';
+ unlockSystem(tiles);
 }
-
-const expiry=info.expiryDate.toDate?info.expiryDate.toDate():new Date(info.expiryDate);
-const diff=Math.ceil((expiry-new Date())/86400000);
-
-details.innerHTML=`<b>الباقة:</b> ${escapeHTML(info.plan||"نشطة")}<br><b>المتبقي:</b> <span style="color:#0284c7">${diff} يوم</span><br><b>الحالة:</b> ساري`;
-action.innerHTML='<span class="tag good">الباقة نشطة</span>';
-unlockSystem(tiles);
-}
-
-function lockSystem(c){c.style.pointerEvents="none";c.style.opacity=".4"}
-function unlockSystem(c){c.style.pointerEvents="auto";c.style.opacity="1"}
+function lockSystem(c){c.style.pointerEvents="none";c.style.opacity=".4";}
+function unlockSystem(c){c.style.pointerEvents="auto";c.style.opacity="1";}
 
 window.requestRenewal=()=>{
-const sys=activeSystem==="playstation"?"البلايستيشن":"المبيعات";
-const msg=encodeURIComponent(`مرحبًا، أرغب في تجديد اشتراك سيستم ${sys} لنشاط ${profile?.shopName||"متجري"}.`);
-window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
+ const sys=activeSystem==="playstation"?"البلايستيشن":"المبيعات";
+ const msg=encodeURIComponent(`مرحبًا، أرغب في تجديد اشتراك سيستم ${sys} لنشاط ${profile?.shopName||"متجري"}.`);
+ window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
 };
 
-/* أقسام المالك */
 window.ownerSection=which=>{
-$("ownerSalesSection").classList.toggle("hidden",which!=="sales");
-$("ownerPsSection").classList.toggle("hidden",which!=="playstation");
-$("ownerSalesTab").classList.toggle("active",which==="sales");
-$("ownerPsTab").classList.toggle("active",which==="playstation");
+ $("ownerSalesSection").classList.toggle("hidden",which!=="sales");
+ $("ownerPsSection").classList.toggle("hidden",which!=="playstation");
+ $("ownerSalesTab").classList.toggle("active",which==="sales");
+ $("ownerPsTab").classList.toggle("active",which==="playstation");
 };
 
 function planControls(u,system){
-const info=systemInfo(u,system);
-if(info.status==="not_registered")return `<span class="muted">غير مسجل</span>`;
-const requestedDays=Number(info.requestedDays)||30;
-return `
-<select id="plan_${system}_${u.id}" style="width:140px;padding:6px">
-<option value="30" ${requestedDays===30?"selected":""}>شهري (100ج)</option>
-<option value="90" ${requestedDays===90?"selected":""}>3 شهور (250ج)</option>
-<option value="365" ${requestedDays===365?"selected":""}>سنوي (900ج)</option>
-<option value="36500" ${requestedDays===36500?"selected":""}>دائم (3000ج)</option>
-</select>
-<button class="rowbtn green" onclick="activateUserWithPlan('${u.id}','${system}')">تفعيل</button>
-<button class="rowbtn red" onclick="deactivateSystem('${u.id}','${system}')">إيقاف</button>
-<button class="rowbtn dark" onclick="deleteUser('${u.id}')">حذف</button>`;
+ const info=systemInfo(u,system);
+ if(info.status==="not_registered")return `<span class="muted">غير مسجل</span>`;
+ const requestedDays=Number(info.requestedDays)||30;
+ return `<select id="plan_${system}_${u.id}" style="width:140px;padding:6px">
+ <option value="30" ${requestedDays===30?"selected":""}>شهري (100ج)</option>
+ <option value="90" ${requestedDays===90?"selected":""}>3 شهور (250ج)</option>
+ <option value="365" ${requestedDays===365?"selected":""}>سنوي (900ج)</option>
+ <option value="36500" ${requestedDays===36500?"selected":""}>دائم (3000ج)</option>
+ </select>
+ <button class="rowbtn green" onclick="activateUserWithPlan('${u.id}','${system}')">تفعيل</button>
+ <button class="rowbtn red" onclick="deactivateSystem('${u.id}','${system}')">إيقاف</button>
+ <button class="rowbtn dark" onclick="deleteUser('${u.id}')">حذف</button>`;
 }
 
 window.loadUsers=async()=>{
-try{
-const snap=await getDocs(collection(db,"users"));
-const list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
-$("totalUsers").textContent=list.length;
-
-const salesList=list.filter(u=>systemInfo(u,"sales").status!=="not_registered");
-const psList=list.filter(u=>systemInfo(u,"playstation").status!=="not_registered");
-
-const pendingCount=list.reduce((count,u)=>{
-let n=0;
-if(systemInfo(u,"sales").status==="pending")n++;
-if(systemInfo(u,"playstation").status==="pending")n++;
-return count+n;
-},0);
-
-$("salesUsersCount").textContent=salesList.length;
-$("psUsersCount").textContent=psList.length;
-$("pendingUsersCount").textContent=pendingCount;
-
-const render=(arr,system)=>arr.map(u=>{
-const info=systemInfo(u,system);
-const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():info.expiryDate;
-const expired=expiry&&new Date(expiry)<new Date();
-let statusText="قيد المراجعة",good=false;
-
-if(info.status==="active"&&!expired){statusText="نشط";good=true}
-else if(info.status==="active"&&expired)statusText="منتهي";
-else if(info.status==="pending")statusText="طلب جديد";
-
-const requestedPlan=info.requestedPlan||"لم يختر باقة";
-const requestedPrice=Number(info.requestedPrice||0);
-
-return `<tr>
-<td>${escapeHTML(u.shopName||"")}</td>
-<td>${escapeHTML(u.customerName||"")}</td>
-<td>${escapeHTML(u.email||"")}</td>
-<td>${escapeHTML(u.phone||"")}</td>
-<td><span class="tag ${good?"good":""}">${statusText}</span></td>
-<td>${info.status==="pending"?`<span class="tag">${escapeHTML(requestedPlan)}</span><br><small>${requestedPrice} جنيه</small>`:escapeHTML(info.plan||"غير محدد")}</td>
-<td>${planControls(u,system)}</td>
-</tr>`;
-}).join("")||'<tr><td colspan="7">لا يوجد عملاء مسجلون في هذا النظام</td></tr>';
-
-$("salesUsersTable").innerHTML=render(salesList,"sales");
-$("psUsersTable").innerHTML=render(psList,"playstation");
-}catch(e){
-console.error(e);
-alert("تعذر تحميل العملاء: "+e.message);
-}
+ try{
+  const snap=await getDocs(collection(db,"users"));
+  const list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
+  $("totalUsers").textContent=list.length;
+  const salesList=list.filter(u=>systemInfo(u,"sales").status!=="not_registered");
+  const psList=list.filter(u=>systemInfo(u,"playstation").status!=="not_registered");
+  const pendingCount=list.reduce((count,u)=>count+(systemInfo(u,"sales").status==="pending"?1:0)+(systemInfo(u,"playstation").status==="pending"?1:0),0);
+  $("salesUsersCount").textContent=salesList.length;
+  $("psUsersCount").textContent=psList.length;
+  $("pendingUsersCount").textContent=pendingCount;
+  const render=(arr,system)=>arr.map(u=>{
+   const info=systemInfo(u,system);
+   const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():info.expiryDate;
+   const expired=expiry&&new Date(expiry)<new Date();
+   let statusText="قيد المراجعة",good=false;
+   if(info.status==="active"&&!expired){statusText="نشط";good=true;}
+   else if(info.status==="active"&&expired)statusText="منتهي";
+   else if(info.status==="pending")statusText="طلب جديد";
+   const requestedPlan=info.requestedPlan||"لم يختر باقة";
+   const requestedPrice=Number(info.requestedPrice||0);
+   return `<tr>
+    <td>${escapeHTML(u.shopName||"")}</td><td>${escapeHTML(u.customerName||"")}</td>
+    <td>${escapeHTML(u.email||"")}</td><td>${escapeHTML(u.phone||"")}</td>
+    <td><span class="tag ${good?"good":""}">${statusText}</span></td>
+    <td>${info.status==="pending"?`<span class="tag">${escapeHTML(requestedPlan)}</span><br><small>${requestedPrice} جنيه</small>`:escapeHTML(info.plan||"غير محدد")}</td>
+    <td>${planControls(u,system)}</td></tr>`;
+  }).join("")||'<tr><td colspan="7">لا يوجد عملاء مسجلون في هذا النظام</td></tr>';
+  $("salesUsersTable").innerHTML=render(salesList,"sales");
+  $("psUsersTable").innerHTML=render(psList,"playstation");
+ }catch(e){console.error(e);alert("تعذر تحميل العملاء: "+e.message);}
 };
 
 function escapeHTML(s){
-return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
 window.activateUserWithPlan=async(id,system)=>{
-const select=$(`plan_${system}_${id}`);
-if(!select)return;
-const days=Number(select.value);
-const selectedPlan=PLANS[days];
-if(!selectedPlan)return alert("اختر باقة صحيحة.");
-
-const expiry=new Date();
-expiry.setDate(expiry.getDate()+days);
-
-try{
-await updateDoc(doc(db,"users",id),{
-[`systems.${system}.status`]:"active",
-[`systems.${system}.plan`]:selectedPlan.name,
-[`systems.${system}.price`]:selectedPlan.price,
-[`systems.${system}.expiryDate`]:expiry,
-[`systems.${system}.activatedAt`]:serverTimestamp()
-});
-alert("تم تفعيل "+(system==="sales"?"سيستم المبيعات":"سيستم البلايستيشن")+" بنجاح.\nالباقة: "+selectedPlan.name+"\nالسعر: "+selectedPlan.price+" جنيه");
-await loadUsers();
-}catch(e){alert("خطأ أثناء التفعيل: "+e.message)}
+ const select=$(`plan_${system}_${id}`);
+ if(!select)return;
+ const days=Number(select.value),selectedPlan=PLANS[days];
+ if(!selectedPlan)return alert("اختر باقة صحيحة.");
+ const expiry=new Date();expiry.setDate(expiry.getDate()+days);
+ try{
+  await updateDoc(doc(db,"users",id),{
+   [`systems.${system}.status`]:"active",
+   [`systems.${system}.plan`]:selectedPlan.name,
+   [`systems.${system}.price`]:selectedPlan.price,
+   [`systems.${system}.expiryDate`]:expiry,
+   [`systems.${system}.activatedAt`]:serverTimestamp()
+  });
+  alert("تم تفعيل "+(system==="sales"?"سيستم المبيعات":"سيستم البلايستيشن")+" بنجاح.\nالباقة: "+selectedPlan.name+"\nالسعر: "+selectedPlan.price+" جنيه");
+  await loadUsers();
+ }catch(e){alert("خطأ أثناء التفعيل: "+e.message);}
 };
 
 window.deactivateSystem=async(id,system)=>{
-if(!confirm("هل تريد إيقاف اشتراك هذا النظام؟"))return;
-try{
-await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"pending"});
-await loadUsers();
-alert("تم إيقاف الاشتراك.");
-}catch(e){alert("تعذر إيقاف الاشتراك: "+e.message)}
+ if(!confirm("هل تريد إيقاف اشتراك هذا النظام؟"))return;
+ try{
+  await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"pending"});
+  await loadUsers();alert("تم إيقاف الاشتراك.");
+ }catch(e){alert("تعذر إيقاف الاشتراك: "+e.message);}
 };
 
 window.deleteUser=async id=>{
-if(!confirm("حذف بيانات الحساب من قاعدة البيانات؟ هذا لا يحذف حساب Firebase Authentication."))return;
-try{
-await deleteDoc(doc(db,"users",id));
-await loadUsers();
-}catch(e){alert("تعذر حذف الحساب: "+e.message)}
+ if(!confirm("حذف بيانات الحساب من قاعدة البيانات؟ هذا لا يحذف حساب Firebase Authentication."))return;
+ try{await deleteDoc(doc(db,"users",id));await loadUsers();}
+ catch(e){alert("تعذر حذف الحساب: "+e.message);}
 };
 
-/* التنقل */
 window.page=function(name){
-const pages=["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription"];
-pages.forEach(p=>$(p+"Page").classList.add("hidden"));
-$(name+"Page").classList.remove("hidden");
-if(name==="dashboard"||name==="reports")renderStats();
-if(name==="sales")renderCart();
+ const pages=["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription"];
+ pages.forEach(p=>$(p+"Page").classList.add("hidden"));
+ $(name+"Page").classList.remove("hidden");
+ if(name==="dashboard"||name==="reports")renderStats();
+ if(name==="sales")renderCart();
 };
 
-/* إغلاق الوردية */
 async function checkAndSettleDailySales(){
-try{
-const userDocRef=doc(db,"users",currentUser.uid);
-const snap=await getDoc(userDocRef);
-if(!snap.exists())return;
-const data=snap.data();
-const today=new Date().toISOString().slice(0,10);
-const last=data.lastSettledDate||"";
-if(last!==today){
-const rev=sales.reduce((s,x)=>s+Number(x.total||0),0);
-if(rev>0){
-await addDoc(col("treasury"),{
-type:"in",amount:rev,
-note:`إغلاق وردية ومبيعات يوم: ${last||today}`,
-date:new Date().toLocaleString("ar-EG")
-});
-}
-await updateDoc(userDocRef,{lastSettledDate:today});
-await loadTreasury();
-renderStats();
-}
-}catch(e){console.error(e)}
+ try{
+  const userDocRef=doc(db,"users",currentUser.uid),snap=await getDoc(userDocRef);
+  if(!snap.exists())return;
+  const data=snap.data(),today=new Date().toISOString().slice(0,10),last=data.lastSettledDate||"";
+  if(last!==today){
+   const rev=sales.reduce((s,x)=>s+Number(x.total||0),0);
+   if(rev>0)await addDoc(col("treasury"),{type:"in",amount:rev,note:`إغلاق وردية ومبيعات يوم: ${last||today}`,date:new Date().toLocaleString("ar-EG")});
+   await updateDoc(userDocRef,{lastSettledDate:today});
+   await loadTreasury();renderStats();
+  }
+ }catch(e){console.error(e);}
 }
 
-/* إعدادات الحساب */
 window.updateShopNameSetting=async()=>{
-const n=$("settingsShopName").value.trim();
-if(!n)return alert("أدخل اسم المحل.");
-try{
-await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});
-profile.shopName=n;
-$("shopTitle").textContent=n;
-$("sahalShopTitle").textContent=n;
-alert("تم تحديث اسم المحل بنجاح.");
-}catch(e){alert("خطأ: "+e.message)}
+ const n=$("settingsShopName").value.trim();
+ if(!n)return alert("أدخل اسم المحل.");
+ try{
+  await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});
+  profile.shopName=n;$("shopTitle").textContent=n;$("sahalShopTitle").textContent=n;
+  alert("تم تحديث اسم المحل بنجاح.");
+ }catch(e){alert("خطأ: "+e.message);}
 };
 
 window.updateCustomerEmailSetting=async()=>{
-const n=$("settingsEmail").value.trim();
-if(!n)return alert("أدخل البريد الجديد.");
-try{
-await updateEmail(auth.currentUser,n);
-await updateDoc(doc(db,"users",currentUser.uid),{email:n});
-profile.email=n;
-alert("تم تحديث البريد الإلكتروني.");
-}catch(e){alert("خطأ: "+e.message)}
+ const n=$("settingsEmail").value.trim();
+ if(!n)return alert("أدخل البريد الجديد.");
+ try{
+  await updateEmail(auth.currentUser,n);
+  await updateDoc(doc(db,"users",currentUser.uid),{email:n});
+  profile.email=n;alert("تم تحديث البريد الإلكتروني.");
+ }catch(e){alert("خطأ: "+e.message);}
 };
 
 window.updateCustomerPassword=async()=>{
-const p=$("newCustomerPassword").value;
-if(!p||p.length<6)return alert("كلمة المرور يجب ألا تقل عن 6 أحرف.");
-try{
-await updatePassword(auth.currentUser,p);
-$("newCustomerPassword").value="";
-alert("تم تحديث كلمة المرور.");
-}catch(e){alert("تعذر تحديث كلمة المرور. قد تحتاج إلى تسجيل الدخول مجدداً.")}
+ const p=$("newCustomerPassword").value;
+ if(!p||p.length<6)return alert("كلمة المرور يجب ألا تقل عن 6 أحرف.");
+ try{
+  await updatePassword(auth.currentUser,p);
+  $("newCustomerPassword").value="";alert("تم تحديث كلمة المرور.");
+ }catch(e){alert("تعذر تحديث كلمة المرور. قد تحتاج إلى تسجيل الدخول مجدداً.");}
 };
 
-/* تحميل بيانات المتجر */
 async function loadBusiness(){
-await Promise.all([loadProducts(),loadSales(),loadExpenses(),loadTreasury()]);
-renderStats();
+ await Promise.all([loadProducts(),loadSales(),loadExpenses(),loadTreasury()]);
+ renderStats();
 }
-
 async function loadProducts(){
-const s=await getDocs(col("products"));
-products=s.docs.map(d=>({id:d.id,...d.data()}));
-renderProducts();
+ const s=await getDocs(col("products"));
+ products=s.docs.map(d=>({id:d.id,...d.data()}));renderProducts();
 }
 async function loadSales(){
-const s=await getDocs(col("sales"));
-sales=s.docs.map(d=>({id:d.id,...d.data()}));
-renderSales();
+ const s=await getDocs(col("sales"));
+ sales=s.docs.map(d=>({id:d.id,...d.data()}));renderSales();
 }
 async function loadExpenses(){
-const s=await getDocs(col("expenses"));
-expenses=s.docs.map(d=>({id:d.id,...d.data()}));
-renderExpenses();
+ const s=await getDocs(col("expenses"));
+ expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();
 }
 async function loadTreasury(){
-const s=await getDocs(col("treasury"));
-treasury=s.docs.map(d=>({id:d.id,...d.data()}));
-renderTreasury();
+ const s=await getDocs(col("treasury"));
+ treasury=s.docs.map(d=>({id:d.id,...d.data()}));renderTreasury();
 }
 
 window.clearTreasuryData=async()=>{
-if(!confirm("هل تريد مسح حركات الخزينة؟"))return;
-const snap=await getDocs(col("treasury"));
-for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));
-await loadTreasury();
-renderStats();
-alert("تم التصفير.");
+ if(!confirm("هل تريد مسح حركات الخزينة؟"))return;
+ const snap=await getDocs(col("treasury"));
+ for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));
+ await loadTreasury();renderStats();alert("تم التصفير.");
 };
 
-/* المنتجات */
 window.saveProduct=async()=>{
-const name=$("pName").value.trim();
-const cost=Number($("pCost").value)||0;
-const price=Number($("pPrice").value)||0;
-const qty=Number($("pQty").value)||0;
-if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع.");
-await addDoc(col("products"),{name,cost,price,qty,createdAt:serverTimestamp()});
-$("pName").value="";
-$("pCost").value="";
-$("pPrice").value="";
-$("pQty").value=10;
-await loadProducts();
-renderStats();
-alert("تم حفظ المنتج.");
+ const name=$("pName").value.trim(),cost=Number($("pCost").value)||0,price=Number($("pPrice").value)||0,qty=Number($("pQty").value)||0;
+ if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع.");
+ await addDoc(col("products"),{name,cost,price,qty,createdAt:serverTimestamp()});
+ $("pName").value="";$("pCost").value="";$("pPrice").value="";$("pQty").value=10;
+ await loadProducts();renderStats();alert("تم حفظ المنتج.");
 };
 
 window.deleteProduct=async id=>{
-if(!confirm("حذف المنتج؟"))return;
-await deleteDoc(docRef("products",id));
-await loadProducts();
-renderStats();
+ if(!confirm("حذف المنتج؟"))return;
+ await deleteDoc(docRef("products",id));await loadProducts();renderStats();
 };
 
 function renderProducts(){
-$("productsTable").innerHTML=products.map(p=>`
-<tr><td>${escapeHTML(p.name)}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>
-`).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
+ $("productsTable").innerHTML=products.map(p=>`<tr>
+ <td>${escapeHTML(p.name)}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td>
+ <td><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
 }
 
-/* البحث */
 window.searchProducts=()=>{
-const q=$("saleSearch").value.trim().toLowerCase();
-selectedProduct=null;
-if(!q){$("searchResults").innerHTML="";return}
-const matches=products.filter(p=>(p.name||"").toLowerCase().includes(q)&&Number(p.qty)>0).slice(0,10);
-$("searchResults").innerHTML=matches.map(p=>`
-<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${escapeHTML(p.name)} — ${money(p.price)} ج — المتاح ${p.qty}</button>
-`).join("")||'<div style="padding:12px">لا توجد نتائج</div>';
+ const q=$("saleSearch").value.trim().toLowerCase();selectedProduct=null;
+ if(!q){$("searchResults").innerHTML="";return;}
+ const matches=products.filter(p=>(p.name||"").toLowerCase().includes(q)&&Number(p.qty)>0).slice(0,10);
+ $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${escapeHTML(p.name)} — ${money(p.price)} ج — المتاح ${p.qty}</button>`).join("")||'<div style="padding:12px">لا توجد نتائج</div>';
 };
 
 window.selectSaleProduct=id=>{
-selectedProduct=products.find(p=>p.id===id);
-if(!selectedProduct)return;
-$("saleSearch").value=selectedProduct.name;
-$("salePrice").value=selectedProduct.price;
-$("searchResults").innerHTML="";
-addToCart();
+ selectedProduct=products.find(p=>p.id===id);
+ if(!selectedProduct)return;
+ $("saleSearch").value=selectedProduct.name;$("salePrice").value=selectedProduct.price;$("searchResults").innerHTML="";
+ addToCart();
 };
 
-/* السلة */
 window.addToCart=()=>{
-const qty=Number($("saleQty").value)||1;
-const priceInput=$("salePrice").value;
-const price=priceInput===""?Number(selectedProduct?.price||0):Number(priceInput);
-const p=selectedProduct;
-if(!p)return alert("اختر منتجاً من قائمة البحث.");
-if(qty<=0)return alert("أدخل كمية صحيحة.");
-if(price<0||!Number.isFinite(price))return alert("أدخل سعر بيع صحيح.");
-const old=cart.find(x=>x.productId===p.id);
-const already=old?old.qty:0;
-if(qty+already>Number(p.qty))return alert("الكمية المطلوبة أكبر من المخزون المتاح.");
-if(old){old.qty+=qty;old.price=price}
-else cart.push({productId:p.id,name:p.name,qty,price,cost:p.cost||0});
-selectedProduct=null;
-$("saleSearch").value="";
-$("saleQty").value="1";
-$("salePrice").value="";
-$("searchResults").innerHTML="";
-renderCart();
-$("saleSearch").focus();
+ const qty=Number($("saleQty").value)||1,priceInput=$("salePrice").value;
+ const price=priceInput===""?Number(selectedProduct?.price||0):Number(priceInput),p=selectedProduct;
+ if(!p)return alert("اختر منتجاً من قائمة البحث.");
+ if(qty<=0)return alert("أدخل كمية صحيحة.");
+ if(price<0||!Number.isFinite(price))return alert("أدخل سعر بيع صحيح.");
+ const old=cart.find(x=>x.productId===p.id),already=old?old.qty:0;
+ if(qty+already>Number(p.qty))return alert("الكمية المطلوبة أكبر من المخزون المتاح.");
+ if(old){old.qty+=qty;old.price=price;}
+ else cart.push({productId:p.id,name:p.name,qty,price,cost:p.cost||0});
+ selectedProduct=null;
+ $("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";
+ renderCart();$("saleSearch").focus();
 };
 
 function renderCart(){
-$("cartTable").innerHTML=cart.map((x,i)=>`
-<tr><td>${escapeHTML(x.name)}</td><td>${x.qty}</td><td>${money(x.price)} ج</td><td><b>${money(x.qty*x.price)} ج</b></td><td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td></tr>
-`).join("")||'<tr><td colspan="5" style="text-align:center;color:#788397">الفاتورة فارغة، أضف أصنافاً للبدء</td></tr>';
-const subtotal=cart.reduce((s,x)=>s+Number(x.qty)*Number(x.price),0);
-const discount=Math.max(0,Number($("saleDiscount").value)||0);
-const addition=Math.max(0,Number($("saleAddition").value)||0);
-const total=Math.max(0,subtotal-discount+addition);
-$("cartTotalDisplay").textContent=money(total);
-return {subtotal,discount,addition,total};
+ $("cartTable").innerHTML=cart.map((x,i)=>`<tr>
+ <td>${escapeHTML(x.name)}</td><td>${x.qty}</td><td>${money(x.price)} ج</td>
+ <td><b>${money(x.qty*x.price)} ج</b></td><td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td></tr>`).join("")||'<tr><td colspan="5" style="text-align:center;color:#788397">الفاتورة فارغة، أضف أصنافاً للبدء</td></tr>';
+ const subtotal=cart.reduce((s,x)=>s+Number(x.qty)*Number(x.price),0);
+ const discount=Math.max(0,Number($("saleDiscount").value)||0),addition=Math.max(0,Number($("saleAddition").value)||0);
+ const total=Math.max(0,subtotal-discount+addition);
+ $("cartTotalDisplay").textContent=money(total);
+ return {subtotal,discount,addition,total};
 }
 window.renderCart=renderCart;
 $("saleDiscount").addEventListener("input",renderCart);
 $("saleAddition").addEventListener("input",renderCart);
 
-window.removeCartItem=i=>{cart.splice(i,1);renderCart()};
-
+window.removeCartItem=i=>{cart.splice(i,1);renderCart();};
 window.clearCart=()=>{
-if(cart.length&&!confirm("هل تريد إلغاء الفاتورة الحالية؟"))return;
-cart=[];
-$("saleDiscount").value="0";
-$("saleAddition").value="0";
-$("saleSearch").value="";
-$("saleQty").value="1";
-$("salePrice").value="";
-$("searchResults").innerHTML="";
-selectedProduct=null;
-renderCart();
+ if(cart.length&&!confirm("هل تريد إلغاء الفاتورة الحالية؟"))return;
+ cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";selectedProduct=null;renderCart();
 };
 
-/* إتمام البيع */
 window.completeSale=async()=>{
-if(!cart.length)return alert("الفاتورة فارغة.");
-const totals=renderCart();
-const {subtotal,discount,addition,total}=totals;
-if(discount>subtotal+addition)return alert("قيمة الخصم أكبر من إجمالي الفاتورة.");
-for(const item of cart){
-const p=products.find(x=>x.id===item.productId);
-if(!p||Number(p.qty)<item.qty)return alert("المخزون غير كافٍ للصنف: "+item.name);
-}
-const invoice={
-number:"INV-"+Date.now().toString().slice(-6),
-subtotal,discount,addition,total,
-items:[...cart],
-date:new Date().toLocaleString("ar-EG")
-};
-try{
-for(const item of cart){
-const p=products.find(x=>x.id===item.productId);
-await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});
-}
-await addDoc(col("sales"),invoice);
-await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoice.number}`,date:invoice.date});
-if($("autoPrintToggle").checked)printInvoiceDirectly(invoice);
-cart=[];
-$("saleDiscount").value="0";
-$("saleAddition").value="0";
-$("saleSearch").value="";
-$("saleQty").value="1";
-$("salePrice").value="";
-selectedProduct=null;
-renderCart();
-await loadBusiness();
-alert("تم البيع بنجاح. الإجمالي: "+money(total)+" جنيه");
-}catch(e){alert("حدث خطأ أثناء البيع: "+e.message)}
+ if(!cart.length)return alert("الفاتورة فارغة.");
+ const totals=renderCart(),{subtotal,discount,addition,total}=totals;
+ if(discount>subtotal+addition)return alert("قيمة الخصم أكبر من إجمالي الفاتورة.");
+ for(const item of cart){
+  const p=products.find(x=>x.id===item.productId);
+  if(!p||Number(p.qty)<item.qty)return alert("المخزون غير كافٍ للصنف: "+item.name);
+ }
+ const invoice={number:"INV-"+Date.now().toString().slice(-6),subtotal,discount,addition,total,items:[...cart],date:new Date().toLocaleString("ar-EG")};
+ try{
+  for(const item of cart){
+   const p=products.find(x=>x.id===item.productId);
+   await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});
+  }
+  await addDoc(col("sales"),invoice);
+  await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoice.number}`,date:invoice.date});
+  if($("autoPrintToggle").checked)printInvoiceDirectly(invoice);
+  cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";selectedProduct=null;renderCart();
+  await loadBusiness();alert("تم البيع بنجاح. الإجمالي: "+money(total)+" جنيه");
+ }catch(e){alert("حدث خطأ أثناء البيع: "+e.message);}
 };
 
-/* طباعة الفاتورة */
 window.printInvoiceDirectly=inv=>{
-const shop=profile?.shopName||"متجري";
-$("printArea").innerHTML=`
-<div style="text-align:center;font-family:Arial;padding:10px">
-<h2>${escapeHTML(shop)}</h2><h3>فاتورة مبيعات</h3>
-<p>رقم الفاتورة: ${inv.number}</p><p>التاريخ: ${inv.date}</p>
-<hr style="border:1px dashed">
-<table style="width:100%;min-width:0">
-<tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>
-${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}
-</table>
-<hr style="border:1px dashed">
-<p>إجمالي الأصناف: ${money(inv.subtotal??inv.items.reduce((s,i)=>s+i.qty*i.price,0))} جنيه</p>
-<p>الخصم: -${money(inv.discount)} جنيه</p>
-<p>الإضافة: +${money(inv.addition)} جنيه</p>
-<h2>الإجمالي النهائي: ${money(inv.total)} جنيه</h2>
-<p style="margin-top:25px">شكراً لتعاملكم معنا</p><p>تطوير: محمد الصلاحي</p>
-</div>`;
-window.print();
+ const shop=profile?.shopName||"متجري";
+ $("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px">
+ <h2>${escapeHTML(shop)}</h2><h3>فاتورة مبيعات</h3>
+ <p>رقم الفاتورة: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr style="border:1px dashed">
+ <table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>
+ ${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}
+ </table><hr style="border:1px dashed">
+ <p>إجمالي الأصناف: ${money(inv.subtotal??inv.items.reduce((s,i)=>s+i.qty*i.price,0))} جنيه</p>
+ <p>الخصم: -${money(inv.discount)} جنيه</p><p>الإضافة: +${money(inv.addition)} جنيه</p>
+ <h2>الإجمالي النهائي: ${money(inv.total)} جنيه</h2>
+ <p style="margin-top:25px">شكراً لتعاملكم معنا</p><p>تطوير: محمد الصلاحي</p></div>`;
+ window.print();
 };
 
-/* الخزينة */
 window.addTreasuryTransaction=async()=>{
-const type=$("tType").value;
-const amount=Number($("tAmount").value)||0;
-const note=$("tNote").value.trim();
-if(amount<=0)return alert("أدخل مبلغاً صحيحاً.");
-await addDoc(col("treasury"),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});
-$("tAmount").value="";
-$("tNote").value="";
-await loadTreasury();
-renderStats();
-alert("تم تسجيل الحركة.");
+ const type=$("tType").value,amount=Number($("tAmount").value)||0,note=$("tNote").value.trim();
+ if(amount<=0)return alert("أدخل مبلغاً صحيحاً.");
+ await addDoc(col("treasury"),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});
+ $("tAmount").value="";$("tNote").value="";
+ await loadTreasury();renderStats();alert("تم تسجيل الحركة.");
 };
 
 function renderTreasury(){
-let tIn=0,tOut=0;
-$("treasuryTable").innerHTML=treasury.map(t=>{
-if(t.type==="in")tIn+=Number(t.amount)||0;
-else tOut+=Number(t.amount)||0;
-return `<tr><td><span class="tag ${t.type==="in"?"good":""}">${t.type==="in"?"وارد":"صادر"}</span></td><td>${money(t.amount)} ج</td><td>${escapeHTML(t.note||"")}</td><td>${t.date||""}</td></tr>`;
-}).join("")||"<tr><td colspan='4'>لا توجد حركات</td></tr>";
-$("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" جنيه";
+ let tIn=0,tOut=0;
+ $("treasuryTable").innerHTML=treasury.map(t=>{
+  if(t.type==="in")tIn+=Number(t.amount)||0;else tOut+=Number(t.amount)||0;
+  return `<tr><td><span class="tag ${t.type==="in"?"good":""}">${t.type==="in"?"وارد":"صادر"}</span></td><td>${money(t.amount)} ج</td><td>${escapeHTML(t.note||"")}</td><td>${t.date||""}</td></tr>`;
+ }).join("")||"<tr><td colspan='4'>لا توجد حركات</td></tr>";
+ $("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" جنيه";
 }
 
-/* المصروفات */
 window.addExpense=async()=>{
-const name=$("expenseName").value.trim();
-const amount=Number($("expenseAmount").value)||0;
-if(!name||amount<=0)return alert("أدخل اسم المصروف والمبلغ.");
-const date=new Date().toLocaleString("ar-EG");
-await addDoc(col("expenses"),{name,amount,date});
-await addDoc(col("treasury"),{type:"out",amount,note:"مصروف: "+name,date});
-$("expenseName").value="";
-$("expenseAmount").value="";
-await loadBusiness();
-alert("تم حفظ المصروف.");
+ const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value)||0;
+ if(!name||amount<=0)return alert("أدخل اسم المصروف والمبلغ.");
+ const date=new Date().toLocaleString("ar-EG");
+ await addDoc(col("expenses"),{name,amount,date});
+ await addDoc(col("treasury"),{type:"out",amount,note:"مصروف: "+name,date});
+ $("expenseName").value="";$("expenseAmount").value="";
+ await loadBusiness();alert("تم حفظ المصروف.");
 };
 
 function renderExpenses(){
-$("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات</td></tr>";
+ $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات</td></tr>";
 }
-
-/* سجل الفواتير */
 function renderSales(){
-$("salesTable").innerHTML=sales.map(s=>`
-<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printSavedInvoice('${s.id}')">طباعة</button></td></tr>
-`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
+ $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printSavedInvoice('${s.id}')">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
 }
-window.printSavedInvoice=id=>{
-const inv=sales.find(s=>s.id===id);
-if(inv)printInvoiceDirectly(inv);
-};
+window.printSavedInvoice=id=>{const inv=sales.find(s=>s.id===id);if(inv)printInvoiceDirectly(inv);};
 
-/* الإحصائيات */
 function renderStats(){
-const rev=sales.reduce((s,x)=>s+Number(x.total||0),0);
-const exp=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
-const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0);
-const tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(x.amount||0),0);
-$("statProducts").textContent=products.length;
-$("statSales").textContent=sales.length;
-$("statRevenue").textContent=money(rev)+" جنيه";
-$("statTreasuryBalance").textContent=money(tIn-tOut)+" جنيه";
-$("reportRevenue").textContent=money(rev)+" جنيه";
-$("reportExpenses").textContent=money(exp)+" جنيه";
-$("reportNet").textContent=money(rev-exp)+" جنيه";
+ const rev=sales.reduce((s,x)=>s+Number(x.total||0),0),exp=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
+ const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0);
+ const tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(x.amount||0),0);
+ $("statProducts").textContent=products.length;
+ $("statSales").textContent=sales.length;
+ $("statRevenue").textContent=money(rev)+" جنيه";
+ $("statTreasuryBalance").textContent=money(tIn-tOut)+" جنيه";
+ $("reportRevenue").textContent=money(rev)+" جنيه";
+ $("reportExpenses").textContent=money(exp)+" جنيه";
+ $("reportNet").textContent=money(rev-exp)+" جنيه";
 }
 </script>
 </body>

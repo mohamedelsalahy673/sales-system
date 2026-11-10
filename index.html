@@ -73,7 +73,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   <div class="brand">NexPOS PRO</div>
   <div class="sub-brand">ELSALAHY</div>
   <div class="system-desc">نظام إدارة المبيعات والمخازن</div>
-  <span class="version">TILES INTERFACE V6</span>
+  <span class="version">TILES INTERFACE V7</span>
  </div>
  <div>
   <span id="networkStatus" class="tag good" style="margin-left:10px;">متصل بالخادم</span>
@@ -152,6 +152,15 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button class="red" onclick="logout()">تسجيل الخروج</button>
   </div>
 
+  <!-- خانة اشتراكي المضافة حديثاً -->
+  <div class="card" style="background: linear-gradient(135deg, #1e293b, #334155); color: white; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+   <div>
+     <h3 style="margin:0; color: #38bdf8;">📦 خانة اشتراكي</h3>
+     <p id="subscriptionStatusText" style="margin: 5px 0 0 0; font-size: 14px;">جاري التحقق من حالة الاشتراك...</p>
+   </div>
+   <div id="renewalActionBox"></div>
+  </div>
+
   <div id="dashboardPage">
    <div class="grid">
     <div class="stat">إجمالي المنتجات<strong id="statProducts">0</strong></div>
@@ -162,7 +171,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
    <div class="card">
     <h3>اختر القسم للبدء</h3>
-    <div class="tiles-grid">
+    <div class="tiles-grid" id="mainTilesContainer">
      <div class="tile t-blue" onclick="page('sales')"><h3>شاشة المبيعات (POS)</h3><p>إصدار الفواتير بالباركود</p></div>
      <div class="tile t-green" onclick="page('products')"><h3>المنتجات والمخزون</h3><p>إدارة الأصناف والأسعار</p></div>
      <div class="tile t-orange" onclick="page('treasury')"><h3>الخزينة والحسابات</h3><p>متابعة النقدية والأرباح</p></div>
@@ -339,7 +348,18 @@ window.register=async()=>{
  if(!shop||!name||!phone||!email||!password)return message("أكمل جميع البيانات المطلوبة.");
  try{
   const cred=await createUserWithEmailAndPassword(auth,email,password);
-  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",status:"pending",plan:"غير محدد",createdAt:serverTimestamp()});
+  // إضافة expiryDate افتراضي قديم أو غير موجود لكي يبدأ مقفلاً حتى يتم تفعيله
+  await setDoc(doc(db,"users",cred.user.uid),{
+   shopName:shop,
+   customerName:name,
+   phone,
+   email,
+   role:"customer",
+   status:"pending",
+   plan:"غير محدد",
+   expiryDate: null,
+   createdAt:serverTimestamp()
+  });
   lastRegisteredUser={name,shop,email};
   await signOut(auth);
   $("auth").classList.add("hidden");
@@ -385,9 +405,58 @@ onAuthStateChanged(auth,async user=>{
   $("pendingScreen").classList.add("hidden");
   $("customerPanel").classList.remove("hidden");
   $("shopTitle").textContent=profile.shopName||"نظام المبيعات والمخزون";
+  
+  // فحص وتشغيل خانة اشتراكي والعداد
+  checkCustomerSubscription(profile);
+
   await loadBusiness();
  }catch(e){console.error(e);}
 });
+
+// دالة فحص اشتراكي والتحكم في إيقاف/تشغيل السيستم للعميل
+function checkCustomerSubscription(pData){
+ const statusBox = $("subscriptionStatusText");
+ const actionBox = $("renewalActionBox");
+ const tilesContainer = $("mainTilesContainer");
+
+ if(!pData.expiryDate){
+  statusBox.innerHTML = `⚠️ الباقة غير مفعلة أو انتهت صلاحيتها.`;
+  actionBox.innerHTML = `<button class="green" onclick="requestRenewal()">💬 اطلب التجديد الآن</button>`;
+  lockSystem(tilesContainer);
+  return;
+ }
+
+ const expiryDate = pData.expiryDate.toDate ? pData.expiryDate.toDate() : new Date(pData.expiryDate);
+ const today = new Date();
+ const diffTime = expiryDate - today;
+ const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+ if(diffDays > 0){
+  statusBox.innerHTML = `✅ باقتك سارية (${pData.plan || 'نشطة'}) — متبقي: <b style="color:#38bdf8; font-size:16px;">${diffDays} يوم</b> على الانتهاء.`;
+  actionBox.innerHTML = `<span class="tag good">الحالة: تعمل بانتظام</span>`;
+  unlockSystem(tilesContainer);
+ } else {
+  statusBox.innerHTML = `❌ انتهت صلاحية باقة الاشتراك الخاصة بك! يرجى التواصل مع المطور للتجديد.`;
+  actionBox.innerHTML = `<button class="green" onclick="requestRenewal()">💬 تجديد الاشتراك فوراً</button>`;
+  lockSystem(tilesContainer);
+ }
+}
+
+function lockSystem(container){
+ container.style.pointerEvents = "none";
+ container.style.opacity = "0.4";
+}
+
+function unlockSystem(container){
+ container.style.pointerEvents = "auto";
+ container.style.opacity = "1";
+}
+
+window.requestRenewal=()=>{
+ const shop = profile.shopName || "متجري";
+ const msg=encodeURIComponent(`مرحبًا مطور محمد الصلاحي، أرغب في تجديد باقة الاشتراك لنشاطي "${shop}" لتفعيل السيستم واستمرار العمل.`);
+ window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
+};
 
 window.loadUsers=async()=>{
  try{
@@ -404,8 +473,8 @@ window.loadUsers=async()=>{
      <option value="365">سنوي (سنة - 900ج)</option>
      <option value="36500">دائم (مدى الحياة - 3000ج)</option>
     </select>
-    <button class="rowbtn green" onclick="activateUserWithPlan('${u.id}')">تفعيل</button>
-    <button class="rowbtn" style="background:#d97706" onclick="updateUserStatus('${u.id}','suspended','منتهي')">إيقاف</button>
+    <button class="rowbtn green" onclick="activateUserWithPlan('${u.id}')">تفعيل التشغيل</button>
+    <button class="rowbtn" style="background:#d97706" onclick="updateUserStatus('${u.id}','suspended','منتهي')">إيقاف يدوي</button>
     <button class="rowbtn red" onclick="deleteUser('${u.id}')">حذف</button>
    </td>
   </tr>`).join("");
@@ -418,27 +487,31 @@ window.activateUserWithPlan=async(id)=>{
  let planName = "شهري (100 ج)";
  if(days === 90) planName = "3 شهور (250 ج)";
  else if(days === 365) planName = "سنوي (900 ج)";
- else if(days === 36500) planName = "دائم (3000 ج)";
+ else if(days === 36500) planName = "دائم (مدى الحياة)";
 
  const expiryDate = new Date();
  expiryDate.setDate(expiryDate.getDate() + days);
 
  try{
+  // حفظ تاريخ الانتهاء كـ Timestamp في فايربيس ليعمل مع الـ Rules والعداد
   await updateDoc(doc(db,"users",id),{
    status:"active",
    plan: planName,
-   expiresAt: expiryDate.toLocaleDateString("ar-EG")
+   expiryDate: expiryDate
   });
-  alert(`تم تفعيل الحساب بنجاح باقة "${planName}"!`);
+  alert(`تم تفعيل الحساب والسيستم بنجاح باقة "${planName}"!`);
   loadUsers();
  }catch(e){
-  alert("خطأ في التفعيل: تأكد من تعديل قواعد الفايربيس (Firestore Rules) في الكونسول لتسمح للمالك بالكتابة. التفاصيل: "+e.message);
+  alert("خطأ في التفعيل: "+e.message);
  }
 };
 
 window.updateUserStatus=async(id,status,planText)=>{
  try{
-  await updateDoc(doc(db,"users",id),{status, plan:planText});
+  // عند الإيقاف نجعل expiryDate يساوي تاريخ قديم ليقف السيستم فوراً للعميل
+  const oldDate = new Date();
+  oldDate.setDate(oldDate.getDate() - 1);
+  await updateDoc(doc(db,"users",id),{status, plan:planText, expiryDate: oldDate});
   loadUsers();
  }catch(e){alert("خطأ: "+e.message);}
 };

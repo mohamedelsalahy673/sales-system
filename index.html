@@ -169,7 +169,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
      <div class="tile t-purple" onclick="page('history')"><h3>الفواتير السابقة</h3><p>استعراض وطباعة الفواتير</p></div>
      <div class="tile t-dark" onclick="page('expenses')"><h3>المصروفات اليومية</h3><p>تسجيل المصاريف التشغيلية</p></div>
      <div class="tile t-teal" onclick="page('reports')"><h3>التقارير المالية</h3><p>تقارير الأرباح وصافي الدخل</p></div>
-     <div class="tile t-red" onclick="page('settings')"><h3>الإعدادات والباسورد</h3><p>تغيير كلمة المرور</p></div>
+     <div class="tile t-red" onclick="page('settings')"><h3>الإعدادات والباسورد</h3><p>تعديل بيانات الحساب والمحل</p></div>
      <!-- خانة اشتراكي الجديدة المضافة مع الأقسام -->
      <div class="tile" style="background:linear-gradient(135deg,#0284c7,#0369a1)" onclick="page('subscription')"><h3>📦 اشتراكي</h3><p>متابعة الباقة والأيام المتبقية وسعر الاشتراك</p></div>
     </div>
@@ -269,13 +269,27 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- صفحة الإعدادات -->
+  <!-- صفحة الإعدادات المحدثة لتعديل اسم المحل، البريد، وكلمة المرور -->
   <div id="settingsPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>إعدادات الحساب</h3>
-   <div class="card" style="max-width:500px;">
-    <label>كلمة المرور الجديدة</label><input id="newCustomerPassword" type="password" placeholder="أدخل كلمة المرور الجديدة">
-    <button class="big purple" onclick="updateCustomerPassword()">تغيير كلمة المرور</button>
+   <h3>إعدادات الحساب والمحل</h3>
+   
+   <div class="card" style="max-width:600px;">
+    <h3 style="color:#2458d3;">تعديل اسم المحل التجاري</h3>
+    <label>اسم المحل الجديد</label><input id="settingsShopName" type="text" placeholder="أدخل اسم المحل الجديد">
+    <button class="big" onclick="updateShopNameSetting()">حفظ اسم المحل</button>
+   </div>
+
+   <div class="card" style="max-width:600px;">
+    <h3 style="color:#2458d3;">تعديل البريد الإلكتروني (Gmail)</h3>
+    <label>البريد الإلكتروني الجديد</label><input id="settingsEmail" type="email" placeholder="أدخل البريد الجديد">
+    <button class="big purple" onclick="updateCustomerEmailSetting()">تغيير البريد الإلكتروني</button>
+   </div>
+
+   <div class="card" style="max-width:600px;">
+    <h3 style="color:#2458d3;">تغيير كلمة المرور</h3>
+    <label>كلمة المرور الجديدة</label><input id="newCustomerPassword" type="password" placeholder="أدخل كلمة المرور الجديدة (6 أحرف على الأقل)">
+    <button class="big dark" onclick="updateCustomerPassword()">تغيير كلمة المرور</button>
    </div>
   </div>
 
@@ -283,12 +297,12 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 </section>
 
 <div id="printArea" class="hidden"></div>
-<footer class="muted" style="text-align:center;padding:20px">NexPOS PRO — تم التطوير بواسطة المهندس | محمد الصلاحي</footer>
+<footer class="muted" style="text-align:center;padding:20px">تم التطوير بواسطة المهندس | محمد الصلاحي</footer>
 </div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {getFirestore,doc,setDoc,getDoc,updateDoc,collection,addDoc,getDocs,deleteDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 const firebaseConfig={
@@ -411,12 +425,53 @@ onAuthStateChanged(auth,async user=>{
   $("customerPanel").classList.remove("hidden");
   $("shopTitle").textContent=profile.shopName||"نظام المبيعات والمخزون";
   
+  // تعبئة حقول الإعدادات بالبيانات الحالية للعميل
+  if($("settingsShopName")) $("settingsShopName").value = profile.shopName || "";
+  if($("settingsEmail")) $("settingsEmail").value = profile.email || user.email || "";
+
   // فحص حالة الاشتراك وإدارتها بالخلفية
   checkCustomerSubscription(profile);
 
   await loadBusiness();
  }catch(e){console.error(e);}
 });
+
+// دوال تعديل الإعدادات (اسم المحل، البريد، كلمة المرور)
+window.updateShopNameSetting=async()=>{
+ const newShopName = $("settingsShopName").value.trim();
+ if(!newShopName) return alert("أدخل اسم المحل الجديد.");
+ try{
+  await updateDoc(doc(db,"users",currentUser.uid),{ shopName: newShopName });
+  profile.shopName = newShopName;
+  $("shopTitle").textContent = newShopName;
+  alert("تم تحديث اسم المحل بنجاح!");
+ }catch(e){
+  alert("خطأ في تحديث اسم المحل: " + e.message);
+ }
+};
+
+window.updateCustomerEmailSetting=async()=>{
+ const newEmail = $("settingsEmail").value.trim();
+ if(!newEmail) return alert("أدخل البريد الإلكتروني الجديد.");
+ try{
+  await updateEmail(auth.currentUser, newEmail);
+  await updateDoc(doc(db,"users",currentUser.uid),{ email: newEmail });
+  profile.email = newEmail;
+  alert("تم تحديث البريد الإلكتروني بنجاح!");
+ }catch(e){
+  alert("خطأ في تحديث البريد (قد يتطلب إعادة تسجيل الدخول لأسباب أمنية): " + e.message);
+ }
+};
+
+window.updateCustomerPassword=async()=>{
+ const newPass=$("newCustomerPassword").value;
+ if(!newPass || newPass.length<6)return alert("كلمة المرور يجب ألا تقل عن 6 أحرف.");
+ try{
+  await updatePassword(auth.currentUser, newPass);
+  $("newCustomerPassword").value="";
+  alert("تم تحديث كلمة المرور بنجاح!");
+ }catch(e){alert("خطأ: يرجى تسجيل الدخول مجدداً لتحديث كلمة المرور لأسباب أمنية.");}
+};
 
 // دالة فحص اشتراكي وعرض التفاصيل داخل صفحة اشتراكي وتأمين السيستم
 function checkCustomerSubscription(pData){
@@ -436,7 +491,6 @@ function checkCustomerSubscription(pData){
  const diffTime = expiryDate - today;
  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
- // تحديد السعر بناءً على اسم الباقة المخزنة أو المدة
  let planPrice = "غير متوفر";
  const planName = pData.plan || "غير محدد";
  if(planName.includes("30") || planName.includes("شهر")) planPrice = "100 جنيه";
@@ -541,16 +595,6 @@ window.updateUserStatus=async(id,status,planText)=>{
 window.deleteUser=async id=>{
  if(!confirm("هل أنت متأكد من حذف الحساب؟"))return;
  try{await deleteDoc(doc(db,"users",id));loadUsers();}catch(e){}
-};
-
-window.updateCustomerPassword=async()=>{
- const newPass=$("newCustomerPassword").value;
- if(!newPass || newPass.length<6)return alert("كلمة المرور يجب ألا تقل عن 6 أحرف.");
- try{
-  await updatePassword(auth.currentUser, newPass);
-  $("newCustomerPassword").value="";
-  alert("تم تحديث كلمة المرور بنجاح!");
- }catch(e){alert("خطأ: يرجى تسجيل الدخول مجدداً لتحديث كلمة المرور لأسباب أمنية.");}
 };
 
 window.page=function(name){

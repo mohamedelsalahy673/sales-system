@@ -98,7 +98,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .inline-form{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .inline-form button{width:100%}
 .mode-note{background:#eff6ff;color:#1d4ed8;border-radius:8px;padding:9px;font-size:12px;margin:8px 0}
-/* Modal Styles for Sub */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000}
 .modal-box{background:white;padding:22px;border-radius:16px;max-width:450px;width:90%;box-shadow:0 4px 20px #0003}
 .social-links{display:flex;gap:10px;justify-content:center;margin-top:15px;flex-wrap:wrap}
@@ -292,7 +291,7 @@ window.openAuth=(system,mode)=>{
  selectedSystem=system;$("authForm").classList.remove("hidden");
  $("customerLoginBox").classList.toggle("hidden",mode!=="login"||system==="owner");
  $("registerBox").classList.toggle("hidden",mode!=="register");$("ownerBox").classList.toggle("hidden",system!=="owner");
- $("authFormTitle").textContent=system==="owner"?"دخول لوحة التحكم":(system==="sales"?"سيستم المبيعات":"سيستم البلايستيشن")+" - "+(mode==="login"?"تسجيل الدخول":"إنشاء حساب؛");
+ $("authFormTitle").textContent=system==="owner"?"دخول لوحة التحكم":(system==="sales"?"سيستم المبيعات":"سيستم البلايستيشن")+" - "+(mode==="login"?"تسجيل الدخول":"إنشاء حساب");
  $("authMsg").classList.add("hidden");
 };
 window.backToGate=()=>{$("authForm").classList.add("hidden");$("authMsg").classList.add("hidden");};
@@ -334,7 +333,14 @@ window.register=async()=>{
 };
 window.sendWhatsAppActivation=()=>{
  const d=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:"",phone:"",system:selectedSystem,plan:"غير محددة",price:""};
- const msg=encodeURIComponent(`طلب تفعيل جديد في NexPOS PRO\nاسم العميل: ${d.name}\nالنشاط: ${d.shop}\nالهاتف: ${d.phone}\nالبريد: ${d.email}\nالنظام: ${d.system}\nالباقة: ${d.plan}\nالسعر: ${d.price} جنيه`);
+ const msg=encodeURIComponent(`طلب تفعيل جديد في NexPOS PRO
+اسم العميل: ${d.name}
+النشاط: ${d.shop}
+الهاتف: ${d.phone}
+البريد: ${d.email}
+النظام: ${d.system}
+الباقة: ${d.plan}
+السعر: ${d.price} جنيه`);
  window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
 };
 window.logout=async()=>{if(psTimer)clearInterval(psTimer);await signOut(auth);location.reload();};
@@ -576,7 +582,7 @@ window.addOrderToRoom = async (deviceId) => {
     await refreshCurrentSession(d.sessionId);
     renderPsDevices();
     if (qtyElement) qtyElement.value = "1";
-    alert("تمت إضافة الطلب إلى الفاتورة.");
+    // تمت إزالة الرسالة المنبثقة (alert) بناءً على طلبك
   } catch (e) {
     console.error(e);
     alert("تعذر إضافة الطلب: " + e.message);
@@ -967,7 +973,7 @@ function renderTreasury(){
   return `<tr><td><span class="tag ${t.type==="in"?"good":""}">${t.type==="in"?"وارد":"صادر"}</span></td><td>${money(t.amount)} ج</td><td>${escapeHTML(t.note||"")}</td><td>${t.date||""}</td></tr>`;
  }).join("")||"<tr><td colspan='4'>لا توجد حركات</td></tr>";
  $("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" جنيه";
-}
+};
 window.addExpense=async()=>{
  const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value)||0;
  if(!name||amount<=0)return alert("أدخل اسم المصروف والمبلغ.");

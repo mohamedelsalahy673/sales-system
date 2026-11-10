@@ -99,7 +99,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .inline-form button{width:100%}
 .mode-note{background:#eff6ff;color:#1d4ed8;border-radius:8px;padding:9px;font-size:12px;margin:8px 0}
 
-/* تصميم النافذة المنبثقة المخصصة في منتصف الشاشة */
+/* تصميم النافذة المنبثقة المنتصفة للشاشة */
 .custom-modal-overlay {
   position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65);
   backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
@@ -137,7 +137,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <body>
 <div class="wrap">
 <header class="top">
- <div><div class="brand">NexPOS PRO</div><div class="system-desc">منصة إدارة الأنشطة والخدمات</div><span class="version">MULTI SYSTEM V17</span></div>
+ <div><div class="brand">NexPOS PRO</div><div class="system-desc">منصة إدارة الأنشطة والخدمات</div><span class="version">MULTI SYSTEM V18</span></div>
  <div><span id="networkStatus" class="tag good">متصل بالخادم</span> <button class="secondary" onclick="support()">الدعم الفني</button></div>
 </header>
 
@@ -168,7 +168,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  <div class="grid"><div class="stat">إجمالي الحسابات<strong id="totalUsers">0</strong></div><div class="stat">حسابات المبيعات<strong id="salesUsersCount">0</strong></div><div class="stat">حسابات البلايستيشن<strong id="psUsersCount">0</strong></div><div class="stat">طلبات في انتظار التفعيل<strong id="pendingUsersCount">0</strong></div></div>
  <nav><button id="ownerSalesTab" class="active" onclick="ownerSection('sales')">سيستم المبيعات</button><button id="ownerPsTab" onclick="ownerSection('playstation')">سيستم البلايستيشن</button></nav>
  <div id="ownerSalesSection"><h3>عملاء وااشتراكات سيستم المبيعات</h3><div class="tablewrap"><table><thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة</th><th>الإدارة</th></tr></thead><tbody id="salesUsersTable"></tbody></table></div></div>
- <div id="ownerPsSection" class="hidden"><h3>عملاء وااشتراكات سيستم البلايستيشن</h3><div class="tablewrap"><table><thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة</th><th>الإدارة</th></tr></thead><tbody id="psUsersTable"></tbody></table></div></div>
+ <div id="ownerPsSection" class="hidden"><h3>عملاء واشتراكات سيستم البلايستيشن</h3><div class="tablewrap"><table><thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة</th><th>الإدارة</th></tr></thead><tbody id="psUsersTable"></tbody></table></div></div>
  <button class="secondary big" onclick="loadUsers()">تحديث قائمة العملاء</button></div>
 </section>
 
@@ -191,6 +191,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button id="psDrinksTab" onclick="showPsSection('drinks')">🥤 المشروبات</button>
    <button id="psSandwichesTab" onclick="showPsSection('sandwiches')">🥪 السندوتشات</button>
    <button id="psSessionsTab" onclick="showPsSection('sessions')">📄 سجل الجلسات</button>
+   <button id="psSubTab" onclick="showPsSection('subscription')">💎 اشتراكي والدعم</button>
   </div>
 
   <div id="psDevicesSection">
@@ -222,6 +223,24 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <h3>قائمة السندوتشات</h3><div class="tablewrap"><table><thead><tr><th>السندوتش</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psSandwichesTable"></tbody></table></div>
   </div>
   <div id="psSessionsSection" class="hidden"><div class="card"><div class="top"><h3>سجل الجلسات والفواتير</h3><button class="secondary" onclick="loadPlaystationData()">تحديث السجل</button></div><div class="grid"><div class="stat">عدد الجلسات<strong id="psSessionsTotal">0</strong></div><div class="stat">إجمالي الإيرادات<strong id="psSessionsRevenue2">0 جنيه</strong></div></div><div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>الجهاز</th><th>البداية</th><th>النهاية</th><th>المدة</th><th>اللعب</th><th>الإضافات</th><th>الإجمالي</th><th>الفاتورة</th></tr></thead><tbody id="psSessionsTable"></tbody></table></div></div></div>
+  <div id="psSubscriptionSection" class="hidden">
+   <div class="card" style="max-width:700px;margin:20px auto;text-align:center">
+    <h2>💎 تفاصيل اشتراكي والدعم الفني</h2>
+    <p class="muted">معلومات باقتك الحالية وطرق التواصل المباشر مع المطور</p>
+    <div id="psSubPageDetails" class="card" style="background:#f8fafc;padding:20px;text-align:right;line-height:2.2;margin:15px 0">
+     جاري تحميل بيانات الاشتراك...
+    </div>
+    <div class="card" style="background:#f1f5f9;padding:20px;text-align:center">
+     <h3>📞 قنوات التواصل الاجتماعي والدعم</h3>
+     <p class="muted">للتواصل الفوري، التجديد، أو الاستفسارات:</p>
+     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:15px">
+      <button class="green big" style="flex:1;min-width:180px" onclick="window.open('https://wa.me/201062883414','_blank')">💬 تواصل واتساب</button>
+      <button class="big" style="flex:1;min-width:180px;background:#1877f2" onclick="window.open('https://www.facebook.com/share/1KXSCGweg6/?mibextid=wwXIfr','_blank')">👥 تواصل فيسبوك</button>
+      <button class="big" style="flex:1;min-width:180px;background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af,#515bd4)" onclick="window.open('https://www.instagram.com/mhmd.elsalahy?srtk=a2F2c2M1ajc1dzRj&utm_source=qr','_blank')">📸 تواصل انستغرام</button>
+     </div>
+    </div>
+   </div>
+  </div>
  </div>
 </section>
 
@@ -250,7 +269,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  </div>
 </section>
 
-<!-- النافذة المنبثقة المخصصة بمنتصف الشاشة -->
+<!-- نافذة تأكيد إنهاء الجلسة في منتصف الشاشة -->
 <div id="customConfirmModal" class="custom-modal-overlay hidden">
   <div class="custom-modal-card">
     <div class="modal-header">
@@ -394,6 +413,24 @@ onAuthStateChanged(auth,async user=>{
   else{$("customerPanel").classList.remove("hidden");$("shopTitle").textContent=profile.shopName||"نظام المبيعات";$("sahalShopTitle").textContent=profile.shopName||"متجري";$("settingsShopName").value=profile.shopName||"";$("settingsEmail").value=profile.email||user.email||"";checkCustomerSubscription(info);await loadBusiness();await checkAndSettleDailySales();}
  }catch(e){console.error(e);alert("حدث خطأ أثناء تحميل الحساب: "+e.message);}
 });
+
+function renderPsSubscriptionDetails(){
+ const info=systemInfo(profile,"playstation");
+ const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():(info.expiryDate?new Date(info.expiryDate):null);
+ const days=expiry?Math.ceil((expiry-new Date())/86400000):0;
+ const active=subscriptionActive(info);
+ $("psSubPageDetails").innerHTML=`
+  <b>اسم النشاط:</b> ${escapeHTML(profile?.shopName||"—")}<br>
+  <b>المالك:</b> ${escapeHTML(profile?.customerName||"—")}<br>
+  <b>رقم الهاتف:</b> ${escapeHTML(profile?.phone||"—")}<br>
+  <b>البريد الإلكتروني:</b> ${escapeHTML(profile?.email||"—")}<br>
+  <b>الباقة الحالية:</b> ${escapeHTML(info.plan||"غير محدد")}<br>
+  <b>تاريخ انتهاء الاشتراك:</b> ${expiry?expiry.toLocaleDateString("ar-EG"):"—"}<br>
+  <b>الأيام المتبقية:</b> ${Math.max(0,days)} يوم<br>
+  <b>حالة الاشتراك:</b> <span class="tag ${active?"good":""}">${active?"نشط وساري":"غير نشط أو منتهي"}</span>
+ `;
+}
+
 function renderPsSubscription(info){const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():new Date(info.expiryDate);const days=Math.ceil((expiry-new Date())/86400000);$("psSubDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(profile.shopName||"—")}<br><b>الباقة:</b> ${escapeHTML(info.plan||"—")}<br><b>المتبقي:</b> ${Math.max(0,days)} يوم<br><span class="tag good">الاشتراك نشط</span>`;}
 function checkCustomerSubscription(info){
  const details=$("subPageDetails"),action=$("subPageActionBox"),tiles=$("mainTilesContainer");
@@ -433,14 +470,15 @@ window.deleteUser=async id=>{if(!confirm("حذف بيانات الحساب من 
 
 /* =============== البلايستيشن: الرومات وVIP =============== */
 window.showPsSection=which=>{
- const sections=["devices","vip","drinks","sandwiches","sessions"];
+ const sections=["devices","vip","drinks","sandwiches","sessions","subscription"];
  sections.forEach(s=>{
-  const sectionId=s==="vip"?"psVipSection":"ps"+s[0].toUpperCase()+s.slice(1)+"Section";
-  const tabId=s==="vip"?"psVipTab":"ps"+s[0].toUpperCase()+s.slice(1)+"Tab";
+  const sectionId=s==="vip"?"psVipSection":(s==="subscription"?"psSubscriptionSection":"ps"+s[0].toUpperCase()+s.slice(1)+"Section");
+  const tabId=s==="vip"?"psVipTab":(s==="subscription"?"psSubTab":"ps"+s[0].toUpperCase()+s.slice(1)+"Tab");
   $(sectionId).classList.toggle("hidden",s!==which);
   $(tabId).classList.toggle("active",s===which);
  });
  if(which==="sessions")renderPsSessions();
+ if(which==="subscription")renderPsSubscriptionDetails();
 };
 
 window.loadPlaystationData = async function(){
@@ -485,7 +523,7 @@ window.deletePsDevice=async id=>{
  try{await deleteDoc(docRef("devices",id));await loadPlaystationData();}catch(e){alert(e.message);}
 };
 
-/* بدء الجلسة: مدة لا تقل عن 30 دقيقة أو مبلغ أو حساب تلقائي */
+/* بدء الجلسة */
 window.startPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status==="running")return alert("الجهاز غير متاح.");
@@ -552,7 +590,7 @@ window.extendPsDevice=async id=>{
  }catch(e){alert("تعذر التمديد: "+e.message);}
 };
 
-/* إنهاء الجلسة وعرض النافذة المنبثقة المخصصة في منتصف الشاشة */
+/* فتح النافذة المنبثقة المنتصفة لإنهاء الجلسة */
 window.stopPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status!=="running")return;
@@ -615,7 +653,6 @@ window.stopPsDevice=async id=>{
  });
 };
 
-/* إضافة الطلبات إلى فاتورة الجهاز */
 window.addOrderToRoom = async (deviceId) => {
   const d = psDevices.find(x => x.id === deviceId);
   if (!d || d.status !== "running" || !d.sessionId) return alert("لا توجد جلسة نشطة على هذا الجهاز.");
@@ -686,7 +723,6 @@ window.removeRoomOrder=async(deviceId,index)=>{
  }catch(e){alert(e.message);}
 };
 
-/* إنهاء الجلسة وتسجيل إيراد واحد فقط */
 async function finalizePsSession(device,reason="manual"){
  if(!currentUser||!device||psEndingDevices.has(device.id))return;
  psEndingDevices.add(device.id);
@@ -836,7 +872,6 @@ window.togglePsMode=id=>{
  $(`psAutoBox_${id}`).classList.toggle("hidden",mode!=="auto");
 };
 
-/* المؤقت: العد التنازلي للمدة والمبلغ، والعد التصاعدي للتلقائي */
 function startPsTimer(){
  if(psTimer)clearInterval(psTimer);
  psTimer=setInterval(async()=>{
@@ -895,7 +930,6 @@ window.printPsInvoice=id=>{
  window.print();
 };
 
-/* إدارة المشروبات والسندوتشات */
 window.addPsItem=async category=>{
  const drink=category==="drink",name=$(drink?"psDrinkName":"psSandwichName").value.trim();
  const price=Number($(drink?"psDrinkPrice":"psSandwichPrice").value),qty=Number($(drink?"psDrinkQty":"psSandwichQty").value);
@@ -934,7 +968,6 @@ function renderPsStats(){
  $("psSandwichesCount").textContent=psItems.filter(x=>x.category==="sandwich").length;
 }
 
-/* =============== نظام المبيعات =============== */
 window.page=name=>{
  const pages=["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription"];
  pages.forEach(p=>$(p+"Page").classList.add("hidden"));
@@ -1079,3 +1112,4 @@ function renderStats(){
 </script>
 </body>
 </html>
+```eof

@@ -71,7 +71,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  <div>
   <div class="brand">NexPOS PRO</div>
   <div class="system-desc">نظام إدارة المبيعات والمخازن</div>
-  <span class="version">TILES INTERFACE V9</span>
+  <span class="version">TILES INTERFACE V10</span>
  </div>
  <div>
   <span id="networkStatus" class="tag good" style="margin-left:10px;">متصل بالخادم</span>
@@ -186,23 +186,24 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    </div>
   </div>
 
-  <!-- صفحة المبيعات -->
+  <!-- صفحة المبيعات المحدثة بالبيع الفوري واختيار الطباعة -->
   <div id="salesPage" class="hidden">
    <button class="secondary" onclick="page('dashboard')" style="margin-bottom:10px">← العودة للرئيسية</button>
-   <h3>شاشة نقاط البيع (المبيعات)</h3>
-   <div class="grid">
-    <div><label>بحث عن منتج</label><input id="saleSearch" placeholder="ابحث..." oninput="searchProducts()"><div id="searchResults"></div></div>
-    <div>
-     <label>الكمية</label><input id="saleQty" type="number" min="1" value="1">
-     <label>سعر البيع</label><input id="salePrice" type="number" min="0">
-     <button class="big" onclick="addToCart()">إضافة للسلة</button>
+   <h3>شاشة نقاط البيع (المبيعات السريعة)</h3>
+   <div class="card">
+    <label>بحث واختيار منتج (بمجرد النقر يتم إتمام البيع فورا)</label>
+    <input id="saleSearch" placeholder="اكتب اسم المنتج للبحث..." oninput="searchProducts()">
+    <div id="searchResults" style="margin-bottom:15px;"></div>
+
+    <div style="background:#f8fafc; padding:12px; border-radius:10px; display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+     <input type="checkbox" id="autoPrintToggle" checked style="width:20px;height:20px;margin:0;cursor:pointer;">
+     <label for="autoPrintToggle" style="cursor:pointer;font-size:15px;color:#1e293b;">طباعة الفاتورة تلقائياً عند اختيار المنتج وإتمام البيع</label>
     </div>
    </div>
+
    <div class="card">
-    <h3>سلة المبيعات</h3>
-    <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead><tbody id="cartTable"></tbody></table></div>
-    <h3>الإجمالي الكلي: <span id="cartTotal">0</span> جنيه</h3>
-    <button class="big green" onclick="completeSale()">إتمام البيع وطباعة الفاتورة</button>
+    <h3>آخر فاتورة أو السلة الحالية</h3>
+    <div class="tablewrap"><table><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead><tbody id="cartTable"><tr><td colspan="4" style="text-align:center;color:#788397;">اختر منتجاً من أعلى ليتم البيع فوراً</td></tr></tbody></table></div>
    </div>
   </div>
 
@@ -318,9 +319,7 @@ const SUPPORT_PHONE="201062883414";
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app), db=getFirestore(app);
 
-let currentUser=null, profile=null, products=[], sales=[], expenses=[], treasury=[], cart=[];
-let selectedProduct=null;
-let lastRegisteredUser=null;
+let currentUser=null, profile=null, products=[], sales=[], expenses=[], treasury=[];
 
 const $=id=>document.getElementById(id);
 const money=n=>(Number(n)||0).toLocaleString("ar-EG",{maximumFractionDigits:2});
@@ -383,6 +382,7 @@ window.register=async()=>{
  }catch(e){message("تعذر التسجيل: "+e.message)}
 };
 
+let lastRegisteredUser=null;
 window.sendWhatsAppActivation=()=>{
  const data=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:""};
  const msg=encodeURIComponent(`مرحبًا، أنا ${data.name} صاحب نشاط "${data.shop}"، قمت بإنشاء حساب جديد وبريدي هو: ${data.email}، وأرغب في دفع الاشتراك وتفعيل الحساب والاستلام.`);
@@ -426,34 +426,23 @@ onAuthStateChanged(auth,async user=>{
   if($("settingsEmail")) $("settingsEmail").value = profile.email || user.email || "";
 
   checkCustomerSubscription(profile);
-
   await loadBusiness();
-  
-  // تفعيل التحقق من إغلاق الوردية بعد منتصف الليل أوتوماتيك
   checkAndSettleDailySales();
-
  }catch(e){console.error(e);}
 });
 
-// دالة ترحيل مبيعات اليوم للخزينة وتصفيرها بعد منتصف الليل أوتوماتيك
 async function checkAndSettleDailySales(){
  try{
   const userDocRef = doc(db,"users",currentUser.uid);
   const userSnap = await getDoc(userDocRef);
   if(!userSnap.exists()) return;
   const userData = userSnap.data();
-
-  const todayStr = new Date().toISOString().slice(0, 10); // صيغة YYYY-MM-DD
+  const todayStr = new Date().toISOString().slice(0, 10);
   const lastSettled = userData.lastSettledDate || "";
 
-  // لو اليوم الحالي مختلف عن آخر يوم تم إغلاقه وتصفيره فيه
   if(lastSettled !== todayStr){
-   // نحسب مبيعات الأيام السابقة أو إجمالي مبيعات الفواتير التي لم ترحل
    const rev = sales.reduce((s,x)=>s+Number(x.total||0),0);
-   
-   // لو في مبيعات، نسجلها كإيراد وارد في الخزينة أوتوماتيك
    if(rev > 0){
-    // ملاحظة: نتحقق إذا لم تسجل مبيعات هذا اليوم مسبقاً في الخزينة
     await addDoc(col("treasury"),{
      type: "in",
      amount: rev,
@@ -461,18 +450,13 @@ async function checkAndSettleDailySales(){
      date: new Date().toLocaleString("ar-EG")
     });
    }
-
-   // تحديث تاريخ آخر تصفير في قاعدة بيانات المستخدم لكي لا يتكرر اليوم
    await updateDoc(userDocRef, { lastSettledDate: todayStr });
    await loadTreasury();
    renderStats();
   }
- }catch(e){
-  console.error("خطأ في الترحيل التلقائي:", e);
- }
+ }catch(e){console.error(e);}
 }
 
-// دوال تعديل الإعدادات (اسم المحل، البريد، كلمة المرور)
 window.updateShopNameSetting=async()=>{
  const newShopName = $("settingsShopName").value.trim();
  if(!newShopName) return alert("أدخل اسم المحل الجديد.");
@@ -481,9 +465,7 @@ window.updateShopNameSetting=async()=>{
   profile.shopName = newShopName;
   $("shopTitle").textContent = newShopName;
   alert("تم تحديث اسم المحل بنجاح!");
- }catch(e){
-  alert("خطأ في تحديث اسم المحل: " + e.message);
- }
+ }catch(e){alert("خطأ: " + e.message);}
 };
 
 window.updateCustomerEmailSetting=async()=>{
@@ -494,9 +476,7 @@ window.updateCustomerEmailSetting=async()=>{
   await updateDoc(doc(db,"users",currentUser.uid),{ email: newEmail });
   profile.email = newEmail;
   alert("تم تحديث البريد الإلكتروني بنجاح!");
- }catch(e){
-  alert("خطأ في تحديث البريد (قد يتطلب إعادة تسجيل الدخول لأسباب أمنية): " + e.message);
- }
+ }catch(e){alert("خطأ: " + e.message);}
 };
 
 window.updateCustomerPassword=async()=>{
@@ -506,17 +486,16 @@ window.updateCustomerPassword=async()=>{
   await updatePassword(auth.currentUser, newPass);
   $("newCustomerPassword").value="";
   alert("تم تحديث كلمة المرور بنجاح!");
- }catch(e){alert("خطأ: يرجى تسجيل الدخول مجدداً لتحديث كلمة المرور لأسباب أمنية.");}
+ }catch(e){alert("خطأ في تحديث كلمة المرور.");}
 };
 
-// دالة فحص اشتراكي وعرض التفاصيل داخل صفحة اشتراكي وتأمين السيستم
 function checkCustomerSubscription(pData){
  const detailsBox = $("subPageDetails");
  const actionBox = $("subPageActionBox");
  const tilesContainer = $("mainTilesContainer");
 
  if(!pData.expiryDate){
-  detailsBox.innerHTML = `⚠️ الباقة غير مفعلة أو انتهت صلاحيتها.<br><b>الباقة الحالية:</b> غير محددة<br><b>سعر الاشتراك:</b> --`;
+  detailsBox.innerHTML = `⚠️ الباقة غير مفعلة أو انتهت صلاحيتها.<br><b>الباقة الحالية:</b> غير محددة`;
   actionBox.innerHTML = `<button class="green big" onclick="requestRenewal()">💬 اطلب تفعيل الاشتراك الآن</button>`;
   lockSystem(tilesContainer);
   return;
@@ -524,51 +503,25 @@ function checkCustomerSubscription(pData){
 
  const expiryDate = pData.expiryDate.toDate ? pData.expiryDate.toDate() : new Date(pData.expiryDate);
  const today = new Date();
- const diffTime = expiryDate - today;
- const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
- let planPrice = "غير متوفر";
- const planName = pData.plan || "غير محدد";
- if(planName.includes("30") || planName.includes("شهر")) planPrice = "100 جنيه";
- else if(planName.includes("90") || planName.includes("3 شهور")) planPrice = "250 جنيه";
- else if(planName.includes("365") || planName.includes("سنوي")) planPrice = "900 جنيه";
- else if(planName.includes("دائم")) planPrice = "3000 جنيه (مدى الحياة)";
+ const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
 
  if(diffDays > 0){
-  detailsBox.innerHTML = `
-   📋 <b>اسم الباقة:</b> ${planName}<br>
-   💰 <b>قيمة الاشتراك:</b> ${planPrice}<br>
-   ⏳ <b>الوقت المتبقي:</b> <span style="color:#0284c7; font-size:18px; font-weight:bold;">${diffDays} يوم</span><br>
-   📅 <b>تاريخ الانتهاء:</b> ${expiryDate.toLocaleDateString("ar-EG")}<br>
-   🟢 <span style="color:#178653; font-weight:bold;">حالة الاشتراك: ساري ويعمل بانتظام</span>
-  `;
-  actionBox.innerHTML = `<span class="tag good" style="font-size:14px; padding:8px 15px;">الباقة نشطة ولا توجد مشكلة</span>`;
+  detailsBox.innerHTML = `📋 <b>اسم الباقة:</b> ${pData.plan || 'نشطة'}<br>⏳ <b>الوقت المتبقي:</b> <span style="color:#0284c7;font-weight:bold;">${diffDays} يوم</span><br>🟢 <b>حالة الاشتراك: ساري ويعمل بانتظام</b>`;
+  actionBox.innerHTML = `<span class="tag good" style="font-size:14px; padding:8px 15px;">الباقة نشطة</span>`;
   unlockSystem(tilesContainer);
  } else {
-  detailsBox.innerHTML = `
-   📋 <b>اسم الباقة:</b> ${planName}<br>
-   💰 <b>قيمة الاشتراك:</b> ${planPrice}<br>
-   ❌ <span style="color:#b72f3b; font-size:18px; font-weight:bold;">انتهت صلاحية باقة الاشتراك الخاصة بك!</span><br>
-   📅 تاريخ الانتهاء كان: ${expiryDate.toLocaleDateString("ar-EG")}
-  `;
-  actionBox.innerHTML = `<button class="green big" onclick="requestRenewal()">💬 تجديد الاشتراك فوراً مع المطور</button>`;
+  detailsBox.innerHTML = `❌ <span style="color:#b72f3b;font-weight:bold;">انتهت صلاحية باقة الاشتراك!</span>`;
+  actionBox.innerHTML = `<button class="green big" onclick="requestRenewal()">💬 تجديد الاشتراك فوراً</button>`;
   lockSystem(tilesContainer);
  }
 }
 
-function lockSystem(container){
- container.style.pointerEvents = "none";
- container.style.opacity = "0.4";
-}
-
-function unlockSystem(container){
- container.style.pointerEvents = "auto";
- container.style.opacity = "1";
-}
+function lockSystem(container){ container.style.pointerEvents="none"; container.style.opacity="0.4"; }
+function unlockSystem(container){ container.style.pointerEvents="auto"; container.style.opacity="1"; }
 
 window.requestRenewal=()=>{
  const shop = profile.shopName || "متجري";
- const msg=encodeURIComponent(`مرحبًا مطور محمد الصلاحي، أرغب في تجديد باقة الاشتراك لنشاطي "${shop}" لتفعيل السيستم واستمرار العمل.`);
+ const msg=encodeURIComponent(`مرحبًا مطور محمد الصلاحي، أرغب في تجديد باقة الاشتراك لنشاطي "${shop}".`);
  window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
 };
 
@@ -579,7 +532,7 @@ window.loadUsers=async()=>{
   $("totalUsers").textContent=list.length;
   $("usersTable").innerHTML=list.map(u=>`<tr>
    <td>${u.shopName||""}</td><td>${u.customerName||""}</td><td>${u.email||""}</td><td>${u.phone||""}</td>
-   <td><span class="tag ${u.status==='active'?'good':''}">${u.status||""}</span><br><small style="color:#555">الخطة: ${u.plan||'غير محدد'}</small></td>
+   <td><span class="tag ${u.status==='active'?'good':''}">${u.status||""}</span><br><small>الخطة: ${u.plan||'غير محدد'}</small></td>
    <td>
     <select id="plan_${u.id}" style="width:140px;padding:6px;margin:2px;display:inline-block;">
      <option value="30">شهري (30 يوم - 100ج)</option>
@@ -587,8 +540,7 @@ window.loadUsers=async()=>{
      <option value="365">سنوي (سنة - 900ج)</option>
      <option value="36500">دائم (مدى الحياة - 3000ج)</option>
     </select>
-    <button class="rowbtn green" onclick="activateUserWithPlan('${u.id}')">تفعيل التشغيل</button>
-    <button class="rowbtn" style="background:#d97706" onclick="updateUserStatus('${u.id}','suspended','منتهي')">إيقاف يدوي</button>
+    <button class="rowbtn green" onclick="activateUserWithPlan('${u.id}')">تفعيل</button>
     <button class="rowbtn red" onclick="deleteUser('${u.id}')">حذف</button>
    </td>
   </tr>`).join("");
@@ -596,41 +548,21 @@ window.loadUsers=async()=>{
 };
 
 window.activateUserWithPlan=async(id)=>{
- const selectElement = document.getElementById(`plan_${id}`);
- const days = Number(selectElement.value);
- let planName = "شهري (30 يوم - 100 ج)";
- if(days === 90) planName = "3 شهور (90 يوم - 250 ج)";
- else if(days === 365) planName = "سنوي (سنة - 900 ج)";
- else if(days === 36500) planName = "دائم (مدى الحياة - 3000 ج)";
-
+ const days = Number(document.getElementById(`plan_${id}`).value);
+ let planName = days===30?"شهري":days===90?"3 شهور":days===365?"سنوي":"دائم";
  const expiryDate = new Date();
  expiryDate.setDate(expiryDate.getDate() + days);
-
  try{
-  await updateDoc(doc(db,"users",id),{
-   status:"active",
-   plan: planName,
-   expiryDate: expiryDate
-  });
-  alert(`تم تفعيل الحساب والسيستم بنجاح باقة "${planName}"!`);
-  loadUsers();
- }catch(e){
-  alert("خطأ في التفعيل: "+e.message);
- }
-};
-
-window.updateUserStatus=async(id,status,planText)=>{
- try{
-  const oldDate = new Date();
-  oldDate.setDate(oldDate.getDate() - 1);
-  await updateDoc(doc(db,"users",id),{status, plan:planText, expiryDate: oldDate});
+  await updateDoc(doc(db,"users",id),{status:"active", plan:planName, expiryDate});
+  alert("تم التفعيل بنجاح!");
   loadUsers();
  }catch(e){alert("خطأ: "+e.message);}
 };
 
 window.deleteUser=async id=>{
- if(!confirm("هل أنت متأكد من حذف الحساب؟"))return;
- try{await deleteDoc(doc(db,"users",id));loadUsers();}catch(e){}
+ if(!confirm("حذف الحساب؟"))return;
+ await deleteDoc(doc(db,"users",id));
+ loadUsers();
 };
 
 window.page=function(name){
@@ -650,82 +582,91 @@ async function loadExpenses(){const s=await getDocs(col("expenses"));expenses=s.
 async function loadTreasury(){const s=await getDocs(col("treasury"));treasury=s.docs.map(d=>({id:d.id,...d.data()}));renderTreasury();}
 
 window.clearTreasuryData=async()=>{
- if(!confirm("هل أنت متأكد من مسح جميع حركات الخزينة القديمة تماماً؟"))return;
- try{
-  const snap=await getDocs(col("treasury"));
-  for(const dDoc of snap.docs){
-   await deleteDoc(docRef("treasury",dDoc.id));
-  }
-  await loadTreasury();
-  renderStats();
-  alert("تم تصفير الخزينة وحذف الحركات القديمة بنجاح!");
- }catch(e){alert("خطأ: "+e.message);}
+ if(!confirm("مسح حركات الخزينة؟"))return;
+ const snap=await getDocs(col("treasury"));
+ for(const dDoc of snap.docs) await deleteDoc(docRef("treasury",dDoc.id));
+ await loadTreasury(); renderStats(); alert("تم التصفير بنجاح!");
 };
 
 window.saveProduct=async()=>{
  const name=$("pName").value.trim();
  const cost=Number($("pCost").value)||0, price=Number($("pPrice").value)||0, qty=Number($("pQty").value)||0;
- if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع بشكل صحيح.");
- try{
-  await addDoc(col("products"),{name,cost,price,qty,createdAt:serverTimestamp()});
-  $("pName").value=""; $("pCost").value=""; $("pPrice").value=""; $("pQty").value="10";
-  await loadProducts();renderStats();alert("تم حفظ المنتج بنجاح.");
- }catch(e){alert("خطأ في الحفظ: "+e.message);}
+ if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع.");
+ await addDoc(col("products"),{name,cost,price,qty,createdAt:serverTimestamp()});
+ $("pName").value=""; $("pCost").value=""; $("pPrice").value=""; $("pQty").value="10";
+ await loadProducts(); renderStats(); alert("تم حفظ المنتج.");
 };
 
 function renderProducts(){
- $("productsTable").innerHTML=products.map(p=>`<tr><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد منتجات مسجلة</td></tr>";
+ $("productsTable").innerHTML=products.map(p=>`<tr><td>${p.name}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td><b>${p.qty}</b></td><td><button class="rowbtn red" onclick="deleteDoc(docRef('products','${p.id}'));loadProducts();">حذف</button></td></tr>`).join("")||"<tr><td colspan='5'>لا توجد منتجات</td></tr>";
 }
 
+// دالة البحث المباشر وإتمام البيع فوراً بمجرد الضغط على المنتج
 window.searchProducts=()=>{
  const q=$("saleSearch").value.trim().toLowerCase();
+ if(!q){ $("searchResults").innerHTML=""; return; }
  const matches=products.filter(p=>(p.name||"").toLowerCase().includes(q)&&p.qty>0).slice(0,5);
- $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${p.name} — ${money(p.price)} ج (متاح: ${p.qty})</button>`).join("");
+ $("searchResults").innerHTML=matches.map(p=>`<button class="result secondary" style="background:#e8edfa; color:#2458d3; font-weight:bold; padding:12px; margin:4px 0;" onclick="quickSell('${p.id}')">${p.name} — السعر: ${money(p.price)} ج (المتاح: ${p.qty})</button>`).join("");
 };
 
-window.selectSaleProduct=id=>{
- selectedProduct=products.find(p=>p.id===id);if(!selectedProduct)return;
- $("saleSearch").value=selectedProduct.name;$("salePrice").value=selectedProduct.price;$("searchResults").innerHTML="";
-};
+// إتمام البيع فوراً بنقرة واحدة
+window.quickSell=async(id)=>{
+ const p = products.find(x=>x.id===id);
+ if(!p || p.qty<=0) return alert("المنتج غير متوفر أو نفذ من المخزن.");
+ 
+ const item = {productId: p.id, name: p.name, qty: 1, price: p.price, cost: p.cost||0};
+ const invoice = {number:"INV-"+Date.now().toString().slice(-6), total: p.price, items: [item], date: new Date().toLocaleString("ar-EG")};
 
-window.addToCart=()=>{
- if(!selectedProduct)return alert("اختر منتجاً من نتائج البحث.");
- const qty=Number($("saleQty").value)||1, price=Number($("salePrice").value)||selectedProduct.price;
- if(qty>selectedProduct.qty)return alert("الكمية المطلوبة غير متوفرة بالمخزن.");
- const old=cart.find(x=>x.productId===selectedProduct.id);
- if(old)old.qty+=qty; else cart.push({productId:selectedProduct.id,name:selectedProduct.name,qty,price,cost:selectedProduct.cost||0});
- selectedProduct=null;$("saleSearch").value="";$("saleQty").value=1;$("salePrice").value="";renderCart();
-};
-
-function renderCart(){
- $("cartTable").innerHTML=cart.map((x,i)=>`<tr><td>${x.name}</td><td>${x.qty}</td><td>${money(x.price)} ج</td><td>${money(x.qty*x.price)} ج</td><td><button class="rowbtn red" onclick="cart.splice(${i},1);renderCart()">حذف</button></td></tr>`).join("");
- $("cartTotal").textContent=money(cart.reduce((s,x)=>s+x.qty*x.price,0));
-};
-
-window.completeSale=async()=>{
- if(!cart.length)return alert("سلة المبيعات فارغة.");
- const total=cart.reduce((s,x)=>s+x.qty*x.price,0);
- const invoice={number:"INV-"+Date.now().toString().slice(-6),total,items:[...cart],date:new Date().toLocaleString("ar-EG")};
  try{
-  for(const item of cart){
-   const p=products.find(x=>x.id===item.productId);
-   if(p)await updateDoc(docRef("products",item.productId),{qty:p.qty-item.qty});
+  // خصم الكمية من المخزن
+  await updateDoc(docRef("products", p.id), {qty: p.qty - 1});
+  // تسجيل الفاتورة وحركة الخزينة
+  await addDoc(col("sales"), invoice);
+  await addDoc(col("treasury"), {type:"in", amount: p.price, note:`فاتورة مبيعات فوري #${invoice.number}`, date: invoice.date});
+
+  // عرض الفاتورة في الجدول المؤقت
+  $("cartTable").innerHTML=`<tr><td>${p.name}</td><td>1</td><td>${money(p.price)} ج</td><td><b>${money(p.price)} ج</b></td></tr>`;
+  $("saleSearch").value="";
+  $("searchResults").innerHTML="";
+
+  await loadBusiness();
+
+  // فحص هل زر الطباعة التلقائية مفعل أم لا
+  const autoPrint = $("autoPrintToggle") ? $("autoPrintToggle").checked : true;
+  if(autoPrint){
+   printInvoiceDirectly(invoice);
   }
-  await addDoc(col("sales"),invoice);
-  // ملاحظة: مبيعات اليوم يتم تسجيلها تفصيلياً في جدول الفواتير وتضاف أوتوماتيك للخزينة بعد منتصف الليل
-  renderStats();
-  cart=[];renderCart();await loadBusiness();alert(`تمت عملية البيع بنجاح وتحصيل ${money(total)} جنيه!`);
- }catch(e){alert("خطأ أثناء إتمام البيع: "+e.message)}
+
+  alert(`تم إتمام البيع بنجاح وتحصيل ${money(p.price)} جنيه!`);
+ }catch(e){alert("خطأ أثناء إتمام البيع: "+e.message);}
 };
+
+function printInvoiceDirectly(inv){
+ const shop = profile?.shopName || "متجري";
+ $("printArea").innerHTML = `
+  <div style="text-align:center; font-family:Arial,sans-serif; padding:10px;">
+   <h3>${shop}</h3>
+   <p>فاتورة مبيعات سريعة: ${inv.number}</p>
+   <p>التاريخ: ${inv.date}</p>
+   <hr style="border:1px dashed #000;">
+   <table style="width:100%; text-align:right; font-size:12px;">
+    <tr><th>الصنف</th><th>كمية</th><th>السعر</th></tr>
+    ${inv.items.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>${money(i.price)}</td></tr>`).join("")}
+   </table>
+   <hr style="border:1px dashed #000;">
+   <h4>الإجمالي الكلي: ${money(inv.total)} جنيه</h4>
+   <p style="font-size:11px; margin-top:15px;">شكراً لزيارتكم — تطوير: محمد الصلاحي</p>
+  </div>
+ `;
+ window.print();
+}
 
 window.addTreasuryTransaction=async()=>{
  const type=$("tType").value, amount=Number($("tAmount").value)||0, note=$("tNote").value.trim();
  if(amount<=0)return alert("أدخل مبلغاً صحيحاً.");
- try{
-  await addDoc(col("treasury"),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});
-  $("tAmount").value="";$("tNote").value="";
-  await loadTreasury();renderStats();alert("تم تسجيل الحركة بنجاح.");
- }catch(e){}
+ await addDoc(col("treasury"),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});
+ $("tAmount").value=""; $("tNote").value="";
+ await loadTreasury(); renderStats(); alert("تم تسجيل الحركة.");
 };
 
 function renderTreasury(){
@@ -733,27 +674,25 @@ function renderTreasury(){
  $("treasuryTable").innerHTML=treasury.map(t=>{
   if(t.type==="in")tIn+=Number(t.amount)||0; else tOut+=Number(t.amount)||0;
   return `<tr><td><span class="tag ${t.type==='in'?'good':''}">${t.type==='in'?'وارد':'صادر'}</span></td><td>${money(t.amount)} ج</td><td>${t.note}</td><td>${t.date}</td></tr>`;
- }).join("")||"<tr><td colspan='4'>لا توجد حركات مالية</td></tr>";
+ }).join("")||"<tr><td colspan='4'>لا توجد حركات</td></tr>";
  $("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" جنيه";
 }
 
 window.addExpense=async()=>{
  const name=$("expenseName").value.trim(), amount=Number($("expenseAmount").value)||0;
  if(!name||amount<=0)return alert("أدخل اسم المصروف والمبلغ.");
- try{
-  await addDoc(col("expenses"),{name,amount,date:new Date().toLocaleString("ar-EG")});
-  await addDoc(col("treasury"),{type:"out",amount,note:`مصروف: ${name}`,date:new Date().toLocaleString("ar-EG")});
-  $("expenseName").value="";$("expenseAmount").value="";
-  await loadBusiness();alert("تم حفظ المصروف بنجاح.");
- }catch(e){}
+ await addDoc(col("expenses"),{name,amount,date:new Date().toLocaleString("ar-EG")});
+ await addDoc(col("treasury"),{type:"out",amount,note:`مصروف: ${name}`,date:new Date().toLocaleString("ar-EG")});
+ $("expenseName").value=""; $("expenseAmount").value="";
+ await loadBusiness(); alert("تم حفظ المصروف.");
 };
 
 function renderExpenses(){
- $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${e.name}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات مسجلة</td></tr>";
-};
+ $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${e.name}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات</td></tr>";
+}
 
 window.renderSales=function(){
- $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="alert('تفاصيل الفاتورة #${s.number}')">عرض</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير سابقة</td></tr>";
+ $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printInvoiceDirectly(${JSON.stringify(s).replace(/"/g, '&quot;')})">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
 };
 
 window.renderStats=function(){

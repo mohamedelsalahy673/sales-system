@@ -81,8 +81,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 .search-container{position:relative;min-width:0}
 #searchResults{position:absolute;top:100%;right:0;width:100%;z-index:100;background:white;box-shadow:0 4px 12px #0002;border-radius:6px;overflow:auto;max-height:220px}
 #searchResults button{border-radius:0!important}
-
-/* إضافات إدارة البلايستيشن */
 .ps-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
 .ps-tabs button{flex:1;min-width:120px}
 .ps-tabs button.active{background:#178653;color:white}
@@ -123,7 +121,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  <div>
   <div class="brand">NexPOS PRO</div>
   <div class="system-desc">منصة إدارة الأنشطة والخدمات</div>
-  <span class="version">MULTI SYSTEM V14</span>
+  <span class="version">MULTI SYSTEM V15</span>
  </div>
  <div>
   <span id="networkStatus" class="tag good">متصل بالخادم</span>
@@ -239,7 +237,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  </div>
 </section>
 
-<!-- لوحة البلايستيشن المطورة -->
 <section id="playstationPanel" class="hidden">
  <div class="card">
   <div class="top">
@@ -252,6 +249,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="stat">أجهزة تعمل الآن<strong id="psRunningDevices">0</strong></div>
    <div class="stat">إجمالي المشروبات<strong id="psDrinksCount">0</strong></div>
    <div class="stat">إجمالي السندوتشات<strong id="psSandwichesCount">0</strong></div>
+   <div class="stat">إيرادات الجلسات<strong id="psSessionsRevenue">0 جنيه</strong></div>
   </div>
 
   <div class="card" style="text-align:center">
@@ -263,6 +261,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button id="psDevicesTab" class="active" onclick="showPsSection('devices')">🎮 الأجهزة</button>
    <button id="psDrinksTab" onclick="showPsSection('drinks')">🥤 المشروبات</button>
    <button id="psSandwichesTab" onclick="showPsSection('sandwiches')">🥪 السندوتشات</button>
+   <button id="psSessionsTab" onclick="showPsSection('sessions')">📄 سجل الجلسات</button>
   </div>
 
   <div id="psDevicesSection">
@@ -319,6 +318,36 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <thead><tr><th>السندوتش</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead>
     <tbody id="psSandwichesTable"></tbody>
    </table></div>
+  </div>
+
+  <div id="psSessionsSection" class="hidden">
+   <div class="card">
+    <div class="top">
+     <h3>سجل جلسات البلايستيشن والفواتير</h3>
+     <button class="secondary" onclick="loadPlaystationData()">تحديث السجل</button>
+    </div>
+    <div class="grid">
+     <div class="stat">عدد الجلسات<strong id="psSessionsTotal">0</strong></div>
+     <div class="stat">إجمالي الإيرادات<strong id="psSessionsRevenue2">0 جنيه</strong></div>
+    </div>
+    <div class="tablewrap">
+     <table>
+      <thead>
+       <tr>
+        <th>رقم الفاتورة</th>
+        <th>الجهاز</th>
+        <th>وقت البداية</th>
+        <th>وقت النهاية</th>
+        <th>مدة التشغيل</th>
+        <th>سعر الساعة</th>
+        <th>الإجمالي</th>
+        <th>الفاتورة</th>
+       </tr>
+      </thead>
+      <tbody id="psSessionsTable"></tbody>
+     </table>
+    </div>
+   </div>
   </div>
  </div>
 </section>
@@ -502,10 +531,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {
  getFirestore,doc,setDoc,getDoc,updateDoc,collection,
- addDoc,getDocs,deleteDoc,serverTimestamp
+ addDoc,getDocs,deleteDoc,serverTimestamp,runTransaction
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-/* إعدادات Firebase */
 const firebaseConfig={
  apiKey:"AIzaSyABpb7h1WXzodOKoxoRvvkXZSrPQ6UgZiA",
  authDomain:"nexpos-14155.firebaseapp.com",
@@ -520,6 +548,7 @@ const firebaseConfig={
 const OWNER_EMAIL="melsalahy689@gmail.com";
 const OWNER_USERNAME="elsalahy";
 const SUPPORT_PHONE="201062883414";
+const PS_DEFAULT_HOURLY_RATE=40;
 
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
@@ -531,9 +560,9 @@ let registeringNow=false;
 let products=[],sales=[],expenses=[],treasury=[],cart=[];
 let selectedProduct=null,lastRegisteredUser=null;
 
-/* بيانات البلايستيشن */
 let psDevices=[];
 let psItems=[];
+let psSessions=[];
 let psTimer=null;
 let psEndingDevices=new Set();
 
@@ -844,15 +873,18 @@ window.deleteUser=async id=>{
 };
 
 /* ============================
-   وظائف إدارة البلايستيشن
+   إدارة البلايستيشن والجلسات
 ============================ */
 
 window.showPsSection=which=>{
- const sections=["devices","drinks","sandwiches"];
+ const sections=["devices","drinks","sandwiches","sessions"];
  sections.forEach(s=>{
-  $(`ps${s.charAt(0).toUpperCase()+s.slice(1)}Section`).classList.toggle("hidden",s!==which);
-  $(`ps${s.charAt(0).toUpperCase()+s.slice(1)}Tab`).classList.toggle("active",s===which);
+  const sectionId=`ps${s.charAt(0).toUpperCase()+s.slice(1)}Section`;
+  const tabId=`ps${s.charAt(0).toUpperCase()+s.slice(1)}Tab`;
+  if($(sectionId))$(sectionId).classList.toggle("hidden",s!==which);
+  if($(tabId))$(tabId).classList.toggle("active",s===which);
  });
+ if(which==="sessions")renderPsSessions();
 };
 
 async function loadPlaystationData(){
@@ -866,23 +898,24 @@ async function loadPlaystationData(){
   psDevices=devicesSnap.docs.map(d=>({id:d.id,...d.data()}));
   psItems=itemsSnap.docs.map(d=>({id:d.id,...d.data()}));
 
-  /* إنهاء أي جلسة انتهى وقتها أثناء إغلاق الصفحة */
-  const now=Date.now();
+  // إغلاق الجلسات المنتهية حتى لو كانت الصفحة مغلقة
   for(const device of psDevices){
-   if(device.status==="running"&&Number(device.endAt)<=now){
-    await updateDoc(docRef("devices",device.id),{
-     status:"idle",
-     endedAt:now,
-     endAt:null
-    });
-    device.status="idle";
-    device.endAt=null;
+   if(device.status==="running"&&Number(device.endAt)<=Date.now()){
+    await finalizePsSession(device,"automatic");
    }
   }
+
+  const refreshed=await getDocs(col("devices"));
+  psDevices=refreshed.docs.map(d=>({id:d.id,...d.data()}));
+
+  const sessionsSnap=await getDocs(col("psSessions"));
+  psSessions=sessionsSnap.docs.map(d=>({id:d.id,...d.data()}));
 
   renderPsDevices();
   renderPsItems();
   renderPsStats();
+  renderPsSessions();
+
  }catch(e){
   console.error(e);
   alert("تعذر تحميل بيانات البلايستيشن: "+e.message);
@@ -898,6 +931,7 @@ window.addPsDevice=async()=>{
    status:"idle",
    startedAt:null,
    endAt:null,
+   hourlyRate:PS_DEFAULT_HOURLY_RATE,
    createdAt:Date.now()
   });
   $("psNewDeviceName").value="";
@@ -921,29 +955,154 @@ window.deletePsDevice=async id=>{
  }
 };
 
+async function finalizePsSession(device,reason="manual"){
+ if(!currentUser||!device)return;
+ if(psEndingDevices.has(device.id))return;
+
+ psEndingDevices.add(device.id);
+
+ try{
+  const now=Date.now();
+  const sessionId=device.sessionId||("legacy_"+device.id+"_"+(device.startedAt||now));
+  const sessionRef=docRef("psSessions",sessionId);
+  const deviceReference=docRef("devices",device.id);
+  const treasuryRef=doc(col("psTreasury"));
+
+  await runTransaction(db,async transaction=>{
+   const sessionSnap=await transaction.get(sessionRef);
+   const deviceSnap=await transaction.get(deviceReference);
+
+   if(!deviceSnap.exists())return;
+
+   const currentDevice=deviceSnap.data();
+
+   if(sessionSnap.exists()&&sessionSnap.data().finalized===true){
+    transaction.update(deviceReference,{
+     status:"idle",
+     endAt:null,
+     sessionId:null,
+     startedAt:null
+    });
+    return;
+   }
+
+   const sessionData=sessionSnap.exists()?sessionSnap.data():{};
+   const startedAt=Number(sessionData.startedAt||currentDevice.startedAt)||now;
+   const hourlyRate=Number(sessionData.hourlyRate||currentDevice.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
+
+   const elapsedMs=Math.max(0,now-startedAt);
+   const elapsedMinutes=Math.max(1,Math.ceil(elapsedMs/60000));
+   const total=Math.ceil((elapsedMinutes/60)*hourlyRate);
+   const invoiceNumber="PS-"+now.toString().slice(-8);
+
+   const invoice={
+    invoiceNumber,
+    deviceId:device.id,
+    deviceName:currentDevice.name||device.name,
+    startedAt,
+    endedAt:now,
+    elapsedMinutes,
+    hourlyRate,
+    total,
+    paymentMethod:"cash",
+    paymentStatus:"paid",
+    finalized:true,
+    reason,
+    date:new Date(now).toLocaleString("ar-EG"),
+    createdAt:now
+   };
+
+   transaction.set(sessionRef,invoice);
+
+   transaction.set(treasuryRef,{
+    type:"in",
+    amount:total,
+    note:"إيراد جلسة بلايستيشن - "+invoiceNumber,
+    deviceName:currentDevice.name||device.name,
+    sessionId,
+    date:new Date(now).toLocaleString("ar-EG"),
+    createdAt:now
+   });
+
+   transaction.update(deviceReference,{
+    status:"idle",
+    endAt:null,
+    startedAt:null,
+    sessionId:null,
+    endedAt:now,
+    lastSessionId:sessionId,
+    lastSessionTotal:total
+   });
+  });
+
+  const updatedDevice=await getDoc(deviceReference);
+  if(updatedDevice.exists()){
+   Object.assign(device,updatedDevice.data());
+  }
+
+  const sessionsSnap=await getDocs(col("psSessions"));
+  psSessions=sessionsSnap.docs.map(d=>({id:d.id,...d.data()}));
+
+  renderPsDevices();
+  renderPsStats();
+  renderPsSessions();
+
+ }catch(e){
+  console.error("خطأ إنهاء الجلسة:",e);
+  alert("تعذر تسجيل فاتورة الجلسة: "+e.message);
+ }finally{
+  psEndingDevices.delete(device.id);
+ }
+}
+
 window.startPsDevice=async id=>{
  const device=psDevices.find(d=>d.id===id);
  if(!device)return alert("الجهاز غير موجود.");
  if(device.status==="running")return alert("الجهاز يعمل بالفعل.");
+
  const select=$(`psDuration_${id}`);
  const minutes=Number(select?.value||30);
+
  if(![30,60,120,180].includes(minutes))return alert("اختر مدة صحيحة.");
+
  const now=Date.now();
- const endAt=now+(minutes*60*1000);
+ const endAt=now+(minutes*60000);
+ const sessionRef=doc(col("psSessions"));
+ const sessionId=sessionRef.id;
+ const hourlyRate=Number(device.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
+
  try{
+  await setDoc(sessionRef,{
+   deviceId:id,
+   deviceName:device.name,
+   startedAt:now,
+   endAt,
+   plannedMinutes:minutes,
+   hourlyRate,
+   finalized:false,
+   createdAt:now
+  });
+
   await updateDoc(docRef("devices",id),{
    status:"running",
    startedAt:now,
    endAt,
-   lastDuration:minutes
+   lastDuration:minutes,
+   hourlyRate,
+   sessionId
   });
+
   device.status="running";
   device.startedAt=now;
   device.endAt=endAt;
-  device.lastDuration=minutes;
+  device.sessionId=sessionId;
+  device.hourlyRate=hourlyRate;
+
   renderPsDevices();
   renderPsStats();
+
  }catch(e){
+  console.error(e);
   alert("تعذر بدء الجلسة: "+e.message);
  }
 };
@@ -951,18 +1110,31 @@ window.startPsDevice=async id=>{
 window.extendPsDevice=async id=>{
  const device=psDevices.find(d=>d.id===id);
  if(!device||device.status!=="running")return alert("الجهاز غير مشغل.");
+
  const select=$(`psExtend_${id}`);
  const minutes=Number(select?.value||30);
+
  if(![30,60,120,180].includes(minutes))return alert("اختر مدة صحيحة.");
- const newEndAt=Math.max(Date.now(),Number(device.endAt)||0)+(minutes*60*1000);
+
+ const newEndAt=Math.max(Date.now(),Number(device.endAt)||0)+(minutes*60000);
+
  try{
   await updateDoc(docRef("devices",id),{
    endAt:newEndAt,
    lastExtendedAt:Date.now()
   });
+
+  if(device.sessionId){
+   await updateDoc(docRef("psSessions",device.sessionId),{
+    endAt:newEndAt,
+    lastExtendedAt:Date.now()
+   });
+  }
+
   device.endAt=newEndAt;
   renderPsDevices();
   alert("تم تمديد وقت الجهاز بنجاح.");
+
  }catch(e){
   alert("تعذر تمديد الوقت: "+e.message);
  }
@@ -971,21 +1143,10 @@ window.extendPsDevice=async id=>{
 window.stopPsDevice=async id=>{
  const device=psDevices.find(d=>d.id===id);
  if(!device||device.status!=="running")return;
- if(!confirm("هل تريد إنهاء جلسة "+device.name+"؟"))return;
- try{
-  await updateDoc(docRef("devices",id),{
-   status:"idle",
-   endAt:null,
-   endedAt:Date.now()
-  });
-  device.status="idle";
-  device.endAt=null;
-  device.startedAt=null;
-  renderPsDevices();
-  renderPsStats();
- }catch(e){
-  alert("تعذر إنهاء الجلسة: "+e.message);
- }
+
+ if(!confirm("هل تريد إنهاء جلسة "+device.name+" وتسجيل الفاتورة؟"))return;
+
+ await finalizePsSession(device,"manual");
 };
 
 function formatPsTime(ms){
@@ -998,6 +1159,7 @@ function formatPsTime(ms){
 
 function renderPsDevices(){
  const box=$("psDevicesList");
+
  if(!psDevices.length){
   box.innerHTML='<div class="ps-empty">لا توجد أجهزة حتى الآن. أضف أول جهاز من الأعلى.</div>';
   return;
@@ -1006,6 +1168,7 @@ function renderPsDevices(){
  box.innerHTML=psDevices.map(device=>{
   const running=device.status==="running"&&Number(device.endAt)>Date.now();
   const time=running?formatPsTime(Number(device.endAt)-Date.now()):"00:00:00";
+
   return `<div class="ps-device-card ${running?"running":""}">
    <div class="top">
     <h3>🎮 ${escapeHTML(device.name)}</h3>
@@ -1013,6 +1176,7 @@ function renderPsDevices(){
    </div>
    <div class="ps-device-time ${running?"":"ps-device-idle"}" id="psClock_${device.id}">${time}</div>
    <p class="muted" style="text-align:center">${running?"الوقت المتبقي":"الجهاز جاهز لبدء جلسة جديدة"}</p>
+   <p class="muted" style="text-align:center">سعر الساعة: ${money(device.hourlyRate||PS_DEFAULT_HOURLY_RATE)} جنيه</p>
    <div class="ps-device-actions">
     ${running?`
      <select id="psExtend_${device.id}">
@@ -1040,9 +1204,9 @@ function renderPsDevices(){
 
 function startPsTimer(){
  if(psTimer)clearInterval(psTimer);
+
  psTimer=setInterval(async()=>{
   const now=Date.now();
-  let changed=false;
 
   for(const device of psDevices){
    if(device.status!=="running")continue;
@@ -1052,29 +1216,70 @@ function startPsTimer(){
 
    if(remaining<=0){
     if(clock)clock.textContent="00:00:00";
+
     if(!psEndingDevices.has(device.id)){
-     psEndingDevices.add(device.id);
-     device.status="idle";
-     device.endAt=null;
-     changed=true;
-     updateDoc(docRef("devices",device.id),{
-      status:"idle",
-      endAt:null,
-      endedAt:now
-     }).catch(e=>console.error("تعذر تحديث حالة الجهاز:",e))
-       .finally(()=>psEndingDevices.delete(device.id));
+     await finalizePsSession(device,"automatic");
     }
    }else if(clock){
     clock.textContent=formatPsTime(remaining);
    }
   }
 
-  if(changed){
-   renderPsDevices();
-   renderPsStats();
-  }
+  renderPsStats();
  },1000);
 }
+
+function renderPsSessions(){
+ const table=$("psSessionsTable");
+ if(!table)return;
+
+ const sorted=[...psSessions].sort((a,b)=>
+  Number(b.endedAt||0)-Number(a.endedAt||0)
+ );
+
+ const total=sorted.reduce((sum,s)=>sum+Number(s.total||0),0);
+
+ $("psSessionsTotal").textContent=sorted.length;
+ $("psSessionsRevenue").textContent=money(total)+" جنيه";
+ $("psSessionsRevenue2").textContent=money(total)+" جنيه";
+
+ table.innerHTML=sorted.map(s=>`
+  <tr>
+   <td>${escapeHTML(s.invoiceNumber||"—")}</td>
+   <td>${escapeHTML(s.deviceName||"—")}</td>
+   <td>${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</td>
+   <td>${s.endedAt?new Date(s.endedAt).toLocaleString("ar-EG"):"—"}</td>
+   <td>${Number(s.elapsedMinutes)||0} دقيقة</td>
+   <td>${money(s.hourlyRate)} جنيه</td>
+   <td><b>${money(s.total)} جنيه</b></td>
+   <td><button class="rowbtn secondary" onclick="printPsInvoice('${s.id}')">طباعة</button></td>
+  </tr>
+ `).join("")||'<tr><td colspan="8">لا توجد جلسات مسجلة حتى الآن</td></tr>';
+}
+
+window.printPsInvoice=id=>{
+ const session=psSessions.find(s=>s.id===id);
+ if(!session)return;
+
+ $("printArea").innerHTML=`
+ <div style="text-align:center;font-family:Arial;padding:10px">
+  <h2>${escapeHTML(profile?.shopName||"نشاط البلايستيشن")}</h2>
+  <h3>فاتورة جلسة بلايستيشن</h3>
+  <hr>
+  <p>رقم الفاتورة: ${escapeHTML(session.invoiceNumber||"—")}</p>
+  <p>الجهاز: ${escapeHTML(session.deviceName||"—")}</p>
+  <p>بداية الجلسة: ${new Date(session.startedAt).toLocaleString("ar-EG")}</p>
+  <p>نهاية الجلسة: ${new Date(session.endedAt).toLocaleString("ar-EG")}</p>
+  <p>مدة التشغيل: ${Number(session.elapsedMinutes)||0} دقيقة</p>
+  <p>سعر الساعة: ${money(session.hourlyRate)} جنيه</p>
+  <hr>
+  <h2>الإجمالي: ${money(session.total)} جنيه</h2>
+  <p>شكراً لزيارتكم</p>
+  <p>تطوير: محمد الصلاحي</p>
+ </div>`;
+
+ window.print();
+};
 
 window.addPsItem=async category=>{
  const isDrink=category==="drink";

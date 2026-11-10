@@ -493,7 +493,7 @@ window.stopPsDevice=async id=>{
  await finalizePsSession(d,"manual");
 };
 
-/* إضافة الطلبات إلى فاتورة الجهاز (الدالة المصححة بدقة) */
+/* إضافة الطلبات إلى فاتورة الجهاز */
 window.addOrderToRoom = async (deviceId) => {
   const d = psDevices.find(x => x.id === deviceId);
   if (!d || d.status !== "running" || !d.sessionId) return alert("لا توجد جلسة نشطة على هذا الجهاز.");
@@ -944,7 +944,7 @@ function renderExpenses(){
  $("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا توجد مصروفات</td></tr>";
 }
 function renderSales(){
- $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printSavedInvoice('${s.id}')">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
+ $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printSavedInvoice('${s.id}')">طباعة</button></div></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>";
 }
 window.printSavedInvoice=id=>{const inv=sales.find(s=>s.id===id);if(inv)printInvoiceDirectly(inv);};
 function renderStats(){

@@ -231,7 +231,8 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     </div>
     <hr>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
-      <button class="green" onclick="confirmAndPrintPsInvoice()">✔ تأكيد وطباعة</button>
+      <button class="green" onclick="confirmAndPrintPsInvoice(true)" style="grid-column: 1 / -1;">✔ تأكيد وطباعة</button>
+      <button class="dark" onclick="confirmAndPrintPsInvoice(false)">💾 تأكيد فقط</button>
       <button class="red" onclick="$('psConfirmInvoiceModal').classList.add('hidden')">✖ إلغاء</button>
     </div>
   </div>
@@ -544,7 +545,6 @@ window.stopPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status!=="running")return;
  
- // بدلاً من رسالة التأكيد، نعرض الفاتورة
  window.currentInvoiceToConfirm = d;
  
  const now = Date.now();
@@ -581,10 +581,10 @@ window.stopPsDevice=async id=>{
  $("psConfirmInvoiceModal").classList.remove("hidden");
 };
 
-window.confirmAndPrintPsInvoice = async () => {
+window.confirmAndPrintPsInvoice = async (shouldPrint = true) => {
   $("psConfirmInvoiceModal").classList.add("hidden");
   if(window.currentInvoiceToConfirm) {
-    await finalizePsSession(window.currentInvoiceToConfirm, "manual");
+    await finalizePsSession(window.currentInvoiceToConfirm, "manual", shouldPrint);
     window.currentInvoiceToConfirm = null;
   }
 };
@@ -639,7 +639,7 @@ window.removeRoomOrder=async(deviceId,index)=>{
  }catch(e){alert(e.message);}
 };
 
-async function finalizePsSession(device,reason="manual"){
+async function finalizePsSession(device,reason="manual", shouldPrint = true){
  if(!currentUser||!device||psEndingDevices.has(device.id))return;
  psEndingDevices.add(device.id);
  try{
@@ -684,7 +684,7 @@ async function finalizePsSession(device,reason="manual"){
   if(updated.exists())Object.assign(device,updated.data());
   psSessions=sessions.docs.map(x=>({id:x.id,...x.data()}));
   renderPsDevices();renderPsStats();renderPsSessions();
-  printPsInvoice(sessionId);
+  if(shouldPrint) printPsInvoice(sessionId);
  }catch(e){console.error(e);alert("تعذر تسجيل الفاتورة: "+e.message);}
  finally{psEndingDevices.delete(device.id);}
 }

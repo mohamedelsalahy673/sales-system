@@ -132,7 +132,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div>
      <div class="brand" style="margin:0;">NexPOS PRO</div>
      <div class="system-desc">منصة إدارة الأنشطة والخدمات</div>
-     <span class="version">MULTI SYSTEM V20</span>
+     <span class="version">MULTI SYSTEM V21</span>
    </div>
  </div>
  <div><span id="networkStatus" class="tag good">متصل بالخادم</span> <button class="secondary" onclick="support()">الدعم الفني</button></div>
@@ -399,7 +399,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'nexpos-v20';
+      const CACHE_NAME = 'nexpos-v21';
       self.addEventListener('install', (e) => { self.skipWaiting(); });
       self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
       self.addEventListener('fetch', (e) => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });
@@ -467,7 +467,7 @@ window.addEventListener('online', updateNetworkStatus); window.addEventListener(
 let currentUser=null,profile=null,selectedSystem="sales",activeSystem="sales",registeringNow=false;
 let products=[],sales=[],expenses=[],treasury=[],cart=[],selectedProduct=null,lastRegisteredUser=null;
 let psDevices=[],psItems=[],psSessions=[],psTimer=null,psEndingDevices=new Set();
-let currentShiftCloseTime = 0; // متغير لتخزين وقت إغلاق الوردية
+let currentShiftCloseTime = 0; 
 const $=id=>document.getElementById(id);
 const money=n=>(Number(n)||0).toLocaleString("ar-EG",{minimumFractionDigits:2,maximumFractionDigits:2});
 const shopRef=()=>`shops/${currentUser.uid}`;
@@ -534,7 +534,7 @@ window.register=async()=>{
   const cred=await createUserWithEmailAndPassword(auth,email,password);
   const systemData={status:"pending",plan:"غير مفعل",requestedPlan:selectedPlan.name,requestedPrice:selectedPlan.price,requestedDays:days,expiryDate:null,requestedAt:serverTimestamp()};
   const systems={};systems[selectedSystem]=systemData;
-  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone:phone,email:email,role:"owner",systems:systems,createdAt:serverTimestamp()});
+  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone:phone,email:email,role:"customer",systems:systems,createdAt:serverTimestamp()});
   lastRegisteredUser={name,shop,email,phone,system:selectedSystem,plan:selectedPlan.name,price:selectedPlan.price};
   $("pendingDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(shop)}<br><b>الباقة:</b> ${selectedPlan.name}`;
   await signOut(auth); registeringNow=false;
@@ -977,7 +977,6 @@ async function renderPsSessions(){
  let filtered = allSessions.filter(s => s.finalized || s.endedAt);
  if (filterDate) { filtered = filtered.filter(s => { const d = new Date(s.endedAt || s.createdAt); const localDate = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; return localDate === filterDate; }); }
  
- // تصفية الجلسات بناءً على وقت إغلاق الوردية
  if (currentShiftCloseTime > 0 && filterDate === new Date().toISOString().slice(0, 10)) {
      filtered = filtered.filter(s => Number(s.endedAt) > currentShiftCloseTime);
  }
@@ -1066,7 +1065,6 @@ window.openPsShiftModal = async () => {
   const today = new Date().toISOString().slice(0, 10);
   const todaySessions = psSessions.filter(s => (s.finalized || s.endedAt) && new Date(s.endedAt || s.createdAt).toISOString().slice(0, 10) === today);
   
-  // تصفية بناءً على وقت التقفيل
   let filteredShiftSessions = todaySessions;
   if (currentShiftCloseTime > 0) {
       filteredShiftSessions = todaySessions.filter(s => Number(s.endedAt) > currentShiftCloseTime);
@@ -1093,10 +1091,10 @@ window.closePsShift = async () => {
       try {
         const shiftRef = doc(col("psShifts"), "current");
         await setDoc(shiftRef, { closedAt: Date.now(), date: new Date().toLocaleString("ar-EG"), closedBy: profile.customerName });
-        currentShiftCloseTime = Date.now(); // تحديث وقت الإغلاق فوراً
+        currentShiftCloseTime = Date.now(); 
         $("psShiftModal").classList.add("hidden");
         Swal.fire('تم!', 'تم تقفيل الوردية بنجاح.', 'success');
-        await renderPsSessions(); // تحديث الجدول والإحصائيات لتصفير المبيعات
+        await renderPsSessions(); 
       } catch(e) { 
         showAlert(e.message, "error"); 
       }

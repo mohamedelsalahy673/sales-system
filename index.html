@@ -535,7 +535,6 @@ window.addPsDevice=async type=>{
  if(!name)return alert(isVip?"اكتب اسم جهاز VIP.":(isBase?"اكتب اسم جهاز القاعدة العربي.":"اكتب اسم الروم."));
  if(!Number.isFinite(rate)||rate<=0)return alert("أدخل سعر ساعة صحيح.");
  try{
-  // ✅ التعديل: استخدام doc و setDoc ليعمل أوفلاين
   const newDeviceRef = doc(col("devices"));
   await setDoc(newDeviceRef,{name,deviceType:type,status:"idle",startedAt:null,endAt:null,hourlyRate:rate,createdAt:Date.now()});
   $(nameInput).value="";$(rateInput).value="";
@@ -579,7 +578,6 @@ window.startPsDevice=async id=>{
   endAt=null;
  }else return alert("اختر طريقة حساب صحيحة.");
 
- // ✅ التعديل: إنشاء ID محلياً للجلسة
  const sessionRef=doc(col("psSessions")),sessionId=sessionRef.id;
  try{
   await setDoc(sessionRef,{
@@ -594,14 +592,38 @@ window.startPsDevice=async id=>{
    sessionAmount:mode==="amount"?plannedAmount:0
   });
   
+  // ✅ 1. تحديث بيانات الجهاز في الذاكرة فوراً
   Object.assign(d,{status:"running",startedAt:now,endAt,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:plannedAmount});
   
-  // ✅ حدّث الواجهة فورًا بدون انتظار السيرفر
+  // ✅ 2. إضافة الجلسة الجديدة لسجل الجلسات عشان العداد يقرأ منها
+  psSessions.push({
+    id: sessionId,
+    deviceId: id,
+    deviceName: d.name,
+    deviceType: window.getDeviceType(d),
+    startedAt: now,
+    endAt: endAt,
+    plannedMinutes: minutes,
+    hourlyRate: rate,
+    sessionMode: mode,
+    plannedAmount: mode === "amount" ? plannedAmount : 0,
+    orders: [],
+    finalized: false,
+    createdAt: now
+  });
+
+  // ✅ 3. رسم الواجهة فوراً (هنا العداد هيبدأ يشتغل)
   renderPsDevices();
   renderPsStats();
+  renderPsSessions();
   
-  // ✅ حاول تحديث في الخلفية (بدون ما نمنع الجلسة)
-  loadPlaystationData().catch(err => console.warn('⚠️ Background refresh failed:', err));
+  // ✅ 4. تشغيل العداد (لو مش شغال)
+  startPsTimer();
+
+  // ✅ 5. محاولة المزامنة في الخلفية بدون تعطيل الشاشة
+  if (navigator.onLine) {
+    loadPlaystationData().catch(err => console.warn('⚠️ Background refresh failed:', err));
+  }
  }catch(e){console.error(e);alert("تعذر بدء الجلسة: "+e.message);}
 };
 
@@ -623,7 +645,9 @@ window.extendPsDevice=async id=>{
   });
   await updateDoc(docRef("devices",id),{endAt:newEndAt,lastExtendedAt:now});
   d.endAt=newEndAt;renderPsDevices();
-  loadPlaystationData().catch(err => console.warn('⚠️ Background refresh failed:', err));
+  if (navigator.onLine) {
+    loadPlaystationData().catch(err => console.warn('⚠️ Background refresh failed:', err));
+  }
   alert("تم تمديد وقت الجهاز.");
  }catch(e){alert("تعذر التمديد: "+e.message);}
 };
@@ -786,7 +810,9 @@ async function finalizePsSession(device,reason="manual", shouldPrint = true){
   if(shouldPrint) printPsInvoice(sessionId);
   
   // ✅ حاول تحديث في الخلفية
-  loadPlaystationData().catch(err => console.warn('⚠️ Background refresh failed:', err));
+  if (navigator.onLine) {
+    loadPlaystationData().catch(err => console.warn('⚠️ Background refresh failed:', err));
+  }
  }catch(e){
   console.error(e);
   if(navigator.onLine)alert("تعذر تسجيل الفاتورة: "+e.message);
@@ -948,7 +974,6 @@ window.addPsItem=async category=>{
  if(!Number.isFinite(price)||price<=0)return alert("أدخل سعرًا صحيحًا.");
  if(!Number.isInteger(qty)||qty<0)return alert("أدخل كمية صحيحة.");
  try{
-  // ✅ التعديل: استخدام doc و setDoc ليعمل أوفلاين
   const newItemRef = doc(col("psItems"));
   await setDoc(newItemRef, {category, name, price, qty, createdAt: Date.now()});
   $(drink?"psDrinkName":"psSandwichName").value="";$(drink?"psDrinkPrice":"psSandwichPrice").value="";$(drink?"psDrinkQty":"psSandwichQty").value="1";
@@ -1043,7 +1068,6 @@ window.clearTreasuryData=async()=>{
 window.saveProduct=async()=>{
  const name=$("pName").value.trim(),cost=Number($("pCost").value)||0,price=Number($("pPrice").value)||0,qty=Number($("pQty").value)||0;
  if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع.");
- // ✅ التعديل: استخدام doc و setDoc ليعمل أوفلاين
  const newProductRef = doc(col("products"));
  await setDoc(newProductRef, {name, cost, price, qty, createdAt: serverTimestamp()});
  $("pName").value="";$("pCost").value="";$("pPrice").value="";$("pQty").value=10;await loadProducts();renderStats();alert("تم حفظ المنتج.");
@@ -1096,7 +1120,6 @@ window.completeSale=async()=>{
  try{
   for(const item of cart){const p=products.find(x=>x.id===item.productId);await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});}
   
-  // ✅ التعديل: استخدام doc و setDoc ليعمل أوفلاين
   const newSaleRef = doc(col("sales"));
   await setDoc(newSaleRef, invoice);
   

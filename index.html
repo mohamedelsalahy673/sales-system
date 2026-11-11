@@ -6,6 +6,7 @@
 <title>NexPOS PRO</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#2458d3">
+<link rel="icon" type="image/png" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f3f5fa;color:#1c2940;font-family:Arial,sans-serif}
@@ -105,12 +106,25 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <body>
 <div class="wrap">
 <header class="top">
- <div><div class="brand">NexPOS PRO</div><div class="system-desc">منصة إدارة الأنشطة والخدمات</div><span class="version">MULTI SYSTEM V17</span></div>
+ <!-- ✅ تم إضافة اللوجو هنا -->
+ <div style="display:flex; align-items:center; gap:12px;">
+   <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS Logo" style="height:50px; width:auto; border-radius:8px; object-fit:contain;">
+   <div>
+     <div class="brand" style="margin:0;">NexPOS PRO</div>
+     <div class="system-desc">منصة إدارة الأنشطة والخدمات</div>
+     <span class="version">MULTI SYSTEM V17</span>
+   </div>
+ </div>
  <div><span id="networkStatus" class="tag good">متصل بالخادم</span> <button class="secondary" onclick="support()">الدعم الفني</button></div>
 </header>
 
 <section id="auth">
- <div style="text-align:center;margin:28px 0 12px"><h2>مرحبًا بك في NexPOS PRO</h2><p class="muted">اختر النظام الذي تريد الدخول إليه أو إنشاء حساب جديد</p></div>
+ <div style="text-align:center;margin:28px 0 12px">
+   <!-- ✅ تم إضافة اللوجو هنا -->
+   <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS Logo" style="height:120px; width:auto; margin-bottom:15px; border-radius:15px; object-fit:contain;">
+   <h2>مرحبًا بك في NexPOS PRO</h2>
+   <p class="muted">اختر النظام الذي تريد الدخول إليه أو إنشاء حساب جديد</p>
+ </div>
  <div class="auth-grid">
   <div class="auth-card"><div class="auth-icon">▦</div><h3>سيستم المبيعات</h3><p class="muted">إدارة المبيعات والمخازن والفواتير والخزينة</p><button class="big" onclick="openAuth('sales','login')">تسجيل الدخول</button><button class="big secondary" onclick="openAuth('sales','register')">إنشاء حساب جديد</button></div>
   <div class="auth-card ps"><div class="auth-icon">🎮</div><h3>سيستم البلايستيشن</h3><p class="muted">إدارة الرومات وصالة VIP والقاعدة العربي والجلسات والمشروبات والسندوتشات</p><button class="big green" onclick="openAuth('playstation','login')">تسجيل الدخول</button><button class="big secondary" onclick="openAuth('playstation','register')">إنشاء حساب جديد</button></div>
@@ -441,6 +455,7 @@ window.register=async()=>{
   const systemData={status:"pending",plan:"غير مفعل",requestedPlan:selectedPlan.name,requestedPrice:selectedPlan.price,requestedDays:days,expiryDate:null,requestedAt:serverTimestamp()};
   const systems={};systems[selectedSystem]=systemData;
   
+  // ✅ حفظ بيانات الحساب في قاعدة البيانات
   await setDoc(doc(db,"users",cred.user.uid),{
     shopName:shop,
     customerName:name,

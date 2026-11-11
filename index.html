@@ -436,14 +436,38 @@ window.register=async()=>{
  if(!navigator.onLine){return message("إنشاء الحساب يتطلب اتصالاً بالإنترنت.");}
  const selectedPlan=PLANS[days];if(!selectedPlan)return message("اختر باقة صحيحة.");
  try{
-  registeringNow=true;const cred=await createUserWithEmailAndPassword(auth,email,password);
+  registeringNow=true;
+  const cred=await createUserWithEmailAndPassword(auth,email,password);
   const systemData={status:"pending",plan:"غير مفعل",requestedPlan:selectedPlan.name,requestedPrice:selectedPlan.price,requestedDays:days,expiryDate:null,requestedAt:serverTimestamp()};
   const systems={};systems[selectedSystem]=systemData;
-  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",systems,createdAt:serverTimestamp()});
+  
+  await setDoc(doc(db,"users",cred.user.uid),{
+    shopName:shop,
+    customerName:name,
+    phone:phone,
+    email:email,
+    role:"customer",
+    systems:systems,
+    createdAt:serverTimestamp()
+  });
+  
   lastRegisteredUser={name,shop,email,phone,system:selectedSystem,plan:selectedPlan.name,price:selectedPlan.price};
   $("pendingDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(shop)}<br><b>النظام:</b> ${selectedSystem==="sales"?"المبيعات":"البلايستيشن"}<br><b>الباقة:</b> ${selectedPlan.name}<br><b>السعر:</b> ${selectedPlan.price} جنيه`;
-  await signOut(auth);registeringNow=false;$("auth").classList.add("hidden");$("pendingScreen").classList.remove("hidden");
- }catch(e){registeringNow=false;console.error(e);message(e.code==="auth/email-already-in-use"?"البريد مسجل بالفعل.":"تعذر التسجيل: "+(e.code||e.message));}
+  
+  await signOut(auth);
+  registeringNow=false;
+  $("auth").classList.add("hidden");
+  $("pendingScreen").classList.remove("hidden");
+  
+ }catch(e){
+  registeringNow=false;
+  console.error(e);
+  if(e.code === 'permission-denied' || e.message.includes('permission')){
+    alert("خطأ في قاعدة البيانات (Firestore): الصلاحيات مرفوضة. تأكد من ضبط الـ Rules.");
+  } else {
+    message(e.code==="auth/email-already-in-use"?"البريد مسجل بالفعل.":"تعذر التسجيل: "+(e.code||e.message));
+  }
+ }
 };
 window.sendWhatsAppActivation=()=>{
  const d=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:"",phone:"",system:selectedSystem,plan:"غير محددة",price:""};
@@ -458,7 +482,15 @@ onAuthStateChanged(auth,async user=>{
  if(registeringNow)return;
  if(!user){if(psTimer)clearInterval(psTimer);["customerPanel","ownerPanel","playstationPanel","pendingScreen"].forEach(x=>$(x).classList.add("hidden"));$("auth").classList.remove("hidden");return;}
  try{
-  if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){$("auth").classList.add("hidden");$("ownerPanel").classList.remove("hidden");await loadUsers();return;}
+  if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){
+    $("auth").classList.add("hidden");
+    $("ownerPanel").classList.remove("hidden");
+    
+    // ✅ تحميل العملاء فوراً عند دخول المالك
+    const snap = await getDocs(collection(db,"users"));
+    await loadUsers(); 
+    return;
+  }
   const snap=await safeGetDoc(doc(db,"users",user.uid));if(!snap.exists()){await signOut(auth);return;}
   profile=snap.data();const system=selectedSystem,info=systemInfo(profile,system);
   if(info.status==="not_registered"||!subscriptionActive(info)){await signOut(auth);$("auth").classList.remove("hidden");message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");return;}
@@ -467,7 +499,7 @@ onAuthStateChanged(auth,async user=>{
     $("playstationPanel").classList.remove("hidden");
     $("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";
     await loadPlaystationData();
-    await checkAndSettleDailyPsSales(); // ✅ فحص إقفال اليوم
+    await checkAndSettleDailyPsSales();
     startPsTimer();
   }
   else{$("customerPanel").classList.remove("hidden");$("shopTitle").textContent=profile.shopName||"نظام المبيعات";$("sahalShopTitle").textContent=profile.shopName||"متجري";$("settingsShopName").value=profile.shopName||"";$("settingsEmail").value=profile.email||user.email||"";checkCustomerSubscription(info);await loadBusiness();await checkAndSettleDailySales();}
@@ -497,19 +529,30 @@ function planControls(u,system){
  const requestedDays=Number(info.requestedDays)||30;
  return `<select id="plan_${system}_${u.id}" style="width:140px"><option value="30" ${requestedDays===30?"selected":""}>شهري (100ج)</option><option value="90" ${requestedDays===90?"selected":""}>3 شهور (250ج)</option><option value="365" ${requestedDays===365?"selected":""}>سنوي (900ج)</option><option value="36500" ${requestedDays===36500?"selected":""}>دائم (3000ج)</option></select><button class="rowbtn green" onclick="activateUserWithPlan('${u.id}','${system}')">تفعيل</button><button class="rowbtn red" onclick="deactivateSystem('${u.id}','${system}')">إيقاف</button><button class="rowbtn dark" onclick="deleteUser('${u.id}')">حذف</button>`;
 }
+
+// ✅ تعديل loadUsers عشان نضمن قراءة البيانات صح
 window.loadUsers=async()=>{
  try{
-  const snap=await safeGetDocs(collection(db,"users")),list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
-  $("totalUsers").textContent=list.length;const salesList=list.filter(u=>systemInfo(u,"sales").status!=="not_registered"),psList=list.filter(u=>systemInfo(u,"playstation").status!=="not_registered");
-  $("salesUsersCount").textContent=salesList.length;$("psUsersCount").textContent=psList.length;
+  const snap = await getDocs(collection(db,"users"));
+  const list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
+  $("totalUsers").textContent=list.length;
+  const salesList=list.filter(u=>systemInfo(u,"sales").status!=="not_registered");
+  const psList=list.filter(u=>systemInfo(u,"playstation").status!=="not_registered");
+  $("salesUsersCount").textContent=salesList.length;
+  $("psUsersCount").textContent=psList.length;
   $("pendingUsersCount").textContent=list.reduce((c,u)=>c+(systemInfo(u,"sales").status==="pending"?1:0)+(systemInfo(u,"playstation").status==="pending"?1:0),0);
   const render=(arr,system)=>arr.map(u=>{
    const info=systemInfo(u,system),expiry=info.expiryDate?.toDate?info.expiryDate.toDate():info.expiryDate,expired=expiry&&new Date(expiry)<new Date();
    let statusText="قيد المراجعة",good=false;if(info.status==="active"&&!expired){statusText="نشط";good=true;}else if(info.status==="active"&&expired)statusText="منتهي";else if(info.status==="pending")statusText="طلب جديد";
    return `<tr><td>${escapeHTML(u.shopName||"")}</td><td>${escapeHTML(u.customerName||"")}</td><td>${escapeHTML(u.email||"")}</td><td>${escapeHTML(u.phone||"")}</td><td><span class="tag ${good?"good":""}">${statusText}</span></td><td>${escapeHTML(info.requestedPlan||info.plan||"غير محدد")} ${Number(info.requestedPrice)?`<br>${Number(info.requestedPrice)} جنيه`:""}</td><td>${planControls(u,system)}</td></tr>`;
   }).join("")||'<tr><td colspan="7">لا يوجد عملاء</td></tr>';
-  $("salesUsersTable").innerHTML=render(salesList,"sales");$("psUsersTable").innerHTML=render(psList,"playstation");
- }catch(e){console.error(e);if(navigator.onLine)alert("تعذر تحميل العملاء: "+e.message);}
+  $("salesUsersTable").innerHTML=render(salesList,"sales");
+  $("psUsersTable").innerHTML=render(psList,"playstation");
+ }catch(e){
+  console.error(e);
+  // ✅ لو فيه مشكلة في الصلاحيات هتظهرلك هنا
+  alert("حدث خطأ في قراءة البيانات: " + e.message);
+ }
 };
 window.activateUserWithPlan=async(id,system)=>{
  const select=$(`plan_${system}_${id}`);if(!select)return;const days=Number(select.value),plan=PLANS[days];if(!plan)return alert("اختر باقة صحيحة.");
@@ -530,7 +573,6 @@ window.showPsSection=which=>{
   $(tabId).classList.toggle("active",s===which);
  });
  if(which==="sessions"){
-   // ✅ تحديد تاريخ اليوم تلقائياً
    const dateInput = $("psSessionDateFilter");
    if (dateInput && !dateInput.value) {
      const today = new Date().toISOString().slice(0, 10);
@@ -624,7 +666,6 @@ window.startPsDevice=async id=>{
 
  const sessionRef=doc(col("psSessions")),sessionId=sessionRef.id;
  try{
-  // ✅ 1. تحديث الذاكرة المحلية (الواجهة) فوراً
   Object.assign(d,{status:"running",startedAt:now,endAt,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:plannedAmount});
   psSessions.push({
     id: sessionId, deviceId: id, deviceName: d.name, deviceType: window.getDeviceType(d),
@@ -633,13 +674,11 @@ window.startPsDevice=async id=>{
     orders: [], finalized: false, createdAt: now
   });
 
-  // ✅ 2. رسم الشاشة فوراً
   renderPsDevices();
   renderPsStats();
   renderPsSessions();
   startPsTimer();
 
-  // ✅ 3. الحفظ في الكاش المحلي (Firebase هيزامن لوحده لما النت يرجع)
   setDoc(sessionRef,{
    deviceId:id,deviceName:d.name,deviceType:window.getDeviceType(d),
    startedAt:now,endAt,plannedMinutes:minutes,hourlyRate:rate,
@@ -681,18 +720,13 @@ window.extendPsDevice=async id=>{
  }catch(e){alert("تعذر التمديد: "+e.message);}
 };
 
-// ✅ دالة تحديث الإجمالي لحظياً لما تكتب الخصم
 window.updateConfirmModalTotal = function() {
   const d = window.currentInvoiceToConfirm;
   if (!d) return;
-
   const discount = Math.max(0, Number(document.getElementById('psConfirmDiscountInput').value) || 0);
-  
-  // احسب قيمة اللعب
   const now = Date.now();
   const elapsedMinutes = Math.max(1, Math.ceil((now - Number(d.startedAt)) / 60000));
   let playTotal = 0;
-  
   if (d.sessionMode === "amount") {
     playTotal = Number(d.sessionAmount || 0);
   } else if (d.sessionMode === "auto") {
@@ -701,13 +735,9 @@ window.updateConfirmModalTotal = function() {
   } else {
     playTotal = (Math.max(PS_MIN_SESSION_MINUTES, elapsedMinutes) / 60) * Number(d.hourlyRate);
   }
-
   const orders = d.currentOrders || psSessions.find(s => s.id === d.sessionId)?.orders || [];
   const ordersTotal = orders.reduce((sum, o) => sum + Number(o.lineTotal ?? (o.price * o.qty)), 0);
-  
   const finalTotal = Math.max(0, playTotal + ordersTotal - discount);
-
-  // تحديث السطر الأخير في الشاشة
   const finalEl = document.getElementById('psConfirmFinalTotal');
   if (finalEl) {
     finalEl.innerHTML = `الإجمالي النهائي: ${money(finalTotal)} جنيه ${discount > 0 ? `<br><small style="color:#b72f3b; font-size:12px;">(شامل خصم ${money(discount)} ج)</small>` : ''}`;
@@ -751,7 +781,6 @@ window.stopPsDevice=async id=>{
    <h3 id="psConfirmFinalTotal" style="color:#178653; text-align:center; margin:5px 0;">الإجمالي النهائي: ${money(total)} جنيه</h3>
  `;
  
- // ✅ تصفير خانة الخصم كل مرة بتفتح
  const discountInput = $("psConfirmDiscountInput");
  if(discountInput) discountInput.value = "";
  
@@ -776,26 +805,19 @@ window.confirmAndPrintPsInvoice = async (shouldPrint = true) => {
 window.addOrderToRoom = async (deviceId) => {
   const d = psDevices.find(x => x.id === deviceId);
   if (!d || d.status !== "running" || !d.sessionId) return alert("لا توجد جلسة نشطة على هذا الجهاز.");
-  
   const selectElement = document.getElementById(`orderItem_${deviceId}`);
   const qtyElement = document.getElementById(`orderQty_${deviceId}`);
   if (!selectElement || !selectElement.value) return alert("اختر الصنف أولاً.");
-  
   const itemId = selectElement.value;
   const item = psItems.find(x => x.id === itemId);
   if (!item) return alert("الصنف غير موجود.");
-  
   const qty = Number(qtyElement?.value || 1);
   if (!Number.isInteger(qty) || qty <= 0) return alert("أدخل كمية صحيحة.");
-  
   const price = Number(item.price) || 0;
   if (price < 0) return alert("سعر الصنف غير صحيح.");
 
-  // ✅ 1. نجيب الطلبات القديمة من الذاكرة
   const session = psSessions.find(s => s.id === d.sessionId);
   const oldOrders = session?.orders || [];
-  
-  // ✅ 2. نضيف الطلب الجديد في الذاكرة المحلية فوراً
   const newOrder = {
     itemId: item.id, name: item.name, category: item.category,
     qty: qty, price: price, lineTotal: Number((qty * price).toFixed(2)),
@@ -804,12 +826,9 @@ window.addOrderToRoom = async (deviceId) => {
   
   if (session) session.orders = [...oldOrders, newOrder];
   d.currentOrders = [...oldOrders, newOrder];
-
-  // ✅ 3. نرسم الشاشة فوراً
   renderPsDevices();
   if (qtyElement) qtyElement.value = "1";
 
-  // ✅ 4. نحدث الكاش في الخلفية
   const sRef = docRef("psSessions", d.sessionId);
   setDoc(sRef, { orders: [...oldOrders, newOrder], updatedAt: Date.now() }, { merge: true })
     .catch(e => console.warn('⚠️ تم الحفظ محلياً، بانتظار المزامنة:', e));
@@ -825,39 +844,29 @@ window.removeRoomOrder = async(deviceId, index) => {
   const d = psDevices.find(x => x.id === deviceId);
   if (!d?.sessionId) return;
   if (!confirm("حذف هذا الطلب من الفاتورة؟")) return;
-
   const session = psSessions.find(s => s.id === d.sessionId);
   if (!session) return;
-  
-  // ✅ 1. نمسح الطلب من الذاكرة المحلية
   const newOrders = [...(session.orders || [])];
   newOrders.splice(index, 1);
   session.orders = newOrders;
   d.currentOrders = newOrders;
-  
-  // ✅ 2. نحدث الشاشة فوراً
   renderPsDevices();
-
-  // ✅ 3. نحدث الكاش في الخلفية
   const sRef = docRef("psSessions", d.sessionId);
   setDoc(sRef, { orders: newOrders, updatedAt: Date.now() }, { merge: true })
     .catch(e => console.warn('⚠️ تم الحفظ محلياً، بانتظار المزامنة:', e));
 };
 
-// ✅ التعديل الجذري: استخدام setDoc و updateDoc بدل runTransaction
 async function finalizePsSession(device,reason="manual", shouldPrint = true){
  if(!currentUser||!device||psEndingDevices.has(device.id))return;
  psEndingDevices.add(device.id);
  try{
   const now=Date.now(),sessionId=device.sessionId||("legacy_"+device.id+"_"+(device.startedAt||now));
   const sRef=docRef("psSessions",sessionId),dRef=docRef("devices",device.id),tRef=doc(col("psTreasury"));
-  
   const startedAt=Number(device.startedAt)||now;
   const elapsedMs=Math.max(0,now-startedAt);
   const elapsedMinutes=Math.max(1,Math.ceil(elapsedMs/60000));
   const rate=Number(device.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
   let playTotal=0;
-  
   if(device.sessionMode==="amount"){
    const minimumAmount=rate*PS_MIN_SESSION_MINUTES/60;
    playTotal=Math.max(minimumAmount,Number(device.sessionAmount||0));
@@ -869,11 +878,9 @@ async function finalizePsSession(device,reason="manual", shouldPrint = true){
    const chargedMinutes=Math.max(PS_MIN_SESSION_MINUTES,elapsedMinutes);
    playTotal=Number((chargedMinutes/60*rate).toFixed(2));
   }
-  
   const orders = device.currentOrders || psSessions.find(s=>s.id===sessionId)?.orders || [];
   const ordersTotal=Number(orders.reduce((sum,o)=>sum+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0).toFixed(2));
   
-  // ✅ قراءة الخصم من الخانة
   let discount = 0;
   if (reason === "manual") {
     const discountInput = $("psConfirmDiscountInput");
@@ -882,9 +889,8 @@ async function finalizePsSession(device,reason="manual", shouldPrint = true){
     }
   }
 
-  // ✅ حساب الإجمالي بعد الخصم
   const totalBeforeDiscount = playTotal + ordersTotal;
-  const total = Math.max(0, Number((totalBeforeDiscount - discount).toFixed(2))); // الإجمالي النهائي
+  const total = Math.max(0, Number((totalBeforeDiscount - discount).toFixed(2))); 
   
   const invoiceNumber="PS-"+now.toString().slice(-8);
   const invoice={
@@ -893,31 +899,27 @@ async function finalizePsSession(device,reason="manual", shouldPrint = true){
     elapsedMinutes, hourlyRate:rate, sessionMode:device.sessionMode||"duration",
     plannedMinutes:Number(device.lastDuration||0), plannedAmount:Number(device.sessionAmount||0),
     playTotal, orders, ordersTotal, 
-    discount: discount, // ✅ حفظ الخصم
+    discount: discount,
     total: total, 
-    totalBeforeDiscount: totalBeforeDiscount, // ✅ حفظ الإجمالي قبل الخصم للرجوع له
+    totalBeforeDiscount: totalBeforeDiscount,
     paymentMethod:"cash",
     paymentStatus:"paid", finalized:true, reason, date:new Date(now).toLocaleString("ar-EG"), createdAt:now
   };
   
   const typeLabel=invoice.deviceType==="vip"?"صالة VIP":(invoice.deviceType==="base_arabi"?"القاعدة العربي":"روم");
   
-  // ✅ نستخدم setDoc و updateDoc بدل runTransaction عشان تشتغل أوفلاين
   setDoc(sRef, invoice).catch(err => console.warn('⚠️ تم الحفظ محلياً:', err));
-  
   setDoc(tRef, {
     type:"in", amount:total, note:`فاتورة ${typeLabel} - ${invoiceNumber}`,
     deviceName:device.name, deviceType:invoice.deviceType,
     sessionId, invoiceNumber, date:new Date(now).toLocaleString("ar-EG"), createdAt:now
   }).catch(err => console.warn('⚠️ تم الحفظ محلياً:', err));
-  
   updateDoc(dRef, {
     status:"idle", endAt:null, startedAt:null, sessionId:null,
     sessionMode:null, sessionAmount:null, endedAt:now,
     lastSessionId:sessionId, lastSessionTotal:total
   }).catch(err => console.warn('⚠️ تم الحفظ محلياً:', err));
   
-  // ✅ تحديث الواجهة فوراً
   device.status = "idle";
   device.sessionId = null;
   device.startedAt = null;
@@ -925,7 +927,6 @@ async function finalizePsSession(device,reason="manual", shouldPrint = true){
   device.sessionMode = null;
   device.sessionAmount = null;
   
-  // إضافة الفاتورة لسجل الجلسات محلياً (عشان تظهر في السجل فوراً)
   const existingIndex = psSessions.findIndex(s => s.id === sessionId);
   if (existingIndex >= 0) {
     psSessions[existingIndex] = { id: sessionId, ...invoice };
@@ -934,7 +935,6 @@ async function finalizePsSession(device,reason="manual", shouldPrint = true){
   }
   
   renderPsDevices();renderPsStats();renderPsSessions();
-  
   if(shouldPrint) printPsInvoice(sessionId);
   
  }catch(e){
@@ -1049,29 +1049,22 @@ function startPsTimer(){
    }
   }
   renderPsStats();
-  
-  // ✅ كل دقيقة نتأكد لو اليوم اتغير عشان نسجل الإيراد
   if (new Date().getSeconds() === 0 && new Date().getMinutes() === 0) {
     checkAndSettleDailyPsSales();
   }
  },1000);
 }
 
-// ✅ دالة تسجيل إغلاق اليوم (بتشتغل بعد 12 بالليل)
 async function checkAndSettleDailyPsSales() {
   if (!currentUser) return;
   try {
     const ref = doc(db, "users", currentUser.uid);
     const snap = await safeGetDoc(ref);
     if (!snap.exists()) return;
-    
     const data = snap.data();
     const today = new Date().toISOString().slice(0, 10);
     const lastSettled = data.lastPsSettledDate || "";
-
-    // لو النهاردة مختلف عن آخر يوم تم تسجيله
     if (lastSettled !== today) {
-      // احسب إيرادات اليوم اللي فات
       const yesterdayRevenue = psSessions
         .filter(s => s.finalized || s.endedAt)
         .filter(s => {
@@ -1079,9 +1072,7 @@ async function checkAndSettleDailyPsSales() {
           return sessionDate === lastSettled;
         })
         .reduce((sum, s) => sum + Number(s.total || 0), 0);
-
       if (yesterdayRevenue > 0) {
-        // سجل الإيراد في الخزينة
         const tRef = doc(col("psTreasury"));
         setDoc(tRef, {
           type: "in",
@@ -1091,8 +1082,6 @@ async function checkAndSettleDailyPsSales() {
           createdAt: Date.now()
         }).catch(err => console.warn('⚠️ خطأ في تسجيل الخزينة:', err));
       }
-
-      // حدث آخر يوم تم التسجيل فيه
       await updateDoc(ref, { lastPsSettledDate: today }).catch(err => console.warn(err));
     }
   } catch (e) {
@@ -1100,44 +1089,30 @@ async function checkAndSettleDailyPsSales() {
   }
 }
 
-// ✅ التعديل هنا: قراءة كل الجلسات من الكاش للفلترة
 async function renderPsSessions(){
  const table=$("psSessionsTable");if(!table)return;
- 
- // ✅ 1. قراءة كل الجلسات المحفوظة في الكاش مباشرة (بدل الذاكرة المؤقتة)
  let allSessions = [];
  try {
    const ss = await getDocsFromCache(col("psSessions"));
    allSessions = ss.docs.map(d => ({id: d.id, ...d.data()}));
  } catch (e) {
-   allSessions = [...psSessions]; // لو الكاش فشل، نستخدم الذاكرة
+   allSessions = [...psSessions];
  }
-
- // ✅ 2. التحقق من التاريخ المختار
  const filterInput = $("psSessionDateFilter");
- const filterDate = filterInput ? filterInput.value : ""; // YYYY-MM-DD
-
+ const filterDate = filterInput ? filterInput.value : "";
  let filtered = allSessions.filter(s => s.finalized || s.endedAt);
- 
- // ✅ 3. فلترة بالتاريخ المختار
  if (filterDate) {
    filtered = filtered.filter(s => {
-     // نستخدم التاريخ المحلي للجهاز مش UTC عشان يتوافق مع اختيار المستخدم
      const d = new Date(s.endedAt || s.createdAt);
      const localDate = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
      return localDate === filterDate;
    });
  }
-
- // ترتيب من الأحدث للأقدم
  filtered.sort((a,b)=>Number(b.endedAt||0)-Number(a.endedAt||0));
- 
  const total = filtered.reduce((sum,s)=>sum+Number(s.total||0),0);
  $("psSessionsTotal").textContent = filtered.length;
- 
  const revEl = $("psSessionsRevenue2");
  if (revEl) revEl.textContent = money(total) + " جنيه";
- 
  const revElMain = $("psSessionsRevenue");
  if (revElMain) revElMain.textContent = money(total) + " جنيه";
 

@@ -210,10 +210,11 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
       </div>
       
       <!-- ✅ فلتر التاريخ الجديد -->
-      <div style="display:flex; gap:10px; align-items:center; margin:15px 0; background:#f8fafc; padding:10px; border-radius:9px;">
+      <div style="display:flex; gap:10px; align-items:center; margin:15px 0; background:#f8fafc; padding:10px; border-radius:9px; flex-wrap:wrap;">
         <label style="margin:0;">عرض جلسات يوم:</label>
-        <input type="date" id="psSessionDateFilter" style="width:auto; margin:0;" onchange="renderPsSessions()">
+        <input type="date" id="psSessionDateFilter" style="width:auto; margin:0; padding:8px;" onchange="renderPsSessions()">
         <button class="secondary" onclick="document.getElementById('psSessionDateFilter').value=''; renderPsSessions();">عرض الكل</button>
+        <button class="secondary" onclick="document.getElementById('psSessionDateFilter').value=new Date().toISOString().slice(0,10); renderPsSessions();">اليوم</button>
       </div>
 
       <div class="grid">
@@ -1038,39 +1039,49 @@ async function checkAndSettleDailyPsSales() {
   }
 }
 
-function renderPsSessions(){
+// ✅ التعديل هنا: قراءة كل الجلسات من الكاش للفلترة
+async function renderPsSessions(){
  const table=$("psSessionsTable");if(!table)return;
  
- // ✅ التحقق من التاريخ المختار في الفلتر
+ // ✅ 1. قراءة كل الجلسات المحفوظة في الكاش مباشرة (بدل الذاكرة المؤقتة)
+ let allSessions = [];
+ try {
+   const ss = await getDocsFromCache(col("psSessions"));
+   allSessions = ss.docs.map(d => ({id: d.id, ...d.data()}));
+ } catch (e) {
+   allSessions = [...psSessions]; // لو الكاش فشل، نستخدم الذاكرة
+ }
+
+ // ✅ 2. التحقق من التاريخ المختار
  const filterInput = $("psSessionDateFilter");
  const filterDate = filterInput ? filterInput.value : ""; // YYYY-MM-DD
 
- let sorted = [...psSessions].filter(s => s.finalized || s.endedAt);
+ let filtered = allSessions.filter(s => s.finalized || s.endedAt);
  
- // ✅ لو فيه تاريخ مختار، نفلتر بيه
+ // ✅ 3. فلترة بالتاريخ المختار
  if (filterDate) {
-   sorted = sorted.filter(s => {
-     const sessionDate = new Date(s.endedAt || s.createdAt).toISOString().slice(0, 10);
-     return sessionDate === filterDate;
+   filtered = filtered.filter(s => {
+     // نستخدم التاريخ المحلي للجهاز مش UTC عشان يتوافق مع اختيار المستخدم
+     const d = new Date(s.endedAt || s.createdAt);
+     const localDate = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+     return localDate === filterDate;
    });
  }
 
  // ترتيب من الأحدث للأقدم
- sorted.sort((a,b)=>Number(b.endedAt||0)-Number(a.endedAt||0));
+ filtered.sort((a,b)=>Number(b.endedAt||0)-Number(a.endedAt||0));
  
- const total=sorted.reduce((sum,s)=>sum+Number(s.total||0),0);
- $("psSessionsTotal").textContent=sorted.length;
+ const total = filtered.reduce((sum,s)=>sum+Number(s.total||0),0);
+ $("psSessionsTotal").textContent = filtered.length;
  
- // تحديث الإيرادات
  const revEl = $("psSessionsRevenue2");
  if (revEl) revEl.textContent = money(total) + " جنيه";
  
- // تحديث الإيرادات الإجمالية (فوق في الإحصائيات)
  const revElMain = $("psSessionsRevenue");
  if (revElMain) revElMain.textContent = money(total) + " جنيه";
 
- table.innerHTML=sorted.map(s=>{
-  const type=s.deviceType==="vip"?"VIP":(s.deviceType==="base_arabi"?"قاعدة":"روم");
+ table.innerHTML = filtered.map(s=>{
+  const type = s.deviceType==="vip"?"VIP":(s.deviceType==="base_arabi"?"قاعدة":"روم");
   return `<tr>
    <td>${escapeHTML(s.invoiceNumber||"—")}</td>
    <td>${escapeHTML(s.deviceName||"—")} <span class="tag">${type}</span></td>

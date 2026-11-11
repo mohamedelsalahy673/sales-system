@@ -741,67 +741,80 @@ window.removeRoomOrder=async(deviceId,index)=>{
  }catch(e){alert(e.message);}
 };
 
+// ✅ التعديل الجذري: استخدام setDoc و updateDoc بدل runTransaction
 async function finalizePsSession(device,reason="manual", shouldPrint = true){
  if(!currentUser||!device||psEndingDevices.has(device.id))return;
  psEndingDevices.add(device.id);
  try{
   const now=Date.now(),sessionId=device.sessionId||("legacy_"+device.id+"_"+(device.startedAt||now));
   const sRef=docRef("psSessions",sessionId),dRef=docRef("devices",device.id),tRef=doc(col("psTreasury"));
-  await runTransaction(db,async tx=>{
-   const [ss,ds]=await Promise.all([tx.get(sRef),tx.get(dRef)]);
-   if(!ds.exists())return;
-   const current=ds.data();
-   if(ss.exists()&&ss.data().finalized){
-    tx.update(dRef,{status:"idle",endAt:null,sessionId:null,startedAt:null,sessionMode:null,sessionAmount:null});
-    return;
-   }
-   const s=ss.exists()?ss.data():{};
-   const startedAt=Number(s.startedAt||current.startedAt)||now;
-   const elapsedMs=Math.max(0,now-startedAt);
-   const elapsedMinutes=Math.max(1,Math.ceil(elapsedMs/60000));
-   const rate=Number(s.hourlyRate||current.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
-   let playTotal=0;
-   if(s.sessionMode==="amount"){
-    const minimumAmount=rate*PS_MIN_SESSION_MINUTES/60;
-    playTotal=Math.max(minimumAmount,Number(s.plannedAmount||current.sessionAmount||0));
-   }else if(s.sessionMode==="auto"){
-    const halfHourBlocks=Math.max(1,Math.ceil(elapsedMs/(PS_MIN_SESSION_MINUTES*60000)));
-    const chargedMinutes=halfHourBlocks*PS_MIN_SESSION_MINUTES;
-    playTotal=Number((chargedMinutes/60*rate).toFixed(2));
-   }else{
-    const chargedMinutes=Math.max(PS_MIN_SESSION_MINUTES,elapsedMinutes);
-    playTotal=Number((chargedMinutes/60*rate).toFixed(2));
-   }
-   const orders=Array.isArray(s.orders)?s.orders:[];
-   const ordersTotal=Number(orders.reduce((sum,o)=>sum+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0).toFixed(2));
-   const total=Number((playTotal+ordersTotal).toFixed(2));
-   const invoiceNumber="PS-"+now.toString().slice(-8);
-   const invoice={invoiceNumber,deviceId:device.id,deviceName:current.name||device.name,deviceType:current.deviceType||device.deviceType||"room",startedAt,endedAt:now,elapsedMinutes,hourlyRate:rate,sessionMode:s.sessionMode||"duration",plannedMinutes:Number(s.plannedMinutes||0),plannedAmount:Number(s.plannedAmount||0),playTotal,orders,ordersTotal,total,paymentMethod:"cash",paymentStatus:"paid",finalized:true,reason,date:new Date(now).toLocaleString("ar-EG"),createdAt:now};
-   tx.set(sRef,invoice);
-   const typeLabel=invoice.deviceType==="vip"?"صالة VIP":(invoice.deviceType==="base_arabi"?"القاعدة العربي":"روم");
-   tx.set(tRef,{type:"in",amount:total,note:`فاتورة ${typeLabel} - ${invoiceNumber}`,deviceName:current.name||device.name,deviceType:invoice.deviceType,sessionId,invoiceNumber,date:new Date(now).toLocaleString("ar-EG"),createdAt:now});
-   tx.update(dRef,{status:"idle",endAt:null,startedAt:null,sessionId:null,sessionMode:null,sessionAmount:null,endedAt:now,lastSessionId:sessionId,lastSessionTotal:total});
-  });
   
-  // ✅ حدّث الواجهة محليًا فورًا
+  const startedAt=Number(device.startedAt)||now;
+  const elapsedMs=Math.max(0,now-startedAt);
+  const elapsedMinutes=Math.max(1,Math.ceil(elapsedMs/60000));
+  const rate=Number(device.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
+  let playTotal=0;
+  
+  if(device.sessionMode==="amount"){
+   const minimumAmount=rate*PS_MIN_SESSION_MINUTES/60;
+   playTotal=Math.max(minimumAmount,Number(device.sessionAmount||0));
+  }else if(device.sessionMode==="auto"){
+   const halfHourBlocks=Math.max(1,Math.ceil(elapsedMs/(PS_MIN_SESSION_MINUTES*60000)));
+   const chargedMinutes=halfHourBlocks*PS_MIN_SESSION_MINUTES;
+   playTotal=Number((chargedMinutes/60*rate).toFixed(2));
+  }else{
+   const chargedMinutes=Math.max(PS_MIN_SESSION_MINUTES,elapsedMinutes);
+   playTotal=Number((chargedMinutes/60*rate).toFixed(2));
+  }
+  
+  const orders = device.currentOrders || psSessions.find(s=>s.id===sessionId)?.orders || [];
+  const ordersTotal=Number(orders.reduce((sum,o)=>sum+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0).toFixed(2));
+  const total=Number((playTotal+ordersTotal).toFixed(2));
+  const invoiceNumber="PS-"+now.toString().slice(-8);
+  const invoice={
+    invoiceNumber, deviceId:device.id, deviceName:device.name,
+    deviceType:device.deviceType||"room", startedAt, endedAt:now,
+    elapsedMinutes, hourlyRate:rate, sessionMode:device.sessionMode||"duration",
+    plannedMinutes:Number(device.lastDuration||0), plannedAmount:Number(device.sessionAmount||0),
+    playTotal, orders, ordersTotal, total, paymentMethod:"cash",
+    paymentStatus:"paid", finalized:true, reason, date:new Date(now).toLocaleString("ar-EG"), createdAt:now
+  };
+  
+  const typeLabel=invoice.deviceType==="vip"?"صالة VIP":(invoice.deviceType==="base_arabi"?"القاعدة العربي":"روم");
+  
+  // ✅ نستخدم setDoc و updateDoc بدل runTransaction عشان تشتغل أوفلاين
+  setDoc(sRef, invoice).catch(err => console.warn('⚠️ تم الحفظ محلياً:', err));
+  
+  setDoc(tRef, {
+    type:"in", amount:total, note:`فاتورة ${typeLabel} - ${invoiceNumber}`,
+    deviceName:device.name, deviceType:invoice.deviceType,
+    sessionId, invoiceNumber, date:new Date(now).toLocaleString("ar-EG"), createdAt:now
+  }).catch(err => console.warn('⚠️ تم الحفظ محلياً:', err));
+  
+  updateDoc(dRef, {
+    status:"idle", endAt:null, startedAt:null, sessionId:null,
+    sessionMode:null, sessionAmount:null, endedAt:now,
+    lastSessionId:sessionId, lastSessionTotal:total
+  }).catch(err => console.warn('⚠️ تم الحفظ محلياً:', err));
+  
+  // ✅ تحديث الواجهة فوراً
   device.status = "idle";
   device.sessionId = null;
   device.startedAt = null;
   device.endAt = null;
   device.sessionMode = null;
   device.sessionAmount = null;
+  
+  // إزالة الجلسة من الذاكرة
+  psSessions = psSessions.filter(s => s.id !== sessionId);
+  
   renderPsDevices();renderPsStats();renderPsSessions();
   
   if(shouldPrint) printPsInvoice(sessionId);
   
-  // ✅ حاول تحديث في الخلفية
-  if (navigator.onLine) {
-    loadPlaystationData().catch(err => console.warn('⚠️ Background refresh failed:', err));
-  }
  }catch(e){
   console.error(e);
-  if(navigator.onLine)alert("تعذر تسجيل الفاتورة: "+e.message);
-  else console.warn('⚠️ وضع offline - الفاتورة اتسجلت محليًا وهتتزامن');
+  alert("تعذر تسجيل الفاتورة: "+e.message);
  }
  finally{psEndingDevices.delete(device.id);}
 }

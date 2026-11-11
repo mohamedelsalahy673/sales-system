@@ -3,12 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NexPOS PRO</title>
+<title>NexPOS PRO - نظام إدارة المبيعات والبلايستيشن</title>
+<!-- ✅ وصف الموقع لمحركات البحث SEO -->
+<meta name="description" content="NexPOS PRO - أفضل نظام إدارة مبيعات وبلايستيشن في مصر. إدارة المخزون، الفواتير، الخزينة، وجلسات البلايستيشن بكل سهولة.">
+<meta name="keywords" content="NexPOS, بلايستيشن, سيستم مبيعات, إدارة محلات, كاشير, POS">
+<meta name="author" content="محمد الصلاحي">
+
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#2458d3">
 <link rel="icon" type="image/png" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
+<link rel="apple-touch-icon" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
+
 <!-- ✅ إضافة مكتبة SweetAlert2 للرسائل الأنيقة -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f3f5fa;color:#1c2940;font-family:Arial,sans-serif}
@@ -123,9 +131,38 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   border-radius: 25px !important;
   padding: 10px 30px !important;
 }
+
+/* ✅ تنسيق زر تثبيت التطبيق */
+#installAppBtn {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #178653;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 4px 15px rgba(23, 134, 83, 0.4);
+    display: none;
+    z-index: 9999;
+    cursor: pointer;
+    border: 2px solid white;
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.05); }
+  100% { transform: translateX(-50%) scale(1); }
+}
 </style>
 </head>
 <body>
+
+<!-- ✅ زر تثبيت التطبيق -->
+<button id="installAppBtn" onclick="installApp()">📥 تثبيت التطبيق على جهازك</button>
+
 <div class="wrap">
 <header class="top">
  <div style="display:flex; align-items:center; gap:12px;">
@@ -366,6 +403,94 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <div id="printArea" class="hidden"></div>
 <footer class="muted" style="text-align:center;padding:20px">تم التطوير بواسطة المهندس | محمد الصلاحي</footer>
 </div>
+
+<!-- ✅ كود PWA: إنشاء ملف manifest و service worker ديناميكياً لضمان عمل التثبيت -->
+<script>
+  // 1. إنشاء ملف Manifest ديناميكياً
+  const manifest = {
+    "name": "NexPOS PRO",
+    "short_name": "NexPOS",
+    "description": "منصة إدارة الأنشطة والخدمات - سيستم مبيعات وبلايستيشن",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#f3f5fa",
+    "theme_color": "#2458d3",
+    "orientation": "portrait",
+    "icons": [
+      {
+        "src": "https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }
+    ]
+  };
+  const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+  const manifestUrl = URL.createObjectURL(manifestBlob);
+  document.querySelector('link[rel="manifest"]').setAttribute('href', manifestUrl);
+
+  // 2. تسجيل Service Worker ديناميكياً (ضروري لعمل التثبيت)
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      const CACHE_NAME = 'nexpos-v1';
+      self.addEventListener('install', (e) => {
+        self.skipWaiting();
+      });
+      self.addEventListener('activate', (e) => {
+        e.waitUntil(clients.claim());
+      });
+      self.addEventListener('fetch', (e) => {
+        // Simple pass-through for now to satisfy PWA requirements
+        e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+      });
+    `;
+    const swBlob = new Blob([swCode], {type: 'application/javascript'});
+    const swUrl = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl).catch(err => console.log('SW registration failed:', err));
+  }
+
+  // 3. كود زر التثبيت
+  let deferredPrompt;
+  const installBtn = document.getElementById('installAppBtn');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // إظهار الزر بعد 3 ثواني من فتح الموقع
+    setTimeout(() => {
+        installBtn.style.display = 'block';
+    }, 3000);
+  });
+
+  window.installApp = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+        } else {
+          console.log('User dismissed the install prompt');
+        }
+        deferredPrompt = null;
+        installBtn.style.display = 'none';
+      });
+    } else {
+        // في حالة إذا كان المتصفح لا يدعم التثبيت التلقائي
+        alert('متصفحك لا يدعم التثبيت التلقائي. يرجى استخدام قائمة المتصفح واختيار "إضافة إلى الشاشة الرئيسية".');
+    }
+  };
+
+  // إخفاء الزر إذا كان التطبيق مثبتاً بالفعل
+  window.addEventListener('appinstalled', () => {
+    installBtn.style.display = 'none';
+  });
+</script>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";

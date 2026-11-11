@@ -233,7 +233,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
       <button class="green" onclick="confirmAndPrintPsInvoice(false)" style="grid-column: 1 / -1;">✔ تأكيد</button>
       <button class="dark" onclick="confirmAndPrintPsInvoice(true)">🖨️ تأكيد وطباعة</button>
-      <button class="red" onclick="$('psConfirmInvoiceModal').classList.add('hidden')">✖ إلغاء</button>
+      <button class="red" onclick="cancelPsInvoice()">✖ إلغاء</button>
     </div>
   </div>
 </div>
@@ -581,11 +581,20 @@ window.stopPsDevice=async id=>{
  $("psConfirmInvoiceModal").classList.remove("hidden");
 };
 
+// ✅ دالة الإلغاء الجديدة: بتنضف المودال والمتغير بأمان
+window.cancelPsInvoice = () => {
+  $("psConfirmInvoiceModal").classList.add("hidden");
+  $("psConfirmInvoiceContent").innerHTML = "";
+  window.currentInvoiceToConfirm = null;
+};
+
+// ✅ معدّلة: بتنضف المتغير قبل التنفيذ عشان لو حصل خطأ ميفضلش محفوظ
 window.confirmAndPrintPsInvoice = async (shouldPrint = true) => {
   $("psConfirmInvoiceModal").classList.add("hidden");
-  if(window.currentInvoiceToConfirm) {
-    await finalizePsSession(window.currentInvoiceToConfirm, "manual", shouldPrint);
-    window.currentInvoiceToConfirm = null;
+  const invoice = window.currentInvoiceToConfirm;
+  window.currentInvoiceToConfirm = null;
+  if (invoice) {
+    await finalizePsSession(invoice, "manual", shouldPrint);
   }
 };
 

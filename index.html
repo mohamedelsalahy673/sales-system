@@ -580,50 +580,35 @@ window.startPsDevice=async id=>{
 
  const sessionRef=doc(col("psSessions")),sessionId=sessionRef.id;
  try{
-  await setDoc(sessionRef,{
+  // ✅ 1. تحديث الذاكرة المحلية (الواجهة) فوراً
+  Object.assign(d,{status:"running",startedAt:now,endAt,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:plannedAmount});
+  psSessions.push({
+    id: sessionId, deviceId: id, deviceName: d.name, deviceType: window.getDeviceType(d),
+    startedAt: now, endAt: endAt, plannedMinutes: minutes, hourlyRate: rate,
+    sessionMode: mode, plannedAmount: mode === "amount" ? plannedAmount : 0,
+    orders: [], finalized: false, createdAt: now
+  });
+
+  // ✅ 2. رسم الشاشة فوراً
+  renderPsDevices();
+  renderPsStats();
+  renderPsSessions();
+  startPsTimer();
+
+  // ✅ 3. الحفظ في الكاش المحلي (Firebase هيزامن لوحده لما النت يرجع)
+  setDoc(sessionRef,{
    deviceId:id,deviceName:d.name,deviceType:window.getDeviceType(d),
    startedAt:now,endAt,plannedMinutes:minutes,hourlyRate:rate,
    sessionMode:mode,plannedAmount:mode==="amount"?plannedAmount:0,
    orders:[],finalized:false,createdAt:now
-  });
-  await updateDoc(docRef("devices",id),{
+  }).catch(err => console.warn('⚠️ تم الحفظ محلياً، بانتظار المزامنة:', err));
+
+  updateDoc(docRef("devices",id),{
    status:"running",startedAt:now,endAt,lastDuration:minutes,
    hourlyRate:rate,sessionId,sessionMode:mode,
    sessionAmount:mode==="amount"?plannedAmount:0
-  });
-  
-  // ✅ 1. تحديث بيانات الجهاز في الذاكرة فوراً
-  Object.assign(d,{status:"running",startedAt:now,endAt,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:plannedAmount});
-  
-  // ✅ 2. إضافة الجلسة الجديدة لسجل الجلسات عشان العداد يقرأ منها
-  psSessions.push({
-    id: sessionId,
-    deviceId: id,
-    deviceName: d.name,
-    deviceType: window.getDeviceType(d),
-    startedAt: now,
-    endAt: endAt,
-    plannedMinutes: minutes,
-    hourlyRate: rate,
-    sessionMode: mode,
-    plannedAmount: mode === "amount" ? plannedAmount : 0,
-    orders: [],
-    finalized: false,
-    createdAt: now
-  });
+  }).catch(err => console.warn('⚠️ تم الحفظ محلياً، بانتظار المزامنة:', err));
 
-  // ✅ 3. رسم الواجهة فوراً (هنا العداد هيبدأ يشتغل)
-  renderPsDevices();
-  renderPsStats();
-  renderPsSessions();
-  
-  // ✅ 4. تشغيل العداد (لو مش شغال)
-  startPsTimer();
-
-  // ✅ 5. محاولة المزامنة في الخلفية بدون تعطيل الشاشة
-  if (navigator.onLine) {
-    loadPlaystationData().catch(err => console.warn('⚠️ Background refresh failed:', err));
-  }
  }catch(e){console.error(e);alert("تعذر بدء الجلسة: "+e.message);}
 };
 

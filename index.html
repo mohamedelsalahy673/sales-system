@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NexPOS PRO</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#2458d3">
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f3f5fa;color:#1c2940;font-family:Arial,sans-serif}
@@ -269,7 +271,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-import {getFirestore,doc,setDoc,getDoc,updateDoc,collection,addDoc,getDocs,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import {getFirestore,enableIndexedDbPersistence,doc,setDoc,getDoc,updateDoc,collection,addDoc,getDocs,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 window.getDeviceType = function(device) {
     if (!device) return "room";
@@ -294,6 +296,40 @@ const SUPPORT_PHONE="201062883414";
 const PS_DEFAULT_HOURLY_RATE=40;
 const PS_MIN_SESSION_MINUTES=30;
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+
+// ✅ تفعيل التخزين المحلي للعمل بدون إنترنت
+enableIndexedDbPersistence(db).then(() => {
+  console.log('✅ Firestore offline persistence enabled');
+}).catch((err) => {
+  if (err.code === 'failed-precondition') {
+    console.warn('⚠️ Persistence: فيه تاب تاني مفتوح');
+  } else if (err.code === 'unimplemented') {
+    console.warn('⚠️ Persistence: المتصفح مش بيدعم IndexedDB');
+  } else {
+    console.warn('⚠️ Persistence error:', err.code);
+  }
+});
+
+// ✅ مؤشر حالة الاتصال
+function updateNetworkStatus() {
+  const el = document.getElementById('networkStatus');
+  if (!el) return;
+  if (navigator.onLine) {
+    el.textContent = 'متصل بالخادم';
+    el.className = 'tag good';
+    el.style.background = '';
+    el.style.color = '';
+  } else {
+    el.textContent = '⚠️ وضع عدم الاتصال';
+    el.className = 'tag';
+    el.style.background = '#fef3c7';
+    el.style.color = '#92400e';
+  }
+}
+window.addEventListener('online', updateNetworkStatus);
+window.addEventListener('offline', updateNetworkStatus);
+updateNetworkStatus();
+
 let currentUser=null,profile=null,selectedSystem="sales",activeSystem="sales",registeringNow=false;
 let products=[],sales=[],expenses=[],treasury=[],cart=[],selectedProduct=null,lastRegisteredUser=null;
 let psDevices=[],psItems=[],psSessions=[],psTimer=null,psEndingDevices=new Set();
@@ -581,14 +617,12 @@ window.stopPsDevice=async id=>{
  $("psConfirmInvoiceModal").classList.remove("hidden");
 };
 
-// ✅ دالة الإلغاء الجديدة: بتنضف المودال والمتغير بأمان
 window.cancelPsInvoice = () => {
   $("psConfirmInvoiceModal").classList.add("hidden");
   $("psConfirmInvoiceContent").innerHTML = "";
   window.currentInvoiceToConfirm = null;
 };
 
-// ✅ معدّلة: بتنضف المتغير قبل التنفيذ عشان لو حصل خطأ ميفضلش محفوظ
 window.confirmAndPrintPsInvoice = async (shouldPrint = true) => {
   $("psConfirmInvoiceModal").classList.add("hidden");
   const invoice = window.currentInvoiceToConfirm;
@@ -624,7 +658,6 @@ window.addOrderToRoom = async (deviceId) => {
     await refreshCurrentSession(d.sessionId);
     renderPsDevices();
     if (qtyElement) qtyElement.value = "1";
-    // تم إزالة رسالة التنبيه من هنا
   } catch (e) { console.error(e); alert("تعذر إضافة الطلب: " + e.message); }
 };
 
@@ -1027,6 +1060,15 @@ function renderStats(){
  $("statProducts").textContent=products.length;$("statSales").textContent=sales.length;
  $("statRevenue").textContent=money(rev)+" جنيه";$("statTreasuryBalance").textContent=money(tIn-tOut)+" جنيه";
  $("reportRevenue").textContent=money(rev)+" جنيه";$("reportExpenses").textContent=money(exp)+" جنيه";$("reportNet").textContent=money(rev-exp)+" جنيه";
+}
+
+// ✅ تسجيل Service Worker للعمل offline
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+      .catch(err => console.warn('⚠️ Service Worker failed:', err));
+  });
 }
 </script>
 </body>

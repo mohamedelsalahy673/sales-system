@@ -114,7 +114,8 @@ hr{border:0;border-top:1px solid var(--border-color);margin:18px 0}
 .search-container{position:relative;min-width:0}
 #searchResults{position:absolute;top:100%;right:0;width:100%;z-index:100;background:var(--bg-card);box-shadow:0 10px 25px rgba(0,0,0,0.5);max-height:250px;overflow:auto; border-radius: 8px; border: 1px solid var(--border-color);}
 .ps-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
-.ps-tabs button{flex:1;min-width:120px; background: var(--bg-input); color: var(--text-muted); border: 1px solid var(--border-color); box-shadow: none;}.ps-tabs button.active{background:var(--success); color: white; border-color: var(--success); box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);}
+.ps-tabs button{flex:1;min-width:120px; background: var(--bg-input); color: var(--text-muted); border: 1px solid var(--border-color); box-shadow: none;}
+.ps-tabs button.active{background:var(--success); color: white; border-color: var(--success); box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);}
 .ps-device-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:15px}
 .ps-device-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:16px;padding:20px;box-shadow:0 4px 6px rgba(0,0,0,0.2);min-width:0; transition: border-color 0.3s;}
 .ps-device-card.running{border:2px solid var(--success); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);}
@@ -245,9 +246,10 @@ hr{border:0;border-top:1px solid var(--border-color);margin:18px 0}
    <button id="psDrinksTab" onclick="showPsSection('drinks')">🥤 المشروبات</button>
    <button id="psSandwichesTab" onclick="showPsSection('sandwiches')">🥪 السندوتشات</button>
    <button id="psSessionsTab" onclick="showPsSection('sessions')">📄 سجل الجلسات</button>
-   <button id="psReservationsTab" onclick="showPsSection('reservations')" style="background:#0ea5e9">📅 الحجوزات</button>
-   <button id="psCustomersTab" onclick="showPsSection('customers')" style="background:#8b5cf6">🏆 سجل العملاء</button>
-   <button id="psReportsTab" onclick="showPsSection('reports')" style="background:#0f766e">📊 التقارير</button>
+   <!-- تم إزالة الألوان الثابتة من الأزرار التالية لتأخذ اللون الافتراضي وتتغير للأخضر عند التفعيل -->
+   <button id="psReservationsTab" onclick="showPsSection('reservations')">📅 الحجوزات</button>
+   <button id="psCustomersTab" onclick="showPsSection('customers')">🏆 سجل العملاء</button>
+   <button id="psReportsTab" onclick="showPsSection('reports')">📊 التقارير</button>
    <button id="psShiftTab" onclick="openPsShiftModal()" class="orange">💵 الوردية</button>
    <button id="psMySubTab" onclick="openPsSubscriptionModal()">⭐ اشتراكي</button>
   </div>

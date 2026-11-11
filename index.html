@@ -106,7 +106,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <body>
 <div class="wrap">
 <header class="top">
- <!-- ✅ تم إضافة اللوجو هنا -->
  <div style="display:flex; align-items:center; gap:12px;">
    <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS Logo" style="height:50px; width:auto; border-radius:8px; object-fit:contain;">
    <div>
@@ -120,7 +119,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
 <section id="auth">
  <div style="text-align:center;margin:28px 0 12px">
-   <!-- ✅ تم إضافة اللوجو هنا -->
    <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS Logo" style="height:120px; width:auto; margin-bottom:15px; border-radius:15px; object-fit:contain;">
    <h2>مرحبًا بك في NexPOS PRO</h2>
    <p class="muted">اختر النظام الذي تريد الدخول إليه أو إنشاء حساب جديد</p>
@@ -155,6 +153,11 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 </section>
 
 <section id="playstationPanel" class="hidden">
+ <!-- ✅ شريط التنبيه -->
+ <div id="psExpiryWarning" class="hidden" style="background:#fef3c7; color:#92400e; padding:15px; border-radius:9px; text-align:center; font-weight:bold; font-size:16px; margin-bottom:15px; border:1px solid #fcd34d; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+   <!-- النص بيتحط من الجافاسكريبت -->
+ </div>
+ 
  <div class="card">
   <div class="top"><div><h2>سيستم البلايستيشن</h2><span class="muted" id="psShopTitle">إدارة نشاطك</span></div><button class="red" onclick="logout()">تسجيل الخروج</button></div>
   <div class="grid">
@@ -223,7 +226,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
         <button class="secondary" onclick="loadPlaystationData()">تحديث السجل</button>
       </div>
       
-      <!-- ✅ فلتر التاريخ -->
       <div style="display:flex; gap:10px; align-items:center; margin:15px 0; background:#f8fafc; padding:10px; border-radius:9px; flex-wrap:wrap;">
         <label style="margin:0;">عرض جلسات يوم:</label>
         <input type="date" id="psSessionDateFilter" style="width:auto; margin:0; padding:8px;" onchange="renderPsSessions()">
@@ -455,7 +457,6 @@ window.register=async()=>{
   const systemData={status:"pending",plan:"غير مفعل",requestedPlan:selectedPlan.name,requestedPrice:selectedPlan.price,requestedDays:days,expiryDate:null,requestedAt:serverTimestamp()};
   const systems={};systems[selectedSystem]=systemData;
   
-  // ✅ حفظ بيانات الحساب في قاعدة البيانات
   await setDoc(doc(db,"users",cred.user.uid),{
     shopName:shop,
     customerName:name,
@@ -515,6 +516,7 @@ onAuthStateChanged(auth,async user=>{
     $("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";
     await loadPlaystationData();
     await checkAndSettleDailyPsSales();
+    checkPsSubscriptionStatus(); // ✅ السطر الجديد لفحص الاشتراك
     startPsTimer();
   }
   else{$("customerPanel").classList.remove("hidden");$("shopTitle").textContent=profile.shopName||"نظام المبيعات";$("sahalShopTitle").textContent=profile.shopName||"متجري";$("settingsShopName").value=profile.shopName||"";$("settingsEmail").value=profile.email||user.email||"";checkCustomerSubscription(info);await loadBusiness();await checkAndSettleDailySales();}
@@ -524,11 +526,65 @@ onAuthStateChanged(auth,async user=>{
 window.openPsSubscriptionModal = () => {
  const info = systemInfo(profile, "playstation");
  const expiry = info.expiryDate?.toDate ? info.expiryDate.toDate() : (info.expiryDate ? new Date(info.expiryDate) : null);
- const days = expiry ? Math.ceil((expiry - new Date()) / 86400000) : 0;
- $("psSubModalContent").innerHTML = `<b>النشاط:</b> ${escapeHTML(profile.shopName || "—")}<br><b>الباقة:</b> ${escapeHTML(info.plan || "—")}<br><b>المتبقي:</b> ${Math.max(0, days)} يوم<br><span class="tag good">الاشتراك نشط</span>`;
+ 
+ let daysLeft = 0;
+ if (expiry) {
+   const today = new Date();
+   today.setHours(0, 0, 0, 0); 
+   const expDate = new Date(expiry);
+   expDate.setHours(0, 0, 0, 0); 
+   const diffTime = expDate - today;
+   daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+ }
+
+ $("psSubModalContent").innerHTML = `
+   <b>النشاط:</b> ${escapeHTML(profile.shopName || "—")}<br>
+   <b>الباقة:</b> ${escapeHTML(info.plan || "—")}<br>
+   <b>المتبقي:</b> <span style="color:${daysLeft <= 5 ? '#b72f3b' : '#178653'}; font-weight:bold;">${Math.max(0, daysLeft)} يوم</span><br>
+   <span class="tag ${daysLeft > 0 ? 'good' : ''}">${daysLeft > 0 ? 'الاشتراك نشط' : 'الاشتراك منتهي'}</span>
+ `;
  $("psSubModal").classList.remove("hidden");
 };
 window.closePsSubscriptionModal = () => { $("psSubModal").classList.add("hidden"); };
+
+// ✅ دالة جديدة لفحص حالة الاشتراك والتنبيه
+function checkPsSubscriptionStatus() {
+  const info = systemInfo(profile, "playstation");
+  const expiry = info.expiryDate?.toDate ? info.expiryDate.toDate() : (info.expiryDate ? new Date(info.expiryDate) : null);
+  
+  if (!expiry) return;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); 
+  const expDate = new Date(expiry);
+  expDate.setHours(0, 0, 0, 0); 
+  
+  const diffTime = expDate - today;
+  const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  const warningEl = $("psExpiryWarning");
+
+  // 1. لو الأيام خلصت
+  if (daysLeft <= 0) {
+    warningEl.classList.add("hidden");
+    alert("انتهى اشتراكك في سيستم البلايستيشن. يرجى التواصل مع المطور لتجديد الاشتراك.");
+    $("playstationPanel").classList.add("hidden");
+    $("auth").classList.remove("hidden");
+    message("اشتراكك انتهى. يرجى التواصل مع المطور لتجديد الاشتراك.");
+    logout();
+    return;
+  }
+
+  // 2. لو فاضل 5 أيام أو أقل
+  if (daysLeft <= 5) {
+    warningEl.classList.remove("hidden");
+    warningEl.innerHTML = `⚠️ تنبيه هام: باقي <b>${daysLeft}</b> أيام على انتهاء اشتراكك في سيستم البلايستيشن. يرجى التجديد لتجنب إيقاف الخدمة.<br><br>
+    <button class="green" style="padding:8px 20px; font-size:14px;" onclick="requestRenewal()">تواصل مع المطور لتجديد الاشتراك</button>`;
+  } else {
+    // 3. لو الأيام أكتر من 5، نخفي التنبيه
+    warningEl.classList.add("hidden");
+  }
+}
 
 function checkCustomerSubscription(info){
  const details=$("subPageDetails"),action=$("subPageActionBox"),tiles=$("mainTilesContainer");

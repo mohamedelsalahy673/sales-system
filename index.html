@@ -130,7 +130,18 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
  </div>
  <div id="authForm" class="card hidden" style="max-width:520px;margin:20px auto">
   <div class="top"><h3 id="authFormTitle">تسجيل الدخول</h3><button class="secondary" onclick="backToGate()">رجوع</button></div>
-  <div id="customerLoginBox"><label>البريد الإلكتروني</label><input id="loginEmail" type="email"><label>كلمة المرور</label><input id="loginPassword" type="password"><button class="big" onclick="login()">دخول للنظام</button></div>
+  
+  <div id="customerLoginBox">
+    <label>البريد الإلكتروني</label>
+    <input id="loginEmail" type="email">
+    <label>كلمة المرور</label>
+    <input id="loginPassword" type="password">
+    <button class="big" onclick="login()">دخول للنظام</button>
+    <div style="text-align:center; margin-top:15px;">
+      <a href="#" onclick="forgotPassword(); return false;" style="color:#2458d3; font-size:14px; text-decoration:none; font-weight:bold;">هل نسيت كلمة المرور؟</a>
+    </div>
+  </div>
+  
   <div id="registerBox" class="hidden">
    <label>اسم النشاط التجاري</label><input id="regShop"><label>اسم المسؤول</label><input id="regName"><label>رقم الهاتف</label><input id="regPhone"><label>البريد الإلكتروني</label><input id="regEmail" type="email"><label>كلمة المرور</label><input id="regPassword" type="password">
    <label>اختر الباقة المطلوبة</label><select id="regPlan"><option value="30">الباقة الشهرية - 100 جنيه</option><option value="90">باقة 3 شهور - 250 جنيه</option><option value="365">الباقة السنوية - 900 جنيه</option><option value="36500">الباقة الدائمة - 3000 جنيه</option></select>
@@ -320,7 +331,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {getFirestore,enableIndexedDbPersistence,doc,setDoc,getDoc,getDocFromServer,getDocFromCache,getDocs,getDocsFromCache,getDocsFromServer,updateDoc,collection,addDoc,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 window.getDeviceType = function(device) {
@@ -437,6 +448,29 @@ window.login=async()=>{
   if(!subscriptionActive(si)){await signOut(auth);return message(si.status==="pending"?"حسابك قيد المراجعة ولم يتم تفعيل الاشتراك.":"اشتراك هذا النظام غير نشط أو انتهت صلاحيته.");}
  }catch(e){console.error(e);message("تعذر الدخول: "+(e.code||e.message));}
 };
+
+// ✅ دالة استعادة كلمة المرور
+window.forgotPassword = async () => {
+  const email = prompt("أدخل بريدك الإلكتروني المسجل بالنظام لاستعادة كلمة المرور:");
+  if (!email) return;
+
+  if (!navigator.onLine) {
+    return alert("استعادة كلمة المرور تتطلب اتصالاً بالإنترنت. يرجى توصيل النت والمحاولة.");
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, email.trim());
+    alert("تم إرسال رسالة إلى بريدك الإلكتروني بنجاح.\nيرجى فتح الإيميل والضغط على الرابط الموجود لتغيير كلمة المرور.");
+  } catch (e) {
+    console.error(e);
+    if (e.code === 'auth/user-not-found') {
+      alert("هذا البريد الإلكتروني غير مسجل لدينا في النظام.");
+    } else {
+      alert("حدث خطأ أثناء محاولة إرسال الرسالة. تأكد من البريد الإلكتروني وحاول مرة أخرى.\n" + e.message);
+    }
+  }
+};
+
 window.ownerLogin=async()=>{
  try{
   if($("ownerUsername").value.trim().toLowerCase()!==OWNER_USERNAME)return message("اسم المستخدم الإداري غير صحيح.");
@@ -457,6 +491,7 @@ window.register=async()=>{
   const systemData={status:"pending",plan:"غير مفعل",requestedPlan:selectedPlan.name,requestedPrice:selectedPlan.price,requestedDays:days,expiryDate:null,requestedAt:serverTimestamp()};
   const systems={};systems[selectedSystem]=systemData;
   
+  // ✅ حفظ بيانات الحساب في قاعدة البيانات
   await setDoc(doc(db,"users",cred.user.uid),{
     shopName:shop,
     customerName:name,

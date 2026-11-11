@@ -11,6 +11,8 @@
 <link rel="apple-touch-icon" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- مكتبة Chart.js للرسوم البيانية -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 *{box-sizing:border-box}
@@ -132,7 +134,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div>
      <div class="brand" style="margin:0;">NexPOS PRO</div>
      <div class="system-desc">منصة إدارة الأنشطة والخدمات</div>
-     <span class="version">MULTI SYSTEM V23</span>
+     <span class="version">MULTI SYSTEM V24</span>
    </div>
  </div>
  <div><span id="networkStatus" class="tag good">متصل بالخادم</span> <button class="secondary" onclick="support()">الدعم الفني</button></div>
@@ -207,10 +209,14 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <button id="psDrinksTab" onclick="showPsSection('drinks')">🥤 المشروبات</button>
    <button id="psSandwichesTab" onclick="showPsSection('sandwiches')">🥪 السندوتشات</button>
    <button id="psSessionsTab" onclick="showPsSection('sessions')">📄 سجل الجلسات</button>
+   <button id="psReservationsTab" onclick="showPsSection('reservations')" style="background:#0ea5e9">📅 الحجوزات</button>
+   <button id="psCustomersTab" onclick="showPsSection('customers')" style="background:#8b5cf6">🏆 سجل العملاء</button>
+   <button id="psReportsTab" onclick="showPsSection('reports')" style="background:#0f766e">📊 التقارير</button>
    <button id="psShiftTab" onclick="openPsShiftModal()" class="orange">💵 الوردية</button>
    <button id="psMySubTab" onclick="openPsSubscriptionModal()">⭐ اشتراكي</button>
   </div>
 
+  <!-- الأجهزة -->
   <div id="psDevicesSection">
    <div class="card"><h3>إضافة جهاز روم جديد</h3><div class="grid">
     <div><label>اسم الروم</label><input id="psNewDeviceName" placeholder="مثال: روم 1"></div>
@@ -221,6 +227,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div id="psDevicesList" class="ps-device-grid"><div class="ps-empty">جاري تحميل الرومات...</div></div>
   </div>
 
+  <!-- VIP -->
   <div id="psVipSection" class="hidden">
    <div class="card"><h3>إضافة جهاز إلى صالة VIP</h3><div class="grid">
     <div><label>اسم جهاز VIP</label><input id="psNewVipName" placeholder="مثال: VIP 1"></div>
@@ -231,6 +238,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div id="psVipDevicesList" class="ps-device-grid"><div class="ps-empty">لا توجد أجهزة VIP حتى الآن.</div></div>
   </div>
 
+  <!-- القاعدة العربي -->
   <div id="psBaseArabiSection" class="hidden">
    <div class="card"><h3>إضافة جهاز إلى القاعدة العربي</h3><div class="grid">
     <div><label>اسم الجهاز</label><input id="psNewBaseName" placeholder="مثال: قاعدة 1"></div>
@@ -241,14 +249,19 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div id="psBaseArabiDevicesList" class="ps-device-grid"><div class="ps-empty">لا توجد أجهزة في القاعدة العربي حتى الآن.</div></div>
   </div>
 
+  <!-- المشروبات -->
   <div id="psDrinksSection" class="hidden">
    <div class="card"><h3>إضافة مشروب</h3><div class="ps-item-form"><div><label>اسم المشروب</label><input id="psDrinkName" placeholder="مثال: بيبسي"></div><div><label>السعر</label><input id="psDrinkPrice" type="number" min="0" step=".01"></div><div><label>الكمية</label><input id="psDrinkQty" type="number" min="0" value="1"></div><button class="green" onclick="addPsItem('drink')">إضافة</button></div></div>
    <h3>قائمة المشروبات</h3><div class="tablewrap"><table><thead><tr><th>المشروب</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psDrinksTable"></tbody></table></div>
   </div>
+
+  <!-- السندوتشات -->
   <div id="psSandwichesSection" class="hidden">
    <div class="card"><h3>إضافة سندوتش</h3><div class="ps-item-form"><div><label>اسم السندوتش</label><input id="psSandwichName" placeholder="مثال: سندوتش بطاطس"></div><div><label>السعر</label><input id="psSandwichPrice" type="number" min="0" step=".01"></div><div><label>الكمية</label><input id="psSandwichQty" type="number" min="0" value="1"></div><button class="green" onclick="addPsItem('sandwich')">إضافة</button></div></div>
    <h3>قائمة السندوتشات</h3><div class="tablewrap"><table><thead><tr><th>السندوتش</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psSandwichesTable"></tbody></table></div>
   </div>
+
+  <!-- سجل الجلسات -->
   <div id="psSessionsSection" class="hidden">
     <div class="card">
       <div class="top"><h3>سجل الجلسات والفواتير</h3><button class="secondary" onclick="loadPlaystationData()">تحديث السجل</button></div>
@@ -264,15 +277,71 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
       </div>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>رقم الفاتورة</th><th>الجهاز</th><th>البداية</th><th>النهاية</th><th>المدة</th><th>اللعب</th><th>الإضافات</th><th>الخصم</th><th>الإجمالي</th><th>الفاتورة</th></tr></thead>
+          <thead><tr><th>رقم الفاتورة</th><th>العميل</th><th>الجهاز</th><th>البداية</th><th>النهاية</th><th>المدة</th><th>اللعب</th><th>الإضافات</th><th>الخصم</th><th>الإجمالي</th><th>الفاتورة</th></tr></thead>
           <tbody id="psSessionsTable"></tbody>
         </table>
       </div>
     </div>
   </div>
+
+  <!-- الحجوزات -->
+  <div id="psReservationsSection" class="hidden">
+    <div class="card">
+      <h3>📅 إضافة حجز مسبق</h3>
+      <div class="grid">
+        <div><label>اختر الجهاز</label><select id="resDeviceId"></select></div>
+        <div><label>اسم العميل</label><input id="resCustomerName" placeholder="اسم العميل"></div>
+        <div><label>رقم الهاتف (اختياري)</label><input id="resCustomerPhone" placeholder="رقم الموبايل"></div>
+        <div><label>وقت الحجز</label><input id="resTime" type="time"></div>
+        <div style="display:flex;align-items:end;"><button class="big purple" onclick="addReservation()">حجز</button></div>
+      </div>
+    </div>
+    <h3>الحجوزات القادمة / اليوم</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>العميل</th><th>الهاتف</th><th>الجهاز</th><th>وقت الحجز</th><th>الحالة</th><th>إجراء</th></tr></thead>
+        <tbody id="psReservationsTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- سجل العملاء -->
+  <div id="psCustomersSection" class="hidden">
+    <div class="card">
+      <h3>🏆 سجل العملاء (الأكثر زيارة أولاً)</h3>
+      <p class="muted">يتم جمع الزيارات بناءً على اسم العميل المدخل عند بدء الجلسة.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>#</th><th>اسم العميل</th><th>عدد الزيارات</th><th>إجمالي المدفوع</th><th>آخر زيارة</th></tr></thead>
+          <tbody id="psCustomersTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- التقارير -->
+  <div id="psReportsSection" class="hidden">
+    <div class="card">
+      <div class="top"><h3>📊 التقارير والرسوم البيانية</h3><button class="secondary" onclick="loadPlaystationData()">تحديث</button></div>
+      <div class="grid" style="margin-bottom:20px;">
+        <div class="stat">إجمالي إيرادات (كل الوقت)<strong id="psTotalRevenueAll">0 جنيه</strong></div>
+        <div class="stat">إجمالي عدد الجلسات<strong id="psTotalSessionsAll">0</strong></div>
+      </div>
+      <h4>إيرادات آخر 7 أيام</h4>
+      <div style="background:white; padding:15px; border-radius:12px; margin-bottom:20px;">
+        <canvas id="revenueChart"></canvas>
+      </div>
+      <h4>توزيع الإيرادات حسب نوع الجهاز / الخدمة</h4>
+      <div style="background:white; padding:15px; border-radius:12px; width: 100%; max-width: 500px; margin: auto;">
+        <canvas id="typeChart"></canvas>
+      </div>
+    </div>
+  </div>
+
  </div>
 </section>
 
+<!-- مودالات -->
 <div id="psShiftModal" class="modal-overlay hidden">
   <div class="modal-box" style="max-width:400px; text-align:center; border-top:5px solid #d97706;">
     <h3 style="margin-top:0;">💵 إدارة الوردية</h3>
@@ -399,7 +468,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'nexpos-v23';
+      const CACHE_NAME = 'nexpos-v24';
       self.addEventListener('install', (e) => { self.skipWaiting(); });
       self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
       self.addEventListener('fetch', (e) => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });
@@ -455,9 +524,7 @@ const PS_DEFAULT_HOURLY_RATE=40;
 const PS_MIN_SESSION_MINUTES=30;
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 
-// ✅ إجبار المتصفح على حفظ الجلسة حتى لو اتقفل
 setPersistence(auth, browserLocalPersistence).catch(err => console.warn('Persistence error:', err));
-
 enableIndexedDbPersistence(db).catch((err) => console.warn('Db Persistence error:', err.code));
 
 function updateNetworkStatus() {
@@ -469,8 +536,10 @@ window.addEventListener('online', updateNetworkStatus); window.addEventListener(
 
 let currentUser=null,profile=null,selectedSystem="sales",activeSystem="sales",registeringNow=false;
 let products=[],sales=[],expenses=[],treasury=[],cart=[],selectedProduct=null,lastRegisteredUser=null;
-let psDevices=[],psItems=[],psSessions=[],psTimer=null,psEndingDevices=new Set();
+let psDevices=[],psItems=[],psSessions=[],psReservations=[],psTimer=null,psEndingDevices=new Set();
 let currentShiftCloseTime = 0; 
+let revenueChartInstance = null, typeChartInstance = null; // للمخططات البيانية
+
 const $=id=>document.getElementById(id);
 const money=n=>(Number(n)||0).toLocaleString("ar-EG",{minimumFractionDigits:2,maximumFractionDigits:2});
 const shopRef=()=>`shops/${currentUser.uid}`;
@@ -561,7 +630,6 @@ window.sendWhatsAppActivation=()=>{
 window.logout=async()=>{if(psTimer)clearInterval(psTimer);await signOut(auth);location.reload();};
 window.support=()=>window.open(`https://wa.me/${SUPPORT_PHONE}`,"_blank");
 
-// ✅ التعديل الأهم: منع الخروج المفاجئ
 onAuthStateChanged(auth,async user=>{
  currentUser=user;
  if(registeringNow)return;
@@ -573,14 +641,12 @@ onAuthStateChanged(auth,async user=>{
   }
   const snap=await safeGetDoc(doc(db,"users",user.uid));
   if(!snap.exists()){
-      // لو مفيش داتا في الكاش والسيرفر بيفشل، منطلعوش برة على طول، بنستنى
       if(!navigator.onLine) return; 
       await signOut(auth); return;
   }
   profile=snap.data();
   const system=selectedSystem,info=systemInfo(profile,system);
   if(info.status==="not_registered"||!subscriptionActive(info)){
-      // لو اشتراكه خلص فعلاً بنطلعه، بس لو النت فصل منطلعوش
       if(!navigator.onLine) return;
       await signOut(auth);$("auth").classList.remove("hidden");message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");return;
   }
@@ -687,25 +753,35 @@ window.deactivateSystem=async(id,system)=>{if(!confirm("هل تريد إيقاف
 window.deleteUser=async id=>{if(!confirm("حذف بيانات الحساب؟"))return;try{await deleteDoc(doc(db,"users",id));await loadUsers();showAlert("تم الحذف بنجاح.", "success");}catch(e){showAlert(e.message, "error");}};
 
 window.showPsSection=which=>{
- const sections=["devices","vip","base_arabi","drinks","sandwiches","sessions"];
+ const sections=["devices","vip","base_arabi","drinks","sandwiches","sessions","reservations","customers","reports"];
  sections.forEach(s=>{
   let sectionId,tabId;
   if(s==="vip"){sectionId="psVipSection";tabId="psVipTab";}
   else if(s==="base_arabi"){sectionId="psBaseArabiSection";tabId="psBaseArabiTab";}
+  else if(s==="reservations"){sectionId="psReservationsSection";tabId="psReservationsTab";}
+  else if(s==="customers"){sectionId="psCustomersSection";tabId="psCustomersTab";}
+  else if(s==="reports"){sectionId="psReportsSection";tabId="psReportsTab";}
   else{sectionId="ps"+s[0].toUpperCase()+s.slice(1)+"Section";tabId="ps"+s[0].toUpperCase()+s.slice(1)+"Tab";}
   $(sectionId).classList.toggle("hidden",s!==which);
   $(tabId).classList.toggle("active",s===which);
  });
  if(which==="sessions"){ const dateInput = $("psSessionDateFilter"); if (dateInput && !dateInput.value) { dateInput.value = new Date().toISOString().slice(0, 10); } renderPsSessions(); }
+ if(which==="reservations"){ renderPsReservations(); }
+ if(which==="customers"){ renderPsCustomers(); }
+ if(which==="reports"){ renderPsReports(); }
 };
 
 window.loadPlaystationData = async function(){
  if(!currentUser)return;
  try{
-  const [ds,is,ss,shiftSnap]=await Promise.all([ safeGetDocs(col("devices")), safeGetDocs(col("psItems")), safeGetDocs(col("psSessions")), safeGetDoc(doc(col("psShifts"), "current")) ]);
+  const [ds,is,ss,rs,shiftSnap]=await Promise.all([ 
+      safeGetDocs(col("devices")), safeGetDocs(col("psItems")), safeGetDocs(col("psSessions")), 
+      safeGetDocs(col("psReservations")), safeGetDoc(doc(col("psShifts"), "current")) 
+  ]);
   psDevices=ds.docs.map(d=>({id:d.id,...d.data()}));
   psItems=is.docs.map(d=>({id:d.id,...d.data()}));
   psSessions=ss.docs.map(d=>({id:d.id,...d.data()}));
+  psReservations=rs.docs.map(d=>({id:d.id,...d.data()}));
   
   if(shiftSnap.exists()) {
      const shiftData = shiftSnap.data();
@@ -748,8 +824,12 @@ window.deletePsDevice=async id=>{
 window.startPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status==="running")return showAlert("الجهاز غير متاح.", "warning");
- const mode=$(`psMode_${id}`).value,rate=Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
+ 
+ const mode=$(`psMode_${id}`).value;
+ const customerName = $(`psCustomerName_${id}`)?.value.trim() || "";
+ const rate=Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
  let minutes=0,plannedAmount=0,now=Date.now(),endAt=null;
+ 
  if(mode==="duration"){
   minutes=Number($(`psDuration_${id}`).value);
   if(!Number.isFinite(minutes)||minutes<PS_MIN_SESSION_MINUTES)return showAlert("أقل مدة نصف ساعة.", "warning");
@@ -763,11 +843,11 @@ window.startPsDevice=async id=>{
 
  const sessionRef=doc(col("psSessions")),sessionId=sessionRef.id;
  try{
-  Object.assign(d,{status:"running",startedAt:now,endAt,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:plannedAmount});
-  psSessions.push({id: sessionId, deviceId: id, deviceName: d.name, deviceType: window.getDeviceType(d), startedAt: now, endAt: endAt, plannedMinutes: minutes, hourlyRate: rate, sessionMode: mode, plannedAmount: mode === "amount" ? plannedAmount : 0, orders: [], finalized: false, createdAt: now});
+  Object.assign(d,{status:"running",startedAt:now,endAt,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:plannedAmount,customerName});
+  psSessions.push({id: sessionId, deviceId: id, deviceName: d.name, deviceType: window.getDeviceType(d), startedAt: now, endAt: endAt, plannedMinutes: minutes, hourlyRate: rate, sessionMode: mode, plannedAmount: mode === "amount" ? plannedAmount : 0, orders: [], finalized: false, createdAt: now, customerName});
   renderPsDevices(); renderPsStats(); renderPsSessions(); startPsTimer();
-  setDoc(sessionRef,{deviceId:id,deviceName:d.name,deviceType:window.getDeviceType(d),startedAt:now,endAt,plannedMinutes:minutes,hourlyRate:rate,sessionMode:mode,plannedAmount:mode==="amount"?plannedAmount:0,orders:[],finalized:false,createdAt:now}).catch(e=>console.warn(e));
-  updateDoc(docRef("devices",id),{status:"running",startedAt:now,endAt,lastDuration:minutes,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:mode==="amount"?plannedAmount:0}).catch(e=>console.warn(e));
+  setDoc(sessionRef,{deviceId:id,deviceName:d.name,deviceType:window.getDeviceType(d),startedAt:now,endAt,plannedMinutes:minutes,hourlyRate:rate,sessionMode:mode,plannedAmount:mode==="amount"?plannedAmount:0,orders:[],finalized:false,createdAt:now,customerName}).catch(e=>console.warn(e));
+  updateDoc(docRef("devices",id),{status:"running",startedAt:now,endAt,lastDuration:minutes,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:mode==="amount"?plannedAmount:0,customerName}).catch(e=>console.warn(e));
  }catch(e){console.error(e);showAlert("تعذر بدء الجلسة: "+e.message, "error");}
 };
 
@@ -822,7 +902,9 @@ window.stopPsDevice=async id=>{
  const total = playTotal + ordersTotal;
  const typeLabel = window.getDeviceType(d) === "vip" ? "صالة VIP" : (window.getDeviceType(d) === "base_arabi" ? "القاعدة العربي" : "روم");
  $("psConfirmInvoiceContent").innerHTML = `
-   <b>الجهاز:</b> ${escapeHTML(d.name)} (${typeLabel})<br><b>وقت اللعب:</b> ${elapsedMinutes} دقيقة<br><b>قيمة اللعب:</b> ${money(playTotal)} جنيه<br><hr style="margin: 8px 0;">
+   <b>الجهاز:</b> ${escapeHTML(d.name)} (${typeLabel})<br>
+   <b>العميل:</b> ${escapeHTML(d.customerName||"غير محدد")}<br>
+   <b>وقت اللعب:</b> ${elapsedMinutes} دقيقة<br><b>قيمة اللعب:</b> ${money(playTotal)} جنيه<br><hr style="margin: 8px 0;">
    <b>المشروبات والسندوتشات:</b><br>${orders.length ? orders.map(o => `- ${escapeHTML(o.name)} (${o.qty}) = ${money(o.lineTotal ?? (o.price * o.qty))} ج`).join('<br>') : 'لا يوجد'}
    <br><b>إجمالي الإضافات:</b> ${money(ordersTotal)} جنيه<br><hr style="margin: 8px 0; border-top: 2px dashed #ccc;">
    <h3 id="psConfirmFinalTotal" style="color:#178653; text-align:center; margin:5px 0;">الإجمالي النهائي: ${money(total)} جنيه</h3>`;
@@ -881,12 +963,13 @@ async function finalizePsSession(device,reason="manual", shouldPrint = true){
   const totalBeforeDiscount = playTotal + ordersTotal;
   const total = Math.max(0, Number((totalBeforeDiscount - discount).toFixed(2))); 
   const invoiceNumber="PS-"+now.toString().slice(-8);
-  const invoice={invoiceNumber, deviceId:device.id, deviceName:device.name, deviceType:device.deviceType||"room", startedAt, endedAt:now, elapsedMinutes, hourlyRate:rate, sessionMode:device.sessionMode||"duration", plannedMinutes:Number(device.lastDuration||0), plannedAmount:Number(device.sessionAmount||0), playTotal, orders, ordersTotal, discount: discount, total: total, totalBeforeDiscount: totalBeforeDiscount, paymentMethod:"cash", paymentStatus:"paid", finalized:true, reason, date:new Date(now).toLocaleString("ar-EG"), createdAt:now};
+  const invoice={invoiceNumber, deviceId:device.id, deviceName:device.name, deviceType:device.deviceType||"room", startedAt, endedAt:now, elapsedMinutes, hourlyRate:rate, sessionMode:device.sessionMode||"duration", plannedMinutes:Number(device.lastDuration||0), plannedAmount:Number(device.sessionAmount||0), playTotal, orders, ordersTotal, discount: discount, total: total, totalBeforeDiscount: totalBeforeDiscount, paymentMethod:"cash", paymentStatus:"paid", finalized:true, reason, date:new Date(now).toLocaleString("ar-EG"), createdAt:now, customerName: device.customerName || ""};
   const typeLabel=invoice.deviceType==="vip"?"صالة VIP":(invoice.deviceType==="base_arabi"?"القاعدة العربي":"روم");
   setDoc(sRef, invoice).catch(err => console.warn(err));
   setDoc(tRef, {type:"in", amount:total, note:`فاتورة ${typeLabel} - ${invoiceNumber}`, deviceName:device.name, deviceType:invoice.deviceType, sessionId, invoiceNumber, date:new Date(now).toLocaleString("ar-EG"), createdAt:now}).catch(err => console.warn(err));
-  updateDoc(dRef, {status:"idle", endAt:null, startedAt:null, sessionId:null, sessionMode:null, sessionAmount:null, endedAt:now, lastSessionId:sessionId, lastSessionTotal:total}).catch(err => console.warn(err));
-  device.status = "idle"; device.sessionId = null; device.startedAt = null; device.endAt = null; device.sessionMode = null; device.sessionAmount = null;
+  updateDoc(dRef, {status:"idle", endAt:null, startedAt:null, sessionId:null, sessionMode:null, sessionAmount:null, customerName:null, endedAt:now, lastSessionId:sessionId, lastSessionTotal:total}).catch(err => console.warn(err));
+  device.status = "idle"; device.sessionId = null; device.startedAt = null; device.endAt = null; device.sessionMode = null; device.sessionAmount = null; device.customerName = null;
+  
   const existingIndex = psSessions.findIndex(s => s.id === sessionId);
   if (existingIndex >= 0) { psSessions[existingIndex] = { id: sessionId, ...invoice }; } else { psSessions.push({ id: sessionId, ...invoice }); }
   renderPsDevices();renderPsStats();renderPsSessions(); if(shouldPrint) printPsInvoice(sessionId);
@@ -913,6 +996,7 @@ function buildPsDeviceCard(d){
 
  return `<div class="ps-device-card ${running?"running":""} ${cardClass}">
   <div class="top"><h3>${icon} ${escapeHTML(d.name)}</h3><span class="tag ${running?"good":""}">${running?"يعمل الآن":typeLabel}</span></div>
+  ${running && d.customerName ? `<p style="text-align:center; font-weight:bold; color:#b72f3b;">👤 العميل: ${escapeHTML(d.customerName)}</p>` : ''}
   <div class="ps-device-time ${running?"":"ps-device-idle"}" id="psClock_${d.id}">${time}</div>
   <p class="muted" style="text-align:center" id="psClockLabel_${d.id}">${running?(autoMode?"الوقت المنقضي - حساب تلقائي":"الوقت المتبقي"):"الجهاز جاهز لجلسة جديدة"}</p>
   <label>سعر الساعة بالجنيه</label>
@@ -937,6 +1021,8 @@ function buildPsDeviceCard(d){
    `}
    <button class="red big" onclick="stopPsDevice('${d.id}')">إنهاء الجلسة والفاتورة</button>
   `:`
+   <label>اسم العميل (اختياري)</label>
+   <input id="psCustomerName_${d.id}" placeholder="اتركه فارغاً إذا لم يكن هناك عميل">
    <label>طريقة حساب الجلسة</label>
    <select id="psMode_${d.id}" onchange="togglePsMode('${d.id}')">
     <option value="duration">⏱ تحديد مدة الجلسة</option>
@@ -974,7 +1060,6 @@ window.togglePsMode=id=>{
  $(`psAutoBox_${id}`).classList.toggle("hidden",mode!=="auto");
 };
 
-// تحديث المؤقت ليتناسب مع وضع السكون
 function startPsTimer(){
  if(psTimer)clearInterval(psTimer);
  psTimer=setInterval(async()=>{
@@ -994,10 +1079,8 @@ function startPsTimer(){
   renderPsStats();
  },1000);
 
- // عند رجوع التطبيق من الخلفية
  document.addEventListener("visibilitychange", () => {
     if (!document.hidden && currentUser && activeSystem === "playstation") {
-        // إعادة تحديث العداد والتأكد من إن الجلسات شغالة
         renderPsDevices(); 
         renderPsStats();
     }
@@ -1026,13 +1109,13 @@ async function renderPsSessions(){
   const type = s.deviceType==="vip"?"VIP":(s.deviceType==="base_arabi"?"قاعدة":"روم");
   const discountText = s.discount > 0 ? `<span style="color:#b72f3b;">${money(s.discount)} ج</span>` : "—";
   return `<tr>
-   <td>${escapeHTML(s.invoiceNumber||"—")}</td><td>${escapeHTML(s.deviceName||"—")} <span class="tag">${type}</span></td>
+   <td>${escapeHTML(s.invoiceNumber||"—")}</td><td>${escapeHTML(s.customerName||"—")}</td><td>${escapeHTML(s.deviceName||"—")} <span class="tag">${type}</span></td>
    <td>${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</td><td>${s.endedAt?new Date(s.endedAt).toLocaleString("ar-EG"):"—"}</td>
    <td>${Number(s.elapsedMinutes)||0} دقيقة</td><td>${money(s.playTotal??s.total)} ج</td><td>${money(s.ordersTotal||0)} ج</td>
    <td>${discountText}</td><td><b>${money(s.total)} ج</b></td>
    <td><button class="rowbtn secondary" onclick="printPsInvoice('${s.id}')">طباعة</button></td>
   </tr>`;
- }).join("")||'<tr><td colspan="10">لا توجد جلسات مسجلة.</td></tr>';
+ }).join("")||'<tr><td colspan="11">لا توجد جلسات مسجلة.</td></tr>';
 }
 
 window.printPsInvoice=id=>{
@@ -1045,6 +1128,7 @@ window.printPsInvoice=id=>{
  <div style="font-family:Arial;text-align:center;padding:10px;direction:rtl">
   <h2>${escapeHTML(profile?.shopName||"نشاط البلايستيشن")}</h2><h3>فاتورة جلسة ${type}</h3><hr>
   <p>رقم الفاتورة: ${escapeHTML(s.invoiceNumber||"—")}</p><p>الجهاز: ${escapeHTML(s.deviceName||"—")}</p>
+  ${s.customerName ? `<p>العميل: ${escapeHTML(s.customerName)}</p>` : ''}
   <p>طريقة الحساب: ${modeLabel}</p><p>بداية الجلسة: ${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</p>
   <p>نهاية الجلسة: ${s.endedAt?new Date(s.endedAt).toLocaleString("ar-EG"):"—"}</p>
   <p>مدة التشغيل الفعلية: ${Number(s.elapsedMinutes)||0} دقيقة</p><p>سعر الساعة: ${money(s.hourlyRate)} جنيه</p><hr>
@@ -1290,39 +1374,207 @@ function renderExpenses(){ $("expensesTable").innerHTML=expenses.map(e=>`<tr><td
 function renderSales(){ $("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printSavedInvoice('${s.id}')">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا توجد فواتير</td></tr>"; }
 window.printSavedInvoice=id=>{const inv=sales.find(s=>s.id===id);if(inv)printInvoiceDirectly(inv);};
 
-window.exportDataToExcel = async () => {
-  showAlert("جاري تجهيز ملف النسخة الاحتياطية... يرجى الانتظار.", "info");
+// ==========================================================
+// وظائف الحجوزات والعملاء والتقارير (البلايستيشن)
+// ==========================================================
+
+window.addReservation = async () => {
+  const deviceId = $("resDeviceId").value;
+  const customerName = $("resCustomerName").value.trim();
+  const phone = $("resCustomerPhone").value.trim();
+  const time = $("resTime").value;
+  if (!deviceId || !customerName || !time) return showAlert("اختر الجهاز، اكتب اسم العميل والوقت.", "warning");
+  
+  const d = psDevices.find(x=>x.id===deviceId);
+  const now = new Date();
+  // تحويل الوقت المختار إلى تاريخ اليوم
+  const [hours, minutes] = time.split(':');
+  const resDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+
   try {
-    const wb = XLSX.utils.book_new();
-    if(activeSystem === 'sales') {
-      if(products.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(products), "المنتجات");
-      if(sales.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sales.map(s => ({...s, items: JSON.stringify(s.items)}))), "الفواتير");
-      if(treasury.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(treasury), "الخزينة");
-      if(expenses.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(expenses), "المصروفات");
-    } else {
-      if(psDevices.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(psDevices), "الأجهزة");
-      if(psItems.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(psItems), "الأصناف");
-      if(psSessions.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(psSessions.map(s => ({...s, orders: JSON.stringify(s.orders)}))), "الجلسات");
-    }
-    XLSX.writeFile(wb, `NexPOS_Backup_${new Date().toISOString().slice(0,10)}.xlsx`);
-  } catch(e) {
-    showAlert("حدث خطأ أثناء تصدير الملف: " + e.message, "error");
+    await setDoc(doc(col("psReservations")), {
+      deviceId, deviceName: d ? d.name : "جهاز",
+      customerName, phone, time: resDate.getTime(),
+      status: "pending", createdAt: Date.now()
+    });
+    $("resCustomerName").value = ""; $("resCustomerPhone").value = ""; $("resTime").value = "";
+    await loadPlaystationData();
+    renderPsReservations();
+    showAlert("تم إضافة الحجز بنجاح.", "success");
+  } catch(e) { showAlert(e.message, "error"); }
+};
+
+function renderPsReservations() {
+  const sel = $("resDeviceId");
+  if(sel) {
+      sel.innerHTML = psDevices.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("");
+  }
+  
+  const tbody = $("psReservationsTable");
+  if(!tbody) return;
+  
+  const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+  let filtered = psReservations.filter(r => r.status === "pending" && r.time >= todayStart.getTime());
+  filtered.sort((a,b) => a.time - b.time);
+
+  tbody.innerHTML = filtered.map(r => {
+    const timeStr = new Date(r.time).toLocaleTimeString("ar-EG", {hour: '2-digit', minute:'2-digit'});
+    return `<tr>
+      <td>${escapeHTML(r.customerName)}</td>
+      <td>${escapeHTML(r.phone||"—")}</td>
+      <td>${escapeHTML(r.deviceName)}</td>
+      <td><span class="tag" style="background:#e0f2fe;color:#0369a1">${timeStr}</span></td>
+      <td>قادم</td>
+      <td>
+        <button class="rowbtn green" onclick="startFromReservation('${r.id}', '${r.deviceId}')">بدء الجلسة</button>
+        <button class="rowbtn red" onclick="deleteReservation('${r.id}')">إلغاء</button>
+      </td>
+    </tr>`;
+  }).join("") || '<tr><td colspan="6">لا توجد حجوزات قادمة.</td></tr>';
+}
+
+window.startFromReservation = async (resId, deviceId) => {
+  const d = psDevices.find(x=>x.id===deviceId);
+  if(!d) return showAlert("الجهاز غير موجود.", "error");
+  if(d.status === "running") return showAlert("هذا الجهاز يعمل بالفعل الآن.", "warning");
+  
+  const r = psReservations.find(x=>x.id===resId);
+  if(r) {
+      showPsSection('devices');
+      setTimeout(() => {
+          const nameInput = $(`psCustomerName_${deviceId}`);
+          if(nameInput) {
+              nameInput.value = r.customerName;
+              nameInput.scrollIntoView({behavior: 'smooth', block: 'center'});
+          }
+          // إلغاء الحجز
+          deleteDoc(docRef("psReservations", resId)).then(()=>{ loadPlaystationData(); });
+      }, 300);
   }
 };
 
-function renderStats(){
- const rev=sales.reduce((s,x)=>s+Number(x.total||0),0),exp=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
- const tIn=treasury.filter(t=>t.type==="in").reduce((s,x)=>s+Number(x.amount||0),0),tOut=treasury.filter(t=>t.type==="out").reduce((s,x)=>s+Number(x.amount||0),0);
- $("statProducts").textContent=products.length;$("statSales").textContent=sales.length;
- $("statRevenue").textContent=money(rev)+" جنيه";$("statTreasuryBalance").textContent=money(tIn-tOut)+" جنيه";
- $("reportRevenue").textContent=money(rev)+" جنيه";$("reportExpenses").textContent=money(exp)+" جنيه";$("reportNet").textContent=money(rev-exp)+" جنيه";
+window.deleteReservation = async (id) => {
+  if(!confirm("هل تريد إلغاء هذا الحجز؟")) return;
+  try { await deleteDoc(docRef("psReservations", id)); await loadPlaystationData(); renderPsReservations(); showAlert("تم إلغاء الحجز", "success"); } 
+  catch(e) { showAlert(e.message, "error"); }
+};
+
+function renderPsCustomers() {
+  const tbody = $("psCustomersTable");
+  if(!tbody) return;
+
+  const customers = {};
+  psSessions.filter(s => s.finalized || s.endedAt).forEach(s => {
+      const name = (s.customerName || "").trim();
+      if (!name) return;
+      
+      if (!customers[name]) {
+          customers[name] = { count: 0, total: 0, lastVisit: 0 };
+      }
+      customers[name].count++;
+      customers[name].total += Number(s.total || 0);
+      customers[name].lastVisit = Math.max(customers[name].lastVisit, s.endedAt || 0);
+  });
+
+  const sorted = Object.keys(customers).map(name => ({ name, ...customers[name] })).sort((a,b) => b.count - a.count);
+
+  tbody.innerHTML = sorted.map((c, index) => {
+      const lastVisitStr = c.lastVisit ? new Date(c.lastVisit).toLocaleDateString("ar-EG") : "—";
+      return `<tr>
+          <td><b>${index === 0 ? '🥇 1' : index === 1 ? '🥈 2' : index === 2 ? '🥉 3' : index+1}</b></td>
+          <td>${escapeHTML(c.name)}</td>
+          <td><span class="tag good">${c.count} زيارة</span></td>
+          <td>${money(c.total)} ج</td>
+          <td>${lastVisitStr}</td>
+      </tr>`;
+  }).join("") || '<tr><td colspan="5">لا توجد بيانات عملاء حتى الآن. اكتب اسم العميل عند بدء الجلسة ليتم تسجيله.</td></tr>';
 }
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(err => console.warn('⚠️ SW Failed:', err));
+function renderPsReports() {
+  const allSessions = psSessions.filter(s => s.finalized || s.endedAt);
+  
+  let totalRev = 0;
+  let playRev = 0, ordersRev = 0;
+  let roomRev = 0, vipRev = 0, baseRev = 0, drinksRev = 0, sandRev = 0;
+
+  allSessions.forEach(s => {
+      totalRev += Number(s.total || 0);
+      playRev += Number(s.playTotal || 0);
+      ordersRev += Number(s.ordersTotal || 0);
+      
+      if (s.deviceType === "vip") vipRev += Number(s.playTotal || 0);
+      else if (s.deviceType === "base_arabi") baseRev += Number(s.playTotal || 0);
+      else roomRev += Number(s.playTotal || 0);
+      
+      if (Array.isArray(s.orders)) {
+          s.orders.forEach(o => {
+              if (o.category === "drink") drinksRev += Number(o.lineTotal || 0);
+              if (o.category === "sandwich") sandRev += Number(o.lineTotal || 0);
+          });
+      }
   });
+
+  $("psTotalRevenueAll").textContent = money(totalRev) + " جنيه";
+  $("psTotalSessionsAll").textContent = allSessions.length;
+
+  // رسم بياني 1: إيرادات 7 أيام
+  const last7Days = [];
+  const revData = [];
+  const dateLabels = [];
+  for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().slice(0, 10);
+      const daySessions = allSessions.filter(s => new Date(s.endedAt || s.createdAt).toISOString().slice(0, 10) === dateStr);
+      const dayTotal = daySessions.reduce((sum, s) => sum + Number(s.total || 0), 0);
+      revData.push(dayTotal);
+      dateLabels.push(d.toLocaleDateString("ar-EG", { weekday: 'short', day: 'numeric' }));
+  }
+
+  if (revenueChartInstance) revenueChartInstance.destroy();
+  const ctx1 = document.getElementById('revenueChart');
+  if (ctx1) {
+      revenueChartInstance = new Chart(ctx1, {
+          type: 'bar',
+          data: {
+              labels: dateLabels,
+              datasets: [{
+                  label: 'الإيرادات (جنيه)',
+                  data: revData,
+                  backgroundColor: '#2458d3',
+                  borderRadius: 6
+              }]
+          },
+          options: {
+              responsive: true,
+              plugins: { legend: { display: false } },
+              scales: { y: { beginAtZero: true } }
+          }
+      });
+  }
+
+  // رسم بياني 2: توزيع الإيرادات
+  if (typeChartInstance) typeChartInstance.destroy();
+  const ctx2 = document.getElementById('typeChart');
+  if (ctx2) {
+      typeChartInstance = new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+              labels: ['رومات', 'VIP', 'قاعدة عربي', 'مشروبات', 'سندوتشات'],
+              datasets: [{
+                  data: [roomRev, vipRev, baseRev, drinksRev, sandRev],
+                  backgroundColor: ['#178653', '#7c3aed', '#d97706', '#0ea5e9', '#b72f3b'],
+                  borderWidth: 0
+              }]
+          },
+          options: {
+              responsive: true,
+              plugins: { legend: { position: 'bottom' } }
+          }
+      });
+  }
 }
+
 </script>
 </body>
 </html>

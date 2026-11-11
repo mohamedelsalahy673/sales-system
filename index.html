@@ -1,24 +1,15 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<!-- ✅ كود التحقق من ملكية جوجل -->
 <meta name="google-site-verification" content="jiyqOFPs0SoJIjbutlNuIyM5bpgHcbhpPYKLc8Fr_lc" />
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NexPOS PRO - نظام إدارة المبيعات والبلايستيشن</title>
 <meta name="description" content="NexPOS PRO - أفضل نظام إدارة مبيعات وبلايستيشن في مصر. إدارة المخزون، الفواتير، الخزينة، وجلسات البلايستيشن بكل سهولة.">
-<meta name="keywords" content="NexPOS, بلايستيشن, سيستم مبيعات, إدارة محلات, كاشير, POS">
-<meta name="author" content="محمد الصلاحي">
-
-<link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#2458d3">
 <link rel="icon" type="image/png" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
 <link rel="apple-touch-icon" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
-
-<!-- ✅ مكتبة SweetAlert2 للرسائل -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- ✅ مكتبة SheetJS لتصدير ملفات Excel -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
@@ -141,7 +132,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div>
      <div class="brand" style="margin:0;">NexPOS PRO</div>
      <div class="system-desc">منصة إدارة الأنشطة والخدمات</div>
-     <span class="version">MULTI SYSTEM V18</span>
+     <span class="version">MULTI SYSTEM V19</span>
    </div>
  </div>
  <div><span id="networkStatus" class="tag good">متصل بالخادم</span> <button class="secondary" onclick="support()">الدعم الفني</button></div>
@@ -413,7 +404,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'nexpos-v18';
+      const CACHE_NAME = 'nexpos-v19';
       self.addEventListener('install', (e) => { self.skipWaiting(); });
       self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
       self.addEventListener('fetch', (e) => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });
@@ -481,6 +472,7 @@ window.addEventListener('online', updateNetworkStatus); window.addEventListener(
 let currentUser=null,profile=null,userRole="owner",selectedSystem="sales",activeSystem="sales",registeringNow=false;
 let products=[],sales=[],expenses=[],treasury=[],cart=[],selectedProduct=null,lastRegisteredUser=null;
 let psDevices=[],psItems=[],psSessions=[],psTimer=null,psEndingDevices=new Set();
+let currentShiftCloseTime = 0; // متغير لتخزين وقت إغلاق الوردية
 const $=id=>document.getElementById(id);
 const money=n=>(Number(n)||0).toLocaleString("ar-EG",{minimumFractionDigits:2,maximumFractionDigits:2});
 const shopRef=()=>`shops/${currentUser.uid}`;
@@ -706,10 +698,19 @@ window.showPsSection=which=>{
 window.loadPlaystationData = async function(){
  if(!currentUser)return;
  try{
-  const [ds,is,ss]=await Promise.all([ safeGetDocs(col("devices")), safeGetDocs(col("psItems")), safeGetDocs(col("psSessions")) ]);
+  const [ds,is,ss,shiftSnap]=await Promise.all([ safeGetDocs(col("devices")), safeGetDocs(col("psItems")), safeGetDocs(col("psSessions")), safeGetDoc(doc(col("psShifts"), "current")) ]);
   psDevices=ds.docs.map(d=>({id:d.id,...d.data()}));
   psItems=is.docs.map(d=>({id:d.id,...d.data()}));
   psSessions=ss.docs.map(d=>({id:d.id,...d.data()}));
+  if(shiftSnap.exists()) {
+     const shiftData = shiftSnap.data();
+     const shiftDate = new Date(shiftData.closedAt).toISOString().slice(0,10);
+     const today = new Date().toISOString().slice(0,10);
+     if(shiftDate === today) currentShiftCloseTime = shiftData.closedAt;
+     else currentShiftCloseTime = 0;
+  } else {
+     currentShiftCloseTime = 0;
+  }
   renderPsDevices();renderPsItems();renderPsStats();renderPsSessions();
  }catch(e){ if(navigator.onLine)showAlert("تعذر تحميل البيانات: "+e.message, "error"); }
 };
@@ -1078,7 +1079,7 @@ function renderPsStats(){
  $("psSandwichesCount").textContent=psItems.filter(x=>x.category==="sandwich").length;
 }
 
-window.openPsShiftModal = () => {
+window.openPsShiftModal = async () => {
   const today = new Date().toISOString().slice(0, 10);
   const todaySessions = psSessions.filter(s => (s.finalized || s.endedAt) && new Date(s.endedAt || s.createdAt).toISOString().slice(0, 10) === today);
   const total = todaySessions.reduce((sum, s) => sum + Number(s.total || 0), 0);
@@ -1086,15 +1087,31 @@ window.openPsShiftModal = () => {
   $("psShiftDateDisplay").textContent = "تاريخ اليوم: " + new Date().toLocaleDateString("ar-EG");
   $("psShiftModal").classList.remove("hidden");
 };
+
 window.closePsShift = async () => {
-  if(!confirm("هل أنت متأكد من تقفيل الوردية؟ سيتم تصفير عداد مبيعات اليوم لبدء وردية جديدة.")) return;
-  try {
-    const shiftRef = doc(col("psShifts"));
-    await setDoc(shiftRef, { closedAt: Date.now(), date: new Date().toLocaleString("ar-EG"), closedBy: profile.customerName });
-    $("psShiftModal").classList.add("hidden");
-    showAlert("تم تقفيل الوردية بنجاح.", "success");
-    renderPsSessions(); 
-  } catch(e) { showAlert(e.message, "error"); }
+  Swal.fire({
+    title: 'هل أنت متأكد؟',
+    text: "سيتم تصفير عداد مبيعات اليوم لبدء وردية جديدة.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d97706',
+    cancelButtonColor: '#64748b',
+    confirmButtonText: 'نعم، قفل الوردية',
+    cancelButtonText: 'إلغاء'
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const shiftRef = doc(col("psShifts"), "current");
+        await setDoc(shiftRef, { closedAt: Date.now(), date: new Date().toLocaleString("ar-EG"), closedBy: profile.customerName });
+        currentShiftCloseTime = Date.now(); // تحديث وقت الإغلاق فوراً
+        $("psShiftModal").classList.add("hidden");
+        Swal.fire('تم!', 'تم تقفيل الوردية بنجاح.', 'success');
+        await renderPsSessions(); // تحديث الجدول والإحصائيات لتصفير المبيعات
+      } catch(e) { 
+        showAlert(e.message, "error"); 
+      }
+    }
+  });
 };
 
 window.page=name=>{

@@ -301,6 +301,22 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
   </div>
 </div>
 
+<!-- ✅ نافذة استعادة كلمة المرور -->
+<div id="forgotPasswordModal" class="modal-overlay hidden">
+  <div class="modal-box" style="max-width:400px; text-align:center;">
+    <div style="font-size:40px; margin-bottom:10px;">🔑</div>
+    <h3 style="margin-bottom:5px;">استعادة كلمة المرور</h3>
+    <p class="muted" style="margin-bottom:20px;">أدخل بريدك الإلكتروني المسجل بالنظام وسنرسل لك رابطاً لتغيير كلمة المرور.</p>
+    
+    <input type="email" id="forgotEmailInput" placeholder="أدخل بريدك الإلكتروني هنا" style="text-align:center;">
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+      <button class="green" onclick="submitForgotPassword()">إرسال الرابط</button>
+      <button class="secondary" onclick="closeForgotModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
 <section id="customerPanel" class="hidden">
  <div class="card">
   <div class="top"><div><h2 id="shopTitle">نظام المبيعات والمخزون</h2><span class="muted">لوحة الإدارة الشاملة</span></div><button class="red" onclick="logout()">تسجيل الخروج</button></div>
@@ -449,18 +465,22 @@ window.login=async()=>{
  }catch(e){console.error(e);message("تعذر الدخول: "+(e.code||e.message));}
 };
 
-// ✅ دالة استعادة كلمة المرور
-window.forgotPassword = async () => {
-  const email = prompt("أدخل بريدك الإلكتروني المسجل بالنظام لاستعادة كلمة المرور:");
-  if (!email) return;
-
-  if (!navigator.onLine) {
-    return alert("استعادة كلمة المرور تتطلب اتصالاً بالإنترنت. يرجى توصيل النت والمحاولة.");
-  }
-
+// ✅ دوال استعادة كلمة المرور (بشكل شيك)
+window.forgotPassword = () => {
+  $("forgotEmailInput").value = "";
+  $("forgotPasswordModal").classList.remove("hidden");
+};
+window.closeForgotModal = () => {
+  $("forgotPasswordModal").classList.add("hidden");
+};
+window.submitForgotPassword = async () => {
+  const email = $("forgotEmailInput").value.trim();
+  if (!email) return alert("يرجى إدخال البريد الإلكتروني أولاً.");
+  if (!navigator.onLine) return alert("استعادة كلمة المرور تتطلب اتصالاً بالإنترنت. يرجى توصيل النت والمحاولة.");
   try {
-    await sendPasswordResetEmail(auth, email.trim());
+    await sendPasswordResetEmail(auth, email);
     alert("تم إرسال رسالة إلى بريدك الإلكتروني بنجاح.\nيرجى فتح الإيميل والضغط على الرابط الموجود لتغيير كلمة المرور.");
+    closeForgotModal();
   } catch (e) {
     console.error(e);
     if (e.code === 'auth/user-not-found') {
@@ -491,7 +511,6 @@ window.register=async()=>{
   const systemData={status:"pending",plan:"غير مفعل",requestedPlan:selectedPlan.name,requestedPrice:selectedPlan.price,requestedDays:days,expiryDate:null,requestedAt:serverTimestamp()};
   const systems={};systems[selectedSystem]=systemData;
   
-  // ✅ حفظ بيانات الحساب في قاعدة البيانات
   await setDoc(doc(db,"users",cred.user.uid),{
     shopName:shop,
     customerName:name,

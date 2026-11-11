@@ -98,29 +98,6 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 @media(max-width:950px){.sahal-layout{grid-template-columns:1fr}.sahal-sidebar{display:grid;grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}}
 @media(max-width:600px){.sale-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.sale-fields .search-container{grid-column:1/-1}.sahal-sidebar{grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}.ps-item-form{grid-template-columns:1fr 1fr}.ps-item-form input:first-child{grid-column:1/-1}.ps-item-form button{grid-column:1/-1}}
 @media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
-
-/* ===== خلفية سيستم البلايستيشن ===== */
-body.sys-playstation {
-  background-color: #0f172a;
-  background-image: 
-    linear-gradient(rgba(15,23,42,0.82), rgba(15,23,42,0.82)),
-    url('https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=1600&q=80');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  min-height: 100vh;
-  transition: background-image .5s ease;
-}
-body.sys-playstation .brand{color:#fff}
-body.sys-playstation .system-desc{color:#e2e8f0}
-body.sys-playstation .version{background:#7c3aed}
-body.sys-playstation .card{background:rgba(255,255,255,0.97)}
-body.sys-playstation .stat{background:rgba(255,255,255,0.97)}
-body.sys-playstation .tag{background:rgba(255,255,255,0.9)}
-@media (max-width: 800px) {
-  body.sys-playstation { background-attachment: scroll; }
-}
 </style>
 </head>
 <body>
@@ -331,14 +308,6 @@ function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;",
 function systemInfo(p,system){const s=p.systems?.[system];if(s)return s;if(system==="sales"&&(p.status||p.expiryDate||p.plan))return {status:p.status||"pending",plan:p.plan||"غير محدد",expiryDate:p.expiryDate||null};return {status:"not_registered",plan:"غير محدد",expiryDate:null};}
 function subscriptionActive(data){if(!data||data.status!=="active"||!data.expiryDate)return false;const exp=data.expiryDate.toDate?data.expiryDate.toDate():new Date(data.expiryDate);return exp>new Date();}
 
-// ✅ دالة تغيير الخلفية حسب السيستم
-window.setSystemBackground = (system) => {
-  document.body.classList.remove('sys-playstation');
-  if (system === 'playstation') {
-    document.body.classList.add('sys-playstation');
-  }
-};
-
 window.openAuth=(system,mode)=>{
  selectedSystem=system;$("authForm").classList.remove("hidden");
  $("customerLoginBox").classList.toggle("hidden",mode!=="login"||system==="owner");
@@ -388,33 +357,19 @@ window.sendWhatsAppActivation=()=>{
  const msg=encodeURIComponent(`طلب تفعيل جديد في NexPOS PRO\nاسم العميل: ${d.name}\nالنشاط: ${d.shop}\nالهاتف: ${d.phone}\nالبريد: ${d.email}\nالنظام: ${d.system}\nالباقة: ${d.plan}\nالسعر: ${d.price} جنيه`);
  window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");
 };
-window.logout=async()=>{
-  if(psTimer)clearInterval(psTimer);
-  setSystemBackground('default');  // ✅ رجّع الخلفية الافتراضية
-  await signOut(auth);
-  location.reload();
-};
+window.logout=async()=>{if(psTimer)clearInterval(psTimer);await signOut(auth);location.reload();};
 window.support=()=>window.open(`https://wa.me/${SUPPORT_PHONE}`,"_blank");
 
 onAuthStateChanged(auth,async user=>{
  currentUser=user;
  if(registeringNow)return;
- if(!user){
-   if(psTimer)clearInterval(psTimer);
-   setSystemBackground('default');  // ✅ ارجع للخلفية الافتراضية
-   ["customerPanel","ownerPanel","playstationPanel","pendingScreen"].forEach(x=>$(x).classList.add("hidden"));
-   $("auth").classList.remove("hidden");
-   return;
- }
+ if(!user){if(psTimer)clearInterval(psTimer);["customerPanel","ownerPanel","playstationPanel","pendingScreen"].forEach(x=>$(x).classList.add("hidden"));$("auth").classList.remove("hidden");return;}
  try{
-  if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){
-    $("auth").classList.add("hidden");$("ownerPanel").classList.remove("hidden");await loadUsers();return;
-  }
+  if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){$("auth").classList.add("hidden");$("ownerPanel").classList.remove("hidden");await loadUsers();return;}
   const snap=await getDoc(doc(db,"users",user.uid));if(!snap.exists()){await signOut(auth);return;}
   profile=snap.data();const system=selectedSystem,info=systemInfo(profile,system);
   if(info.status==="not_registered"||!subscriptionActive(info)){await signOut(auth);$("auth").classList.remove("hidden");message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");return;}
   activeSystem=system;$("auth").classList.add("hidden");$("pendingScreen").classList.add("hidden");
-  setSystemBackground(system);  // ✅ غيّر الخلفية حسب السيستم
   if(system==="playstation"){$("playstationPanel").classList.remove("hidden");$("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";await loadPlaystationData();startPsTimer();}
   else{$("customerPanel").classList.remove("hidden");$("shopTitle").textContent=profile.shopName||"نظام المبيعات";$("sahalShopTitle").textContent=profile.shopName||"متجري";$("settingsShopName").value=profile.shopName||"";$("settingsEmail").value=profile.email||user.email||"";checkCustomerSubscription(info);await loadBusiness();await checkAndSettleDailySales();}
  }catch(e){console.error(e);alert("حدث خطأ أثناء تحميل الحساب: "+e.message);}
@@ -626,12 +581,14 @@ window.stopPsDevice=async id=>{
  $("psConfirmInvoiceModal").classList.remove("hidden");
 };
 
+// ✅ دالة الإلغاء الجديدة: بتنضف المودال والمتغير بأمان
 window.cancelPsInvoice = () => {
   $("psConfirmInvoiceModal").classList.add("hidden");
   $("psConfirmInvoiceContent").innerHTML = "";
   window.currentInvoiceToConfirm = null;
 };
 
+// ✅ معدّلة: بتنضف المتغير قبل التنفيذ عشان لو حصل خطأ ميفضلش محفوظ
 window.confirmAndPrintPsInvoice = async (shouldPrint = true) => {
   $("psConfirmInvoiceModal").classList.add("hidden");
   const invoice = window.currentInvoiceToConfirm;
@@ -667,6 +624,7 @@ window.addOrderToRoom = async (deviceId) => {
     await refreshCurrentSession(d.sessionId);
     renderPsDevices();
     if (qtyElement) qtyElement.value = "1";
+    // تم إزالة رسالة التنبيه من هنا
   } catch (e) { console.error(e); alert("تعذر إضافة الطلب: " + e.message); }
 };
 

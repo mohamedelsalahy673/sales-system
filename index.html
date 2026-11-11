@@ -132,7 +132,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div>
      <div class="brand" style="margin:0;">NexPOS PRO</div>
      <div class="system-desc">منصة إدارة الأنشطة والخدمات</div>
-     <span class="version">MULTI SYSTEM V22</span>
+     <span class="version">MULTI SYSTEM V23</span>
    </div>
  </div>
  <div><span id="networkStatus" class="tag good">متصل بالخادم</span> <button class="secondary" onclick="support()">الدعم الفني</button></div>
@@ -399,7 +399,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'nexpos-v22';
+      const CACHE_NAME = 'nexpos-v23';
       self.addEventListener('install', (e) => { self.skipWaiting(); });
       self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
       self.addEventListener('fetch', (e) => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });
@@ -424,7 +424,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {getAuth,setPersistence,browserLocalPersistence,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {getFirestore,enableIndexedDbPersistence,doc,setDoc,getDoc,getDocFromServer,getDocFromCache,getDocs,getDocsFromCache,getDocsFromServer,updateDoc,collection,addDoc,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 window.showAlert = function(message, type = 'info') {
@@ -455,7 +455,10 @@ const PS_DEFAULT_HOURLY_RATE=40;
 const PS_MIN_SESSION_MINUTES=30;
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 
-enableIndexedDbPersistence(db).catch((err) => console.warn('Persistence error:', err.code));
+// ✅ إجبار المتصفح على حفظ الجلسة حتى لو اتقفل
+setPersistence(auth, browserLocalPersistence).catch(err => console.warn('Persistence error:', err));
+
+enableIndexedDbPersistence(db).catch((err) => console.warn('Db Persistence error:', err.code));
 
 function updateNetworkStatus() {
   const el = document.getElementById('networkStatus'); if (!el) return;
@@ -475,7 +478,6 @@ const col=name=>collection(db,shopRef(),name);
 const docRef=(name,id)=>doc(db,shopRef(),name,id);
 const PLANS={30:{name:"شهري",price:100},90:{name:"3 شهور",price:250},365:{name:"سنوي",price:900},36500:{name:"دائم",price:3000}};
 
-// ✅ التعديل الأهم: بنجبر السيستم يقرأ من السيرفر أولاً عشان يتزامن بين الأجهزة
 async function safeGetDocs(collectionRef) { 
     try { return await getDocsFromServer(collectionRef); } 
     catch (e) { return await getDocsFromCache(collectionRef); } 
@@ -559,6 +561,7 @@ window.sendWhatsAppActivation=()=>{
 window.logout=async()=>{if(psTimer)clearInterval(psTimer);await signOut(auth);location.reload();};
 window.support=()=>window.open(`https://wa.me/${SUPPORT_PHONE}`,"_blank");
 
+// ✅ التعديل الأهم: منع الخروج المفاجئ
 onAuthStateChanged(auth,async user=>{
  currentUser=user;
  if(registeringNow)return;
@@ -568,10 +571,19 @@ onAuthStateChanged(auth,async user=>{
     $("auth").classList.add("hidden"); $("ownerPanel").classList.remove("hidden");
     await loadUsers(); return;
   }
-  const snap=await safeGetDoc(doc(db,"users",user.uid));if(!snap.exists()){await signOut(auth);return;}
+  const snap=await safeGetDoc(doc(db,"users",user.uid));
+  if(!snap.exists()){
+      // لو مفيش داتا في الكاش والسيرفر بيفشل، منطلعوش برة على طول، بنستنى
+      if(!navigator.onLine) return; 
+      await signOut(auth); return;
+  }
   profile=snap.data();
   const system=selectedSystem,info=systemInfo(profile,system);
-  if(info.status==="not_registered"||!subscriptionActive(info)){await signOut(auth);$("auth").classList.remove("hidden");message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");return;}
+  if(info.status==="not_registered"||!subscriptionActive(info)){
+      // لو اشتراكه خلص فعلاً بنطلعه، بس لو النت فصل منطلعوش
+      if(!navigator.onLine) return;
+      await signOut(auth);$("auth").classList.remove("hidden");message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");return;
+  }
   activeSystem=system;$("auth").classList.add("hidden");$("pendingScreen").classList.add("hidden");
 
   if(system==="playstation"){
@@ -590,7 +602,7 @@ onAuthStateChanged(auth,async user=>{
     checkCustomerSubscription(info);
     await loadBusiness();
   }
- }catch(e){console.error(e);showAlert("حدث خطأ أثناء تحميل الحساب: "+e.message, "error");}
+ }catch(e){console.error(e); if(navigator.onLine) showAlert("حدث خطأ أثناء تحميل الحساب: "+e.message, "error");}
 });
 
 window.openPsSubscriptionModal = () => {
@@ -962,6 +974,7 @@ window.togglePsMode=id=>{
  $(`psAutoBox_${id}`).classList.toggle("hidden",mode!=="auto");
 };
 
+// تحديث المؤقت ليتناسب مع وضع السكون
 function startPsTimer(){
  if(psTimer)clearInterval(psTimer);
  psTimer=setInterval(async()=>{
@@ -970,10 +983,25 @@ function startPsTimer(){
    if(d.status!=="running")continue;
    const clock=$(`psClock_${d.id}`);
    if(d.sessionMode==="auto"){ if(clock)clock.textContent=formatPsTime(now-Number(d.startedAt||now)); }
-   else{ const remaining=Number(d.endAt)-now; if(remaining<=0){ if(clock)clock.textContent="00:00:00"; if(!psEndingDevices.has(d.id))await finalizePsSession(d,"automatic"); }else if(clock)clock.textContent=formatPsTime(remaining); }
+   else{ 
+       const remaining=Number(d.endAt)-now; 
+       if(remaining<=0){ 
+           if(clock)clock.textContent="00:00:00"; 
+           if(!psEndingDevices.has(d.id))await finalizePsSession(d,"automatic"); 
+       }else if(clock)clock.textContent=formatPsTime(remaining); 
+   }
   }
   renderPsStats();
  },1000);
+
+ // عند رجوع التطبيق من الخلفية
+ document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && currentUser && activeSystem === "playstation") {
+        // إعادة تحديث العداد والتأكد من إن الجلسات شغالة
+        renderPsDevices(); 
+        renderPsStats();
+    }
+ });
 }
 
 async function renderPsSessions(){

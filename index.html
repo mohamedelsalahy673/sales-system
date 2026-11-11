@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NexPOS PRO - نظام إدارة المبيعات والبلايستيشن</title>
-<meta name="description" content="NexPOS PRO - أفضل نظام إدارة مبيعات وبلايستيشن في مصر. إدارة المخزون، الفواتير، الخزينة، وجلسات البلايستيشن بكل سهولة.">
+<meta name="description" content="NexPOS PRO - أفضل نظام إدارة مبيعات وبلاييستيشن في مصر. إدارة المخزون، الفواتير، الخزينة، وجلسات البلايستيشن بكل سهولة.">
 <meta name="theme-color" content="#2458d3">
 <link rel="icon" type="image/png" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
 <link rel="apple-touch-icon" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
@@ -134,7 +134,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div>
      <div class="brand" style="margin:0;">NexPOS PRO</div>
      <div class="system-desc">منصة إدارة الأنشطة والخدمات</div>
-     <span class="version">MULTI SYSTEM V24</span>
+     <span class="version">MULTI SYSTEM V25</span>
    </div>
  </div>
  <div><span id="networkStatus" class="tag good">متصل بالخادم</span> <button class="secondary" onclick="support()">الدعم الفني</button></div>
@@ -468,7 +468,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'nexpos-v24';
+      const CACHE_NAME = 'nexpos-v25';
       self.addEventListener('install', (e) => { self.skipWaiting(); });
       self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
       self.addEventListener('fetch', (e) => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });
@@ -538,7 +538,7 @@ let currentUser=null,profile=null,selectedSystem="sales",activeSystem="sales",re
 let products=[],sales=[],expenses=[],treasury=[],cart=[],selectedProduct=null,lastRegisteredUser=null;
 let psDevices=[],psItems=[],psSessions=[],psReservations=[],psTimer=null,psEndingDevices=new Set();
 let currentShiftCloseTime = 0; 
-let revenueChartInstance = null, typeChartInstance = null; // للمخططات البيانية
+let revenueChartInstance = null, typeChartInstance = null; 
 
 const $=id=>document.getElementById(id);
 const money=n=>(Number(n)||0).toLocaleString("ar-EG",{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -1407,7 +1407,17 @@ window.addReservation = async () => {
 function renderPsReservations() {
   const sel = $("resDeviceId");
   if(sel) {
-      sel.innerHTML = psDevices.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("");
+      // تجميع الأجهزة في مجموعات (رومات، VIP، قاعدة عربي)
+      const rooms = psDevices.filter(d => window.getDeviceType(d) === "room");
+      const vips = psDevices.filter(d => window.getDeviceType(d) === "vip");
+      const bases = psDevices.filter(d => window.getDeviceType(d) === "base_arabi");
+      
+      let optionsHtml = "";
+      if(rooms.length) optionsHtml += `<optgroup label="🎮 أجهزة الرومات">${rooms.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("")}</optgroup>`;
+      if(vips.length) optionsHtml += `<optgroup label="⭐ أجهزة صالة VIP">${vips.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("")}</optgroup>`;
+      if(bases.length) optionsHtml += `<optgroup label="🏛 أجهزة القاعدة العربي">${bases.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("")}</optgroup>`;
+      
+      sel.innerHTML = optionsHtml || `<option value="">لا توجد أجهزة مضافة</option>`;
   }
   
   const tbody = $("psReservationsTable");
@@ -1494,13 +1504,10 @@ function renderPsReports() {
   const allSessions = psSessions.filter(s => s.finalized || s.endedAt);
   
   let totalRev = 0;
-  let playRev = 0, ordersRev = 0;
   let roomRev = 0, vipRev = 0, baseRev = 0, drinksRev = 0, sandRev = 0;
 
   allSessions.forEach(s => {
       totalRev += Number(s.total || 0);
-      playRev += Number(s.playTotal || 0);
-      ordersRev += Number(s.ordersTotal || 0);
       
       if (s.deviceType === "vip") vipRev += Number(s.playTotal || 0);
       else if (s.deviceType === "base_arabi") baseRev += Number(s.playTotal || 0);
@@ -1518,7 +1525,6 @@ function renderPsReports() {
   $("psTotalSessionsAll").textContent = allSessions.length;
 
   // رسم بياني 1: إيرادات 7 أيام
-  const last7Days = [];
   const revData = [];
   const dateLabels = [];
   for (let i = 6; i >= 0; i--) {
@@ -1574,7 +1580,6 @@ function renderPsReports() {
       });
   }
 }
-
 </script>
 </body>
 </html>

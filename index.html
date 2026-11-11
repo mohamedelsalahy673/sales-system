@@ -271,7 +271,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-import {getFirestore,enableIndexedDbPersistence,doc,setDoc,getDoc,updateDoc,collection,addDoc,getDocs,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import {getFirestore,enableIndexedDbPersistence,doc,setDoc,getDoc,getDocFromServer,getDocFromCache,getDocs,getDocsFromCache,getDocsFromServer,updateDoc,collection,addDoc,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 window.getDeviceType = function(device) {
     if (!device) return "room";
@@ -339,6 +339,30 @@ const shopRef=()=>`shops/${currentUser.uid}`;
 const col=name=>collection(db,shopRef(),name);
 const docRef=(name,id)=>doc(db,shopRef(),name,id);
 const PLANS={30:{name:"شهري",price:100},90:{name:"3 شهور",price:250},365:{name:"سنوي",price:900},36500:{name:"دائم",price:3000}};
+
+// ✅ دالة ذكية: تقرأ من السيرفر لو النت شغال، ومن الكاش لو قطع
+async function safeGetDocs(collectionRef) {
+  try {
+    if (navigator.onLine) {
+      return await getDocsFromServer(collectionRef);
+    }
+  } catch (e) {
+    console.warn('⚠️ Server fetch failed, falling back to cache:', e.code);
+  }
+  return await getDocsFromCache(collectionRef);
+}
+
+async function safeGetDoc(docReference) {
+  try {
+    if (navigator.onLine) {
+      return await getDocFromServer(docReference);
+    }
+  } catch (e) {
+    console.warn('⚠️ Server fetch failed, falling back to cache:', e.code);
+  }
+  return await getDocFromCache(docReference);
+}
+
 function message(t){$("authMsg").textContent=t;$("authMsg").classList.remove("hidden");}
 function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function systemInfo(p,system){const s=p.systems?.[system];if(s)return s;if(system==="sales"&&(p.status||p.expiryDate||p.plan))return {status:p.status||"pending",plan:p.plan||"غير محدد",expiryDate:p.expiryDate||null};return {status:"not_registered",plan:"غير محدد",expiryDate:null};}
@@ -357,6 +381,7 @@ window.login=async()=>{
  try{
   const email=$("loginEmail").value.trim(),password=$("loginPassword").value;
   if(!email||!password)return message("أدخل البريد وكلمة المرور.");
+  if(!navigator.onLine){return message("تسجيل الدخول يتطلب اتصالاً بالإنترنت. يرجى توصيل النت والمحاولة.");}
   const cred=await signInWithEmailAndPassword(auth,email,password);
   if(cred.user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase())return;
   const snap=await getDoc(doc(db,"users",cred.user.uid));
@@ -370,6 +395,7 @@ window.ownerLogin=async()=>{
  try{
   if($("ownerUsername").value.trim().toLowerCase()!==OWNER_USERNAME)return message("اسم المستخدم الإداري غير صحيح.");
   const p=$("ownerPassword").value;if(!p)return message("أدخل كلمة المرور.");
+  if(!navigator.onLine){return message("تسجيل الدخول يتطلب اتصالاً بالإنترنت.");}
   await signInWithEmailAndPassword(auth,OWNER_EMAIL,p);
  }catch(e){console.error(e);message("تعذر الدخول إلى لوحة المالك. تأكد من بيانات Firebase Authentication. "+(e.code||""));}
 };
@@ -377,6 +403,7 @@ window.register=async()=>{
  const shop=$("regShop").value.trim(),name=$("regName").value.trim(),phone=$("regPhone").value.trim(),email=$("regEmail").value.trim(),password=$("regPassword").value,days=Number($("regPlan").value);
  if(!shop||!name||!phone||!email||!password)return message("أكمل جميع البيانات.");
  if(password.length<6)return message("كلمة المرور يجب ألا تقل عن 6 أحرف.");
+ if(!navigator.onLine){return message("إنشاء الحساب يتطلب اتصالاً بالإنترنت.");}
  const selectedPlan=PLANS[days];if(!selectedPlan)return message("اختر باقة صحيحة.");
  try{
   registeringNow=true;const cred=await createUserWithEmailAndPassword(auth,email,password);
@@ -402,7 +429,7 @@ onAuthStateChanged(auth,async user=>{
  if(!user){if(psTimer)clearInterval(psTimer);["customerPanel","ownerPanel","playstationPanel","pendingScreen"].forEach(x=>$(x).classList.add("hidden"));$("auth").classList.remove("hidden");return;}
  try{
   if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){$("auth").classList.add("hidden");$("ownerPanel").classList.remove("hidden");await loadUsers();return;}
-  const snap=await getDoc(doc(db,"users",user.uid));if(!snap.exists()){await signOut(auth);return;}
+  const snap=await safeGetDoc(doc(db,"users",user.uid));if(!snap.exists()){await signOut(auth);return;}
   profile=snap.data();const system=selectedSystem,info=systemInfo(profile,system);
   if(info.status==="not_registered"||!subscriptionActive(info)){await signOut(auth);$("auth").classList.remove("hidden");message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");return;}
   activeSystem=system;$("auth").classList.add("hidden");$("pendingScreen").classList.add("hidden");
@@ -436,7 +463,7 @@ function planControls(u,system){
 }
 window.loadUsers=async()=>{
  try{
-  const snap=await getDocs(collection(db,"users")),list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
+  const snap=await safeGetDocs(collection(db,"users")),list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="owner");
   $("totalUsers").textContent=list.length;const salesList=list.filter(u=>systemInfo(u,"sales").status!=="not_registered"),psList=list.filter(u=>systemInfo(u,"playstation").status!=="not_registered");
   $("salesUsersCount").textContent=salesList.length;$("psUsersCount").textContent=psList.length;
   $("pendingUsersCount").textContent=list.reduce((c,u)=>c+(systemInfo(u,"sales").status==="pending"?1:0)+(systemInfo(u,"playstation").status==="pending"?1:0),0);
@@ -446,7 +473,7 @@ window.loadUsers=async()=>{
    return `<tr><td>${escapeHTML(u.shopName||"")}</td><td>${escapeHTML(u.customerName||"")}</td><td>${escapeHTML(u.email||"")}</td><td>${escapeHTML(u.phone||"")}</td><td><span class="tag ${good?"good":""}">${statusText}</span></td><td>${escapeHTML(info.requestedPlan||info.plan||"غير محدد")} ${Number(info.requestedPrice)?`<br>${Number(info.requestedPrice)} جنيه`:""}</td><td>${planControls(u,system)}</td></tr>`;
   }).join("")||'<tr><td colspan="7">لا يوجد عملاء</td></tr>';
   $("salesUsersTable").innerHTML=render(salesList,"sales");$("psUsersTable").innerHTML=render(psList,"playstation");
- }catch(e){console.error(e);alert("تعذر تحميل العملاء: "+e.message);}
+ }catch(e){console.error(e);if(navigator.onLine)alert("تعذر تحميل العملاء: "+e.message);}
 };
 window.activateUserWithPlan=async(id,system)=>{
  const select=$(`plan_${system}_${id}`);if(!select)return;const days=Number(select.value),plan=PLANS[days];if(!plan)return alert("اختر باقة صحيحة.");
@@ -472,7 +499,11 @@ window.showPsSection=which=>{
 window.loadPlaystationData = async function(){
  if(!currentUser)return;
  try{
-  const [ds,is,ss]=await Promise.all([getDocs(col("devices")),getDocs(col("psItems")),getDocs(col("psSessions"))]);
+  const [ds,is,ss]=await Promise.all([
+    safeGetDocs(col("devices")),
+    safeGetDocs(col("psItems")),
+    safeGetDocs(col("psSessions"))
+  ]);
   psDevices=ds.docs.map(d=>({id:d.id,...d.data()}));
   psItems=is.docs.map(d=>({id:d.id,...d.data()}));
   psSessions=ss.docs.map(d=>({id:d.id,...d.data()}));
@@ -482,10 +513,18 @@ window.loadPlaystationData = async function(){
     await finalizePsSession(d,"automatic");
    }
   }
-  const refreshed=await getDocs(col("devices"));psDevices=refreshed.docs.map(d=>({id:d.id,...d.data()}));
-  const sessions=await getDocs(col("psSessions"));psSessions=sessions.docs.map(d=>({id:d.id,...d.data()}));
+  const [refreshed, sessions] = await Promise.all([
+    safeGetDocs(col("devices")),
+    safeGetDocs(col("psSessions"))
+  ]);
+  psDevices=refreshed.docs.map(d=>({id:d.id,...d.data()}));
+  psSessions=sessions.docs.map(d=>({id:d.id,...d.data()}));
   renderPsDevices();renderPsItems();renderPsStats();renderPsSessions();
- }catch(e){console.error(e);alert("تعذر تحميل بيانات البلايستيشن: "+e.message);}
+ }catch(e){
+  console.error(e);
+  if(navigator.onLine)alert("تعذر تحميل بيانات البلايستيشن: "+e.message);
+  else console.warn('⚠️ وضع offline - البيانات من الكاش');
+ }
 };
 
 window.addPsDevice=async type=>{
@@ -551,8 +590,15 @@ window.startPsDevice=async id=>{
    hourlyRate:rate,sessionId,sessionMode:mode,
    sessionAmount:mode==="amount"?plannedAmount:0
   });
+  
   Object.assign(d,{status:"running",startedAt:now,endAt,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:plannedAmount});
-  await loadPlaystationData();
+  
+  // ✅ حدّث الواجهة فورًا بدون انتظار السيرفر
+  renderPsDevices();
+  renderPsStats();
+  
+  // ✅ حاول تحديث في الخلفية (بدون ما نمنع الجلسة)
+  loadPlaystationData().catch(err => console.warn('⚠️ Background refresh failed:', err));
  }catch(e){console.error(e);alert("تعذر بدء الجلسة: "+e.message);}
 };
 
@@ -573,7 +619,9 @@ window.extendPsDevice=async id=>{
    tx.update(sRef,{endAt:newEndAt,plannedMinutes:Number(old.plannedMinutes||0)+minutes,plannedAmount:Number(old.plannedAmount||0)+(old.sessionMode==="amount"?addAmount:0),lastExtendedAt:now});
   });
   await updateDoc(docRef("devices",id),{endAt:newEndAt,lastExtendedAt:now});
-  d.endAt=newEndAt;await loadPlaystationData();alert("تم تمديد وقت الجهاز.");
+  d.endAt=newEndAt;renderPsDevices();
+  loadPlaystationData().catch(err => console.warn('⚠️ Background refresh failed:', err));
+  alert("تم تمديد وقت الجهاز.");
  }catch(e){alert("تعذر التمديد: "+e.message);}
 };
 
@@ -662,7 +710,7 @@ window.addOrderToRoom = async (deviceId) => {
 };
 
 async function refreshCurrentSession(id){
- const snap=await getDoc(docRef("psSessions",id));if(!snap.exists())return;
+ const snap=await safeGetDoc(docRef("psSessions",id));if(!snap.exists())return;
  const s=snap.data(),d=psDevices.find(x=>x.sessionId===id);
  if(d)d.currentOrders=s.orders||[];
  psSessions=psSessions.map(x=>x.id===id?{id,...s}:x);
@@ -722,12 +770,25 @@ async function finalizePsSession(device,reason="manual", shouldPrint = true){
    tx.set(tRef,{type:"in",amount:total,note:`فاتورة ${typeLabel} - ${invoiceNumber}`,deviceName:current.name||device.name,deviceType:invoice.deviceType,sessionId,invoiceNumber,date:new Date(now).toLocaleString("ar-EG"),createdAt:now});
    tx.update(dRef,{status:"idle",endAt:null,startedAt:null,sessionId:null,sessionMode:null,sessionAmount:null,endedAt:now,lastSessionId:sessionId,lastSessionTotal:total});
   });
-  const [updated,sessions]=await Promise.all([getDoc(dRef),getDocs(col("psSessions"))]);
-  if(updated.exists())Object.assign(device,updated.data());
-  psSessions=sessions.docs.map(x=>({id:x.id,...x.data()}));
+  
+  // ✅ حدّث الواجهة محليًا فورًا
+  device.status = "idle";
+  device.sessionId = null;
+  device.startedAt = null;
+  device.endAt = null;
+  device.sessionMode = null;
+  device.sessionAmount = null;
   renderPsDevices();renderPsStats();renderPsSessions();
+  
   if(shouldPrint) printPsInvoice(sessionId);
- }catch(e){console.error(e);alert("تعذر تسجيل الفاتورة: "+e.message);}
+  
+  // ✅ حاول تحديث في الخلفية
+  loadPlaystationData().catch(err => console.warn('⚠️ Background refresh failed:', err));
+ }catch(e){
+  console.error(e);
+  if(navigator.onLine)alert("تعذر تسجيل الفاتورة: "+e.message);
+  else console.warn('⚠️ وضع offline - الفاتورة اتسجلت محليًا وهتتزامن');
+ }
  finally{psEndingDevices.delete(device.id);}
 }
 
@@ -929,7 +990,7 @@ window.page=name=>{
 };
 async function checkAndSettleDailySales(){
  try{
-  const ref=doc(db,"users",currentUser.uid),snap=await getDoc(ref);if(!snap.exists())return;
+  const ref=doc(db,"users",currentUser.uid),snap=await safeGetDoc(ref);if(!snap.exists())return;
   const data=snap.data(),today=new Date().toISOString().slice(0,10),last=data.lastSettledDate||"";
   if(last!==today){
    const rev=sales.reduce((s,x)=>s+Number(x.total||0),0);
@@ -953,14 +1014,22 @@ window.updateCustomerPassword=async()=>{
  try{await updatePassword(auth.currentUser,p);$("newCustomerPassword").value="";alert("تم تحديث كلمة المرور.");}
  catch(e){alert("تعذر تحديث كلمة المرور. قد تحتاج إلى تسجيل الدخول مجدداً.");}
 };
-async function loadBusiness(){await Promise.all([loadProducts(),loadSales(),loadExpenses(),loadTreasury()]);renderStats();}
-async function loadProducts(){const s=await getDocs(col("products"));products=s.docs.map(d=>({id:d.id,...d.data()}));renderProducts();}
-async function loadSales(){const s=await getDocs(col("sales"));sales=s.docs.map(d=>({id:d.id,...d.data()}));renderSales();}
-async function loadExpenses(){const s=await getDocs(col("expenses"));expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();}
-async function loadTreasury(){const s=await getDocs(col("treasury"));treasury=s.docs.map(d=>({id:d.id,...d.data()}));renderTreasury();}
+async function loadBusiness(){
+  await Promise.all([
+    loadProducts().catch(e => console.warn('Products load failed:', e)),
+    loadSales().catch(e => console.warn('Sales load failed:', e)),
+    loadExpenses().catch(e => console.warn('Expenses load failed:', e)),
+    loadTreasury().catch(e => console.warn('Treasury load failed:', e))
+  ]);
+  renderStats();
+}
+async function loadProducts(){try{const s=await safeGetDocs(col("products"));products=s.docs.map(d=>({id:d.id,...d.data()}));renderProducts();}catch(e){console.warn('loadProducts:',e);}}
+async function loadSales(){try{const s=await safeGetDocs(col("sales"));sales=s.docs.map(d=>({id:d.id,...d.data()}));renderSales();}catch(e){console.warn('loadSales:',e);}}
+async function loadExpenses(){try{const s=await safeGetDocs(col("expenses"));expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();}catch(e){console.warn('loadExpenses:',e);}}
+async function loadTreasury(){try{const s=await safeGetDocs(col("treasury"));treasury=s.docs.map(d=>({id:d.id,...d.data()}));renderTreasury();}catch(e){console.warn('loadTreasury:',e);}}
 window.clearTreasuryData=async()=>{
  if(!confirm("هل تريد مسح حركات الخزينة؟"))return;
- const snap=await getDocs(col("treasury"));for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));
+ const snap=await safeGetDocs(col("treasury"));for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));
  await loadTreasury();renderStats();alert("تم التصفير.");
 };
 window.saveProduct=async()=>{
@@ -1018,7 +1087,8 @@ window.completeSale=async()=>{
   for(const item of cart){const p=products.find(x=>x.id===item.productId);await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});}
   await addDoc(col("sales"),invoice);await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoice.number}`,date:invoice.date});
   if($("autoPrintToggle").checked)printInvoiceDirectly(invoice);
-  cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";selectedProduct=null;renderCart();await loadBusiness();
+  cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";selectedProduct=null;renderCart();
+  loadBusiness().catch(e=>console.warn(e));
   alert("تم البيع بنجاح. الإجمالي: "+money(total)+" جنيه");
  }catch(e){alert("حدث خطأ أثناء البيع: "+e.message);}
 };

@@ -535,7 +535,9 @@ window.addPsDevice=async type=>{
  if(!name)return alert(isVip?"اكتب اسم جهاز VIP.":(isBase?"اكتب اسم جهاز القاعدة العربي.":"اكتب اسم الروم."));
  if(!Number.isFinite(rate)||rate<=0)return alert("أدخل سعر ساعة صحيح.");
  try{
-  await addDoc(col("devices"),{name,deviceType:type,status:"idle",startedAt:null,endAt:null,hourlyRate:rate,createdAt:Date.now()});
+  // ✅ التعديل: استخدام doc و setDoc ليعمل أوفلاين
+  const newDeviceRef = doc(col("devices"));
+  await setDoc(newDeviceRef,{name,deviceType:type,status:"idle",startedAt:null,endAt:null,hourlyRate:rate,createdAt:Date.now()});
   $(nameInput).value="";$(rateInput).value="";
   await loadPlaystationData();
   alert(isVip?"تمت إضافة جهاز VIP بنجاح.":(isBase?"تمت إضافة جهاز القاعدة العربي بنجاح.":"تمت إضافة الروم بنجاح."));
@@ -577,6 +579,7 @@ window.startPsDevice=async id=>{
   endAt=null;
  }else return alert("اختر طريقة حساب صحيحة.");
 
+ // ✅ التعديل: إنشاء ID محلياً للجلسة
  const sessionRef=doc(col("psSessions")),sessionId=sessionRef.id;
  try{
   await setDoc(sessionRef,{
@@ -945,7 +948,9 @@ window.addPsItem=async category=>{
  if(!Number.isFinite(price)||price<=0)return alert("أدخل سعرًا صحيحًا.");
  if(!Number.isInteger(qty)||qty<0)return alert("أدخل كمية صحيحة.");
  try{
-  await addDoc(col("psItems"),{category,name,price,qty,createdAt:Date.now()});
+  // ✅ التعديل: استخدام doc و setDoc ليعمل أوفلاين
+  const newItemRef = doc(col("psItems"));
+  await setDoc(newItemRef, {category, name, price, qty, createdAt: Date.now()});
   $(drink?"psDrinkName":"psSandwichName").value="";$(drink?"psDrinkPrice":"psSandwichPrice").value="";$(drink?"psDrinkQty":"psSandwichQty").value="1";
   await loadPlaystationData();alert("تمت إضافة الصنف.");
  }catch(e){alert(e.message);}
@@ -994,7 +999,10 @@ async function checkAndSettleDailySales(){
   const data=snap.data(),today=new Date().toISOString().slice(0,10),last=data.lastSettledDate||"";
   if(last!==today){
    const rev=sales.reduce((s,x)=>s+Number(x.total||0),0);
-   if(rev>0)await addDoc(col("treasury"),{type:"in",amount:rev,note:`إغلاق وردية ومبيعات يوم: ${last||today}`,date:new Date().toLocaleString("ar-EG")});
+   if(rev>0){
+      const tRef = doc(col("treasury"));
+      await setDoc(tRef, {type:"in",amount:rev,note:`إغلاق وردية ومبيعات يوم: ${last||today}`,date:new Date().toLocaleString("ar-EG")});
+   }
    await updateDoc(ref,{lastSettledDate:today});await loadTreasury();renderStats();
   }
  }catch(e){console.error(e);}
@@ -1035,7 +1043,9 @@ window.clearTreasuryData=async()=>{
 window.saveProduct=async()=>{
  const name=$("pName").value.trim(),cost=Number($("pCost").value)||0,price=Number($("pPrice").value)||0,qty=Number($("pQty").value)||0;
  if(!name||price<=0)return alert("أدخل اسم المنتج وسعر البيع.");
- await addDoc(col("products"),{name,cost,price,qty,createdAt:serverTimestamp()});
+ // ✅ التعديل: استخدام doc و setDoc ليعمل أوفلاين
+ const newProductRef = doc(col("products"));
+ await setDoc(newProductRef, {name, cost, price, qty, createdAt: serverTimestamp()});
  $("pName").value="";$("pCost").value="";$("pPrice").value="";$("pQty").value=10;await loadProducts();renderStats();alert("تم حفظ المنتج.");
 };
 window.deleteProduct=async id=>{
@@ -1085,7 +1095,14 @@ window.completeSale=async()=>{
  const invoice={number:"INV-"+Date.now().toString().slice(-6),subtotal,discount,addition,total,items:[...cart],date:new Date().toLocaleString("ar-EG")};
  try{
   for(const item of cart){const p=products.find(x=>x.id===item.productId);await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});}
-  await addDoc(col("sales"),invoice);await addDoc(col("treasury"),{type:"in",amount:total,note:`فاتورة مبيعات #${invoice.number}`,date:invoice.date});
+  
+  // ✅ التعديل: استخدام doc و setDoc ليعمل أوفلاين
+  const newSaleRef = doc(col("sales"));
+  await setDoc(newSaleRef, invoice);
+  
+  const newTreasuryRef = doc(col("treasury"));
+  await setDoc(newTreasuryRef, {type:"in",amount:total,note:`فاتورة مبيعات #${invoice.number}`,date:invoice.date});
+  
   if($("autoPrintToggle").checked)printInvoiceDirectly(invoice);
   cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";selectedProduct=null;renderCart();
   loadBusiness().catch(e=>console.warn(e));
@@ -1099,7 +1116,8 @@ window.printInvoiceDirectly=inv=>{
 window.addTreasuryTransaction=async()=>{
  const type=$("tType").value,amount=Number($("tAmount").value)||0,note=$("tNote").value.trim();
  if(amount<=0)return alert("أدخل مبلغاً صحيحاً.");
- await addDoc(col("treasury"),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});
+ const newTreasuryRef = doc(col("treasury"));
+ await setDoc(newTreasuryRef, {type, amount, note:note||"حركة يدوية", date:new Date().toLocaleString("ar-EG")});
  $("tAmount").value="";$("tNote").value="";await loadTreasury();renderStats();alert("تم تسجيل الحركة.");
 };
 function renderTreasury(){
@@ -1114,7 +1132,12 @@ window.addExpense=async()=>{
  const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value)||0;
  if(!name||amount<=0)return alert("أدخل اسم المصروف والمبلغ.");
  const date=new Date().toLocaleString("ar-EG");
- await addDoc(col("expenses"),{name,amount,date});await addDoc(col("treasury"),{type:"out",amount,note:"مصروف: "+name,date});
+ 
+ const newExpenseRef = doc(col("expenses"));
+ await setDoc(newExpenseRef, {name, amount, date});
+ const newTreasuryRef = doc(col("treasury"));
+ await setDoc(newTreasuryRef, {type:"out", amount, note:"مصروف: "+name, date});
+ 
  $("expenseName").value="";$("expenseAmount").value="";await loadBusiness();alert("تم حفظ المصروف.");
 };
 function renderExpenses(){

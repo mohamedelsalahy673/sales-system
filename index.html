@@ -197,6 +197,7 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="stat">أجهزة VIP<strong id="psVipDevices">0</strong></div>
    <div class="stat">أجهزة القاعدة العربي<strong id="psBaseDevices">0</strong></div>
    <div class="stat">الأجهزة تعمل الآن<strong id="psRunningDevices">0</strong></div>
+   <div class="stat">الأجهزة المحجوزة<strong id="psReservedDevices">0</strong></div>
    <div class="stat">المشروبات<strong id="psDrinksCount">0</strong></div>
    <div class="stat">السندوتشات<strong id="psSandwichesCount">0</strong></div>
    <div class="stat">إيرادات الجلسات (الوردية)<strong id="psSessionsRevenue">0 جنيه</strong></div>
@@ -1176,6 +1177,13 @@ function renderPsStats(){
  $("psTotalDevices").textContent=psDevices.length;$("psRoomDevices").textContent=rooms.length;$("psVipDevices").textContent=vips.length;
  if($("psBaseDevices"))$("psBaseDevices").textContent=bases.length;
  $("psRunningDevices").textContent=psDevices.filter(d=>d.status==="running").length;
+
+ // ===== عدد الأجهزة المحجوزة (حجوزات اليوم لم تنتهِ) =====
+ const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+ const reservedCount = psReservations.filter(r => r.status === "pending" && Number(r.time) >= todayStart.getTime()).length;
+ if($("psReservedDevices")) $("psReservedDevices").textContent = reservedCount;
+ // ==========================================================
+
  $("psDrinksCount").textContent=psItems.filter(x=>x.category==="drink").length;
  $("psSandwichesCount").textContent=psItems.filter(x=>x.category==="sandwich").length;
 }
@@ -1400,6 +1408,7 @@ window.addReservation = async () => {
     $("resCustomerName").value = ""; $("resCustomerPhone").value = ""; $("resTime").value = "";
     await loadPlaystationData();
     renderPsReservations();
+    renderPsStats();
     showAlert("تم إضافة الحجز بنجاح.", "success");
   } catch(e) { showAlert(e.message, "error"); }
 };
@@ -1458,14 +1467,14 @@ window.startFromReservation = async (resId, deviceId) => {
               nameInput.scrollIntoView({behavior: 'smooth', block: 'center'});
           }
           // إلغاء الحجز
-          deleteDoc(docRef("psReservations", resId)).then(()=>{ loadPlaystationData(); });
+          deleteDoc(docRef("psReservations", resId)).then(()=>{ loadPlaystationData(); renderPsStats(); });
       }, 300);
   }
 };
 
 window.deleteReservation = async (id) => {
   if(!confirm("هل تريد إلغاء هذا الحجز؟")) return;
-  try { await deleteDoc(docRef("psReservations", id)); await loadPlaystationData(); renderPsReservations(); showAlert("تم إلغاء الحجز", "success"); } 
+  try { await deleteDoc(docRef("psReservations", id)); await loadPlaystationData(); renderPsReservations(); renderPsStats(); showAlert("تم إلغاء الحجز", "success"); } 
   catch(e) { showAlert(e.message, "error"); }
 };
 

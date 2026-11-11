@@ -1,8 +1,3 @@
-تمام، ده الكود كامل بعد إزالة رسالة التنبيه (Alert) اللي كانت بتظهر لما تضيف مشروب أو سندوتش للفاتورة.
- 
-دلوقتي لما بتضيف أي طلب، هيضيفه في صمت ويكمل شغلك على طول من غير ما توقف وتدوس OK.
- 
-انسخ الكود ده كله واستبدله باللي عندك:
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -222,6 +217,22 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
       <a class="btn-whatsapp" href="https://wa.me/201062883414" target="_blank">واتساب: 01062883414</a>
       <a class="btn-facebook" href="https://www.facebook.com/share/1KNgaKhfXq/?mibextid=wwXIfr" target="_blank">فيسبوك</a>
       <a class="btn-insta" href="https://www.instagram.com/mhmd.elsalahy?dlrf=a2F2c2M1ajc1dzRj&utm_source=qr" target="_blank">انستجرام</a>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة تأكيد الفاتورة الجديدة -->
+<div id="psConfirmInvoiceModal" class="modal-overlay hidden">
+  <div class="modal-box" style="max-width:400px; border-top:5px solid #178653;">
+    <h3 style="text-align:center; margin-top:0;">تأكيد الفاتورة</h3>
+    <hr>
+    <div id="psConfirmInvoiceContent" style="line-height:1.8; font-size:14px;">
+      <!-- التفاصيل هتظهر هنا -->
+    </div>
+    <hr>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
+      <button class="green" onclick="confirmAndPrintPsInvoice()">✔ تأكيد وطباعة</button>
+      <button class="red" onclick="$('psConfirmInvoiceModal').classList.add('hidden')">✖ إلغاء</button>
     </div>
   </div>
 </div>
@@ -532,8 +543,50 @@ window.extendPsDevice=async id=>{
 window.stopPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status!=="running")return;
- if(!confirm("إنهاء الجلسة وتسجيل الفاتورة؟"))return;
- await finalizePsSession(d,"manual");
+ 
+ // بدلاً من رسالة التأكيد، نعرض الفاتورة
+ window.currentInvoiceToConfirm = d;
+ 
+ const now = Date.now();
+ const elapsedMinutes = Math.max(1, Math.ceil((now - Number(d.startedAt)) / 60000));
+ let playTotal = 0;
+ 
+ if(d.sessionMode === "amount") {
+    playTotal = Number(d.sessionAmount || 0);
+ } else if(d.sessionMode === "auto") {
+    const halfHourBlocks = Math.max(1, Math.ceil((now - Number(d.startedAt)) / (PS_MIN_SESSION_MINUTES * 60000)));
+    playTotal = (halfHourBlocks * PS_MIN_SESSION_MINUTES / 60) * Number(d.hourlyRate);
+ } else {
+    playTotal = (Math.max(PS_MIN_SESSION_MINUTES, elapsedMinutes) / 60) * Number(d.hourlyRate);
+ }
+ 
+ const orders = d.currentOrders || psSessions.find(s=>s.id===d.sessionId)?.orders || [];
+ const ordersTotal = orders.reduce((sum,o)=> sum + Number(o.lineTotal ?? (o.price * o.qty)), 0);
+ const total = playTotal + ordersTotal;
+ 
+ const typeLabel = window.getDeviceType(d) === "vip" ? "صالة VIP" : (window.getDeviceType(d) === "base_arabi" ? "القاعدة العربي" : "روم");
+ 
+ $("psConfirmInvoiceContent").innerHTML = `
+   <b>الجهاز:</b> ${escapeHTML(d.name)} (${typeLabel})<br>
+   <b>وقت اللعب:</b> ${elapsedMinutes} دقيقة<br>
+   <b>قيمة اللعب:</b> ${money(playTotal)} جنيه<br>
+   <hr style="margin: 8px 0;">
+   <b>المشروبات والسندوتشات:</b><br>
+   ${orders.length ? orders.map(o => `- ${escapeHTML(o.name)} (${o.qty}) = ${money(o.lineTotal ?? (o.price * o.qty))} ج`).join('<br>') : 'لا يوجد'}
+   <br><b>إجمالي الإضافات:</b> ${money(ordersTotal)} جنيه<br>
+   <hr style="margin: 8px 0; border-top: 2px dashed #ccc;">
+   <h3 style="color:#178653; text-align:center; margin:5px 0;">الإجمالي النهائي: ${money(total)} جنيه</h3>
+ `;
+ 
+ $("psConfirmInvoiceModal").classList.remove("hidden");
+};
+
+window.confirmAndPrintPsInvoice = async () => {
+  $("psConfirmInvoiceModal").classList.add("hidden");
+  if(window.currentInvoiceToConfirm) {
+    await finalizePsSession(window.currentInvoiceToConfirm, "manual");
+    window.currentInvoiceToConfirm = null;
+  }
 };
 
 window.addOrderToRoom = async (deviceId) => {
@@ -631,6 +684,7 @@ async function finalizePsSession(device,reason="manual"){
   if(updated.exists())Object.assign(device,updated.data());
   psSessions=sessions.docs.map(x=>({id:x.id,...x.data()}));
   renderPsDevices();renderPsStats();renderPsSessions();
+  printPsInvoice(sessionId);
  }catch(e){console.error(e);alert("تعذر تسجيل الفاتورة: "+e.message);}
  finally{psEndingDevices.delete(device.id);}
 }

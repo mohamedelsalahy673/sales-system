@@ -1,3 +1,8 @@
+تمام، ده الكود كامل بعد إزالة رسالة التنبيه (Alert) اللي كانت بتظهر لما تضيف مشروب أو سندوتش للفاتورة.
+ 
+دلوقتي لما بتضيف أي طلب، هيضيفه في صمت ويكمل شغلك على طول من غير ما توقف وتدوس OK.
+ 
+انسخ الكود ده كله واستبدله باللي عندك:
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -557,7 +562,7 @@ window.addOrderToRoom = async (deviceId) => {
     await refreshCurrentSession(d.sessionId);
     renderPsDevices();
     if (qtyElement) qtyElement.value = "1";
-    alert("تمت إضافة الطلب إلى الفاتورة.");
+    // تم إزالة رسالة التنبيه من هنا
   } catch (e) { console.error(e); alert("تعذر إضافة الطلب: " + e.message); }
 };
 

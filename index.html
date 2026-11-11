@@ -202,7 +202,33 @@ hr{border:0;border-top:1px solid #eee;margin:18px 0}
    <div class="card"><h3>إضافة سندوتش</h3><div class="ps-item-form"><div><label>اسم السندوتش</label><input id="psSandwichName" placeholder="مثال: سندوتش بطاطس"></div><div><label>السعر</label><input id="psSandwichPrice" type="number" min="0" step=".01"></div><div><label>الكمية</label><input id="psSandwichQty" type="number" min="0" value="1"></div><button class="green" onclick="addPsItem('sandwich')">إضافة</button></div></div>
    <h3>قائمة السندوتشات</h3><div class="tablewrap"><table><thead><tr><th>السندوتش</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psSandwichesTable"></tbody></table></div>
   </div>
-  <div id="psSessionsSection" class="hidden"><div class="card"><div class="top"><h3>سجل الجلسات والفواتير</h3><button class="secondary" onclick="loadPlaystationData()">تحديث السجل</button></div><div class="grid"><div class="stat">عدد الجلسات<strong id="psSessionsTotal">0</strong></div><div class="stat">إجمالي الإيرادات<strong id="psSessionsRevenue2">0 جنيه</strong></div></div><div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>الجهاز</th><th>البداية</th><th>النهاية</th><th>المدة</th><th>اللعب</th><th>الإضافات</th><th>الإجمالي</th><th>الفاتورة</th></tr></thead><tbody id="psSessionsTable"></tbody></table></div></div></div>
+  <div id="psSessionsSection" class="hidden">
+    <div class="card">
+      <div class="top">
+        <h3>سجل الجلسات والفواتير</h3>
+        <button class="secondary" onclick="loadPlaystationData()">تحديث السجل</button>
+      </div>
+      
+      <!-- ✅ فلتر التاريخ الجديد -->
+      <div style="display:flex; gap:10px; align-items:center; margin:15px 0; background:#f8fafc; padding:10px; border-radius:9px;">
+        <label style="margin:0;">عرض جلسات يوم:</label>
+        <input type="date" id="psSessionDateFilter" style="width:auto; margin:0;" onchange="renderPsSessions()">
+        <button class="secondary" onclick="document.getElementById('psSessionDateFilter').value=''; renderPsSessions();">عرض الكل</button>
+      </div>
+
+      <div class="grid">
+        <div class="stat">عدد الجلسات (لليوم المحدد)<strong id="psSessionsTotal">0</strong></div>
+        <div class="stat">إيرادات اليوم<strong id="psSessionsRevenue2">0 جنيه</strong></div>
+      </div>
+      
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>رقم الفاتورة</th><th>الجهاز</th><th>البداية</th><th>النهاية</th><th>المدة</th><th>اللعب</th><th>الإضافات</th><th>الإجمالي</th><th>الفاتورة</th></tr></thead>
+          <tbody id="psSessionsTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
  </div>
 </section>
 
@@ -343,7 +369,6 @@ const PLANS={30:{name:"شهري",price:100},90:{name:"3 شهور",price:250},365
 // ✅ دالة ذكية: تقرأ من الكاش دايماً (أسرع وبيشتغل أوفلاين 100%)
 async function safeGetDocs(collectionRef) {
   try {
-    // بنقرأ من الكاش دايماً
     return await getDocsFromCache(collectionRef);
   } catch (e) {
     console.warn('⚠️ Cache failed, falling back to server:', e.code);
@@ -430,7 +455,13 @@ onAuthStateChanged(auth,async user=>{
   profile=snap.data();const system=selectedSystem,info=systemInfo(profile,system);
   if(info.status==="not_registered"||!subscriptionActive(info)){await signOut(auth);$("auth").classList.remove("hidden");message(info.status==="pending"?"حسابك في انتظار تفعيل الاشتراك.":"اشتراك النظام المختار غير نشط أو انتهت صلاحيته.");return;}
   activeSystem=system;$("auth").classList.add("hidden");$("pendingScreen").classList.add("hidden");
-  if(system==="playstation"){$("playstationPanel").classList.remove("hidden");$("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";await loadPlaystationData();startPsTimer();}
+  if(system==="playstation"){
+    $("playstationPanel").classList.remove("hidden");
+    $("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";
+    await loadPlaystationData();
+    await checkAndSettleDailyPsSales(); // ✅ فحص إقفال اليوم
+    startPsTimer();
+  }
   else{$("customerPanel").classList.remove("hidden");$("shopTitle").textContent=profile.shopName||"نظام المبيعات";$("sahalShopTitle").textContent=profile.shopName||"متجري";$("settingsShopName").value=profile.shopName||"";$("settingsEmail").value=profile.email||user.email||"";checkCustomerSubscription(info);await loadBusiness();await checkAndSettleDailySales();}
  }catch(e){console.error(e);alert("حدث خطأ أثناء تحميل الحساب: "+e.message);}
 });
@@ -490,7 +521,15 @@ window.showPsSection=which=>{
   $(sectionId).classList.toggle("hidden",s!==which);
   $(tabId).classList.toggle("active",s===which);
  });
- if(which==="sessions")renderPsSessions();
+ if(which==="sessions"){
+   // ✅ تحديد تاريخ اليوم تلقائياً
+   const dateInput = $("psSessionDateFilter");
+   if (dateInput && !dateInput.value) {
+     const today = new Date().toISOString().slice(0, 10);
+     dateInput.value = today;
+   }
+   renderPsSessions();
+ }
 };
 
 window.loadPlaystationData = async function(){
@@ -948,23 +987,102 @@ function startPsTimer(){
    }
   }
   renderPsStats();
+  
+  // ✅ كل دقيقة نتأكد لو اليوم اتغير عشان نسجل الإيراد
+  if (new Date().getSeconds() === 0 && new Date().getMinutes() === 0) {
+    checkAndSettleDailyPsSales();
+  }
  },1000);
+}
+
+// ✅ دالة تسجيل إغلاق اليوم (بتشتغل بعد 12 بالليل)
+async function checkAndSettleDailyPsSales() {
+  if (!currentUser) return;
+  try {
+    const ref = doc(db, "users", currentUser.uid);
+    const snap = await safeGetDoc(ref);
+    if (!snap.exists()) return;
+    
+    const data = snap.data();
+    const today = new Date().toISOString().slice(0, 10);
+    const lastSettled = data.lastPsSettledDate || "";
+
+    // لو النهاردة مختلف عن آخر يوم تم تسجيله
+    if (lastSettled !== today) {
+      // احسب إيرادات اليوم اللي فات
+      const yesterdayRevenue = psSessions
+        .filter(s => s.finalized || s.endedAt)
+        .filter(s => {
+          const sessionDate = new Date(s.endedAt || s.createdAt).toISOString().slice(0, 10);
+          return sessionDate === lastSettled;
+        })
+        .reduce((sum, s) => sum + Number(s.total || 0), 0);
+
+      if (yesterdayRevenue > 0) {
+        // سجل الإيراد في الخزينة
+        const tRef = doc(col("psTreasury"));
+        setDoc(tRef, {
+          type: "in",
+          amount: yesterdayRevenue,
+          note: `إقفال يومية سجل الجلسات - ${lastSettled || 'اليوم السابق'}`,
+          date: new Date().toLocaleString("ar-EG"),
+          createdAt: Date.now()
+        }).catch(err => console.warn('⚠️ خطأ في تسجيل الخزينة:', err));
+      }
+
+      // حدث آخر يوم تم التسجيل فيه
+      await updateDoc(ref, { lastPsSettledDate: today }).catch(err => console.warn(err));
+    }
+  } catch (e) {
+    console.error('خطأ في تسوية اليوم:', e);
+  }
 }
 
 function renderPsSessions(){
  const table=$("psSessionsTable");if(!table)return;
- const sorted=[...psSessions].filter(s=>s.finalized||s.endedAt).sort((a,b)=>Number(b.endedAt||0)-Number(a.endedAt||0));
+ 
+ // ✅ التحقق من التاريخ المختار في الفلتر
+ const filterInput = $("psSessionDateFilter");
+ const filterDate = filterInput ? filterInput.value : ""; // YYYY-MM-DD
+
+ let sorted = [...psSessions].filter(s => s.finalized || s.endedAt);
+ 
+ // ✅ لو فيه تاريخ مختار، نفلتر بيه
+ if (filterDate) {
+   sorted = sorted.filter(s => {
+     const sessionDate = new Date(s.endedAt || s.createdAt).toISOString().slice(0, 10);
+     return sessionDate === filterDate;
+   });
+ }
+
+ // ترتيب من الأحدث للأقدم
+ sorted.sort((a,b)=>Number(b.endedAt||0)-Number(a.endedAt||0));
+ 
  const total=sorted.reduce((sum,s)=>sum+Number(s.total||0),0);
  $("psSessionsTotal").textContent=sorted.length;
- $("psSessionsRevenue").textContent=money(total)+" جنيه";
- $("psSessionsRevenue2").textContent=money(total)+" جنيه";
+ 
+ // تحديث الإيرادات
+ const revEl = $("psSessionsRevenue2");
+ if (revEl) revEl.textContent = money(total) + " جنيه";
+ 
+ // تحديث الإيرادات الإجمالية (فوق في الإحصائيات)
+ const revElMain = $("psSessionsRevenue");
+ if (revElMain) revElMain.textContent = money(total) + " جنيه";
+
  table.innerHTML=sorted.map(s=>{
   const type=s.deviceType==="vip"?"VIP":(s.deviceType==="base_arabi"?"قاعدة":"روم");
-  return `<tr><td>${escapeHTML(s.invoiceNumber||"—")}</td><td>${escapeHTML(s.deviceName||"—")} <span class="tag">${type}</span></td>
-   <td>${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</td><td>${s.endedAt?new Date(s.endedAt).toLocaleString("ar-EG"):"—"}</td>
-   <td>${Number(s.elapsedMinutes)||0} دقيقة</td><td>${money(s.playTotal??s.total)} ج</td><td>${money(s.ordersTotal||0)} ج</td><td><b>${money(s.total)} ج</b></td>
-   <td><button class="rowbtn secondary" onclick="printPsInvoice('${s.id}')">طباعة</button></td></tr>`;
- }).join("")||'<tr><td colspan="9">لا توجد جلسات مسجلة</td></tr>';
+  return `<tr>
+   <td>${escapeHTML(s.invoiceNumber||"—")}</td>
+   <td>${escapeHTML(s.deviceName||"—")} <span class="tag">${type}</span></td>
+   <td>${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</td>
+   <td>${s.endedAt?new Date(s.endedAt).toLocaleString("ar-EG"):"—"}</td>
+   <td>${Number(s.elapsedMinutes)||0} دقيقة</td>
+   <td>${money(s.playTotal??s.total)} ج</td>
+   <td>${money(s.ordersTotal||0)} ج</td>
+   <td><b>${money(s.total)} ج</b></td>
+   <td><button class="rowbtn secondary" onclick="printPsInvoice('${s.id}')">طباعة</button></td>
+  </tr>`;
+ }).join("")||'<tr><td colspan="9">لا توجد جلسات مسجلة لهذا اليوم</td></tr>';
 }
 
 window.printPsInvoice=id=>{

@@ -30,11 +30,11 @@
   --warning: #f59e0b;
   --danger: #ef4444;
   --purple: #8b5cf6;
+  --billiard-color: #f97316;
 }
 
 *{box-sizing:border-box}
 
-/* ============ الصفحة ثابتة بدون سكرول ============ */
 html, body {
   height: 100vh;
   margin: 0;
@@ -57,7 +57,6 @@ label{font-size:12px;font-weight:600;color:var(--text-muted); display:block; mar
 h2,h3,h4{margin-top:0; color: var(--text-main); font-weight: 700;}
 h2{font-size:20px;} h3{font-size:16px;} h4{font-size:14px;}
 
-/* ============ Wrapper فيه السكرول الداخلي ============ */
 .wrap{
   max-width:1450px;
   margin:auto;
@@ -78,10 +77,10 @@ h2{font-size:20px;} h3{font-size:16px;} h4{font-size:14px;}
 .muted{font-size:12px;color:var(--text-muted)}
 .top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap; padding: 4px 0; margin-bottom: 5px;}
 
-/* تم تصغير كروت الإحصائيات هنا */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
-.stat{background:var(--bg-card);padding:8px 10px;border-radius:8px; border: 1px solid var(--border-color); border-left: 3px solid var(--primary);}
-.stat strong{display:block;font-size:16px;margin-top:4px; color: var(--primary);}
+/* تصغير كروت الإحصائيات أكتر */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:6px}
+.stat{background:var(--bg-card);padding:6px 8px;border-radius:6px; border: 1px solid var(--border-color); border-left: 3px solid var(--primary);}
+.stat strong{display:block;font-size:15px;margin-top:2px; color: var(--primary);}
 
 nav{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
 nav button{background:var(--bg-input);color:var(--text-muted); box-shadow: none; font-size:12px; padding:7px 12px;}
@@ -117,6 +116,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
+/* ============ شاشة المبيعات ============ */
 .sahal-header{background:linear-gradient(135deg, #059669, #047857);color:white;padding:10px 14px;font-size:13px;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap; font-weight: bold;}
 .sahal-shortcuts{background:var(--bg-input);border-bottom:1px solid var(--border-color);padding:7px;display:flex;gap:6px;flex-wrap:wrap}
 .sahal-sc-btn{background:var(--bg-card);color:var(--text-main);border:1px solid var(--border-color);padding:6px 10px;font-size:11px;font-weight:bold; box-shadow: none;}
@@ -137,6 +137,8 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .sahal-btn{padding:10px 6px;font-weight:bold;font-size:12px; border-radius: 6px;}
 .search-container{position:relative;min-width:0}
 #searchResults{position:absolute;top:100%;right:0;width:100%;z-index:100;background:var(--bg-card);box-shadow:0 10px 25px rgba(0,0,0,0.5);max-height:200px;overflow:auto; border-radius: 6px; border: 1px solid var(--border-color);}
+
+/* ============ البلايستيشن ============ */
 .ps-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
 .ps-tabs button{flex:1;min-width:110px; background: var(--bg-input); color: var(--text-muted); border: 1px solid var(--border-color); box-shadow: none; font-size:11px; padding:6px 10px;}
 .ps-tabs button.active{background:var(--success); color: white; border-color: var(--success); box-shadow: 0 3px 5px rgba(16, 185, 129, 0.3);}
@@ -145,6 +147,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .ps-device-card.running{border:2px solid var(--success); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);}
 .ps-device-card.vip-card{border-top:4px solid var(--purple)}
 .ps-device-card.base-card{border-top:4px solid var(--warning)}
+.ps-device-card.billiard-card{border-top:4px solid var(--billiard-color)}
 .ps-device-card h3{margin:0 0 5px; color: var(--text-main); font-size:14px;}
 .ps-device-time{font-size:26px;font-weight:700;color:var(--success);text-align:center;padding:10px 4px;direction:ltr; font-family: monospace; text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);}
 .ps-device-idle{color:var(--text-muted); text-shadow: none;}
@@ -160,56 +163,13 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .inline-form{display:grid;grid-template-columns:1fr 1fr;gap:6px}.inline-form button{width:100%}
 .mode-note{background:rgba(59, 130, 246, 0.1);color:#60a5fa;border-radius:6px;padding:7px;font-size:11px;margin:8px 0; border: 1px solid rgba(59, 130, 246, 0.2);}
 
-/* ============ المودالات (في نص الشاشة) ============ */
-.modal-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.7);
-  backdrop-filter: blur(4px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:1000;
-  padding: 16px;
-  overflow-y: auto;
-}
-.modal-box{
-  background:var(--bg-card);
-  padding:20px;
-  border-radius:12px;
-  max-width:440px;
-  width:100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);
-  border: 1px solid var(--border-color);
-  position: relative;
-  margin: auto;
-}
-.modal-close{
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  width: 30px; height: 30px;
-  padding: 0;
-  border-radius: 50%;
-  background: var(--bg-input);
-  color: var(--text-muted);
-  font-size: 16px;
-  line-height: 1;
-  display: grid; place-items: center;
-  border: 1px solid var(--border-color);
-}
+/* ============ المودالات ============ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter: blur(4px);display:flex;align-items:center;justify-content:center;z-index:1000;padding: 16px;overflow-y: auto;}
+.modal-box{background:var(--bg-card);padding:20px;border-radius:12px;max-width:440px;width:100%;max-height: 90vh;overflow-y: auto;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);border: 1px solid var(--border-color);position: relative;margin: auto;}
+.modal-close{position: absolute;top: 10px;left: 10px;width: 30px; height: 30px;padding: 0;border-radius: 50%;background: var(--bg-input);color: var(--text-muted);font-size: 16px;line-height: 1;display: grid; place-items: center;border: 1px solid var(--border-color);}
 .modal-close:hover { background: var(--danger); color: white; }
 
-/* ============ زر تركيب التطبيق ============ */
-#installAppBtn {
-    position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-    background: var(--success); color: white; padding: 9px 18px; border-radius: 24px;
-    font-weight: bold; font-size: 13px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-    display: none; z-index: 9999; cursor: pointer; border: 2px solid white;
-    animation: pulse 2s infinite;
-}
+#installAppBtn {position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);background: var(--success); color: white; padding: 9px 18px; border-radius: 24px;font-weight: bold; font-size: 13px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);display: none; z-index: 9999; cursor: pointer; border: 2px solid white;animation: pulse 2s infinite;}
 @keyframes pulse { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.05); } 100% { transform: translateX(-50%) scale(1); } }
 
 .social-links{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
@@ -217,7 +177,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .social-links a:hover { opacity: 0.8; }
 .btn-whatsapp{background:#25D366}.btn-facebook{background:#1877F2}.btn-insta{background:radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%)}
 
-/* ============ Responsive ============ */
 @media(max-width:950px){.sahal-layout{grid-template-columns:1fr}.sahal-sidebar{display:grid;grid-template-columns:1fr 1fr}.sahal-total-card{grid-column:1/-1}}
 @media(max-width:600px){
   .sale-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -228,12 +187,11 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   .ps-item-form input:first-child{grid-column:1/-1}
   .ps-item-form button{grid-column:1/-1}
 }
-/* على شاشات اللابتوب القصيرة، صغّر أكتر */
 @media (max-height: 800px) {
   .wrap { padding: 8px 10px; }
   .card { padding: 10px; margin: 8px 0; }
-  .stat { padding: 6px 8px; }
-  .stat strong { font-size: 15px; margin-top: 2px; }
+  .stat { padding: 4px 6px; }
+  .stat strong { font-size: 13px; margin-top: 1px; }
   .tile { min-height: 85px; padding: 12px; }
   .tile h3 { font-size: 13px; }
   .tile p { font-size: 11px; }
@@ -290,7 +248,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  </div>
 </section>
 
-<!-- ============ Auth Modal (في نص الشاشة) ============ -->
 <div id="authForm" class="modal-overlay hidden" onclick="if(event.target===this) backToGate();">
   <div class="modal-box">
     <button class="modal-close" onclick="backToGate()" title="إغلاق">✕</button>
@@ -348,30 +305,30 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  <div id="psExpiryWarning" class="hidden" style="background:rgba(245, 158, 11, 0.1); color:#fbbf24; padding:10px; border-radius:8px; text-align:center; font-weight:bold; font-size:13px; margin-bottom:10px; border:1px solid rgba(245, 158, 11, 0.3); box-shadow:0 2px 10px rgba(0,0,0,0.05);"></div>
 
  <div class="card">
-  <!-- تم تعديل الهيدر هنا لإضافة اسم صاحب النشاط باللون الأزرق -->
-  <div class="top" style="margin-bottom: 10px;">
-    <div style="display: flex; align-items: center; gap: 8px;">
-      <h2 style="margin: 0;">سيستم البلايستيشن</h2>
-      <span id="psOwnerName" style="color: var(--primary); font-weight: bold; font-size: 16px;">اسم صاحب النشاط</span>
-    </div>
-    <button class="red" onclick="logout()">تسجيل الخروج</button>
+  <!-- اسم النشاط + اسم صاحب النشاط في النص -->
+  <div style="text-align: center; margin-bottom: 12px;">
+    <h2 id="psShopTitle" style="color: var(--primary); font-size: 22px; margin-bottom: 4px;">اسم النشاط</h2>
+    <span id="psOwnerName" style="color: var(--text-muted); font-size: 14px; font-weight: bold;">اسم صاحب النشاط</span>
+    <button class="red" onclick="logout()" style="margin-top: 8px; padding: 5px 12px; font-size: 11px;">تسجيل الخروج</button>
   </div>
-  
+
   <div class="grid">
    <div class="stat">إجمالي الأجهزة<strong id="psTotalDevices">0</strong></div>
    <div class="stat">أجهزة الرومات<strong id="psRoomDevices">0</strong></div>
    <div class="stat">أجهزة VIP<strong id="psVipDevices">0</strong></div>
    <div class="stat">أجهزة القاعدة العربي<strong id="psBaseDevices">0</strong></div>
+   <div class="stat">أجهزة البلياردو<strong id="psBilliardDevices">0</strong></div>
    <div class="stat">الأجهزة تعمل الآن<strong id="psRunningDevices">0</strong></div>
    <div class="stat">المشروبات<strong id="psDrinksCount">0</strong></div>
    <div class="stat">السندوتشات<strong id="psSandwichesCount">0</strong></div>
-   <div class="stat">إيرادات الجلسات (الوردية)<strong id="psSessionsRevenue">0 جنيه</strong></div>
+   <div class="stat">إيرادات الجلسات<strong id="psSessionsRevenue">0 جنيه</strong></div>
   </div>
 
   <div class="ps-tabs">
    <button id="psDevicesTab" class="active" onclick="showPsSection('devices')">🎮 أجهزة الرومات</button>
    <button id="psVipTab" onclick="showPsSection('vip')">⭐ أجهزة صالة VIP</button>
    <button id="psBaseArabiTab" onclick="showPsSection('base_arabi')">🏛 أجهزة القاعدة العربي</button>
+   <button id="psBilliardTab" onclick="showPsSection('billiard')">🎱 أجهزة البلياردو</button>
    <button id="psDrinksTab" onclick="showPsSection('drinks')">🥤 المشروبات</button>
    <button id="psSandwichesTab" onclick="showPsSection('sandwiches')">🥪 السندوتشات</button>
    <button id="psSessionsTab" onclick="showPsSection('sessions')">📄 سجل الجلسات</button>
@@ -382,6 +339,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
    <button id="psMySubTab" onclick="openPsSubscriptionModal()">⭐ اشتراكي</button>
   </div>
 
+  <!-- أجهزة الرومات -->
   <div id="psDevicesSection">
    <div class="card"><h3>إضافة جهاز روم جديد</h3><div class="grid">
     <div><label>اسم الروم</label><input id="psNewDeviceName" placeholder="مثال: روم 1"></div>
@@ -392,6 +350,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
    <div id="psDevicesList" class="ps-device-grid"><div class="ps-empty">جاري تحميل الرومات...</div></div>
   </div>
 
+  <!-- VIP -->
   <div id="psVipSection" class="hidden">
    <div class="card"><h3>إضافة جهاز إلى صالة VIP</h3><div class="grid">
     <div><label>اسم جهاز VIP</label><input id="psNewVipName" placeholder="مثال: VIP 1"></div>
@@ -402,6 +361,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
    <div id="psVipDevicesList" class="ps-device-grid"><div class="ps-empty">لا توجد أجهزة VIP حتى الآن.</div></div>
   </div>
 
+  <!-- القاعدة العربي -->
   <div id="psBaseArabiSection" class="hidden">
    <div class="card"><h3>إضافة جهاز إلى القاعدة العربي</h3><div class="grid">
     <div><label>اسم الجهاز</label><input id="psNewBaseName" placeholder="مثال: قاعدة 1"></div>
@@ -412,6 +372,18 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
    <div id="psBaseArabiDevicesList" class="ps-device-grid"><div class="ps-empty">لا توجد أجهزة في القاعدة العربي حتى الآن.</div></div>
   </div>
 
+  <!-- البلياردو -->
+  <div id="psBilliardSection" class="hidden">
+   <div class="card"><h3>إضافة جهاز بلياردو جديد</h3><div class="grid">
+    <div><label>اسم جهاز البلياردو</label><input id="psNewBilliardName" placeholder="مثال: بلياردو 1"></div>
+    <div><label>سعر الساعة (لحساب الوقت التلقائي)</label><input id="psNewBilliardRate" type="number" min=".01" step=".01" placeholder="حدد سعر الساعة"></div>
+    <div style="display:flex;align-items:end"><button class="big orange" onclick="addPsDevice('billiard')">إضافة جهاز</button></div>
+   </div></div>
+   <div class="ps-section-title"><h3>إدارة أجهزة البلياردو</h3><button class="secondary" onclick="loadPlaystationData()">تحديث</button></div>
+   <div id="psBilliardDevicesList" class="ps-device-grid"><div class="ps-empty">لا توجد أجهزة بلياردو حتى الآن.</div></div>
+  </div>
+
+  <!-- المشروبات والسندوتشات -->
   <div id="psDrinksSection" class="hidden">
    <div class="card"><h3>إضافة مشروب</h3><div class="ps-item-form"><div><label>اسم المشروب</label><input id="psDrinkName" placeholder="مثال: بيبسي"></div><div><label>السعر</label><input id="psDrinkPrice" type="number" min="0" step=".01"></div><div><label>الكمية</label><input id="psDrinkQty" type="number" min="0" value="1"></div><button class="green" onclick="addPsItem('drink')">إضافة</button></div></div>
    <h3>قائمة المشروبات</h3><div class="tablewrap"><table><thead><tr><th>المشروب</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psDrinksTable"></tbody></table></div>
@@ -422,6 +394,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
    <h3>قائمة السندوتشات</h3><div class="tablewrap"><table><thead><tr><th>السندوتش</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psSandwichesTable"></tbody></table></div>
   </div>
 
+  <!-- السجلات -->
   <div id="psSessionsSection" class="hidden">
     <div class="card">
       <div class="top"><h3>سجل الجلسات والفواتير</h3><button class="secondary" onclick="loadPlaystationData()">تحديث السجل</button></div>
@@ -444,6 +417,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
+  <!-- الحجوزات -->
   <div id="psReservationsSection" class="hidden">
     <div class="card">
       <h3>📅 إضافة حجز مسبق</h3>
@@ -464,6 +438,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
+  <!-- سجل العملاء والتقارير -->
   <div id="psCustomersSection" class="hidden">
     <div class="card">
       <h3>🏆 سجل العملاء (الأكثر زيارة أولاً)</h3>
@@ -664,6 +639,7 @@ window.getDeviceType = function(device) {
     if (!device) return "room";
     if (device.deviceType === "vip") return "vip";
     if (device.deviceType === "base_arabi") return "base_arabi";
+    if (device.deviceType === "billiard") return "billiard";
     return "room";
 };
 
@@ -721,7 +697,6 @@ function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;",
 function systemInfo(p,system){const s=p.systems?.[system];if(s)return s;return {status:"not_registered",plan:"غير محدد",expiryDate:null};}
 function subscriptionActive(data){if(!data||data.status!=="active"||!data.expiryDate)return false;const exp=data.expiryDate.toDate?data.expiryDate.toDate():new Date(data.expiryDate);return exp>new Date();}
 
-/* ============ Open Auth Modal (center of screen) ============ */
 window.openAuth=(system,mode)=>{
  selectedSystem=system;
  $("authForm").classList.remove("hidden");
@@ -817,7 +792,8 @@ onAuthStateChanged(auth,async user=>{
 
   if(system==="playstation"){
     $("playstationPanel").classList.remove("hidden");
-    $("psOwnerName").textContent = profile.customerName || "صاحب النشاط"; // تم إضافة السطر ده
+    $("psShopTitle").textContent=profile.shopName||"سيستم البلايستيشن";
+    $("psOwnerName").textContent = "صاحب النشاط: " + (profile.customerName || "غير محدد"); // اسم صاحب النشاط في النص
     await loadPlaystationData();
     checkPsSubscriptionStatus();
     startPsTimer();
@@ -916,11 +892,12 @@ window.deactivateSystem=async(id,system)=>{if(!confirm("هل تريد إيقاف
 window.deleteUser=async id=>{if(!confirm("حذف بيانات الحساب؟"))return;try{await deleteDoc(doc(db,"users",id));await loadUsers();showAlert("تم الحذف بنجاح.", "success");}catch(e){showAlert(e.message, "error");}};
 
 window.showPsSection=which=>{
- const sections=["devices","vip","base_arabi","drinks","sandwiches","sessions","reservations","customers","reports"];
+ const sections=["devices","vip","base_arabi","billiard","drinks","sandwiches","sessions","reservations","customers","reports"];
  sections.forEach(s=>{
   let sectionId,tabId;
   if(s==="vip"){sectionId="psVipSection";tabId="psVipTab";}
   else if(s==="base_arabi"){sectionId="psBaseArabiSection";tabId="psBaseArabiTab";}
+  else if(s==="billiard"){sectionId="psBilliardSection";tabId="psBilliardTab";}
   else if(s==="reservations"){sectionId="psReservationsSection";tabId="psReservationsTab";}
   else if(s==="customers"){sectionId="psCustomersSection";tabId="psCustomersTab";}
   else if(s==="reports"){sectionId="psReportsSection";tabId="psReportsTab";}
@@ -960,9 +937,13 @@ window.loadPlaystationData = async function(){
 };
 
 window.addPsDevice=async type=>{
- const isVip=type==="vip",isBase=type==="base_arabi";
- const nameInput=isVip?"psNewVipName":(isBase?"psNewBaseName":"psNewDeviceName");
- const rateInput=isVip?"psNewVipRate":(isBase?"psNewBaseRate":"psNewDeviceRate");
+ const isVip=type==="vip",isBase=type==="base_arabi",isBilliard=type==="billiard";
+ let nameInput,rateInput;
+ if(isVip){nameInput="psNewVipName";rateInput="psNewVipRate";}
+ else if(isBase){nameInput="psNewBaseName";rateInput="psNewBaseRate";}
+ else if(isBilliard){nameInput="psNewBilliardName";rateInput="psNewBilliardRate";}
+ else{nameInput="psNewDeviceName";rateInput="psNewDeviceRate";}
+
  const name=$(nameInput).value.trim(),rate=Number($(rateInput).value);
  if(!name)return showAlert("اكتب اسم الجهاز.", "warning");
  if(!Number.isFinite(rate)||rate<=0)return showAlert("أدخل سعر ساعة صحيح.", "warning");
@@ -972,6 +953,7 @@ window.addPsDevice=async type=>{
   await loadPlaystationData(); showAlert("تمت الإضافة بنجاح.", "success");
  }catch(e){showAlert("تعذر الإضافة: "+e.message, "error");}
 };
+
 window.updatePsRate=async id=>{
  const input=$(`psRate_${id}`),rate=Number(input?.value);
  if(!Number.isFinite(rate)||rate<=0)return showAlert("أدخل سعر ساعة صحيح.", "warning");
@@ -992,6 +974,7 @@ window.startPsDevice=async id=>{
  const customerName = $(`psCustomerName_${id}`)?.value.trim() || "";
  const rate=Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
  let minutes=0,plannedAmount=0,now=Date.now(),endAt=null;
+ let gamesCount=0, pricePerGame=0;
 
  if(mode==="duration"){
   minutes=Number($(`psDuration_${id}`).value);
@@ -1002,22 +985,27 @@ window.startPsDevice=async id=>{
   const minimumAmount=rate*PS_MIN_SESSION_MINUTES/60;
   if(!Number.isFinite(plannedAmount)||plannedAmount<minimumAmount) return showAlert(`أقل مبلغ هو ${money(minimumAmount)} جنيه.`, "warning");
   minutes=Math.max(PS_MIN_SESSION_MINUTES,Math.ceil(plannedAmount/rate*60)); endAt=now+minutes*60000;
+ }else if(mode==="games"){
+  gamesCount=Number($(`psGamesCount_${id}`).value);
+  pricePerGame=Number($(`psPricePerGame_${id}`).value);
+  if(gamesCount<=0 || pricePerGame<=0) return showAlert("أدخل عدد الألعاب وسعر اللعبة.", "warning");
+  plannedAmount = gamesCount * pricePerGame;
  }else{ minutes=0; endAt=null; }
 
  const sessionRef=doc(col("psSessions")),sessionId=sessionRef.id;
  try{
-  Object.assign(d,{status:"running",startedAt:now,endAt,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:plannedAmount,customerName});
-  psSessions.push({id: sessionId, deviceId: id, deviceName: d.name, deviceType: window.getDeviceType(d), startedAt: now, endAt: endAt, plannedMinutes: minutes, hourlyRate: rate, sessionMode: mode, plannedAmount: mode === "amount" ? plannedAmount : 0, orders: [], finalized: false, createdAt: now, customerName});
+  Object.assign(d,{status:"running",startedAt:now,endAt,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:plannedAmount,customerName,gamesCount,pricePerGame});
+  psSessions.push({id: sessionId, deviceId: id, deviceName: d.name, deviceType: window.getDeviceType(d), startedAt: now, endAt: endAt, plannedMinutes: minutes, hourlyRate: rate, sessionMode: mode, plannedAmount: mode === "amount" || mode === "games" ? plannedAmount : 0, gamesCount, pricePerGame, orders: [], finalized: false, createdAt: now, customerName});
   renderPsDevices(); renderPsStats(); renderPsSessions(); startPsTimer();
-  setDoc(sessionRef,{deviceId:id,deviceName:d.name,deviceType:window.getDeviceType(d),startedAt:now,endAt,plannedMinutes:minutes,hourlyRate:rate,sessionMode:mode,plannedAmount:mode==="amount"?plannedAmount:0,orders:[],finalized:false,createdAt:now,customerName}).catch(e=>console.warn(e));
-  updateDoc(docRef("devices",id),{status:"running",startedAt:now,endAt,lastDuration:minutes,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:mode==="amount"?plannedAmount:0,customerName}).catch(e=>console.warn(e));
+  setDoc(sessionRef,{deviceId:id,deviceName:d.name,deviceType:window.getDeviceType(d),startedAt:now,endAt,plannedMinutes:minutes,hourlyRate:rate,sessionMode:mode,plannedAmount:plannedAmount,gamesCount,pricePerGame,orders:[],finalized:false,createdAt:now,customerName}).catch(e=>console.warn(e));
+  updateDoc(docRef("devices",id),{status:"running",startedAt:now,endAt,lastDuration:minutes,hourlyRate:rate,sessionId,sessionMode:mode,sessionAmount:plannedAmount,customerName,gamesCount,pricePerGame}).catch(e=>console.warn(e));
  }catch(e){console.error(e);showAlert("تعذر بدء الجلسة: "+e.message, "error");}
 };
 
 window.extendPsDevice=async id=>{
  const d=psDevices.find(x=>x.id===id);
  if(!d||d.status!=="running")return showAlert("الجهاز غير مشغل.", "warning");
- if(d.sessionMode==="auto")return showAlert("الجلسة بالحساب التلقائي.", "info");
+ if(d.sessionMode==="auto"||d.sessionMode==="games")return showAlert("لا يمكن تمديد هذه الجلسة.", "info");
  const minutes=Number($(`psExtend_${id}`).value);
  if(!Number.isFinite(minutes)||minutes<PS_MIN_SESSION_MINUTES)return showAlert("أقل مدة للتمديد نصف ساعة.", "warning");
  const now=Date.now(),newEndAt=Math.max(now,Number(d.endAt)||0)+minutes*60000;
@@ -1042,7 +1030,7 @@ window.updateConfirmModalTotal = function() {
   const now = Date.now();
   const elapsedMinutes = Math.max(1, Math.ceil((now - Number(d.startedAt)) / 60000));
   let playTotal = 0;
-  if (d.sessionMode === "amount") { playTotal = Number(d.sessionAmount || 0); }
+  if (d.sessionMode === "amount" || d.sessionMode === "games") { playTotal = Number(d.sessionAmount || 0); }
   else if (d.sessionMode === "auto") { const halfHourBlocks = Math.max(1, Math.ceil((now - Number(d.startedAt)) / (PS_MIN_SESSION_MINUTES * 60000))); playTotal = (halfHourBlocks * PS_MIN_SESSION_MINUTES / 60) * Number(d.hourlyRate); }
   else { playTotal = (Math.max(PS_MIN_SESSION_MINUTES, elapsedMinutes) / 60) * Number(d.hourlyRate); }
   const orders = d.currentOrders || psSessions.find(s => s.id === d.sessionId)?.orders || [];
@@ -1057,17 +1045,19 @@ window.stopPsDevice=async id=>{
  window.currentInvoiceToConfirm = d;
  const now = Date.now(); const elapsedMinutes = Math.max(1, Math.ceil((now - Number(d.startedAt)) / 60000));
  let playTotal = 0;
- if(d.sessionMode === "amount") { playTotal = Number(d.sessionAmount || 0); }
+ if(d.sessionMode === "amount" || d.sessionMode === "games") { playTotal = Number(d.sessionAmount || 0); }
  else if(d.sessionMode === "auto") { const halfHourBlocks = Math.max(1, Math.ceil((now - Number(d.startedAt)) / (PS_MIN_SESSION_MINUTES * 60000))); playTotal = (halfHourBlocks * PS_MIN_SESSION_MINUTES / 60) * Number(d.hourlyRate); }
  else { playTotal = (Math.max(PS_MIN_SESSION_MINUTES, elapsedMinutes) / 60) * Number(d.hourlyRate); }
  const orders = d.currentOrders || psSessions.find(s=>s.id===d.sessionId)?.orders || [];
  const ordersTotal = orders.reduce((sum,o)=> sum + Number(o.lineTotal ?? (o.price * o.qty)), 0);
  const total = playTotal + ordersTotal;
- const typeLabel = window.getDeviceType(d) === "vip" ? "صالة VIP" : (window.getDeviceType(d) === "base_arabi" ? "القاعدة العربي" : "روم");
+ const typeLabel = window.getDeviceType(d) === "vip" ? "صالة VIP" : (window.getDeviceType(d) === "base_arabi" ? "القاعدة العربي" : (window.getDeviceType(d) === "billiard" ? "بلياردو" : "روم"));
  $("psConfirmInvoiceContent").innerHTML = `
    <b>الجهاز:</b> ${escapeHTML(d.name)} (${typeLabel})<br>
    <b>العميل:</b> ${escapeHTML(d.customerName||"غير محدد")}<br>
-   <b>وقت اللعب:</b> ${elapsedMinutes} دقيقة<br><b>قيمة اللعب:</b> ${money(playTotal)} جنيه<br><hr style="margin: 8px 0;">
+   <b>وقت اللعب:</b> ${elapsedMinutes} دقيقة<br><b>قيمة اللعب:</b> ${money(playTotal)} جنيه<br>
+   ${d.sessionMode === "games" ? `<b>عدد الألعاب:</b> ${d.gamesCount} لعبة × ${money(d.pricePerGame)} ج<br>` : ''}
+   <hr style="margin: 8px 0;">
    <b>المشروبات والسندوتشات:</b><br>${orders.length ? orders.map(o => `- ${escapeHTML(o.name)} (${o.qty}) = ${money(o.lineTotal ?? (o.price * o.qty))} ج`).join('<br>') : 'لا يوجد'}
    <br><b>إجمالي الإضافات:</b> ${money(ordersTotal)} جنيه<br><hr style="margin: 8px 0; border-top: 2px dashed var(--border-color);">
    <h3 id="psConfirmFinalTotal" style="color:var(--success); text-align:center; margin:5px 0;">الإجمالي النهائي: ${money(total)} جنيه</h3>`;
@@ -1117,7 +1107,7 @@ async function finalizePsSession(device,reason="manual", shouldPrint = true){
   const elapsedMinutes=Math.max(1,Math.ceil(elapsedMs/60000));
   const rate=Number(device.hourlyRate)||PS_DEFAULT_HOURLY_RATE;
   let playTotal=0;
-  if(device.sessionMode==="amount"){ const minimumAmount=rate*PS_MIN_SESSION_MINUTES/60; playTotal=Math.max(minimumAmount,Number(device.sessionAmount||0)); }
+  if(device.sessionMode==="amount"||device.sessionMode==="games"){ playTotal=Number(device.sessionAmount||0); }
   else if(device.sessionMode==="auto"){ const halfHourBlocks=Math.max(1,Math.ceil(elapsedMs/(PS_MIN_SESSION_MINUTES*60000))); const chargedMinutes=halfHourBlocks*PS_MIN_SESSION_MINUTES; playTotal=Number((chargedMinutes/60*rate).toFixed(2)); }
   else{ const chargedMinutes=Math.max(PS_MIN_SESSION_MINUTES,elapsedMinutes); playTotal=Number((chargedMinutes/60*rate).toFixed(2)); }
   const orders = device.currentOrders || psSessions.find(s=>s.id===sessionId)?.orders || [];
@@ -1126,12 +1116,12 @@ async function finalizePsSession(device,reason="manual", shouldPrint = true){
   const totalBeforeDiscount = playTotal + ordersTotal;
   const total = Math.max(0, Number((totalBeforeDiscount - discount).toFixed(2)));
   const invoiceNumber="PS-"+now.toString().slice(-8);
-  const invoice={invoiceNumber, deviceId:device.id, deviceName:device.name, deviceType:device.deviceType||"room", startedAt, endedAt:now, elapsedMinutes, hourlyRate:rate, sessionMode:device.sessionMode||"duration", plannedMinutes:Number(device.lastDuration||0), plannedAmount:Number(device.sessionAmount||0), playTotal, orders, ordersTotal, discount: discount, total: total, totalBeforeDiscount: totalBeforeDiscount, paymentMethod:"cash", paymentStatus:"paid", finalized:true, reason, date:new Date(now).toLocaleString("ar-EG"), createdAt:now, customerName: device.customerName || ""};
+  const invoice={invoiceNumber, deviceId:device.id, deviceName:device.name, deviceType:device.deviceType||"room", startedAt, endedAt:now, elapsedMinutes, hourlyRate:rate, sessionMode:device.sessionMode||"duration", plannedMinutes:Number(device.lastDuration||0), plannedAmount:Number(device.sessionAmount||0), gamesCount:device.gamesCount||0, pricePerGame:device.pricePerGame||0, playTotal, orders, ordersTotal, discount: discount, total: total, totalBeforeDiscount: totalBeforeDiscount, paymentMethod:"cash", paymentStatus:"paid", finalized:true, reason, date:new Date(now).toLocaleString("ar-EG"), createdAt:now, customerName: device.customerName || ""};
   const typeLabel=invoice.deviceType==="vip"?"صالة VIP":(invoice.deviceType==="base_arabi"?"القاعدة العربي":"روم");
   setDoc(sRef, invoice).catch(err => console.warn(err));
   setDoc(tRef, {type:"in", amount:total, note:`فاتورة ${typeLabel} - ${invoiceNumber}`, deviceName:device.name, deviceType:invoice.deviceType, sessionId, invoiceNumber, date:new Date(now).toLocaleString("ar-EG"), createdAt:now}).catch(err => console.warn(err));
   updateDoc(dRef, {status:"idle", endAt:null, startedAt:null, sessionId:null, sessionMode:null, sessionAmount:null, customerName:null, endedAt:now, lastSessionId:sessionId, lastSessionTotal:total}).catch(err => console.warn(err));
-  device.status = "idle"; device.sessionId = null; device.startedAt = null; device.endAt = null; device.sessionMode = null; device.sessionAmount = null; device.customerName = null;
+  device.status = "idle"; device.sessionId = null; device.startedAt = null; device.endAt = null; device.sessionMode = null; device.sessionAmount = null; device.customerName = null; device.gamesCount = 0; device.pricePerGame = 0;
 
   const existingIndex = psSessions.findIndex(s => s.id === sessionId);
   if (existingIndex >= 0) { psSessions[existingIndex] = { id: sessionId, ...invoice }; } else { psSessions.push({ id: sessionId, ...invoice }); }
@@ -1144,15 +1134,16 @@ function formatPsTime(ms){ const total=Math.max(0,Math.floor(ms/1000)),h=Math.fl
 
 function buildPsDeviceCard(d){
  const running=d.status==="running",dType=window.getDeviceType(d);
- const isVip=dType==="vip",isBase=dType==="base_arabi";
+ const isVip=dType==="vip",isBase=dType==="base_arabi",isBilliard=dType==="billiard";
  const autoMode=running&&d.sessionMode==="auto";
+ const gamesMode=running&&d.sessionMode==="games";
  const time=running?(autoMode?formatPsTime(Date.now()-Number(d.startedAt)):formatPsTime(Number(d.endAt)-Date.now())):"00:00:00";
  const orders=d.currentOrders||psSessions.find(s=>s.id===d.sessionId)?.orders||[];
  const orderTotal=orders.reduce((a,o)=>a+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0);
  const itemOptions=psItems.map(i=>`<option value="${i.id}">${escapeHTML(i.name)} - ${money(i.price)} ج</option>`).join("");
- const icon=isVip?"⭐":(isBase?"🏛":"🎮");
- const typeLabel=isVip?"جهاز صالة VIP":(isBase?"جهاز القاعدة العربي":"جهاز روم");
- const cardClass=isVip?"vip-card":(isBase?"base-card":"");
+ const icon=isVip?"⭐":(isBase?"🏛":(isBilliard?"🎱":"🎮"));
+ const typeLabel=isVip?"جهاز صالة VIP":(isBase?"جهاز القاعدة العربي":(isBilliard?"جهاز بلياردو":"جهاز روم"));
+ const cardClass=isVip?"vip-card":(isBase?"base-card":(isBilliard?"billiard-card":""));
 
  const rateInputHtml = `<div class="inline-form"><input id="psRate_${d.id}" type="number" min=".01" step=".01" value="${Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE}"><button class="secondary" onclick="updatePsRate('${d.id}')">حفظ السعر</button></div>`;
  const deleteBtnHtml = `<button class="red" onclick="deletePsDevice('${d.id}')">حذف الجهاز</button>`;
@@ -1161,12 +1152,12 @@ function buildPsDeviceCard(d){
   <div class="top"><h3>${icon} ${escapeHTML(d.name)}</h3><span class="tag ${running?"good":""}">${running?"يعمل الآن":typeLabel}</span></div>
   ${running && d.customerName ? `<p style="text-align:center; font-weight:bold; color:#f87171; font-size:12px; margin:4px 0;">👤 العميل: ${escapeHTML(d.customerName)}</p>` : ''}
   <div class="ps-device-time ${running?"":"ps-device-idle"}" id="psClock_${d.id}">${time}</div>
-  <p class="muted" style="text-align:center; font-size:11px; margin:4px 0;" id="psClockLabel_${d.id}">${running?(autoMode?"الوقت المنقضي - حساب تلقائي":"الوقت المتبقي"):"الجهاز جاهز لجلسة جديدة"}</p>
+  <p class="muted" style="text-align:center; font-size:11px; margin:4px 0;" id="psClockLabel_${d.id}">${running?(gamesMode?"حساب بالجيمات":(autoMode?"الوقت المنقضي - حساب تلقائي":"الوقت المتبقي")):"الجهاز جاهز لجلسة جديدة"}</p>
   <label>سعر الساعة بالجنيه</label>
   ${rateInputHtml}
   ${running?`
    <div class="card" style="padding:10px;margin:8px 0; background: rgba(15, 23, 42, 0.3);">
-    <b style="font-size:12px;">إضافة طلبات إلى فاتورة ${isVip?"VIP":(isBase?"القاعدة العربي":"الروم")}</b>
+    <b style="font-size:12px;">إضافة طلبات إلى فاتورة ${isVip?"VIP":(isBase?"القاعدة العربي":(isBilliard?"البلياردو":"الروم"))}</b>
     <label>المشروب أو السندوتش</label>
     <select id="orderItem_${d.id}">${itemOptions||'<option value="">لا توجد أصناف</option>'}</select>
     <label>الكمية</label><input id="orderQty_${d.id}" type="number" min="1" value="1">
@@ -1176,12 +1167,12 @@ function buildPsDeviceCard(d){
      <p style="font-size:12px;"><b>إجمالي الإضافات: ${money(orderTotal)} جنيه</b></p>
     </div>
    </div>
-   ${autoMode?'<div class="mode-note">حساب تلقائي: كل نصف ساعة أو جزء منها يُحسب نصف ساعة.</div>':`
+   ${gamesMode?`<div class="mode-note">تم حساب ${d.gamesCount} لعبة × ${money(d.pricePerGame)} = ${money(d.sessionAmount)} ج</div>`:(autoMode?'<div class="mode-note">حساب تلقائي: كل نصف ساعة أو جزء منها يُحسب نصف ساعة.</div>':`
     <div class="ps-device-actions">
      <select id="psExtend_${d.id}"><option value="30">تمديد نصف ساعة</option><option value="60">ساعة</option><option value="90">ساعة ونصف</option><option value="120">ساعتان</option><option value="180">3 ساعات</option></select>
      <button class="green" onclick="extendPsDevice('${d.id}')">تمديد الوقت</button>
     </div>
-   `}
+   `)}
    <button class="red big" onclick="stopPsDevice('${d.id}')">إنهاء الجلسة والفاتورة</button>
   `:`
    <label>اسم العميل (اختياري)</label>
@@ -1191,6 +1182,7 @@ function buildPsDeviceCard(d){
     <option value="duration">⏱ تحديد مدة الجلسة</option>
     <option value="auto">♾ حساب تلقائي حسب الوقت</option>
     <option value="amount">💵 تحديد مبلغ وحساب المدة</option>
+    ${isBilliard ? `<option value="games">🎱 حساب بالجيمات/الأشواط</option>` : ''}
    </select>
    <div id="psDurationBox_${d.id}">
     <label>اختر مدة اللعب</label>
@@ -1203,6 +1195,13 @@ function buildPsDeviceCard(d){
     <label>مبلغ الجلسة بالجنيه</label>
     <input id="psAmount_${d.id}" type="number" min="${(Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE)/2}" step=".01" placeholder="اكتب المبلغ">
    </div>
+   ${isBilliard ? `
+   <div id="psGamesBox_${d.id}" class="hidden">
+    <label>عدد الجيمات/الأشواط</label>
+    <input id="psGamesCount_${d.id}" type="number" min="1" value="1">
+    <label>سعر الجيم الواحد</label>
+    <input id="psPricePerGame_${d.id}" type="number" min="0" step=".01" value="10">
+   </div>` : ''}
    <div class="ps-device-actions"><button class="green" onclick="startPsDevice('${d.id}')">▶ بدء الجلسة</button>${deleteBtnHtml}</div>
   `}
  </div>`;
@@ -1212,15 +1211,19 @@ function renderPsDevices(){
  const rooms=psDevices.filter(d=>window.getDeviceType(d)==="room");
  const vips=psDevices.filter(d=>window.getDeviceType(d)==="vip");
  const bases=psDevices.filter(d=>window.getDeviceType(d)==="base_arabi");
+ const billiards=psDevices.filter(d=>window.getDeviceType(d)==="billiard");
  $("psDevicesList").innerHTML=rooms.map(buildPsDeviceCard).join("")||'<div class="ps-empty">لا توجد رومات.</div>';
  $("psVipDevicesList").innerHTML=vips.map(buildPsDeviceCard).join("")||'<div class="ps-empty">لا توجد أجهزة VIP.</div>';
  $("psBaseArabiDevicesList").innerHTML=bases.map(buildPsDeviceCard).join("")||'<div class="ps-empty">لا توجد أجهزة في القاعدة.</div>';
+ $("psBilliardDevicesList").innerHTML=billiards.map(buildPsDeviceCard).join("")||'<div class="ps-empty">لا توجد أجهزة بلياردو.</div>';
 }
 window.togglePsMode=id=>{
  const mode=$(`psMode_${id}`).value;
  $(`psAmountBox_${id}`).classList.toggle("hidden",mode!=="amount");
  $(`psDurationBox_${id}`).classList.toggle("hidden",mode!=="duration");
  $(`psAutoBox_${id}`).classList.toggle("hidden",mode!=="auto");
+ const gamesBox = $(`psGamesBox_${id}`);
+ if(gamesBox) gamesBox.classList.toggle("hidden",mode!=="games");
 };
 
 function startPsTimer(){
@@ -1231,7 +1234,7 @@ function startPsTimer(){
    if(d.status!=="running")continue;
    const clock=$(`psClock_${d.id}`);
    if(d.sessionMode==="auto"){ if(clock)clock.textContent=formatPsTime(now-Number(d.startedAt||now)); }
-   else{
+   else if(d.sessionMode!=="games"){
        const remaining=Number(d.endAt)-now;
        if(remaining<=0){
            if(clock)clock.textContent="00:00:00";
@@ -1269,7 +1272,7 @@ async function renderPsSessions(){
  if ($("psSessionsRevenue")) $("psSessionsRevenue").textContent = money(total) + " جنيه";
 
  table.innerHTML = filtered.map(s=>{
-  const type = s.deviceType==="vip"?"VIP":(s.deviceType==="base_arabi"?"قاعدة":"روم");
+  const type = s.deviceType==="vip"?"VIP":(s.deviceType==="base_arabi"?"قاعدة":(s.deviceType==="billiard"?"بلياردو":"روم"));
   const discountText = s.discount > 0 ? `<span style="color:var(--danger);">${money(s.discount)} ج</span>` : "—";
   return `<tr>
    <td>${escapeHTML(s.invoiceNumber||"—")}</td><td>${escapeHTML(s.customerName||"—")}</td><td>${escapeHTML(s.deviceName||"—")} <span class="tag">${type}</span></td>
@@ -1284,15 +1287,17 @@ async function renderPsSessions(){
 window.printPsInvoice=id=>{
  const s=psSessions.find(x=>x.id===id);if(!s)return;
  const orders=Array.isArray(s.orders)?s.orders:[];
- const type=s.deviceType==="vip"?"صالة VIP":(s.deviceType==="base_arabi"?"القاعدة العربي":"روم");
- const modeLabel=s.sessionMode==="auto"?"حساب تلقائي":s.sessionMode==="amount"?"تحديد مبلغ":"مدة محددة";
+ const type=s.deviceType==="vip"?"صالة VIP":(s.deviceType==="base_arabi"?"القاعدة العربي":(s.deviceType==="billiard"?"بلياردو":"روم"));
+ const modeLabel=s.sessionMode==="auto"?"حساب تلقائي":s.sessionMode==="amount"?"تحديد مبلغ":s.sessionMode==="games"?"بالجيمات":"مدة محددة";
  const discountLine = s.discount > 0 ? `<p style="color:#b72f3b;">الخصم: -${money(s.discount)} جنيه</p><hr>` : "";
  $("printArea").innerHTML=`
  <div style="font-family:Arial;text-align:center;padding:10px;direction:rtl">
   <h2>${escapeHTML(profile?.shopName||"نشاط البلايستيشن")}</h2><h3>فاتورة جلسة ${type}</h3><hr>
   <p>رقم الفاتورة: ${escapeHTML(s.invoiceNumber||"—")}</p><p>الجهاز: ${escapeHTML(s.deviceName||"—")}</p>
   ${s.customerName ? `<p>العميل: ${escapeHTML(s.customerName)}</p>` : ''}
-  <p>طريقة الحساب: ${modeLabel}</p><p>بداية الجلسة: ${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</p>
+  <p>طريقة الحساب: ${modeLabel}</p>
+  ${s.sessionMode === "games" ? `<p>عدد الجيمات: ${s.gamesCount} × ${money(s.pricePerGame)} = ${money(s.playTotal)} ج</p>` : ''}
+  <p>بداية الجلسة: ${s.startedAt?new Date(s.startedAt).toLocaleString("ar-EG"):"—"}</p>
   <p>نهاية الجلسة: ${s.endedAt?new Date(s.endedAt).toLocaleString("ar-EG"):"—"}</p>
   <p>مدة التشغيل الفعلية: ${Number(s.elapsedMinutes)||0} دقيقة</p><p>سعر الساعة: ${money(s.hourlyRate)} جنيه</p><hr>
   <h3>قيمة اللعب: ${money(s.playTotal??s.total)} جنيه</h3><h3>المشروبات والسندوتشات</h3>
@@ -1335,9 +1340,10 @@ function renderPsItems(){
  $("psDrinksTable").innerHTML=render(drinks);$("psSandwichesTable").innerHTML=render(sandwiches);renderPsStats();
 }
 function renderPsStats(){
- const rooms=psDevices.filter(d=>window.getDeviceType(d)==="room"), vips=psDevices.filter(d=>window.getDeviceType(d)==="vip"), bases=psDevices.filter(d=>window.getDeviceType(d)==="base_arabi");
+ const rooms=psDevices.filter(d=>window.getDeviceType(d)==="room"), vips=psDevices.filter(d=>window.getDeviceType(d)==="vip"), bases=psDevices.filter(d=>window.getDeviceType(d)==="base_arabi"), billiards=psDevices.filter(d=>window.getDeviceType(d)==="billiard");
  $("psTotalDevices").textContent=psDevices.length;$("psRoomDevices").textContent=rooms.length;$("psVipDevices").textContent=vips.length;
  if($("psBaseDevices"))$("psBaseDevices").textContent=bases.length;
+ if($("psBilliardDevices"))$("psBilliardDevices").textContent=billiards.length;
  $("psRunningDevices").textContent=psDevices.filter(d=>d.status==="running").length;
  $("psDrinksCount").textContent=psItems.filter(x=>x.category==="drink").length;
  $("psSandwichesCount").textContent=psItems.filter(x=>x.category==="sandwich").length;
@@ -1570,11 +1576,13 @@ function renderPsReservations() {
       const rooms = psDevices.filter(d => window.getDeviceType(d) === "room");
       const vips = psDevices.filter(d => window.getDeviceType(d) === "vip");
       const bases = psDevices.filter(d => window.getDeviceType(d) === "base_arabi");
+      const billiards = psDevices.filter(d => window.getDeviceType(d) === "billiard");
 
       let optionsHtml = "";
       if(rooms.length) optionsHtml += `<optgroup label="🎮 أجهزة الرومات">${rooms.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("")}</optgroup>`;
       if(vips.length) optionsHtml += `<optgroup label="⭐ أجهزة صالة VIP">${vips.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("")}</optgroup>`;
       if(bases.length) optionsHtml += `<optgroup label="🏛 أجهزة القاعدة العربي">${bases.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("")}</optgroup>`;
+      if(billiards.length) optionsHtml += `<optgroup label="🎱 أجهزة البلياردو">${billiards.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("")}</optgroup>`;
 
       sel.innerHTML = optionsHtml || `<option value="">لا توجد أجهزة مضافة</option>`;
   }
@@ -1662,13 +1670,14 @@ function renderPsReports() {
   const allSessions = psSessions.filter(s => s.finalized || s.endedAt);
 
   let totalRev = 0;
-  let roomRev = 0, vipRev = 0, baseRev = 0, drinksRev = 0, sandRev = 0;
+  let roomRev = 0, vipRev = 0, baseRev = 0, billiardRev = 0, drinksRev = 0, sandRev = 0;
 
   allSessions.forEach(s => {
       totalRev += Number(s.total || 0);
 
       if (s.deviceType === "vip") vipRev += Number(s.playTotal || 0);
       else if (s.deviceType === "base_arabi") baseRev += Number(s.playTotal || 0);
+      else if (s.deviceType === "billiard") billiardRev += Number(s.playTotal || 0);
       else roomRev += Number(s.playTotal || 0);
 
       if (Array.isArray(s.orders)) {
@@ -1726,10 +1735,10 @@ function renderPsReports() {
       typeChartInstance = new Chart(ctx2, {
           type: 'doughnut',
           data: {
-              labels: ['رومات', 'VIP', 'قاعدة عربي', 'مشروبات', 'سندوتشات'],
+              labels: ['رومات', 'VIP', 'قاعدة عربي', 'بلياردو', 'مشروبات', 'سندوتشات'],
               datasets: [{
-                  data: [roomRev, vipRev, baseRev, drinksRev, sandRev],
-                  backgroundColor: ['#10b981', '#8b5cf6', '#f59e0b', '#0ea5e9', '#ef4444'],
+                  data: [roomRev, vipRev, baseRev, billiardRev, drinksRev, sandRev],
+                  backgroundColor: ['#10b981', '#8b5cf6', '#f59e0b', '#f97316', '#0ea5e9', '#ef4444'],
                   borderWidth: 0
               }]
           },

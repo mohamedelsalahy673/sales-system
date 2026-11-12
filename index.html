@@ -120,29 +120,29 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   min-height: 0;
 }
 .tile:hover { transform: translateY(-2px); box-shadow: 0 8px 14px -4px rgba(0,0,0,0.5); }
-.tile .tile-icon{font-size:22px; line-height:1;}
-.tile .tile-title{font-size:13px; font-weight:700; margin-top:2px; line-height:1.2;}
-.tile .tile-sub{font-size:10px; opacity:.8; margin-top:1px; line-height:1.1;}
+.tile .tile-icon{font-size:22px; line-height:1; z-index: 2;}
+.tile .tile-title{font-size:13px; font-weight:700; margin-top:2px; line-height:1.2; z-index: 2;}
+.tile .tile-sub{font-size:10px; opacity:.8; margin-top:1px; line-height:1.1; z-index: 2;}
 .tile .tile-badge{
   position:absolute; top:6px; left:6px;
   background: rgba(255,255,255,0.18);
   backdrop-filter: blur(4px);
   padding:2px 7px; border-radius:14px; font-size:10px; font-weight:bold;
   border: 1px solid rgba(255,255,255,0.22);
+  z-index: 2;
 }
 
-/* صور الأقسام */
+/* --- تعديل الصورة لتكون خلفية كاملة --- */
 .tile .tile-img {
   position: absolute;
-  left: 8px;
-  bottom: 8px;
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 8px;
-  opacity: 0.85;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* عشان الصورة تبان كاملة من غير قص */
+  opacity: 0.6; /* شفافية عشان الكلام يبان */
+  z-index: 1;
   pointer-events: none;
-  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.2);
 }
 
 .t-blue{background:linear-gradient(135deg,#2563eb,#1d4ed8);}
@@ -579,7 +579,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
        <div class="tile-icon">🎮</div>
        <div><div class="tile-title">أجهزة الرومات</div><div class="tile-sub">إدارة الرومات</div></div>
        <span class="tile-badge" id="psHomeRoomCount">0</span>
-       <!-- صورة الرومات -->
        <img src="https://i.postimg.cc/8PR6pjCS/0F3D6258-8050-4E60-AA7B-0D173D4A290C.png" class="tile-img" alt="Rooms">
      </div>
 
@@ -588,7 +587,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
        <div class="tile-icon">⭐</div>
        <div><div class="tile-title">صالة VIP</div><div class="tile-sub">أجهزة VIP</div></div>
        <span class="tile-badge" id="psHomeVipCount">0</span>
-       <!-- صورة VIP -->
        <img src="https://i.postimg.cc/wBZvcpBZ/1520BCF8-AE57-413D-A9F2-A3BB088A4B19.png" class="tile-img" alt="VIP">
      </div>
 
@@ -597,8 +595,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
        <div class="tile-icon">🏛</div>
        <div><div class="tile-title">القاعدة العربي</div><div class="tile-sub">أجهزة القاعدة</div></div>
        <span class="tile-badge" id="psHomeBaseCount">0</span>
-       <!-- ضع رابط صورة القاعدة هنا مكان الرابط الوهمي -->
-       <img src="https://via.placeholder.com/50/333/fff?text=Base" class="tile-img" alt="Base">
+       <img src="https://via.placeholder.com/150/333/fff?text=Base" class="tile-img" alt="Base">
      </div>
 
      <!-- 4. البلياردو -->
@@ -606,8 +603,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
        <div class="tile-icon">🎱</div>
        <div><div class="tile-title">البلياردو</div><div class="tile-sub">طاولات البلياردو</div></div>
        <span class="tile-badge" id="psHomeBilliardCount">0</span>
-       <!-- ضع رابط صورة البلياردو هنا مكان الرابط الوهمي -->
-       <img src="https://via.placeholder.com/50/333/fff?text=Billiard" class="tile-img" alt="Billiard">
+       <img src="https://via.placeholder.com/150/333/fff?text=Billiard" class="tile-img" alt="Billiard">
      </div>
 
      <!-- 5. تعمل الآن -->
@@ -622,8 +618,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
        <div class="tile-icon">🥤</div>
        <div><div class="tile-title">المشروبات</div><div class="tile-sub">إدارة المشروبات</div></div>
        <span class="tile-badge" id="psHomeDrinksCount">0</span>
-       <!-- ضع رابط صورة المشروبات هنا مكان الرابط الوهمي -->
-       <img src="https://via.placeholder.com/50/333/fff?text=Drinks" class="tile-img" alt="Drinks">
+       <img src="https://via.placeholder.com/150/333/fff?text=Drinks" class="tile-img" alt="Drinks">
      </div>
 
      <!-- 7. السندوتشات -->
@@ -631,8 +626,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
        <div class="tile-icon">🥪</div>
        <div><div class="tile-title">السندوتشات</div><div class="tile-sub">إدارة السندوتشات</div></div>
        <span class="tile-badge" id="psHomeSandCount">0</span>
-       <!-- ضع رابط صورة السندوتشات هنا مكان الرابط الوهمي -->
-       <img src="https://via.placeholder.com/50/333/fff?text=Food" class="tile-img" alt="Food">
+       <img src="https://via.placeholder.com/150/333/fff?text=Food" class="tile-img" alt="Food">
      </div>
 
      <!-- 8. سجل الجلسات -->

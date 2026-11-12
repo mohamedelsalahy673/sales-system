@@ -3,16 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- ============ كود تحسين محركات البحث (SEO) ============ -->
+<title>NexPOS PRO | سيستم كاشير ونظام مبيعات وإدارة بلايستيشن</title>
+<meta name="description" content="NexPOS PRO هو أفضل سيستم كاشير ونظام إدارة مبيعات متكامل. برنامج محاسبة وإدارة مخازن، ونظام بلايستيشن لإدارة الرومات والـ VIP والبلياردو. متوفر كتطبيق أندرويد وويندوز.">
+<meta name="keywords" content="سيستم, كاشير, سيستم مبيعات, برنامج مبيعات, سيستم بلايستيشن, برنامج بلايستيشن, إدارة مخازن, نقاط بيع, NexPOS">
 <meta name="google-site-verification" content="jiyqOFPs0SoJIjbutlNuIyM5bpgHcbhpPYKLc8Fr_lc" />
-<title>NexPOS PRO - نظام إدارة المبيعات والبلايستيشن</title>
-<meta name="theme-color" content="#0f172a">
+<!-- ================================================== -->
 
+<meta name="theme-color" content="#0f172a">
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="NexPOS">
 <link rel="apple-touch-icon" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
-
 <link rel="icon" type="image/png" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -81,6 +84,30 @@ th { background: rgba(15,23,42,0.5); color: var(--text-muted); font-weight: 700;
 .msg{padding:9px;border-radius:8px;background:rgba(239,68,68,0.1);color:#f87171;margin-top:8px;font-size:12px;border:1px solid rgba(239,68,68,0.3); font-weight: bold;}
 hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .result{display:block;width:100%;text-align:right;margin:0;border-radius:0; border: none; border-bottom: 1px solid var(--border-color); font-size:12px; padding:9px 10px;}
+
+/* ============ Landing Page (واجهة الزوار) ============ */
+#landingPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 40px 20px;
+}
+#landingPage h1 { font-size: 40px; margin-bottom: 10px; color: var(--primary); }
+#landingPage p.subtitle { font-size: 18px; color: var(--text-muted); max-width: 700px; margin-bottom: 30px; line-height: 1.6; }
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 1000px; margin: 30px auto; width: 100%; }
+.feature-card { background: var(--bg-card); padding: 25px; border-radius: 15px; border: 1px solid var(--border-color); transition: 0.3s; }
+.feature-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+.feature-card .icon { font-size: 40px; margin-bottom: 15px; }
+.feature-card h3 { color: var(--primary); margin-bottom: 10px; }
+.feature-card p { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+.download-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin: 30px 0; }
+.download-btn { padding: 15px 30px; border-radius: 10px; color: white; text-decoration: none; font-weight: bold; font-size: 16px; display: flex; align-items: center; gap: 10px; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+.download-btn:hover { transform: translateY(-3px); opacity: 0.9; }
+.btn-android { background: linear-gradient(135deg, #10b981, #047857); }
+.btn-windows { background: linear-gradient(135deg, #3b82f6, #2563eb); }
 
 /* ============ شاشة البلايستيشن ============ */
 #playstationPanel { height: calc(100vh - 75px); display: flex; flex-direction: column; overflow: hidden; }
@@ -442,7 +469,62 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 </head>
 <body>
 
-<div class="wrap">
+<!-- ================================================== -->
+<!-- ============ صفحة الزوار (Landing Page) ============ -->
+<!-- ================================================== -->
+<section id="landingPage">
+  <div style="margin-bottom: 20px;">
+    <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS PRO" style="height: 100px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+  </div>
+  
+  <h1>NexPOS PRO</h1>
+  <p class="subtitle">السيستم الأقوى والأسهل لإدارة المبيعات، الكاشير، والمخازن، ونظام متكامل لإدارة البلايستيشن (رومات، VIP، بلياردو). صمم خصيصاً ليزيد أرباحك ويوفر وقتك.</p>
+  
+  <!-- أزرار التحميل -->
+  <div class="download-buttons">
+    <a href="#رابط_ملف_الاندرويد_هنا" target="_blank" class="download-btn btn-android">
+      <i style="font-size: 24px; font-style: normal;">🤖</i> تحميل تطبيق الأندرويد (APK)
+    </a>
+    <a href="#رابط_ملف_الويندوز_هنا" target="_blank" class="download-btn btn-windows">
+      <i style="font-size: 24px; font-style: normal;">💻</i> تحميل تطبيق الويندوز (EXE)
+    </a>
+  </div>
+  
+  <!-- مميزات السيستم -->
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="icon">🛒</div>
+      <h3>سيستم كاشير ونقاط بيع</h3>
+      <p>شاشة مبيعات سهلة وسريعة، تدعم قراءة الباركود، الطباعة، وحساب الخصومات والإضافات بدقة.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📦</div>
+      <h3>إدارة المخازن والمنتجات</h3>
+      <p>تحكم كامل في الكميات، أسعار الشراء والبيع، وتنبيهات النواقص عشان مخزنك دايمًا مليان.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🎮</div>
+      <h3>نظام إدارة البلايستيشن</h3>
+      <p>إدارة الرومات، صالة الـ VIP، والبلياردو. حساب الوقت تلقائياً، إضافة طلبات، وتقارير دقيقة.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">💰</div>
+      <h3>الخزينة والتقارير</h3>
+      <p>متابعة الوارد والصادر، المصروفات، وصافي الأرباح. تقارير يومية وشهرية تظهرلك شغلك ماشي إزاي.</p>
+    </div>
+  </div>
+
+  <!-- زر تسجيل الدخول -->
+  <div style="margin-top: 40px; padding: 20px; background: var(--bg-card); border-radius: 15px; border: 1px solid var(--border-color); width: 100%; max-width: 500px;">
+    <h3 style="margin-bottom: 15px;">لديك حساب بالفعل؟</h3>
+    <button class="big" onclick="document.getElementById('landingPage').classList.add('hidden'); document.getElementById('auth').classList.remove('hidden');" style="font-size: 16px; padding: 12px;">تسجيل الدخول إلى السيستم</button>
+  </div>
+</section>
+
+<!-- ================================================== -->
+<!-- ============ شاشة تسجيل الدخول ============ -->
+<!-- ================================================== -->
+<div class="wrap" id="appWrap" style="display: none;">
 <header class="top" style="padding: 2px 0; margin-bottom: 0;">
  <div></div>
  <div>
@@ -451,7 +533,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  </div>
 </header>
 
-<section id="auth">
+<section id="auth" class="hidden">
  <div style="text-align:center;margin:20px 0 10px">
    <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS" style="height:70px; width:auto; margin-bottom:10px; border-radius:14px; object-fit:contain; box-shadow: 0 8px 20px rgba(0,0,0,0.5);">
    <h2 style="margin:6px 0;">مرحبًا بك في NexPOS PRO</h2>
@@ -2163,6 +2245,13 @@ document.addEventListener('keydown', (e) => {
     });
   }
 });
+
+// دالة إخفاء صفحة الزوار وإظهار شاشة الدخول
+window.goToLogin = function() {
+  document.getElementById('landingPage').classList.add('hidden');
+  document.getElementById('appWrap').style.display = 'block';
+  document.getElementById('auth').classList.remove('hidden');
+};
 
 window.goPsHome();
 </script>

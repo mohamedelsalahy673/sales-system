@@ -88,29 +88,20 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 #playstationPanel .ps-top-card { flex-shrink: 0; margin: 0 0 8px !important; padding: 10px 12px !important; }
 #psHomeScreen { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
 .tiles-grid{ display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:repeat(3, 1fr); gap:8px; flex: 1; min-height: 0; margin-top:8px; }
-.tile{ padding:8px 10px; border-radius:10px; color:white; cursor:pointer; box-shadow:0 3px 8px -2px rgba(0,0,0,0.35); transition: transform 0.15s ease, box-shadow 0.15s ease; border: 1px solid rgba(255,255,255,0.1); display:flex; flex-direction:column; justify-content:space-between; align-items:flex-start; overflow:hidden; position:relative; min-height: 0; }
+
+/* تعديل الكارت ليكون النص في المنتصف وكبير */
+.tile{ 
+  padding:8px 10px; border-radius:12px; color:white; cursor:pointer; 
+  transition: transform 0.15s ease, box-shadow 0.15s ease; 
+  border: 1px solid rgba(255,255,255,0.1); 
+  display:flex; flex-direction:column; justify-content:center; align-items:center; /* سنترة المحتوى */
+  overflow:hidden; position:relative; min-height: 0; text-align: center;
+}
 .tile:hover { transform: translateY(-2px); box-shadow: 0 8px 14px -4px rgba(0,0,0,0.5); }
-.tile .tile-icon{font-size:22px; line-height:1; z-index: 2;}
-.tile .tile-title{font-size:13px; font-weight:700; margin-top:2px; line-height:1.2; z-index: 2;}
-.tile .tile-sub{font-size:10px; opacity:.8; margin-top:1px; line-height:1.1; z-index: 2;}
-.tile .tile-badge{ position:absolute; top:6px; left:6px; background: rgba(255,255,255,0.18); backdrop-filter: blur(4px); padding:2px 7px; border-radius:14px; font-size:10px; font-weight:bold; border: 1px solid rgba(255,255,255,0.22); z-index: 2; }
-.tile .tile-img { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; z-index: 1; pointer-events: none; }
-
-/* كلاس جديد للصور التي نريدها أن تظهر بوضوح بدون شفافية */
-.tile .tile-img-full {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 1; /* الصورة تظهر بوضوح كامل */
-  z-index: 1;
-  pointer-events: none;
-}
-
-.tile-img-full ~ div, .tile-img-full ~ .tile-badge {
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.9); /* ظل للنص لضمان قراءته فوق الصورة */
-}
+.tile .tile-icon{font-size:32px; line-height:1; z-index: 2; margin-bottom: 10px; text-shadow: 1px 1px 3px rgba(0,0,0,0.4);}
+.tile .tile-title{font-size:22px; font-weight:700; line-height:1.2; z-index: 2; text-shadow: 1px 1px 4px rgba(0,0,0,0.6);} /* تكبير الخط */
+.tile .tile-sub{display: none;} /* إخفاء النص الفرعي */
+.tile .tile-badge{ position:absolute; top:8px; right:8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); padding:2px 8px; border-radius:14px; font-size:12px; font-weight:bold; border: 1px solid rgba(255,255,255,0.2); z-index: 2; }
 
 .t-blue{background:linear-gradient(135deg,#2563eb,#1d4ed8);}
 .t-green{background:linear-gradient(135deg,#059669,#047857);}
@@ -223,9 +214,8 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   .sale-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
   .sale-fields .search-container{grid-column:1/-1}
   .tiles-grid{grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(5, minmax(60px, 1fr)); overflow-y: auto; padding-left: 4px;}
-  .tile .tile-icon { font-size: 18px; }
-  .tile .tile-title { font-size: 11px; }
-  .tile .tile-sub { display: none; }
+  .tile .tile-icon { font-size: 22px; }
+  .tile .tile-title { font-size: 16px; }
   #psHomeScreen > div:last-child { grid-template-columns: repeat(2, 1fr) !important; }
   .devices-mini-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -347,71 +337,62 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
      <!-- 1. أجهزة الرومات -->
      <div class="tile t-blue" onclick="showPsSection('devices')">
        <div class="tile-icon">🎮</div>
-       <div><div class="tile-title">أجهزة الرومات</div><div class="tile-sub">إدارة الرومات</div></div>
+       <div class="tile-title">أجهزة الرومات</div>
        <span class="tile-badge" id="psHomeRoomCount">0</span>
-       <img src="https://i.postimg.cc/8PR6pjCS/0F3D6258-8050-4E60-AA7B-0D173D4A290C.png" class="tile-img" alt="Rooms">
      </div>
 
      <!-- 2. صالة VIP -->
      <div class="tile t-purple" onclick="showPsSection('vip')">
        <div class="tile-icon">⭐</div>
-       <div><div class="tile-title">صالة VIP</div><div class="tile-sub">أجهزة VIP</div></div>
+       <div class="tile-title">صالة VIP</div>
        <span class="tile-badge" id="psHomeVipCount">0</span>
-       <img src="https://i.postimg.cc/wBZvcpBZ/1520BCF8-AE57-413D-A9F2-A3BB088A4B19.png" class="tile-img" alt="VIP">
      </div>
 
      <!-- 3. القاعدة العربي -->
      <div class="tile t-orange" onclick="showPsSection('base_arabi')">
        <div class="tile-icon">🏛</div>
-       <div><div class="tile-title">القاعدة العربي</div><div class="tile-sub">أجهزة القاعدة</div></div>
+       <div class="tile-title">القاعدة العربي</div>
        <span class="tile-badge" id="psHomeBaseCount">0</span>
-       <img src="https://i.postimg.cc/0jRHScJk/EFF3BE1D-8E99-43AB-A4E4-B94E6601AEEE.png" class="tile-img" alt="Base">
      </div>
 
      <!-- 4. البلياردو -->
      <div class="tile t-pink" onclick="showPsSection('billiard')">
        <div class="tile-icon">🎱</div>
-       <div><div class="tile-title">البلياردو</div><div class="tile-sub">طاولات البلياردو</div></div>
+       <div class="tile-title">البلياردو</div>
        <span class="tile-badge" id="psHomeBilliardCount">0</span>
-       <img src="https://i.postimg.cc/0yQZbLBP/E2B30E6C-3D06-4F1B-8372-2FD8CFF14CCB.png" class="tile-img" alt="Billiard">
      </div>
 
      <!-- 5. تعمل الآن -->
      <div class="tile t-green" onclick="showPsSection('running')">
        <div class="tile-icon">🟢</div>
-       <div><div class="tile-title">تعمل الآن</div><div class="tile-sub">الجلسات الشغالة</div></div>
+       <div class="tile-title">تعمل الآن</div>
        <span class="tile-badge" id="psHomeRunningCount">0</span>
-       <img src="https://i.postimg.cc/mDwF3rPQ/99086543-F6F0-4ADA-B725-01C9CABDB265.png" class="tile-img" alt="Running">
      </div>
 
      <!-- 6. المشروبات -->
      <div class="tile t-sky" onclick="showPsSection('drinks')">
        <div class="tile-icon">🥤</div>
-       <div><div class="tile-title">المشروبات</div><div class="tile-sub">إدارة المشروبات</div></div>
+       <div class="tile-title">المشروبات</div>
        <span class="tile-badge" id="psHomeDrinksCount">0</span>
-       <img src="https://i.postimg.cc/rwXFmkmz/71E0CFCE-4ED8-4737-ACA6-FED5853E003A.png" class="tile-img" alt="Drinks">
      </div>
 
      <!-- 7. السندوتشات -->
      <div class="tile t-teal" onclick="showPsSection('sandwiches')">
        <div class="tile-icon">🥪</div>
-       <div><div class="tile-title">السندوتشات</div><div class="tile-sub">إدارة السندوتشات</div></div>
+       <div class="tile-title">السندوتشات</div>
        <span class="tile-badge" id="psHomeSandCount">0</span>
-       <img src="https://i.postimg.cc/DzfWvTjG/A7F2D315-DD57-49A4-9F96-641D3F4224BF.png" class="tile-img" alt="Food">
      </div>
 
-     <!-- 8. سجل الجلسات (تم تعديله لإظهار الصورة بوضوح) -->
+     <!-- 8. سجل الجلسات -->
      <div class="tile t-indigo" onclick="showPsSection('sessions')">
        <div class="tile-icon">📄</div>
-       <div><div class="tile-title">سجل الجلسات</div><div class="tile-sub">الفواتير السابقة</div></div>
-       <img src="https://i.postimg.cc/yYvxL5YH/CCAA30C4-7389-410E-BE96-566ED109FB52.png" class="tile-img-full" alt="Sessions">
+       <div class="tile-title">سجل الجلسات</div>
      </div>
 
-     <!-- 9. الحجوزات (تم تعديله لإظهار الصورة بوضوح) -->
+     <!-- 9. الحجوزات -->
      <div class="tile t-dark" onclick="showPsSection('reservations')">
        <div class="tile-icon">📅</div>
-       <div><div class="tile-title">الحجوزات</div><div class="tile-sub">حجوزات اليوم</div></div>
-       <img src="https://i.postimg.cc/d3RkQVYQ/5383ADB9-93EA-476E-A1D9-A3D656A392C6.png" class="tile-img-full" alt="Reservations">
+       <div class="tile-title">الحجوزات</div>
      </div>
 
    </div>
@@ -635,15 +616,15 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
    <div class="grid"><div class="stat">المنتجات<strong id="statProducts">0</strong></div><div class="stat">الفواتير<strong id="statSales">0</strong></div><div class="stat">مبيعات اليوم<strong id="statRevenue">0 ج</strong></div><div class="stat">رصيد الخزينة<strong id="statTreasuryBalance">0 ج</strong></div></div>
    <div style="margin-top:8px;">
     <div class="tiles-grid" id="mainTilesContainer">
-      <div class="tile t-blue" onclick="page('sales')"><div class="tile-icon">🛒</div><div><div class="tile-title">شاشة المبيعات</div><div class="tile-sub">إصدار فواتير</div></div></div>
-      <div class="tile t-green" onclick="page('products')"><div class="tile-icon">📦</div><div><div class="tile-title">المنتجات</div><div class="tile-sub">المخزون</div></div></div>
-      <div class="tile t-orange" onclick="page('treasury')"><div class="tile-icon">💰</div><div><div class="tile-title">الخزينة</div><div class="tile-sub">النقدية</div></div></div>
-      <div class="tile t-purple" onclick="page('history')"><div class="tile-icon">🧾</div><div><div class="tile-title">الفواتير</div><div class="tile-sub">السابقة</div></div></div>
-      <div class="tile t-dark" onclick="page('expenses')"><div class="tile-icon">📝</div><div><div class="tile-title">المصروفات</div><div class="tile-sub">تسجيل</div></div></div>
-      <div class="tile t-teal" onclick="page('reports')"><div class="tile-icon">📊</div><div><div class="tile-title">التقارير</div><div class="tile-sub">الأرباح</div></div></div>
-      <div class="tile t-red" onclick="page('settings')"><div class="tile-icon">⚙</div><div><div class="tile-title">الإعدادات</div><div class="tile-sub">الحساب</div></div></div>
-      <div class="tile t-sky" onclick="page('subscription')"><div class="tile-icon">⭐</div><div><div class="tile-title">اشتراكي</div><div class="tile-sub">الباقة</div></div></div>
-      <div class="tile t-indigo" onclick="exportDataToExcel()"><div class="tile-icon">📥</div><div><div class="tile-title">نسخة Excel</div><div class="tile-sub">احتياطية</div></div></div>
+      <div class="tile t-blue" onclick="page('sales')"><div class="tile-icon">🛒</div><div class="tile-title">شاشة المبيعات</div></div>
+      <div class="tile t-green" onclick="page('products')"><div class="tile-icon">📦</div><div class="tile-title">المنتجات</div></div>
+      <div class="tile t-orange" onclick="page('treasury')"><div class="tile-icon">💰</div><div class="tile-title">الخزينة</div></div>
+      <div class="tile t-purple" onclick="page('history')"><div class="tile-icon">🧾</div><div class="tile-title">الفواتير</div></div>
+      <div class="tile t-dark" onclick="page('expenses')"><div class="tile-icon">📝</div><div class="tile-title">المصروفات</div></div>
+      <div class="tile t-teal" onclick="page('reports')"><div class="tile-icon">📊</div><div class="tile-title">التقارير</div></div>
+      <div class="tile t-red" onclick="page('settings')"><div class="tile-icon">⚙</div><div class="tile-title">الإعدادات</div></div>
+      <div class="tile t-sky" onclick="page('subscription')"><div class="tile-icon">⭐</div><div class="tile-title">اشتراكي</div></div>
+      <div class="tile t-indigo" onclick="exportDataToExcel()"><div class="tile-icon">📥</div><div class="tile-title">نسخة Excel</div></div>
     </div>
    </div>
   </div>

@@ -38,7 +38,7 @@
 html, body {
   height: 100vh;
   margin: 0;
-  overflow: hidden;           /* منع سكرول الصفحة */
+  overflow: hidden;           
 }
 body{
   background-color: var(--bg-body);
@@ -72,11 +72,11 @@ h2{font-size:20px;} h3{font-size:16px;} h4{font-size:14px;}
 .wrap::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
 .card{background:var(--bg-card);padding:14px;border-radius:12px;margin:10px 0;box-shadow:0 6px 10px -3px rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color);}
-.brand{font-size:22px;font-weight:700;color:var(--primary); letter-spacing: -0.5px;}
-.system-desc{font-size:13px;font-weight:600;color:var(--text-muted);margin-top:2px}
-.version{display:block;color:#fff;background:var(--primary);border-radius:5px;padding:3px 8px;font-size:10px;width:max-content;margin-top:5px; font-weight: bold;}
+.brand{font-size:18px;font-weight:700;color:var(--primary); letter-spacing: -0.5px;}
+.system-desc{font-size:11px;font-weight:600;color:var(--text-muted);margin-top:0; line-height:1.2;}
+.version{display:block;color:#fff;background:var(--primary);border-radius:5px;padding:2px 6px;font-size:9px;width:max-content; font-weight: bold;}
 .muted{font-size:12px;color:var(--text-muted)}
-.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap; padding: 4px 0; margin-bottom: 5px;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
 .stat{background:var(--bg-card);padding:12px 14px;border-radius:10px; border: 1px solid var(--border-color); border-left: 3px solid var(--primary);}
 .stat strong{display:block;font-size:20px;margin-top:6px; color: var(--primary);}
@@ -234,7 +234,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   .tile { min-height: 85px; padding: 12px; }
   .tile h3 { font-size: 13px; }
   .tile p { font-size: 11px; }
-  .brand { font-size: 18px; }
+  .brand { font-size: 16px; }
   .auth-grid { gap: 10px; margin-top: 10px; }
   .auth-card { padding: 12px; }
   .ps-device-time { font-size: 22px; padding: 8px 3px; }
@@ -258,15 +258,20 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 
 <div class="wrap">
 <header class="top">
- <div style="display:flex; align-items:center; gap:10px;">
-   <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS Logo" style="height:45px; width:auto; border-radius:8px; object-fit:contain; box-shadow: 0 3px 8px rgba(0,0,0,0.3);">
+ <div style="display:flex; align-items:center; gap:8px;">
+   <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS Logo" style="height:35px; width:auto; border-radius:6px; object-fit:contain;">
    <div>
-     <div class="brand" style="margin:0;">NexPOS PRO</div>
-     <div class="system-desc">منصة إدارة الأنشطة والخدمات</div>
-     <span class="version">MULTI SYSTEM V25</span>
+     <div style="display:flex; align-items:center; gap:6px; margin-bottom: 2px;">
+       <div class="brand" style="margin:0;">NexPOS PRO</div>
+       <span class="version" style="margin-top:0;">V25</span>
+     </div>
+     <div class="system-desc">برنامج إدارة الحسابات والأنشطة والخدمات</div>
    </div>
  </div>
- <div><span id="networkStatus" class="tag good">متصل بالخادم</span> <button class="secondary" onclick="support()">الدعم الفني</button></div>
+ <div>
+   <span id="networkStatus" class="tag good" style="padding:2px 8px; font-size:10px;">متصل بالخادم</span> 
+   <button class="secondary" onclick="support()" style="padding:5px 10px; font-size:11px;">الدعم الفني</button>
+ </div>
 </header>
 
 <section id="auth">

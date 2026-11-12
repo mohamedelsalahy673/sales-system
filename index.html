@@ -174,27 +174,38 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
-.sahal-header{background:linear-gradient(135deg,#059669,#047857);color:white;padding:10px 14px;font-size:13px;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap; font-weight:bold;}
-.sahal-shortcuts{background:var(--bg-input);border-bottom:1px solid var(--border-color);padding:7px;display:flex;gap:6px;flex-wrap:wrap}
+/* ============ شاشة المبيعات (تعديل لملء الشاشة) ============ */
+#salesPage {
+  height: calc(100vh - 75px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sahal-header{background:linear-gradient(135deg,#059669,#047857);color:white;padding:10px 14px;font-size:13px;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap; font-weight:bold; flex-shrink:0;}
+.sahal-shortcuts{background:var(--bg-input);border-bottom:1px solid var(--border-color);padding:7px;display:flex;gap:6px;flex-wrap:wrap; flex-shrink:0;}
 .sahal-sc-btn{background:var(--bg-card);color:var(--text-main);border:1px solid var(--border-color);padding:6px 10px;font-size:11px;font-weight:bold; box-shadow:none;}
-.sahal-layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:10px;background:var(--bg-card);padding:10px;border:1px solid var(--border-color); border-radius: 0 0 8px 8px;}
-.sahal-main{display:flex;flex-direction:column;gap:8px;min-width:0}
-.sahal-search-box{background:rgba(15,23,42,0.4);padding:10px;border-radius:8px; border: 1px solid var(--border-color);}
-.sale-fields{display:grid;grid-template-columns:minmax(150px,2fr) minmax(120px,1fr) repeat(4,minmax(70px,1fr));gap:8px}
-.sahal-table-wrap{background:var(--bg-input);border:1px solid var(--border-color);max-height:240px;overflow:auto; border-radius: 6px;}
+.sahal-layout{flex:1; display:flex; flex-direction:column; gap:10px; background:var(--bg-card); padding:10px; border:1px solid var(--border-color); border-radius: 0 0 8px 8px; min-height:0;}
+.sahal-main{flex:1; display:flex; flex-direction:column; gap:8px; min-height:0;}
+.sahal-search-box{background:rgba(15,23,42,0.4);padding:10px;border-radius:8px; border: 1px solid var(--border-color); flex-shrink:0;}
+.sale-fields-top{display:grid;grid-template-columns: 2fr 1fr 1fr;gap:8px}
+.sale-fields-bottom{display:grid;grid-template-columns: 1fr 1fr 3fr auto;gap:8px; align-items:end; margin-top:8px; padding-top:8px; border-top:1px dashed var(--border-color);}
+.sahal-table-wrap{flex:1; background:var(--bg-input);border:1px solid var(--border-color);overflow:auto; border-radius: 6px; min-height:0;}
 .sahal-table{width:100%;border-collapse:collapse;min-width:350px}
 .sahal-table th{background:rgba(5,150,105,0.2);color:#34d399;padding:8px;position:sticky;top:0; font-size:11px;}
 .sahal-table td{padding:7px;border-bottom:1px solid var(--border-color); font-size:12px;}
-.sahal-sidebar{display:flex;flex-direction:column;gap:8px}
-.sahal-total-card{background:linear-gradient(135deg,#059669,#047857);color:white;padding:14px;text-align:center; border-radius: 8px;}
-.sahal-total-card h2{margin:5px 0;font-size:26px;color:white;}
-.sahal-btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+
+.sahal-total-card{background:linear-gradient(135deg,#059669,#047857);color:white;padding:10px 14px;text-align:center; border-radius: 8px; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;}
+.sahal-total-card span { font-size: 14px; }
+.sahal-total-card h2{margin:0;font-size:24px;color:white;}
+
+.sahal-btn-grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:6px; flex-shrink:0;}
 .sahal-btn{padding:10px 6px;font-weight:bold;font-size:12px; border-radius: 6px;}
+
 .search-container{position:relative;min-width:0}
 #searchResults{position:absolute;top:100%;right:0;width:100%;z-index:100;background:var(--bg-card);box-shadow:0 10px 25px rgba(0,0,0,0.5);max-height:200px;overflow:auto; border-radius: 6px; border: 1px solid var(--border-color);}
 
 .ps-empty{text-align:center;padding:20px;color:var(--text-muted);background:var(--bg-input);border-radius:8px; border: 1px dashed var(--border-color); font-size:12px;}
-.back-btn{ background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); padding: 7px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: none; }
+.back-btn{ background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); padding: 7px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: none; margin-bottom: 8px;}
 .modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter: blur(4px); display:flex; align-items:center; justify-content:center; z-index:1000; padding: 16px; overflow-y: auto;}
 .modal-box{background:var(--bg-card); padding:20px; border-radius:12px; max-width:440px; width:100%; max-height: 90vh; overflow-y: auto; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid var(--border-color); position: relative; margin: auto;}
 .modal-close{position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; padding: 0; border-radius: 50%; background: var(--bg-input); color: var(--text-muted); font-size: 16px; display: grid; place-items: center; border: 1px solid var(--border-color);}
@@ -205,19 +216,17 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .btn-whatsapp{background:#25D366}.btn-facebook{background:#1877F2}.btn-insta{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
 
 @media(max-width:950px){
-  .sahal-layout{grid-template-columns:1fr}
-  .sahal-sidebar{display:grid;grid-template-columns:1fr 1fr}
-  .sahal-total-card{grid-column:1/-1}
   .devices-mini-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media(max-width:700px){
-  .sale-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .sale-fields .search-container{grid-column:1/-1}
   .tiles-grid{grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(5, minmax(60px, 1fr)); overflow-y: auto; padding-left: 4px;}
   .tile .tile-icon { font-size: 22px; }
   .tile .tile-title { font-size: 16px; }
   #psHomeScreen > div:last-child { grid-template-columns: repeat(2, 1fr) !important; }
   .devices-mini-grid { grid-template-columns: repeat(2, 1fr); }
+  .sale-fields-top { grid-template-columns: 1fr; }
+  .sale-fields-bottom { grid-template-columns: 1fr 1fr; }
+  .sahal-btn-grid { grid-template-columns: 1fr 1fr; }
 }
 @media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
 
@@ -629,25 +638,60 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
    </div>
   </div>
   <div id="subscriptionPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>اشتراكي</h3><div class="card" style="max-width:600px;margin:auto;text-align:center"><div id="subPageDetails">...</div><div id="subPageActionBox"></div></div></div>
+  
+  <!-- ============ شاشة المبيعات (تم تعديلها بالكامل) ============ -->
   <div id="salesPage" class="hidden">
-   <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
    <div class="sahal-header"><b>شاشة المبيعات</b><b id="sahalShopTitle">اسم المتجر</b></div>
-   <div class="sahal-shortcuts"><button class="sahal-sc-btn" onclick="$('saleQty').focus()">الكمية</button><button class="sahal-sc-btn" onclick="$('salePrice').focus()">السعر</button><button class="sahal-sc-btn" onclick="$('saleDiscount').focus()">خصم</button><button class="sahal-sc-btn" onclick="clearCart()">حذف</button><button class="sahal-sc-btn" onclick="completeSale()">حفظ</button></div>
+   <div class="sahal-shortcuts"><button class="sahal-sc-btn" onclick="$('saleQty').focus()">الكمية</button><button class="sahal-sc-btn" onclick="$('salePrice').focus()">السعر</button><button class="sahal-sc-btn" onclick="$('saleSearch').focus()">بحث</button><button class="sahal-sc-btn" onclick="clearCart()">حذف</button><button class="sahal-sc-btn" onclick="completeSale()">حفظ</button></div>
+   
    <div class="sahal-layout">
     <div class="sahal-main">
-     <div class="sahal-search-box"><div class="sale-fields">
-       <div class="search-container"><label>بحث</label><input id="saleSearch" oninput="searchProducts()" placeholder="اسم المنتج"><div id="searchResults"></div></div>
-       <div><label>باركود</label><input id="saleBarcode" onkeypress="handleBarcodeScan(event)"></div>
-       <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1"></div>
-       <div><label>سعر</label><input id="salePrice" type="number" min="0"></div>
-       <div><label>خصم</label><input id="saleDiscount" type="number" min="0" value="0"></div>
-       <div><label>إضافة</label><input id="saleAddition" type="number" min="0" value="0"></div>
-     </div></div>
-     <div class="sahal-table-wrap"><table class="sahal-table"><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead><tbody id="cartTable"></tbody></table></div>
+     <div class="sahal-search-box">
+       
+       <!-- الصف العلوي: بحث + باركود + كمية + سعر -->
+       <div class="sale-fields-top">
+         <div class="search-container">
+           <label>بحث / باركود</label>
+           <input id="saleSearch" oninput="searchProducts()" placeholder="ابحث بالاسم أو الباركود..." autocomplete="off">
+           <div id="searchResults"></div>
+         </div>
+         <div><label>باركود</label><input id="saleBarcode" onkeypress="handleBarcodeScan(event)" placeholder="امسح الباركود..."></div>
+         <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1"></div>
+       </div>
+       
+       <!-- الصف السفلي: سعر + خصم + إضافة + زر الإضافة للفاتورة -->
+       <div class="sale-fields-bottom">
+         <div><label>السعر</label><input id="salePrice" type="number" min="0" placeholder="0.00"></div>
+         <div><label>خصم (للفاتورة)</label><input id="saleDiscount" type="number" min="0" value="0"></div>
+         <div><label>إضافة (للفاتورة)</label><input id="saleAddition" type="number" min="0" value="0"></div>
+         <div><button class="green big" style="margin-bottom:9px; height:38px;" onclick="addToCart()">+ إضافة للفاتورة</button></div>
+       </div>
+
+     </div>
+     
+     <div class="sahal-table-wrap">
+       <table class="sahal-table">
+         <thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead>
+         <tbody id="cartTable"></tbody>
+       </table>
+     </div>
     </div>
-    <div class="sahal-sidebar"><div class="sahal-total-card"><span>الإجمالي</span><h2 id="cartTotalDisplay">0.00</h2><span>جنيه</span></div><div class="sahal-btn-grid"><button class="sahal-btn" onclick="completeSale()" style="background:var(--success)">بيع</button><button class="sahal-btn" onclick="clearCart()" style="background:var(--warning)">إلغاء</button><button class="sahal-btn" onclick="page('products')" style="background:var(--primary)">مخزن</button><button class="sahal-btn" onclick="page('treasury')" style="background:var(--border-color)">خزينة</button></div></div>
+    
+    <!-- قسم السلة والدفع (في الأسفل) -->
+    <div class="sahal-total-card">
+      <span>الإجمالي المطلوب</span>
+      <h2 id="cartTotalDisplay">0.00 ج</h2>
+    </div>
+    <div class="sahal-btn-grid">
+      <button class="sahal-btn" onclick="completeSale()" style="background:var(--success)">💵 بيع وحفظ</button>
+      <button class="sahal-btn" onclick="clearCart()" style="background:var(--warning)">🗑️ إلغاء السلة</button>
+      <button class="sahal-btn" onclick="page('products')" style="background:var(--primary)">📦 المخزن</button>
+      <button class="sahal-btn" onclick="page('dashboard')" style="background:var(--border-color)">🏠 الرئيسية</button>
+    </div>
    </div>
   </div>
+  <!-- ==================================================== -->
+
   <div id="productsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>المنتجات</h3><div class="card"><input id="pName" placeholder="اسم"><input id="pBarcode" placeholder="باركود"><div class="grid"><div><label>شراء</label><input id="pCost" type="number" value="0"></div><div><label>بيع</label><input id="pPrice" type="number" value="0"></div><div><label>كمية</label><input id="pQty" type="number" value="10"></div></div><button onclick="saveProduct()" class="green big">حفظ</button></div><div class="tablewrap"><table><thead><tr><th>المنتج</th><th>باركود</th><th>شراء</th><th>بيع</th><th>كمية</th><th>إجراء</th></tr></thead><tbody id="productsTable"></tbody></table></div></div>
   <div id="treasuryPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الخزينة</h3><div class="grid"><div class="stat">رصيد<strong id="treasuryBalanceDisplay">0 ج</strong></div></div><div class="card"><h3>حركة</h3><select id="tType"><option value="in">وارد</option><option value="out">صادر</option></select><input id="tAmount" type="number" placeholder="المبلغ"><input id="tNote" placeholder="البيان"><button class="big green" onclick="addTreasuryTransaction()">تسجيل</button></div><button class="red big" onclick="clearTreasuryData()">مسح الحركات</button><div class="tablewrap"><table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table></div></div>
   <div id="historyPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الفواتير</h3><div class="tablewrap"><table><thead><tr><th>رقم</th><th>التاريخ</th><th>الإجمالي</th><th>إجراء</th></tr></thead><tbody id="salesTable"></tbody></table></div></div>

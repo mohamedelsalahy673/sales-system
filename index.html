@@ -14,7 +14,7 @@
 
 <link rel="icon" type="image/png" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -171,7 +171,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
-/* ============ شاشة المبيعات ============ */
+/* ============ شاشة المبيعات (ستايل كبير وواضح) ============ */
 #salesPage {
   height: calc(100vh - 75px);
   display: flex;
@@ -188,19 +188,19 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 12px;
-  font-size: 12px;
+  padding: 12px 20px;
+  font-size: 18px;
   font-weight: bold;
   border-radius: 8px 8px 0 0;
   flex-shrink: 0;
 }
 .sahal-top-bar .brand-mini {
-  font-size: 10px;
-  opacity: 0.85;
+  font-size: 14px;
+  opacity: 0.9;
   font-weight: 600;
   background: rgba(0,0,0,0.2);
-  padding: 2px 8px;
-  border-radius: 10px;
+  padding: 4px 12px;
+  border-radius: 12px;
 }
 
 .sahal-layout-main {
@@ -211,7 +211,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 }
 
 .sahal-right-sidebar {
-  width: 110px;
+  width: 140px;
   background: var(--bg-input);
   border-left: 1px solid var(--border-color);
   display: flex;
@@ -223,19 +223,19 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 10px 4px;
+  padding: 20px 10px;
   border-bottom: 1px solid var(--border-color);
   cursor: pointer;
   color: var(--text-main);
-  font-size: 11px;
+  font-size: 16px;
   font-weight: bold;
-  gap: 3px;
+  gap: 8px;
   background: transparent;
   transition: 0.2s;
   flex-shrink: 0;
 }
 .sahal-sidebar-btn:hover { background: rgba(255,255,255,0.05); }
-.sahal-sidebar-btn i { font-size: 18px; font-style: normal; }
+.sahal-sidebar-btn i { font-size: 32px; font-style: normal; }
 .sahal-sidebar-btn.sell { background: #059669; color: white; }
 .sahal-sidebar-btn.sell:hover { background: #047857; }
 .sahal-sidebar-btn.f12 { background: #d97706; color: white; flex: 1; }
@@ -252,28 +252,28 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 }
 
 .sahal-search-area {
-  padding: 8px;
+  padding: 15px;
   background: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 2px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 15px;
   flex-shrink: 0;
 }
-.sahal-search-area label { font-size: 11px; margin-bottom: 1px; }
+.sahal-search-area label { font-size: 16px; font-weight: bold; margin-bottom: 6px; color: var(--text-main); }
 .sahal-search-area input,
-.sahal-search-area select { margin: 0; padding: 7px 8px; font-size: 12px; }
+.sahal-search-area select { margin: 0; padding: 14px 16px; font-size: 18px; font-weight: bold; border-radius: 10px; }
 
 .sahal-row-top {
   display: grid;
-  grid-template-columns: 2.2fr 0.7fr 0.9fr 1fr 1fr auto;
-  gap: 6px;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 15px;
   align-items: end;
 }
 .sahal-row-bottom {
   display: grid;
-  grid-template-columns: 1fr 1.5fr 1fr 1fr;
-  gap: 6px;
+  grid-template-columns: 1fr 1.5fr 1fr 1.5fr;
+  gap: 15px;
   align-items: end;
 }
 
@@ -285,12 +285,13 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   right: 0;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 10px 10px;
   z-index: 50;
-  max-height: 220px;
+  max-height: 300px;
   overflow-y: auto;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
+.search-container #searchResults button { font-size: 16px; padding: 15px; }
 
 .inquiry-box {
   position: relative;
@@ -298,48 +299,48 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   align-items: end;
 }
 .inquiry-btn {
-  height: 33px;
+  height: 53px;
   width: 100%;
   background: linear-gradient(135deg, #8b5cf6, #6d28d9);
   color: white;
-  border-radius: 8px;
-  font-size: 12px;
+  border-radius: 10px;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 8px;
   border: none;
 }
 .inquiry-tooltip {
   display: none;
   position: absolute;
-  bottom: 110%;
+  bottom: 120%;
   right: 0;
   background: #0f172a;
   color: #f8fafc;
-  border: 1px solid var(--purple);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 12px;
+  border: 2px solid var(--purple);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 16px;
   font-weight: bold;
   white-space: nowrap;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.6);
   z-index: 60;
-  min-width: 160px;
+  min-width: 200px;
   text-align: center;
 }
 .inquiry-tooltip::after {
   content: '';
   position: absolute;
   top: 100%;
-  right: 20px;
-  border: 6px solid transparent;
+  right: 30px;
+  border: 10px solid transparent;
   border-top-color: var(--purple);
 }
 .inquiry-box:hover .inquiry-tooltip { display: block; }
-.inquiry-tooltip .cost-val { color: #34d399; font-size: 15px; display: block; margin-top: 3px; }
+.inquiry-tooltip .cost-val { color: #34d399; font-size: 22px; display: block; margin-top: 5px; }
 
 .sahal-center-main .sahal-table-wrap {
   flex: 1;
@@ -351,46 +352,48 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .sahal-center-main .sahal-table-wrap table { min-width: 100%; }
 .sahal-center-main .sahal-table-wrap th {
   background: #059669; color: white; position: sticky; top: 0;
-  padding: 8px 6px; font-size: 12px; z-index: 3;
+  padding: 15px 10px; font-size: 16px; z-index: 3;
 }
-.sahal-center-main .sahal-table-wrap td { padding: 7px 6px; font-size: 12px; }
-.empty-cart-msg { text-align: center; padding: 30px; color: var(--text-muted); font-size: 14px; font-weight: bold; }
+.sahal-center-main .sahal-table-wrap td { padding: 12px 10px; font-size: 16px; font-weight: bold; }
+.sahal-center-main .sahal-table-wrap input { font-size: 16px; padding: 8px; height: auto; }
+.empty-cart-msg { text-align: center; padding: 50px; color: var(--text-muted); font-size: 20px; font-weight: bold; }
 
 .sahal-bottom-bar {
   background: var(--bg-card);
   border-top: 2px solid var(--border-color);
   display: flex;
   align-items: center;
-  padding: 8px;
-  gap: 8px;
+  padding: 15px;
+  gap: 15px;
   flex-shrink: 0;
 }
 .sahal-bottom-fields {
   display: flex;
-  gap: 8px;
+  gap: 15px;
   flex: 1;
   align-items: center;
   flex-wrap: wrap;
 }
-.sahal-bottom-fields > div { display: flex; align-items: center; gap: 4px; }
-.sahal-bottom-fields label { margin: 0; font-size: 11px; white-space: nowrap; }
-.sahal-bottom-fields input { margin: 0; width: 70px; text-align: center; font-weight: bold; font-size: 12px; padding: 6px; }
+.sahal-bottom-fields > div { display: flex; align-items: center; gap: 8px; }
+.sahal-bottom-fields label { margin: 0; font-size: 15px; white-space: nowrap; color: var(--text-main); }
+.sahal-bottom-fields input { margin: 0; width: 90px; text-align: center; font-weight: bold; font-size: 16px; padding: 10px; }
 
 .sahal-total-box {
   background: #059669;
   color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 12px 25px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   font-weight: bold;
   flex-shrink: 0;
 }
-.sahal-total-box h2 { margin: 0; font-size: 20px; color: white; direction: ltr; }
+.sahal-total-box span { font-size: 16px; }
+.sahal-total-box h2 { margin: 0; font-size: 32px; color: white; direction: ltr; }
 
 @media(max-width:950px){
-  .sahal-right-sidebar { width: 90px; }
+  .sahal-right-sidebar { width: 100px; }
   .sahal-row-top { grid-template-columns: 1fr 1fr 1fr; }
 }
 
@@ -808,7 +811,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
                 </div>
               </div>
             </div>
-            <div><button class="green" style="height:33px; width:100%;" onclick="addToCart()">➕ إضافة</button></div>
+            <div><button class="green" style="height:53px; width:100%; font-size:18px;" onclick="addToCart()">➕ إضافة</button></div>
           </div>
           
           <div class="sahal-row-bottom">
@@ -816,8 +819,8 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
             <div><label>ملاحظات</label><input type="text" id="saleNotes" placeholder="..."></div>
             <div><label>الخزينة</label><select id="saleTreasury"><option value="main">الرئيسية</option></select></div>
             <div style="display:flex;gap:6px;">
-              <button class="red" style="height:33px; flex:1; margin-bottom:9px;" onclick="clearCart()">🗑️ تفريغ</button>
-              <button class="green" style="height:33px; flex:2; margin-bottom:9px;" onclick="completeSale()">💾 حفظ وبيع</button>
+              <button class="red" style="height:53px; flex:1; margin-bottom:0; font-size:18px;" onclick="clearCart()">🗑️ تفريغ</button>
+              <button class="green" style="height:53px; flex:2; margin-bottom:0; font-size:18px;" onclick="completeSale()">💾 حفظ وبيع</button>
             </div>
           </div>
         </div>
@@ -1968,7 +1971,7 @@ function renderCart(){
         <td>${x.qty}</td>
         <td>${money(x.price)}</td>
         <td>${money(lineTotal)}</td>
-        <td><input type="number" min="0" step="0.01" value="${lineDiscount.toFixed(2)}" style="width:70px;margin:0;padding:4px;text-align:center;font-size:11px;" onchange="updateLineDiscount(${i}, this.value)"></td>
+        <td><input type="number" min="0" step="0.01" value="${lineDiscount.toFixed(2)}" style="width:90px;margin:0;padding:8px;text-align:center;font-size:16px;" onchange="updateLineDiscount(${i}, this.value)"></td>
         <td><b>${money(lineFinal)} ج</b></td>
         <td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td>
       </tr>

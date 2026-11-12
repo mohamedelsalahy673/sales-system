@@ -132,17 +132,16 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   z-index: 2;
 }
 
-/* --- تعديل الصورة لتكون خلفية كاملة --- */
+/* --- تعديل الصورة لتكون خلفية كاملة ومشدودة صح --- */
 .tile .tile-img {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* عشان الصورة تبان كاملة من غير قص */
-  opacity: 0.6; /* شفافية عشان الكلام يبان */
+  object-fit: cover; /* دي اللي بتخلي الصورة تتمدد وتغطي الكارت من غير ما تتشوه */
+  opacity: 0.4; /* خليتها 0.4 عشان الكلام يبان بوضوح فوق الصورة */
   z-index: 1;
   pointer-events: none;
-  background: rgba(0,0,0,0.2);
 }
 
 .t-blue{background:linear-gradient(135deg,#2563eb,#1d4ed8);}

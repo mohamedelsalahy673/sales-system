@@ -171,7 +171,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
-/* ============ شاشة المبيعات (تصميم سهل - ثابتة بدون Scroll) ============ */
+/* ============ شاشة المبيعات ============ */
 #salesPage {
   height: calc(100vh - 75px);
   display: flex;
@@ -210,7 +210,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   overflow: hidden;
 }
 
-/* القائمة الجانبية */
 .sahal-right-sidebar {
   width: 110px;
   background: var(--bg-input);
@@ -242,7 +241,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .sahal-sidebar-btn.f12 { background: #d97706; color: white; flex: 1; }
 .sahal-sidebar-btn.f11 { background: #f59e0b; color: white; }
 
-/* الوسط */
 .sahal-center-main {
   flex: 1;
   display: flex;
@@ -294,7 +292,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   box-shadow: 0 8px 16px rgba(0,0,0,0.4);
 }
 
-/* خانة الاستعلام */
 .inquiry-box {
   position: relative;
   display: flex;
@@ -344,7 +341,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .inquiry-box:hover .inquiry-tooltip { display: block; }
 .inquiry-tooltip .cost-val { color: #34d399; font-size: 15px; display: block; margin-top: 3px; }
 
-/* الجدول */
 .sahal-center-main .sahal-table-wrap {
   flex: 1;
   background: var(--bg-input);
@@ -360,7 +356,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .sahal-center-main .sahal-table-wrap td { padding: 7px 6px; font-size: 12px; }
 .empty-cart-msg { text-align: center; padding: 30px; color: var(--text-muted); font-size: 14px; font-weight: bold; }
 
-/* الشريط السفلي */
 .sahal-bottom-bar {
   background: var(--bg-card);
   border-top: 2px solid var(--border-color);
@@ -508,7 +503,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  <button class="secondary big" onclick="loadUsers()">تحديث</button></div>
 </section>
 
-<!-- ============ Playstation Panel ============ -->
 <section id="playstationPanel" class="hidden">
  <div id="psExpiryWarning" class="hidden" style="background:rgba(245,158,11,0.1); color:#fbbf24; padding:8px; border-radius:8px; text-align:center; font-weight:bold; font-size:12px; margin-bottom:6px; border:1px solid rgba(245,158,11,0.3);"></div>
 
@@ -763,7 +757,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   </div>
   <div id="subscriptionPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>اشتراكي</h3><div class="card" style="max-width:600px;margin:auto;text-align:center"><div id="subPageDetails">...</div><div id="subPageActionBox"></div></div></div>
   
-  <!-- ============ شاشة المبيعات (تصميم سهل) ============ -->
   <div id="salesPage" class="hidden">
     <div class="sahal-top-bar">
       <span>شاشة المبيعات</span>
@@ -786,10 +779,10 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
           <i>🏠</i> الرئيسية
         </div>
         <div class="sahal-sidebar-btn f12" onclick="saveHold()">
-          <i>⏸️</i> تعليق
+          <i>⏸️</i> تعليق (F12)
         </div>
         <div class="sahal-sidebar-btn f11" onclick="showPaymentModal()">
-          <i>💳</i> سداد
+          <i>💳</i> سداد (F11)
         </div>
       </div>
 
@@ -802,7 +795,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
               <input id="saleSearch" oninput="searchProducts()" placeholder="اكتب اسم الصنف..." autocomplete="off">
               <div id="searchResults"></div>
             </div>
-            <div><label>الباركود</label><input id="saleBarcode" onkeypress="handleBarcodeScan(event)" placeholder="امسح..." autocomplete="off"></div>
+            <div><label>الباركود</label><input id="saleBarcode" oninput="handleBarcodeScan(event)" onkeypress="handleBarcodeScan(event)" placeholder="امسح..." autocomplete="off"></div>
             <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1"></div>
             <div><label>سعر البيع</label><input id="salePrice" type="number" min="0" placeholder="0.00"></div>
             <div class="inquiry-box">
@@ -820,10 +813,13 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
           </div>
           
           <div class="sahal-row-bottom">
-            <div><label>الحساب</label><select><option>نقدي</option></select></div>
-            <div><label>ملاحظات</label><input type="text" placeholder="..."></div>
-            <div><label>الخزينة</label><select><option>الرئيسية</option></select></div>
-            <div><label>إتمام</label><button class="green big" style="margin-bottom:9px;" onclick="completeSale()">حفظ وبيع</button></div>
+            <div><label>الحساب</label><select id="salePaymentType"><option value="cash">نقدي</option><option value="visa">فيزا</option><option value="wallet">محفظة</option></select></div>
+            <div><label>ملاحظات</label><input type="text" id="saleNotes" placeholder="..."></div>
+            <div><label>الخزينة</label><select id="saleTreasury"><option value="main">الرئيسية</option></select></div>
+            <div style="display:flex;gap:6px;">
+              <button class="red" style="height:33px; flex:1; margin-bottom:9px;" onclick="clearCart()">🗑️ تفريغ</button>
+              <button class="green" style="height:33px; flex:2; margin-bottom:9px;" onclick="completeSale()">💾 حفظ وبيع</button>
+            </div>
           </div>
         </div>
 
@@ -836,7 +832,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
                 <th>الكمية</th>
                 <th>السعر</th>
                 <th>الإجمالي</th>
-                <th>الخصم</th>
+                <th>خصم</th>
                 <th>النهائي</th>
                 <th>حذف</th>
               </tr>
@@ -850,9 +846,9 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
         <div class="sahal-bottom-bar">
           <div class="sahal-bottom-fields">
             <div><label>نوع الإضافة</label> <input type="text" value="0" id="saleAdditionText"></div>
-            <div><label>إضافة</label> <input id="saleAddition" type="number" min="0" value="0"></div>
-            <div><label>خصم %</label> <input id="saleDiscountPct" type="number" min="0" value="0"></div>
-            <div><label>خصم الفكة</label> <input id="saleDiscount" type="number" min="0" value="0"></div>
+            <div><label>إضافة</label> <input id="saleAddition" type="number" min="0" value="0" oninput="renderCart()"></div>
+            <div><label>خصم %</label> <input id="saleDiscountPct" type="number" min="0" max="100" value="0" oninput="renderCart()"></div>
+            <div><label>خصم الفكة</label> <input id="saleDiscount" type="number" min="0" value="0" oninput="renderCart()"></div>
           </div>
           <div class="sahal-total-box">
             <span>الكل</span>
@@ -1774,19 +1770,28 @@ window.closePsShift = async () => {
  });
 };
 
-// ============ تحديث خانة الاستعلام بسعر الشراء ============
+// ============ تحديث خانة الاستعلام بسعر الشراء والربح ============
 window.updateInquiryTooltip = function() {
   const tip = document.getElementById('inquiryTooltip');
   if (!tip) return;
-  const costVal = tip.querySelector('.cost-val');
   let product = selectedProduct;
   if (!product && cart.length === 1) {
     product = products.find(p => p.id === cart[0].productId);
   }
   if (product) {
-    costVal.textContent = money(product.cost) + ' ج';
+    const cost = Number(product.cost)||0;
+    const sell = Number(product.price)||0;
+    const profit = sell - cost;
+    const profitColor = profit >= 0 ? '#34d399' : '#f87171';
+    tip.innerHTML = `سعر الشراء
+      <span class="cost-val">${money(cost)} ج</span>
+      <span style="display:block;font-size:11px;color:${profitColor};margin-top:2px;">
+        الربح: ${money(profit)} ج
+      </span>`;
   } else {
-    costVal.textContent = 'اختر صنف أولاً';
+    tip.innerHTML = `سعر الشراء
+      <span class="cost-val">—</span>
+      <span style="display:block;font-size:10px;color:#94a3b8;margin-top:2px;">اختر صنف أولاً</span>`;
   }
 };
 
@@ -1806,6 +1811,80 @@ window.page = name => {
   if(name === "sales"){ renderCart(); window.updateInquiryTooltip(); }
 };
 
+// ============ تعليق الفاتورة ============
+window.saveHold = async () => {
+  if(!cart.length) return showAlert("السلة فارغة.","warning");
+  const {subtotal, discount, addition, total} = renderCart();
+  try{
+    await setDoc(doc(col("holds")), {
+      items: cart.map(x=>({...x})),
+      subtotal, discount, addition, total,
+      date: new Date().toLocaleString("ar-EG"),
+      createdAt: Date.now()
+    });
+    cart = [];
+    $("saleDiscount").value = "0";
+    $("saleDiscountPct").value = "0";
+    $("saleAddition").value = "0";
+    $("saleSearch").value = "";
+    $("saleQty").value = "1";
+    $("salePrice").value = "";
+    selectedProduct = null;
+    renderCart();
+    showAlert("تم تعليق الفاتورة.","success");
+  }catch(e){showAlert(e.message,"error");}
+};
+
+// ============ شاشة السداد السريع ============
+window.showPaymentModal = async () => {
+  if(!cart.length) return showAlert("السلة فارغة.","warning");
+  const {total} = renderCart();
+  const result = await Swal.fire({
+    title: '💳 سداد سريع',
+    html: `<div style="font-size:13px;color:#94a3b8;">الإجمالي المطلوب</div>
+           <div style="font-size:28px;color:#34d399;font-weight:bold;margin:8px 0;">${money(total)} ج</div>
+           <label style="display:block;text-align:right;font-size:12px;color:#94a3b8;margin-top:10px;">المدفوع</label>
+           <input id="swalPaid" type="number" min="0" step="0.01" value="${total}" style="width:100%;padding:9px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#f8fafc;text-align:center;font-size:16px;font-weight:bold;">`,
+    showCancelButton: true,
+    confirmButtonText: '💾 تأكيد وبيع',
+    cancelButtonText: 'إلغاء',
+    confirmButtonColor: '#10b981',
+    cancelButtonColor: '#ef4444',
+    background: '#1e293b',
+    color: '#f8fafc',
+    didOpen: () => {
+      const paidInput = document.getElementById('swalPaid');
+      const updateChange = () => {
+        const paid = Number(paidInput.value)||0;
+        const change = paid - total;
+        let el = document.getElementById('swalChange');
+        if(!el){
+          el = document.createElement('div');
+          el.id = 'swalChange';
+          el.style.cssText = 'margin-top:10px;padding:8px;border-radius:8px;background:#0f172a;font-size:13px;text-align:center;';
+          paidInput.parentNode.appendChild(el);
+        }
+        if(change >= 0){
+          el.innerHTML = `<span style="color:#34d399;font-weight:bold;">الباقي: ${money(change)} ج</span>`;
+        } else {
+          el.innerHTML = `<span style="color:#f87171;font-weight:bold;">ناقص: ${money(-change)} ج</span>`;
+        }
+      };
+      paidInput.addEventListener('input', updateChange);
+      paidInput.focus();
+      paidInput.select();
+    },
+    preConfirm: () => {
+      const paid = Number(document.getElementById('swalPaid').value)||0;
+      if(paid < total) return Swal.showValidationMessage('المبلغ المدفوع أقل من الإجمالي');
+      return {paid, change: paid - total};
+    }
+  });
+  if(result.isConfirmed){
+    await completeSale();
+  }
+};
+
 window.updateShopNameSetting = async () => {const n=$("settingsShopName").value.trim();if(!n)return showAlert("اسم.","warning");try{await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;$("shopTitle").textContent=n;$("sahalShopTitle").textContent=n;showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
 window.updateCustomerEmailSetting = async () => {const n=$("settingsEmail").value.trim();if(!n)return showAlert("بريد.","warning");try{await updateEmail(auth.currentUser,n);await updateDoc(doc(db,"users",currentUser.uid),{email:n});profile.email=n;showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
 window.updateCustomerPassword = async () => {const p=$("newCustomerPassword").value;if(!p||p.length<6)return showAlert("6 أحرف.","warning");try{await updatePassword(auth.currentUser,p);$("newCustomerPassword").value="";showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
@@ -1822,9 +1901,22 @@ window.deleteProduct = async id => {if(!await window.customConfirm("حذف؟"))r
 function renderProducts(){$("productsTable").innerHTML=products.map(p=>`<tr><td>${escapeHTML(p.name)}</td><td>${escapeHTML(p.barcode||"")}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td>${p.qty}</td><td><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||"<tr><td colspan='6'>لا منتجات</td></tr>";}
 
 window.handleBarcodeScan = e => {
-  if(e.key==='Enter'){
+  const val = e.target.value.trim();
+  if(val.length >= 8){
+    const pAuto = products.find(x => x.barcode === val);
+    if(pAuto && Number(pAuto.qty) > 0){
+      selectedProduct = pAuto;
+      $("saleSearch").value = pAuto.name;
+      $("salePrice").value = pAuto.price;
+      window.updateInquiryTooltip();
+      addToCart();
+      e.target.value = "";
+      return;
+    }
+  }
+  if(e.key === 'Enter'){
     e.preventDefault();
-    const code = e.target.value.trim();
+    const code = val;
     if(!code) return;
     const p = products.find(x => x.barcode === code);
     if(p){
@@ -1877,7 +1969,7 @@ window.addToCart = () => {
  if(price<0||!Number.isFinite(price))return showAlert("سعر.","warning");
  const old=cart.find(x=>x.productId===p.id), already=old?old.qty:0;
  if(qty+already>Number(p.qty))return showAlert("الكمية أكبر من المخزون.","warning");
- if(old){old.qty+=qty;old.price=price;}else cart.push({productId:p.id,name:p.name,qty,price,cost:p.cost||0});
+ if(old){old.qty+=qty;old.price=price;}else cart.push({productId:p.id,name:p.name,qty,price,cost:p.cost||0,lineDiscount:0});
  selectedProduct=null;$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";renderCart();$("saleSearch").focus();
 };
 function renderCart(){
@@ -1885,39 +1977,97 @@ function renderCart(){
  if(cart.length === 0){
     tbody.innerHTML = '<tr><td colspan="8" class="empty-cart-msg">ابدأ بالبحث عن صنف بالاسم أو الباركود</td></tr>';
  } else {
-    tbody.innerHTML = cart.map((x,i)=>`
+    tbody.innerHTML = cart.map((x,i)=>{
+      const lineTotal = x.qty * x.price;
+      const lineDiscount = Math.max(0, Math.min(Number(x.lineDiscount)||0, lineTotal));
+      const lineFinal = lineTotal - lineDiscount;
+      return `
       <tr>
         <td>${i+1}</td>
         <td>${escapeHTML(x.name)}</td>
         <td>${x.qty}</td>
         <td>${money(x.price)}</td>
-        <td>${money(x.qty*x.price)}</td>
-        <td>0.00</td>
-        <td><b>${money(x.qty*x.price)} ج</b></td>
+        <td>${money(lineTotal)}</td>
+        <td><input type="number" min="0" step="0.01" value="${lineDiscount.toFixed(2)}" style="width:70px;margin:0;padding:4px;text-align:center;font-size:11px;" onchange="updateLineDiscount(${i}, this.value)"></td>
+        <td><b>${money(lineFinal)} ج</b></td>
         <td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td>
       </tr>
-    `).join("");
+    `;}).join("");
  }
- const subtotal=cart.reduce((s,x)=>s+x.qty*x.price,0);
- const discount=Math.max(0,Number($("saleDiscount").value)||0);
- const discountPct=Math.max(0,Number($("saleDiscountPct").value)||0);
- const addition=Math.max(0,Number($("saleAddition").value)||0);
- const total=Math.max(0,subtotal-discount+addition);
+ const subtotal = cart.reduce((s,x)=>s+x.qty*x.price,0);
+ const lineDiscounts = cart.reduce((s,x)=>s+(Number(x.lineDiscount)||0),0);
+ const discountPct = Math.max(0, Math.min(100, Number($("saleDiscountPct").value)||0));
+ const discountCash = Math.max(0,Number($("saleDiscount").value)||0);
+ const addition = Math.max(0,Number($("saleAddition").value)||0);
+ const pctAmount = Number((subtotal * discountPct / 100).toFixed(2));
+ const totalDiscount = lineDiscounts + pctAmount + discountCash;
+ const total = Math.max(0, subtotal - totalDiscount + addition);
  $("cartTotalDisplay").textContent = money(total);
  window.updateInquiryTooltip();
- return {subtotal,discount,addition,total};
+ return {subtotal, discount: totalDiscount, addition, total, discountPct, discountCash, lineDiscounts};
 }
+
+window.updateLineDiscount = (index, value) => {
+  if(!cart[index]) return;
+  const lineTotal = cart[index].qty * cart[index].price;
+  let v = Number(value)||0;
+  if(v < 0) v = 0;
+  if(v > lineTotal) v = lineTotal;
+  cart[index].lineDiscount = v;
+  renderCart();
+};
+
 window.renderCart = renderCart;
 window.removeCartItem = i => {cart.splice(i,1);renderCart();};
 window.clearCart = async () => {if(cart.length&&!await window.customConfirm("إلغاء؟"))return;cart=[];$("saleDiscount").value="0";$("saleDiscountPct").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";selectedProduct=null;renderCart();};
 
 window.completeSale = async () => {
- if(!cart.length)return showAlert("فارغة.","warning");
- const {subtotal,discount,addition,total}=renderCart();
- if(discount>subtotal+addition)return showAlert("الخصم أكبر.","warning");
- for(const item of cart){const p=products.find(x=>x.id===item.productId);if(!p||Number(p.qty)<item.qty)return showAlert("المخزون غير كافٍ: "+item.name,"error");}
- const inv={number:"INV-"+Date.now().toString().slice(-6),subtotal,discount,addition,total,items:[...cart],date:new Date().toLocaleString("ar-EG")};
- try{for(const item of cart){const p=products.find(x=>x.id===item.productId);await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});}await setDoc(doc(col("sales")),inv);await setDoc(doc(col("treasury")),{type:"in",amount:total,note:`فاتورة #${inv.number}`,date:inv.date});printInvoiceDirectly(inv);cart=[];$("saleDiscount").value="0";$("saleDiscountPct").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";selectedProduct=null;renderCart();loadBusiness().catch(e=>console.warn(e));showAlert("تم البيع. "+money(total)+" ج","success");}catch(e){showAlert("خطأ: "+e.message,"error");}
+ if(!cart.length) return showAlert("السلة فارغة.","warning");
+ const {subtotal, discount, addition, total} = renderCart();
+ if(discount > subtotal + addition) return showAlert("الخصم أكبر من الإجمالي.","warning");
+ if(total <= 0) return showAlert("الإجمالي صفر.","warning");
+ for(const item of cart){
+   const p = products.find(x=>x.id===item.productId);
+   if(!p || Number(p.qty) < item.qty) return showAlert("المخزون غير كافٍ: "+item.name,"error");
+ }
+ const paymentType = $("salePaymentType")?.value || "cash";
+ const notes = $("saleNotes")?.value.trim() || "";
+ const inv = {
+   number: "INV-"+Date.now().toString().slice(-6),
+   subtotal, discount, addition, total,
+   paymentType, notes,
+   items: cart.map(x=>({...x})),
+   date: new Date().toLocaleString("ar-EG"),
+   createdAt: Date.now()
+ };
+ try{
+   for(const item of cart){
+     const p = products.find(x=>x.id===item.productId);
+     await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});
+   }
+   await setDoc(doc(col("sales")), inv);
+   await setDoc(doc(col("treasury")), {
+     type: "in",
+     amount: total,
+     note: `فاتورة #${inv.number}${paymentType!=="cash"?" ("+paymentType+")":""}`,
+     paymentType,
+     date: inv.date,
+     createdAt: Date.now()
+   });
+   printInvoiceDirectly(inv);
+   cart = [];
+   $("saleDiscount").value = "0";
+   $("saleDiscountPct").value = "0";
+   $("saleAddition").value = "0";
+   $("saleSearch").value = "";
+   $("saleQty").value = "1";
+   $("salePrice").value = "";
+   if($("saleNotes")) $("saleNotes").value = "";
+   selectedProduct = null;
+   renderCart();
+   loadBusiness().catch(e=>console.warn(e));
+   showAlert("تم البيع. "+money(total)+" ج","success");
+ }catch(e){showAlert("خطأ: "+e.message,"error");}
 };
 window.printInvoiceDirectly = inv => {$("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px"><h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة</h3><p>رقم: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr><table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}</table><hr><p>الأصناف: ${money(inv.subtotal)} ج</p><p>الخصم: -${money(inv.discount)} ج</p><p>الإضافة: +${money(inv.addition)} ج</p><h2>الإجمالي: ${money(inv.total)} ج</h2><p>تطوير: محمد الصلاحي</p></div>`;window.print();};
 window.addTreasuryTransaction = async () => {const type=$("tType").value,amount=Number($("tAmount").value)||0,note=$("tNote").value.trim();if(amount<=0)return showAlert("مبلغ.","warning");await setDoc(doc(col("treasury")),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});$("tAmount").value="";$("tNote").value="";await loadTreasury();renderStats();showAlert("تم.","success");};
@@ -2000,6 +2150,31 @@ function renderPsReports(){
  const c2 = document.getElementById('typeChart');
  if(c2){typeChartInstance=new Chart(c2,{type:'doughnut',data:{labels:['رومات','VIP','قاعدة','بلياردو','مشروبات','سندوتشات'],datasets:[{data:[roomRev,vipRev,baseRev,billRev,drinksRev,sandRev],backgroundColor:['#10b981','#8b5cf6','#f59e0b','#db2777','#0ea5e9','#ef4444'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#f8fafc'}}}}});}
 }
+
+// ============ اختصارات الكيبورد لشاشة المبيعات ============
+document.addEventListener('keydown', (e) => {
+  const salesVisible = !$("salesPage")?.classList.contains("hidden");
+  if(!salesVisible) return;
+  if(e.key === "F11"){ e.preventDefault(); showPaymentModal(); return; }
+  if(e.key === "F12"){ e.preventDefault(); saveHold(); return; }
+  if(e.key === "Escape"){
+    if(cart.length > 0 && !e.target.matches('input,select,textarea')){
+      e.preventDefault();
+      clearCart();
+    }
+    return;
+  }
+});
+
+// Enter في خانة الكمية أو السعر = إضافة للسلة
+["saleQty","salePrice"].forEach(id => {
+  const el = $(id);
+  if(el){
+    el.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){ e.preventDefault(); addToCart(); }
+    });
+  }
+});
 
 window.goPsHome();
 </script>

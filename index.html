@@ -1610,7 +1610,7 @@ window.addToCart = () => {
 function renderCart(){$("cartTable").innerHTML=cart.map((x,i)=>`<tr><td>${escapeHTML(x.name)}</td><td>${x.qty}</td><td>${money(x.price)} ج</td><td><b>${money(x.qty*x.price)} ج</b></td><td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td></tr>`).join("")||'<tr><td colspan="5" style="text-align:center">فارغة</td></tr>';const subtotal=cart.reduce((s,x)=>s+x.qty*x.price,0),discount=Math.max(0,Number($("saleDiscount").value)||0),addition=Math.max(0,Number($("saleAddition").value)||0),total=Math.max(0,subtotal-discount+addition);$("cartTotalDisplay").textContent=money(total);return {subtotal,discount,addition,total};}
 window.renderCart = renderCart;
 window.removeCartItem = i => {cart.splice(i,1);renderCart();};
-window.clearCart = () => {if(cart.length&&!await window.customConfirm("إلغاء؟"))return;cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";selectedProduct=null;renderCart();};
+window.clearCart = async () => {if(cart.length&&!await window.customConfirm("إلغاء؟"))return;cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";selectedProduct=null;renderCart();};
 
 window.completeSale = async () => {
  if(!cart.length)return showAlert("فارغة.","warning");

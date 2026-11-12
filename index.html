@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NexPOS PRO - نظام إدارة المبيعات والبلايستيشن</title>
 <meta name="theme-color" content="#0f172a">
+
+<!-- ============ أكواد PWA المدمجة ============ -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NexPOS">
+<link rel="apple-touch-icon" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
+<!-- سيتم حقن ملف الـ Manifest هنا تلقائياً عبر الجافاسكريبت -->
+<!-- ========================================= -->
+
 <link rel="icon" type="image/png" href="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -75,74 +84,17 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .result{display:block;width:100%;text-align:right;margin:0;border-radius:0; border: none; border-bottom: 1px solid var(--border-color); font-size:12px; padding:9px 10px;}
 
 /* ============ شاشة البلايستيشن ============ */
-#playstationPanel {
-  height: calc(100vh - 75px);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-#playstationPanel .ps-top-card {
-  flex-shrink: 0;
-  margin: 0 0 8px !important;
-  padding: 10px 12px !important;
-}
-#psHomeScreen {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.tiles-grid{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  grid-template-rows:repeat(3, 1fr);
-  gap:8px;
-  flex: 1;
-  min-height: 0;
-  margin-top:8px;
-}
-.tile{
-  padding:8px 10px;
-  border-radius:10px;
-  color:white;
-  cursor:pointer;
-  box-shadow:0 3px 8px -2px rgba(0,0,0,0.35);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  border: 1px solid rgba(255,255,255,0.1);
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  align-items:flex-start;
-  overflow:hidden;
-  position:relative;
-  min-height: 0;
-}
+#playstationPanel { height: calc(100vh - 75px); display: flex; flex-direction: column; overflow: hidden; }
+#playstationPanel .ps-top-card { flex-shrink: 0; margin: 0 0 8px !important; padding: 10px 12px !important; }
+#psHomeScreen { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.tiles-grid{ display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:repeat(3, 1fr); gap:8px; flex: 1; min-height: 0; margin-top:8px; }
+.tile{ padding:8px 10px; border-radius:10px; color:white; cursor:pointer; box-shadow:0 3px 8px -2px rgba(0,0,0,0.35); transition: transform 0.15s ease, box-shadow 0.15s ease; border: 1px solid rgba(255,255,255,0.1); display:flex; flex-direction:column; justify-content:space-between; align-items:flex-start; overflow:hidden; position:relative; min-height: 0; }
 .tile:hover { transform: translateY(-2px); box-shadow: 0 8px 14px -4px rgba(0,0,0,0.5); }
 .tile .tile-icon{font-size:22px; line-height:1; z-index: 2;}
 .tile .tile-title{font-size:13px; font-weight:700; margin-top:2px; line-height:1.2; z-index: 2;}
 .tile .tile-sub{font-size:10px; opacity:.8; margin-top:1px; line-height:1.1; z-index: 2;}
-.tile .tile-badge{
-  position:absolute; top:6px; left:6px;
-  background: rgba(255,255,255,0.18);
-  backdrop-filter: blur(4px);
-  padding:2px 7px; border-radius:14px; font-size:10px; font-weight:bold;
-  border: 1px solid rgba(255,255,255,0.22);
-  z-index: 2;
-}
-
-/* --- تعديل الصورة لتكون خلفية كاملة ومشدودة صح --- */
-.tile .tile-img {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* دي اللي بتخلي الصورة تتمدد وتغطي الكارت من غير ما تتشوه */
-  opacity: 0.4; /* خليتها 0.4 عشان الكلام يبان بوضوح فوق الصورة */
-  z-index: 1;
-  pointer-events: none;
-}
+.tile .tile-badge{ position:absolute; top:6px; left:6px; background: rgba(255,255,255,0.18); backdrop-filter: blur(4px); padding:2px 7px; border-radius:14px; font-size:10px; font-weight:bold; border: 1px solid rgba(255,255,255,0.22); z-index: 2; }
+.tile .tile-img { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; z-index: 1; pointer-events: none; }
 
 .t-blue{background:linear-gradient(135deg,#2563eb,#1d4ed8);}
 .t-green{background:linear-gradient(135deg,#059669,#047857);}
@@ -153,160 +105,39 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .t-indigo{background:linear-gradient(135deg,#4f46e5,#3730a3);}
 .t-sky{background:linear-gradient(135deg,#0284c7,#0369a1);}
 .t-pink{background:linear-gradient(135deg,#db2777,#be185d);}
+.t-red{background:linear-gradient(135deg,#ef4444,#b91c1c);}
 
-#psHomeScreen > div:last-child {
-  flex-shrink: 0;
-  margin-top: 8px !important;
-  gap: 6px !important;
-  display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
-}
-#psHomeScreen > div:last-child button {
-  padding: 7px 6px !important;
-  font-size: 11px !important;
-}
+#psHomeScreen > div:last-child { flex-shrink: 0; margin-top: 8px !important; gap: 6px !important; display: grid !important; grid-template-columns: repeat(4, 1fr) !important; }
+#psHomeScreen > div:last-child button { padding: 7px 6px !important; font-size: 11px !important; }
+#playstationPanel .grid { gap: 6px; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
+#playstationPanel .stat { padding: 5px 7px; border-radius: 6px; }
+#playstationPanel .stat strong { font-size: 13px; margin-top: 2px; }
 
-#playstationPanel .grid {
-  gap: 6px;
-  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-}
-#playstationPanel .stat {
-  padding: 5px 7px;
-  border-radius: 6px;
-}
-#playstationPanel .stat strong {
-  font-size: 13px;
-  margin-top: 2px;
-}
-
-/* ============ صفحة أجهزة (شبكة مصغرة) ============ */
-.devices-page {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.devices-page-header {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-}
+/* ============ صفحة أجهزة ============ */
+.devices-page { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+.devices-page-header { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
 .devices-page-title { font-size: 17px; font-weight: 700; margin: 0; }
-
-.devices-mini-grid {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 8px;
-  overflow-y: auto;
-  padding-left: 4px;
-}
+.devices-mini-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; overflow-y: auto; padding-left: 4px; }
 .devices-mini-grid::-webkit-scrollbar { width: 6px; }
 .devices-mini-grid::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
 
-.dev-mini {
-  background: var(--bg-card);
-  border: 2px solid var(--border-color);
-  border-radius: 10px;
-  padding: 8px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: all 0.15s ease;
-  position: relative;
-  min-height: 80px;
-}
-.dev-mini:hover {
-  transform: translateY(-2px);
-  border-color: var(--primary);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-}
-.dev-mini.running {
-  border-color: var(--success);
-  box-shadow: 0 0 12px rgba(16,185,129,0.3);
-}
-.dev-mini.running::before {
-  content: '';
-  position: absolute;
-  top: 6px; left: 6px;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--success);
-  animation: pulse 1.5s infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.6); }
-  50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(16,185,129,0); }
-}
+.dev-mini { background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 10px; padding: 8px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.15s ease; position: relative; min-height: 80px; }
+.dev-mini:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+.dev-mini.running { border-color: var(--success); box-shadow: 0 0 12px rgba(16,185,129,0.3); }
+.dev-mini.running::before { content: ''; position: absolute; top: 6px; left: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.6); } 50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(16,185,129,0); } }
 .dev-mini.billiard-mini { border-top: 3px solid #db2777; }
 .dev-mini.vip-mini { border-top: 3px solid var(--purple); }
 .dev-mini.base-mini { border-top: 3px solid var(--warning); }
-
-.dev-mini .dev-name {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-main);
-  padding-left: 16px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.dev-mini .dev-status {
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-.dev-mini.running .dev-status {
-  color: var(--success);
-  font-weight: bold;
-}
-.dev-mini .dev-time {
-  font-family: monospace;
-  direction: ltr;
-  font-size: 13px;
-  color: var(--success);
-  font-weight: 700;
-  margin-top: 4px;
-}
-.dev-mini .dev-customer {
-  font-size: 10px;
-  color: #f87171;
-  margin-top: 2px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.devices-empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: var(--text-muted);
-  font-size: 14px;
-  text-align: center;
-  padding: 40px;
-}
+.dev-mini .dev-name { font-size: 13px; font-weight: 700; color: var(--text-main); padding-left: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dev-mini .dev-status { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.dev-mini.running .dev-status { color: var(--success); font-weight: bold; }
+.dev-mini .dev-time { font-family: monospace; direction: ltr; font-size: 13px; color: var(--success); font-weight: 700; margin-top: 4px; }
+.dev-mini .dev-customer { font-size: 10px; color: #f87171; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.devices-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); font-size: 14px; text-align: center; padding: 40px; }
 
 /* ============ مودال تفاصيل الجهاز ============ */
-.device-modal-box {
-  max-width: 500px;
-  width: 100%;
-  max-height: 92vh;
-  overflow-y: auto;
-  border: 2px solid var(--border-color);
-  border-radius: 14px;
-  padding: 16px;
-  background: var(--bg-card);
-  position: relative;
-}
+.device-modal-box { max-width: 500px; width: 100%; max-height: 92vh; overflow-y: auto; border: 2px solid var(--border-color); border-radius: 14px; padding: 16px; background: var(--bg-card); position: relative; }
 .device-modal-box::-webkit-scrollbar { width: 6px; }
 .device-modal-box::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
 .device-modal-box.running-modal { border-top: 4px solid var(--success); }
@@ -314,80 +145,16 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .device-modal-box.base-modal { border-top: 4px solid var(--warning); }
 .device-modal-box.billiard-modal { border-top: 4px solid #db2777; }
 
-.detail-device-time {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--success);
-  text-align: center;
-  padding: 12px 4px;
-  direction: ltr;
-  font-family: monospace;
-  background: rgba(16,185,129,0.08);
-  border-radius: 10px;
-  margin: 8px 0;
-}
+.detail-device-time { font-size: 32px; font-weight: 700; color: var(--success); text-align: center; padding: 12px 4px; direction: ltr; font-family: monospace; background: rgba(16,185,129,0.08); border-radius: 10px; margin: 8px 0; }
 .detail-device-time.idle { color: var(--text-muted); background: rgba(148,163,184,0.08); }
-
-.device-modal-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 10px;
-}
+.device-modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
 .device-modal-actions button { padding: 10px 8px; font-size: 13px; }
-
-.order-list {
-  background: rgba(15,23,42,0.5);
-  border-radius: 8px;
-  padding: 10px;
-  margin-top: 8px;
-  border: 1px solid var(--border-color);
-  max-height: 180px;
-  overflow-y: auto;
-}
-.order-line {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border-color);
-  font-size: 12px;
-}
-
-.mode-note {
-  background: rgba(59,130,246,0.1);
-  color: #60a5fa;
-  border-radius: 6px;
-  padding: 7px;
-  font-size: 11px;
-  margin: 8px 0;
-  border: 1px solid rgba(59,130,246,0.2);
-}
-
-.billiard-games-box {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(219,39,119,0.15);
-  border: 2px solid rgba(219,39,119,0.4);
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin: 8px 0;
-}
-.billiard-games-box .games-num {
-  font-size: 28px;
-  font-weight: bold;
-  color: #f472b6;
-}
-.billiard-info {
-  background: rgba(219,39,119,0.08);
-  border: 1px solid rgba(219,39,119,0.25);
-  border-radius: 8px;
-  padding: 8px;
-  margin: 6px 0;
-  font-size: 11px;
-}
+.order-list { background: rgba(15,23,42,0.5); border-radius: 8px; padding: 10px; margin-top: 8px; border: 1px solid var(--border-color); max-height: 180px; overflow-y: auto; }
+.order-line { display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: 6px 0; border-bottom: 1px solid var(--border-color); font-size: 12px; }
+.mode-note { background: rgba(59,130,246,0.1); color: #60a5fa; border-radius: 6px; padding: 7px; font-size: 11px; margin: 8px 0; border: 1px solid rgba(59,130,246,0.2); }
+.billiard-games-box { display: flex; align-items: center; justify-content: space-between; background: rgba(219,39,119,0.15); border: 2px solid rgba(219,39,119,0.4); border-radius: 10px; padding: 10px 14px; margin: 8px 0; }
+.billiard-games-box .games-num { font-size: 28px; font-weight: bold; color: #f472b6; }
+.billiard-info { background: rgba(219,39,119,0.08); border: 1px solid rgba(219,39,119,0.25); border-radius: 8px; padding: 8px; margin: 6px 0; font-size: 11px; }
 .billiard-info b { color: #f472b6; }
 
 /* ============ Auth ============ */
@@ -420,19 +187,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 #searchResults{position:absolute;top:100%;right:0;width:100%;z-index:100;background:var(--bg-card);box-shadow:0 10px 25px rgba(0,0,0,0.5);max-height:200px;overflow:auto; border-radius: 6px; border: 1px solid var(--border-color);}
 
 .ps-empty{text-align:center;padding:20px;color:var(--text-muted);background:var(--bg-input);border-radius:8px; border: 1px dashed var(--border-color); font-size:12px;}
-
-.back-btn{
-  background: var(--bg-input);
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
-  padding: 7px 14px;
-  font-size: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: none;
-}
-
+.back-btn{ background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); padding: 7px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: none; }
 .modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter: blur(4px); display:flex; align-items:center; justify-content:center; z-index:1000; padding: 16px; overflow-y: auto;}
 .modal-box{background:var(--bg-card); padding:20px; border-radius:12px; max-width:440px; width:100%; max-height: 90vh; overflow-y: auto; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid var(--border-color); position: relative; margin: auto;}
 .modal-close{position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; padding: 0; border-radius: 50%; background: var(--bg-input); color: var(--text-muted); font-size: 16px; display: grid; place-items: center; border: 1px solid var(--border-color);}
@@ -907,14 +662,102 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <footer class="muted" style="text-align:center;padding:8px;border-top:1px solid var(--border-color);margin-top:6px;font-size:11px;">تطوير: محمد الصلاحي</footer>
 </div>
 
+<!-- ============================================================== -->
+<!-- سكريبت الـ PWA المدمج (Manifest & Service Worker) -->
+<!-- ============================================================== -->
 <script>
+  // 1. إنشاء ملف الـ Manifest ديناميكياً وحقنه في الصفحة
+  const manifestData = {
+    "name": "NexPOS PRO",
+    "short_name": "NexPOS",
+    "description": "برنامج إدارة الحسابات والأنشطة والخدمات",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#0f172a",
+    "orientation": "portrait",
+    "icons": [
+      {
+        "src": "https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }
+    ]
+  };
+  
+  const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+  const manifestURL = URL.createObjectURL(manifestBlob);
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = manifestURL;
+  document.head.appendChild(link);
+
+  // 2. إنشاء ملف الـ Service Worker ديناميكياً وتسجيله
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register(URL.createObjectURL(new Blob([`
-      self.addEventListener('install', e=>self.skipWaiting());
-      self.addEventListener('activate', e=>e.waitUntil(clients.claim()));
-    `], {type:'application/javascript'}))).catch(e=>console.log(e));
+    const swCode = `
+      const CACHE_NAME = 'nexpos-cache-v1';
+      const urlsToCache = ['/'];
+
+      self.addEventListener('install', event => {
+        self.skipWaiting();
+        event.waitUntil(
+          caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+        );
+      });
+
+      self.addEventListener('activate', event => {
+        event.waitUntil(
+          caches.keys().then(cacheNames => {
+            return Promise.all(
+              cacheNames.map(cacheName => {
+                if (cacheName !== CACHE_NAME) return caches.delete(cacheName);
+              })
+            );
+          })
+        );
+        self.clients.claim();
+      });
+
+      self.addEventListener('fetch', event => {
+        // تجاهل طلبات Firebase والـ APIs
+        if (event.request.url.includes('firebase') || event.request.url.includes('googleapis') || event.request.method !== 'GET') {
+          return;
+        }
+        
+        event.respondWith(
+          fetch(event.request)
+            .then(response => {
+              if (response && response.status === 200) {
+                const responseClone = response.clone();
+                caches.open(CACHE_NAME).then(cache => {
+                  cache.put(event.request, responseClone);
+                });
+              }
+              return response;
+            })
+            .catch(() => caches.match(event.request))
+        );
+      });
+    `;
+
+    const swBlob = new Blob([swCode], {type: 'application/javascript'});
+    const swURL = URL.createObjectURL(swBlob);
+
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register(swURL)
+        .then(registration => console.log('SW registered:', registration.scope))
+        .catch(error => console.log('SW registration failed:', error));
+    });
   }
 </script>
+<!-- ============================================================== -->
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";

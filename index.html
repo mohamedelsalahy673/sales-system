@@ -792,10 +792,9 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
           <div class="sahal-row-top">
             <div class="search-container">
               <label>ابحث عن الصنف (بالاسم أو الباركود)</label>
-              <input id="saleSearch" oninput="searchProducts()" placeholder="اكتب اسم الصنف..." autocomplete="off">
+              <input id="saleSearch" oninput="searchProducts(event)" onkeypress="handleBarcodeScan(event)" placeholder="اكتب اسم الصنف أو امسح الباركود..." autocomplete="off">
               <div id="searchResults"></div>
             </div>
-            <div><label>الباركود</label><input id="saleBarcode" oninput="handleBarcodeScan(event)" onkeypress="handleBarcodeScan(event)" placeholder="امسح..." autocomplete="off"></div>
             <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1"></div>
             <div><label>سعر البيع</label><input id="salePrice" type="number" min="0" placeholder="0.00"></div>
             <div class="inquiry-box">
@@ -1900,53 +1899,34 @@ window.saveProduct = async () => {const name=$("pName").value.trim(),barcode=$("
 window.deleteProduct = async id => {if(!await window.customConfirm("حذف؟"))return;await deleteDoc(docRef("products",id));await loadProducts();renderStats();showAlert("تم.","success");};
 function renderProducts(){$("productsTable").innerHTML=products.map(p=>`<tr><td>${escapeHTML(p.name)}</td><td>${escapeHTML(p.barcode||"")}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td>${p.qty}</td><td><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||"<tr><td colspan='6'>لا منتجات</td></tr>";}
 
-window.handleBarcodeScan = e => {
-  const val = e.target.value.trim();
-  if(val.length >= 8){
+window.searchProducts = (e) => {
+  const val = $("saleSearch").value.trim();
+  const q = val.toLowerCase();
+  
+  if (val.length >= 8) {
     const pAuto = products.find(x => x.barcode === val);
-    if(pAuto && Number(pAuto.qty) > 0){
+    if (pAuto && Number(pAuto.qty) > 0) {
       selectedProduct = pAuto;
-      $("saleSearch").value = pAuto.name;
       $("salePrice").value = pAuto.price;
+      $("searchResults").innerHTML = "";
       window.updateInquiryTooltip();
       addToCart();
-      e.target.value = "";
       return;
     }
   }
-  if(e.key === 'Enter'){
-    e.preventDefault();
-    const code = val;
-    if(!code) return;
-    const p = products.find(x => x.barcode === code);
-    if(p){
-      if(Number(p.qty) > 0){
-        selectedProduct = p;
-        $("saleSearch").value = p.name;
-        $("salePrice").value = p.price;
-        window.updateInquiryTooltip();
-        addToCart();
-        e.target.value = "";
-      } else {
-        showAlert("غير متوفر.","warning");
-        e.target.value = "";
-      }
-    } else {
-      showAlert("باركود غير مسجل.","error");
-      e.target.value = "";
-    }
-  }
-};
 
-window.searchProducts = () => {
-  const q = $("saleSearch").value.trim().toLowerCase();
   selectedProduct = null;
   window.updateInquiryTooltip();
   if(!q){ $("searchResults").innerHTML = ""; return; }
-  const m = products.filter(p => (p.name||"").toLowerCase().includes(q) && Number(p.qty) > 0).slice(0,10);
+  
+  const m = products.filter(p => 
+    ((p.name||"").toLowerCase().includes(q) || (p.barcode||"").includes(q)) && Number(p.qty) > 0
+  ).slice(0,10);
+
   $("searchResults").innerHTML = m.map(p =>
     `<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${escapeHTML(p.name)} — ${money(p.price)} ج — متاح ${p.qty}</button>`
   ).join("") || '<div style="padding:9px">لا نتائج</div>';
+  
   if(m.length === 1){
     selectedProduct = m[0];
     window.updateInquiryTooltip();

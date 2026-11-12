@@ -89,18 +89,17 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 #psHomeScreen { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
 .tiles-grid{ display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:repeat(3, 1fr); gap:8px; flex: 1; min-height: 0; margin-top:8px; }
 
-/* تعديل الكارت ليكون النص في المنتصف وكبير */
 .tile{ 
   padding:8px 10px; border-radius:12px; color:white; cursor:pointer; 
   transition: transform 0.15s ease, box-shadow 0.15s ease; 
   border: 1px solid rgba(255,255,255,0.1); 
-  display:flex; flex-direction:column; justify-content:center; align-items:center; /* سنترة المحتوى */
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
   overflow:hidden; position:relative; min-height: 0; text-align: center;
 }
 .tile:hover { transform: translateY(-2px); box-shadow: 0 8px 14px -4px rgba(0,0,0,0.5); }
 .tile .tile-icon{font-size:32px; line-height:1; z-index: 2; margin-bottom: 10px; text-shadow: 1px 1px 3px rgba(0,0,0,0.4);}
-.tile .tile-title{font-size:22px; font-weight:700; line-height:1.2; z-index: 2; text-shadow: 1px 1px 4px rgba(0,0,0,0.6);} /* تكبير الخط */
-.tile .tile-sub{display: none;} /* إخفاء النص الفرعي */
+.tile .tile-title{font-size:22px; font-weight:700; line-height:1.2; z-index: 2; text-shadow: 1px 1px 4px rgba(0,0,0,0.6);}
+.tile .tile-sub{display: none;}
 .tile .tile-badge{ position:absolute; top:8px; right:8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); padding:2px 8px; border-radius:14px; font-size:12px; font-weight:bold; border: 1px solid rgba(255,255,255,0.2); z-index: 2; }
 
 .t-blue{background:linear-gradient(135deg,#2563eb,#1d4ed8);}
@@ -174,35 +173,146 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
-/* ============ شاشة المبيعات (تعديل لملء الشاشة) ============ */
+/* ============ شاشة المبيعات (تصميم سهل) ============ */
 #salesPage {
   height: calc(100vh - 75px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: var(--bg-card);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
 }
-.sahal-header{background:linear-gradient(135deg,#059669,#047857);color:white;padding:10px 14px;font-size:13px;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap; font-weight:bold; flex-shrink:0;}
-.sahal-shortcuts{background:var(--bg-input);border-bottom:1px solid var(--border-color);padding:7px;display:flex;gap:6px;flex-wrap:wrap; flex-shrink:0;}
-.sahal-sc-btn{background:var(--bg-card);color:var(--text-main);border:1px solid var(--border-color);padding:6px 10px;font-size:11px;font-weight:bold; box-shadow:none;}
-.sahal-layout{flex:1; display:flex; flex-direction:column; gap:10px; background:var(--bg-card); padding:10px; border:1px solid var(--border-color); border-radius: 0 0 8px 8px; min-height:0;}
-.sahal-main{flex:1; display:flex; flex-direction:column; gap:8px; min-height:0;}
-.sahal-search-box{background:rgba(15,23,42,0.4);padding:10px;border-radius:8px; border: 1px solid var(--border-color); flex-shrink:0;}
-.sale-fields-top{display:grid;grid-template-columns: 2fr 1fr 1fr;gap:8px}
-.sale-fields-bottom{display:grid;grid-template-columns: 1fr 1fr 3fr auto;gap:8px; align-items:end; margin-top:8px; padding-top:8px; border-top:1px dashed var(--border-color);}
-.sahal-table-wrap{flex:1; background:var(--bg-input);border:1px solid var(--border-color);overflow:auto; border-radius: 6px; min-height:0;}
-.sahal-table{width:100%;border-collapse:collapse;min-width:350px}
-.sahal-table th{background:rgba(5,150,105,0.2);color:#34d399;padding:8px;position:sticky;top:0; font-size:11px;}
-.sahal-table td{padding:7px;border-bottom:1px solid var(--border-color); font-size:12px;}
 
-.sahal-total-card{background:linear-gradient(135deg,#059669,#047857);color:white;padding:10px 14px;text-align:center; border-radius: 8px; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;}
-.sahal-total-card span { font-size: 14px; }
-.sahal-total-card h2{margin:0;font-size:24px;color:white;}
+.sahal-top-bar {
+  background: linear-gradient(90deg, #047857, #059669);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 8px 8px 0 0;
+  flex-shrink: 0;
+}
 
-.sahal-btn-grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:6px; flex-shrink:0;}
-.sahal-btn{padding:10px 6px;font-weight:bold;font-size:12px; border-radius: 6px;}
+.sahal-layout-main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
 
-.search-container{position:relative;min-width:0}
-#searchResults{position:absolute;top:100%;right:0;width:100%;z-index:100;background:var(--bg-card);box-shadow:0 10px 25px rgba(0,0,0,0.5);max-height:200px;overflow:auto; border-radius: 6px; border: 1px solid var(--border-color);}
+/* الجزء الأيمن (الأزرار الجانبية) */
+.sahal-right-sidebar {
+  width: 130px;
+  background: var(--bg-input);
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.sahal-sidebar-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 5px;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: bold;
+  gap: 5px;
+  background: transparent;
+  transition: 0.2s;
+}
+.sahal-sidebar-btn:hover { background: rgba(255,255,255,0.05); }
+.sahal-sidebar-btn i { font-size: 24px; font-style: normal; }
+.sahal-sidebar-btn.sell { background: #059669; color: white; border: none; }
+.sahal-sidebar-btn.sell:hover { background: #047857; }
+.sahal-sidebar-btn.f12 { background: #d97706; color: white; flex: 1; }
+.sahal-sidebar-btn.f12:hover { background: #b45309; }
+.sahal-sidebar-btn.f11 { background: #f59e0b; color: white; }
+.sahal-sidebar-btn.f11:hover { background: #d97706; }
+
+/* الجزء الأوسط (البحث والجدول) */
+.sahal-center-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg-body);
+}
+
+.sahal-search-area {
+  padding: 10px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.sahal-row-top, .sahal-row-bottom {
+  display: grid;
+  gap: 8px;
+  align-items: end;
+}
+
+.sahal-row-top {
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto;
+}
+
+.sahal-row-bottom {
+  grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
+}
+
+.sahal-center-main .sahal-table-wrap {
+  flex: 1;
+  background: var(--bg-input);
+  overflow: auto;
+  min-height: 0;
+}
+.sahal-center-main .sahal-table-wrap table { min-width: 100%; }
+.sahal-center-main .sahal-table-wrap th { background: #059669; color: white; position: sticky; top: 0; padding: 10px; font-size: 13px;}
+.sahal-center-main .sahal-table-wrap td { padding: 10px; font-size: 13px;}
+.empty-cart-msg { text-align: center; padding: 40px; color: var(--text-muted); font-size: 16px; font-weight: bold;}
+
+/* الجزء السفلي (الخصم، الإضافة، الإجمالي) */
+.sahal-bottom-bar {
+  background: var(--bg-card);
+  border-top: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.sahal-bottom-fields {
+  display: flex;
+  gap: 15px;
+  flex: 1;
+  align-items: center;
+}
+.sahal-bottom-fields > div { display: flex; align-items: center; gap: 5px; }
+.sahal-bottom-fields label { margin: 0; font-size: 13px; white-space: nowrap; }
+.sahal-bottom-fields input { margin: 0; width: 100px; text-align: center; font-weight: bold;}
+
+.sahal-total-box {
+  background: #059669;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-weight: bold;
+}
+.sahal-total-box h2 { margin: 0; font-size: 24px; color: white; direction: ltr;}
+
 
 .ps-empty{text-align:center;padding:20px;color:var(--text-muted);background:var(--bg-input);border-radius:8px; border: 1px dashed var(--border-color); font-size:12px;}
 .back-btn{ background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); padding: 7px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: none; margin-bottom: 8px;}
@@ -217,6 +327,9 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 
 @media(max-width:950px){
   .devices-mini-grid { grid-template-columns: repeat(3, 1fr); }
+  .sahal-row-top { grid-template-columns: 1fr 1fr; }
+  .sahal-row-bottom { grid-template-columns: 1fr 1fr; }
+  .sahal-right-sidebar { width: 100px; }
 }
 @media(max-width:700px){
   .tiles-grid{grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(5, minmax(60px, 1fr)); overflow-y: auto; padding-left: 4px;}
@@ -224,9 +337,15 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   .tile .tile-title { font-size: 16px; }
   #psHomeScreen > div:last-child { grid-template-columns: repeat(2, 1fr) !important; }
   .devices-mini-grid { grid-template-columns: repeat(2, 1fr); }
-  .sale-fields-top { grid-template-columns: 1fr; }
-  .sale-fields-bottom { grid-template-columns: 1fr 1fr; }
-  .sahal-btn-grid { grid-template-columns: 1fr 1fr; }
+  .sahal-layout-main { flex-direction: column; }
+  .sahal-right-sidebar { width: 100%; flex-direction: row; border-left: none; border-bottom: 1px solid var(--border-color); }
+  .sahal-sidebar-btn { flex: 1; border-bottom: none; border-left: 1px solid var(--border-color); padding: 10px; }
+  .sahal-row-top, .sahal-row-bottom { grid-template-columns: 1fr; }
+  .sahal-bottom-bar { flex-direction: column; align-items: stretch; }
+  .sahal-bottom-fields { flex-wrap: wrap; }
+  .sahal-bottom-fields > div { flex: 1; }
+  .sahal-bottom-fields input { width: 100%; }
+  .sahal-total-box { justify-content: space-between; }
 }
 @media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
 
@@ -342,68 +461,15 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  <!-- الشاشة الرئيسية: 9 خانات -->
  <div id="psHomeScreen">
    <div class="tiles-grid">
-     
-     <!-- 1. أجهزة الرومات -->
-     <div class="tile t-blue" onclick="showPsSection('devices')">
-       <div class="tile-icon">🎮</div>
-       <div class="tile-title">أجهزة الرومات</div>
-       <span class="tile-badge" id="psHomeRoomCount">0</span>
-     </div>
-
-     <!-- 2. صالة VIP -->
-     <div class="tile t-purple" onclick="showPsSection('vip')">
-       <div class="tile-icon">⭐</div>
-       <div class="tile-title">صالة VIP</div>
-       <span class="tile-badge" id="psHomeVipCount">0</span>
-     </div>
-
-     <!-- 3. القاعدة العربي -->
-     <div class="tile t-orange" onclick="showPsSection('base_arabi')">
-       <div class="tile-icon">🏛</div>
-       <div class="tile-title">القاعدة العربي</div>
-       <span class="tile-badge" id="psHomeBaseCount">0</span>
-     </div>
-
-     <!-- 4. البلياردو -->
-     <div class="tile t-pink" onclick="showPsSection('billiard')">
-       <div class="tile-icon">🎱</div>
-       <div class="tile-title">البلياردو</div>
-       <span class="tile-badge" id="psHomeBilliardCount">0</span>
-     </div>
-
-     <!-- 5. تعمل الآن -->
-     <div class="tile t-green" onclick="showPsSection('running')">
-       <div class="tile-icon">🟢</div>
-       <div class="tile-title">تعمل الآن</div>
-       <span class="tile-badge" id="psHomeRunningCount">0</span>
-     </div>
-
-     <!-- 6. المشروبات -->
-     <div class="tile t-sky" onclick="showPsSection('drinks')">
-       <div class="tile-icon">🥤</div>
-       <div class="tile-title">المشروبات</div>
-       <span class="tile-badge" id="psHomeDrinksCount">0</span>
-     </div>
-
-     <!-- 7. السندوتشات -->
-     <div class="tile t-teal" onclick="showPsSection('sandwiches')">
-       <div class="tile-icon">🥪</div>
-       <div class="tile-title">السندوتشات</div>
-       <span class="tile-badge" id="psHomeSandCount">0</span>
-     </div>
-
-     <!-- 8. سجل الجلسات -->
-     <div class="tile t-indigo" onclick="showPsSection('sessions')">
-       <div class="tile-icon">📄</div>
-       <div class="tile-title">سجل الجلسات</div>
-     </div>
-
-     <!-- 9. الحجوزات -->
-     <div class="tile t-dark" onclick="showPsSection('reservations')">
-       <div class="tile-icon">📅</div>
-       <div class="tile-title">الحجوزات</div>
-     </div>
-
+     <div class="tile t-blue" onclick="showPsSection('devices')"><div class="tile-icon">🎮</div><div class="tile-title">أجهزة الرومات</div><span class="tile-badge" id="psHomeRoomCount">0</span></div>
+     <div class="tile t-purple" onclick="showPsSection('vip')"><div class="tile-icon">⭐</div><div class="tile-title">صالة VIP</div><span class="tile-badge" id="psHomeVipCount">0</span></div>
+     <div class="tile t-orange" onclick="showPsSection('base_arabi')"><div class="tile-icon">🏛</div><div class="tile-title">القاعدة العربي</div><span class="tile-badge" id="psHomeBaseCount">0</span></div>
+     <div class="tile t-pink" onclick="showPsSection('billiard')"><div class="tile-icon">🎱</div><div class="tile-title">البلياردو</div><span class="tile-badge" id="psHomeBilliardCount">0</span></div>
+     <div class="tile t-green" onclick="showPsSection('running')"><div class="tile-icon">🟢</div><div class="tile-title">تعمل الآن</div><span class="tile-badge" id="psHomeRunningCount">0</span></div>
+     <div class="tile t-sky" onclick="showPsSection('drinks')"><div class="tile-icon">🥤</div><div class="tile-title">المشروبات</div><span class="tile-badge" id="psHomeDrinksCount">0</span></div>
+     <div class="tile t-teal" onclick="showPsSection('sandwiches')"><div class="tile-icon">🥪</div><div class="tile-title">السندوتشات</div><span class="tile-badge" id="psHomeSandCount">0</span></div>
+     <div class="tile t-indigo" onclick="showPsSection('sessions')"><div class="tile-icon">📄</div><div class="tile-title">سجل الجلسات</div></div>
+     <div class="tile t-dark" onclick="showPsSection('reservations')"><div class="tile-icon">📅</div><div class="tile-title">الحجوزات</div></div>
    </div>
    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-top:8px;">
      <button class="dark" onclick="showPsSection('customers')">🏆 العملاء</button>
@@ -423,7 +489,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
    <div class="devices-mini-grid" id="psDevicesList"></div>
  </div>
 
- <!-- ============ صفحة VIP ============ -->
  <div id="psVipSection" class="devices-page hidden">
    <div class="devices-page-header">
      <button class="back-btn" onclick="goPsHome()">← رجوع</button>
@@ -433,7 +498,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
    <div class="devices-mini-grid" id="psVipDevicesList"></div>
  </div>
 
- <!-- ============ صفحة القاعدة العربي ============ -->
  <div id="psBaseArabiSection" class="devices-page hidden">
    <div class="devices-page-header">
      <button class="back-btn" onclick="goPsHome()">← رجوع</button>
@@ -443,7 +507,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
    <div class="devices-mini-grid" id="psBaseArabiDevicesList"></div>
  </div>
 
- <!-- ============ صفحة البلياردو ============ -->
  <div id="psBilliardSection" class="devices-page hidden">
    <div class="devices-page-header">
      <button class="back-btn" onclick="goPsHome()">← رجوع</button>
@@ -639,56 +702,100 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   </div>
   <div id="subscriptionPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>اشتراكي</h3><div class="card" style="max-width:600px;margin:auto;text-align:center"><div id="subPageDetails">...</div><div id="subPageActionBox"></div></div></div>
   
-  <!-- ============ شاشة المبيعات (تم تعديلها بالكامل) ============ -->
+  <!-- ============ شاشة المبيعات (تصميم سهل) ============ -->
   <div id="salesPage" class="hidden">
-   <div class="sahal-header"><b>شاشة المبيعات</b><b id="sahalShopTitle">اسم المتجر</b></div>
-   <div class="sahal-shortcuts"><button class="sahal-sc-btn" onclick="$('saleQty').focus()">الكمية</button><button class="sahal-sc-btn" onclick="$('salePrice').focus()">السعر</button><button class="sahal-sc-btn" onclick="$('saleSearch').focus()">بحث</button><button class="sahal-sc-btn" onclick="clearCart()">حذف</button><button class="sahal-sc-btn" onclick="completeSale()">حفظ</button></div>
-   
-   <div class="sahal-layout">
-    <div class="sahal-main">
-     <div class="sahal-search-box">
-       
-       <!-- الصف العلوي: بحث + باركود + كمية + سعر -->
-       <div class="sale-fields-top">
-         <div class="search-container">
-           <label>بحث / باركود</label>
-           <input id="saleSearch" oninput="searchProducts()" placeholder="ابحث بالاسم أو الباركود..." autocomplete="off">
-           <div id="searchResults"></div>
-         </div>
-         <div><label>باركود</label><input id="saleBarcode" onkeypress="handleBarcodeScan(event)" placeholder="امسح الباركود..."></div>
-         <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1"></div>
-       </div>
-       
-       <!-- الصف السفلي: سعر + خصم + إضافة + زر الإضافة للفاتورة -->
-       <div class="sale-fields-bottom">
-         <div><label>السعر</label><input id="salePrice" type="number" min="0" placeholder="0.00"></div>
-         <div><label>خصم (للفاتورة)</label><input id="saleDiscount" type="number" min="0" value="0"></div>
-         <div><label>إضافة (للفاتورة)</label><input id="saleAddition" type="number" min="0" value="0"></div>
-         <div><button class="green big" style="margin-bottom:9px; height:38px;" onclick="addToCart()">+ إضافة للفاتورة</button></div>
-       </div>
+    <!-- الشريط العلوي -->
+    <div class="sahal-top-bar">
+      <span>شاشة المبيعات</span>
+      <span id="sahalShopTitle">اسم المتجر</span>
+    </div>
 
-     </div>
-     
-     <div class="sahal-table-wrap">
-       <table class="sahal-table">
-         <thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr></thead>
-         <tbody id="cartTable"></tbody>
-       </table>
-     </div>
+    <div class="sahal-layout-main">
+      <!-- القائمة اليمنى -->
+      <div class="sahal-right-sidebar">
+        <div class="sahal-sidebar-btn sell" onclick="completeSale()">
+          <i>💵</i> بيع
+        </div>
+        <div class="sahal-sidebar-btn" onclick="page('products')">
+          <i>📦</i> المخزن
+        </div>
+        <div class="sahal-sidebar-btn" onclick="page('treasury')">
+          <i>💰</i> الخزينة
+        </div>
+        <div class="sahal-sidebar-btn" onclick="page('dashboard')">
+          <i>🏠</i> الرئيسية
+        </div>
+        <div class="sahal-sidebar-btn f12" onclick="saveHold()">
+          <i>⏸️</i> تعليق
+        </div>
+        <div class="sahal-sidebar-btn f11" onclick="showPaymentModal()">
+          <i>💳</i> سداد
+        </div>
+      </div>
+
+      <!-- المحتوى الأوسط -->
+      <div class="sahal-center-main">
+        
+        <!-- منطقة البحث -->
+        <div class="sahal-search-area">
+          <div class="sahal-row-top">
+            <div class="search-container">
+              <label>ابحث عن الصنف</label>
+              <input id="saleSearch" oninput="searchProducts()" placeholder="ابحث بالاسم أو الباركود..." autocomplete="off">
+              <div id="searchResults"></div>
+            </div>
+            <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1"></div>
+            <div><label>سعر البيع</label><input id="salePrice" type="number" min="0" placeholder="0.00"></div>
+            <div><label>استعلام</label><button class="secondary big" style="margin-bottom:9px; height:38px;" onclick="addToCart()">✔️ إضافة</button></div>
+            <div><label>الباركود</label><input id="saleBarcode" onkeypress="handleBarcodeScan(event)" placeholder="امسح..."></div>
+            <div><button class="green" style="height:38px; margin-bottom:9px; width:100%;" onclick="addToCart()">+</button></div>
+          </div>
+          
+          <div class="sahal-row-bottom">
+            <div><label>الحساب</label><select><option>نقدي</option></select></div>
+            <div><label>ملاحظات</label><input type="text" placeholder="..."></div>
+            <div><label>الخزينة</label><select><option>الرئيسية</option></select></div>
+            <div><label>إتمام</label><button class="green big" style="margin-bottom:9px;" onclick="completeSale()">حفظ وبيع</button></div>
+          </div>
+        </div>
+
+        <!-- الجدول -->
+        <div class="sahal-table-wrap">
+          <table class="sahal-table">
+            <thead>
+              <tr>
+                <th>رقم الصنف</th>
+                <th>اسم الصنف</th>
+                <th>الكمية</th>
+                <th>السعر</th>
+                <th>الإجمالي</th>
+                <th>الخصم</th>
+                <th>النهائي</th>
+                <th>حذف</th>
+              </tr>
+            </thead>
+            <tbody id="cartTable">
+              <tr><td colspan="8" class="empty-cart-msg">ابدأ بالبحث عن صنف بالاسم أو الباركود</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- الشريط السفلي (الخصم والإضافة والإجمالي) -->
+        <div class="sahal-bottom-bar">
+          <div class="sahal-bottom-fields">
+            <div><label>نوع الإضافة</label> <input type="text" value="0" id="saleAdditionText"></div>
+            <div><label>إضافة</label> <input id="saleAddition" type="number" min="0" value="0"></div>
+            <div><label>خصم %</label> <input id="saleDiscountPct" type="number" min="0" value="0"></div>
+            <div><label>خصم الفكة</label> <input id="saleDiscount" type="number" min="0" value="0"></div>
+          </div>
+          <div class="sahal-total-box">
+            <span>الكل</span>
+            <h2 id="cartTotalDisplay">0.00</h2>
+          </div>
+        </div>
+
+      </div>
     </div>
-    
-    <!-- قسم السلة والدفع (في الأسفل) -->
-    <div class="sahal-total-card">
-      <span>الإجمالي المطلوب</span>
-      <h2 id="cartTotalDisplay">0.00 ج</h2>
-    </div>
-    <div class="sahal-btn-grid">
-      <button class="sahal-btn" onclick="completeSale()" style="background:var(--success)">💵 بيع وحفظ</button>
-      <button class="sahal-btn" onclick="clearCart()" style="background:var(--warning)">🗑️ إلغاء السلة</button>
-      <button class="sahal-btn" onclick="page('products')" style="background:var(--primary)">📦 المخزن</button>
-      <button class="sahal-btn" onclick="page('dashboard')" style="background:var(--border-color)">🏠 الرئيسية</button>
-    </div>
-   </div>
   </div>
   <!-- ==================================================== -->
 
@@ -1651,10 +1758,35 @@ window.addToCart = () => {
  if(old){old.qty+=qty;old.price=price;}else cart.push({productId:p.id,name:p.name,qty,price,cost:p.cost||0});
  selectedProduct=null;$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";renderCart();$("saleSearch").focus();
 };
-function renderCart(){$("cartTable").innerHTML=cart.map((x,i)=>`<tr><td>${escapeHTML(x.name)}</td><td>${x.qty}</td><td>${money(x.price)} ج</td><td><b>${money(x.qty*x.price)} ج</b></td><td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td></tr>`).join("")||'<tr><td colspan="5" style="text-align:center">فارغة</td></tr>';const subtotal=cart.reduce((s,x)=>s+x.qty*x.price,0),discount=Math.max(0,Number($("saleDiscount").value)||0),addition=Math.max(0,Number($("saleAddition").value)||0),total=Math.max(0,subtotal-discount+addition);$("cartTotalDisplay").textContent=money(total);return {subtotal,discount,addition,total};}
+function renderCart(){
+ const tbody = $("cartTable");
+ if(cart.length === 0){
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-cart-msg">ابدأ بالبحث عن صنف بالاسم أو الباركود</td></tr>';
+ } else {
+    tbody.innerHTML = cart.map((x,i)=>`
+      <tr>
+        <td>${i+1}</td>
+        <td>${escapeHTML(x.name)}</td>
+        <td>${x.qty}</td>
+        <td>${money(x.price)}</td>
+        <td>${money(x.qty*x.price)}</td>
+        <td>0.00</td>
+        <td><b>${money(x.qty*x.price)} ج</b></td>
+        <td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td>
+      </tr>
+    `).join("");
+ }
+ const subtotal=cart.reduce((s,x)=>s+x.qty*x.price,0);
+ const discount=Math.max(0,Number($("saleDiscount").value)||0);
+ const discountPct=Math.max(0,Number($("saleDiscountPct").value)||0);
+ const addition=Math.max(0,Number($("saleAddition").value)||0);
+ const total=Math.max(0,subtotal-discount+addition);
+ $("cartTotalDisplay").textContent=money(total);
+ return {subtotal,discount,addition,total};
+}
 window.renderCart = renderCart;
 window.removeCartItem = i => {cart.splice(i,1);renderCart();};
-window.clearCart = async () => {if(cart.length&&!await window.customConfirm("إلغاء؟"))return;cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";selectedProduct=null;renderCart();};
+window.clearCart = async () => {if(cart.length&&!await window.customConfirm("إلغاء؟"))return;cart=[];$("saleDiscount").value="0";$("saleDiscountPct").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";selectedProduct=null;renderCart();};
 
 window.completeSale = async () => {
  if(!cart.length)return showAlert("فارغة.","warning");
@@ -1662,7 +1794,7 @@ window.completeSale = async () => {
  if(discount>subtotal+addition)return showAlert("الخصم أكبر.","warning");
  for(const item of cart){const p=products.find(x=>x.id===item.productId);if(!p||Number(p.qty)<item.qty)return showAlert("المخزون غير كافٍ: "+item.name,"error");}
  const inv={number:"INV-"+Date.now().toString().slice(-6),subtotal,discount,addition,total,items:[...cart],date:new Date().toLocaleString("ar-EG")};
- try{for(const item of cart){const p=products.find(x=>x.id===item.productId);await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});}await setDoc(doc(col("sales")),inv);await setDoc(doc(col("treasury")),{type:"in",amount:total,note:`فاتورة #${inv.number}`,date:inv.date});printInvoiceDirectly(inv);cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";selectedProduct=null;renderCart();loadBusiness().catch(e=>console.warn(e));showAlert("تم البيع. "+money(total)+" ج","success");}catch(e){showAlert("خطأ: "+e.message,"error");}
+ try{for(const item of cart){const p=products.find(x=>x.id===item.productId);await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)});}await setDoc(doc(col("sales")),inv);await setDoc(doc(col("treasury")),{type:"in",amount:total,note:`فاتورة #${inv.number}`,date:inv.date});printInvoiceDirectly(inv);cart=[];$("saleDiscount").value="0";$("saleDiscountPct").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";selectedProduct=null;renderCart();loadBusiness().catch(e=>console.warn(e));showAlert("تم البيع. "+money(total)+" ج","success");}catch(e){showAlert("خطأ: "+e.message,"error");}
 };
 window.printInvoiceDirectly = inv => {$("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px"><h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة</h3><p>رقم: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr><table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}</table><hr><p>الأصناف: ${money(inv.subtotal)} ج</p><p>الخصم: -${money(inv.discount)} ج</p><p>الإضافة: +${money(inv.addition)} ج</p><h2>الإجمالي: ${money(inv.total)} ج</h2><p>تطوير: محمد الصلاحي</p></div>`;window.print();};
 window.addTreasuryTransaction = async () => {const type=$("tType").value,amount=Number($("tAmount").value)||0,note=$("tNote").value.trim();if(amount<=0)return showAlert("مبلغ.","warning");await setDoc(doc(col("treasury")),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});$("tAmount").value="";$("tNote").value="";await loadTreasury();renderStats();showAlert("تم.","success");};

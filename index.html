@@ -171,7 +171,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
-/* ============ شاشة المبيعات (ستايل كبير وواضح) ============ */
+/* ============ شاشة المبيعات ============ */
 #salesPage {
   height: calc(100vh - 75px);
   display: flex;
@@ -205,41 +205,11 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 
 .sahal-layout-main {
   display: flex;
+  flex-direction: column;
   flex: 1;
   min-height: 0;
   overflow: hidden;
 }
-
-.sahal-right-sidebar {
-  width: 140px;
-  background: var(--bg-input);
-  border-left: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-}
-.sahal-sidebar-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px 10px;
-  border-bottom: 1px solid var(--border-color);
-  cursor: pointer;
-  color: var(--text-main);
-  font-size: 16px;
-  font-weight: bold;
-  gap: 8px;
-  background: transparent;
-  transition: 0.2s;
-  flex-shrink: 0;
-}
-.sahal-sidebar-btn:hover { background: rgba(255,255,255,0.05); }
-.sahal-sidebar-btn i { font-size: 32px; font-style: normal; }
-.sahal-sidebar-btn.sell { background: #059669; color: white; }
-.sahal-sidebar-btn.sell:hover { background: #047857; }
-.sahal-sidebar-btn.f12 { background: #d97706; color: white; flex: 1; }
-.sahal-sidebar-btn.f11 { background: #f59e0b; color: white; }
 
 .sahal-center-main {
   flex: 1;
@@ -249,11 +219,12 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   min-height: 0;
   background: var(--bg-body);
   overflow: hidden;
+  padding: 0 15px; /* مساحة جانبية */
 }
 
 .sahal-search-area {
-  padding: 15px;
-  background: var(--bg-card);
+  padding: 15px 0;
+  background: var(--bg-body);
   border-bottom: 2px solid var(--border-color);
   display: flex;
   flex-direction: column;
@@ -293,11 +264,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 }
 .search-container #searchResults button { font-size: 16px; padding: 15px; }
 
-.inquiry-box {
-  position: relative;
-  display: flex;
-  align-items: end;
-}
+.inquiry-box { position: relative; display: flex; align-items: end; }
 .inquiry-btn {
   height: 53px;
   width: 100%;
@@ -348,6 +315,8 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 0;
+  border-radius: 8px;
+  margin: 15px 0;
 }
 .sahal-center-main .sahal-table-wrap table { min-width: 100%; }
 .sahal-center-main .sahal-table-wrap th {
@@ -358,14 +327,17 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .sahal-center-main .sahal-table-wrap input { font-size: 16px; padding: 8px; height: auto; }
 .empty-cart-msg { text-align: center; padding: 50px; color: var(--text-muted); font-size: 20px; font-weight: bold; }
 
+/* شريط الإجمالي والخصم */
 .sahal-bottom-bar {
   background: var(--bg-card);
-  border-top: 2px solid var(--border-color);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   padding: 15px;
   gap: 15px;
   flex-shrink: 0;
+  margin-bottom: 15px;
 }
 .sahal-bottom-fields {
   display: flex;
@@ -392,8 +364,40 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .sahal-total-box span { font-size: 16px; }
 .sahal-total-box h2 { margin: 0; font-size: 32px; color: white; direction: ltr; }
 
+/* شريط الأزرار السفلي */
+.sahal-bottom-actions-bar {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  padding-bottom: 15px;
+  flex-shrink: 0;
+}
+
+.sahal-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+  transition: 0.2s;
+  user-select: none;
+}
+.sahal-action-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+.sahal-action-btn i { font-size: 24px; font-style: normal; }
+
+.action-sell { background: #10b981; }
+.action-pay { background: #f59e0b; }
+.action-hold { background: #d97706; }
+.action-stock { background: #334155; }
+.action-treasury { background: #8b5cf6; }
+.action-home { background: #0ea5e9; }
+
 @media(max-width:950px){
-  .sahal-right-sidebar { width: 100px; }
   .sahal-row-top { grid-template-columns: 1fr 1fr 1fr; }
 }
 
@@ -418,14 +422,13 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   #psHomeScreen > div:last-child { grid-template-columns: repeat(2, 1fr) !important; }
   .devices-mini-grid { grid-template-columns: repeat(2, 1fr); }
   .sahal-layout-main { flex-direction: column; }
-  .sahal-right-sidebar { width: 100%; flex-direction: row; border-left: none; border-bottom: 1px solid var(--border-color); }
-  .sahal-sidebar-btn { flex: 1; border-bottom: none; border-left: 1px solid var(--border-color); padding: 10px; }
   .sahal-row-top, .sahal-row-bottom { grid-template-columns: 1fr; }
   .sahal-bottom-bar { flex-direction: column; align-items: stretch; }
   .sahal-bottom-fields { flex-wrap: wrap; }
   .sahal-bottom-fields > div { flex: 1; }
   .sahal-bottom-fields input { width: 100%; }
   .sahal-total-box { justify-content: space-between; }
+  .sahal-bottom-actions-bar { grid-template-columns: repeat(2, 1fr); }
 }
 @media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
 
@@ -768,27 +771,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
 
     <div class="sahal-layout-main">
-      <div class="sahal-right-sidebar">
-        <div class="sahal-sidebar-btn sell" onclick="completeSale()">
-          <i>💵</i> بيع
-        </div>
-        <div class="sahal-sidebar-btn" onclick="page('products')">
-          <i>📦</i> المخزن
-        </div>
-        <div class="sahal-sidebar-btn" onclick="page('treasury')">
-          <i>💰</i> الخزينة
-        </div>
-        <div class="sahal-sidebar-btn" onclick="page('dashboard')">
-          <i>🏠</i> الرئيسية
-        </div>
-        <div class="sahal-sidebar-btn f12" onclick="saveHold()">
-          <i>⏸️</i> تعليق (F12)
-        </div>
-        <div class="sahal-sidebar-btn f11" onclick="showPaymentModal()">
-          <i>💳</i> سداد (F11)
-        </div>
-      </div>
-
       <div class="sahal-center-main">
         
         <div class="sahal-search-area">
@@ -855,6 +837,28 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
           <div class="sahal-total-box">
             <span>الكل</span>
             <h2 id="cartTotalDisplay">0.00</h2>
+          </div>
+        </div>
+
+        <!-- شريط الأزرار السفلي (تحت) -->
+        <div class="sahal-bottom-actions-bar">
+          <div class="sahal-action-btn action-sell" onclick="completeSale()">
+            <i>💵</i> <span>بيع</span>
+          </div>
+          <div class="sahal-action-btn action-pay" onclick="showPaymentModal()">
+            <i>💳</i> <span>سداد (F11)</span>
+          </div>
+          <div class="sahal-action-btn action-hold" onclick="saveHold()">
+            <i>⏸️</i> <span>تعليق (F12)</span>
+          </div>
+          <div class="sahal-action-btn action-stock" onclick="page('products')">
+            <i>📦</i> <span>المخزن</span>
+          </div>
+          <div class="sahal-action-btn action-treasury" onclick="page('treasury')">
+            <i>💰</i> <span>الخزينة</span>
+          </div>
+          <div class="sahal-action-btn action-home" onclick="page('dashboard')">
+            <i>🏠</i> <span>الرئيسية</span>
           </div>
         </div>
 

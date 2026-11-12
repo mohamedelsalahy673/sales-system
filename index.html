@@ -725,6 +725,45 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-
 import {getAuth,setPersistence,browserLocalPersistence,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {getFirestore,enableIndexedDbPersistence,doc,setDoc,getDoc,getDocFromServer,getDocFromCache,getDocs,getDocsFromCache,getDocsFromServer,updateDoc,collection,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
+// ==========================================
+// دالة لعرض رسائل التأكيد بشكل احترافي في المنتصف
+window.customConfirm = async (title, text = "") => {
+  const result = await Swal.fire({
+    title: title,
+    text: text,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3b82f6',
+    cancelButtonColor: '#ef4444',
+    confirmButtonText: 'نعم، متأكد',
+    cancelButtonText: 'إلغاء',
+    background: '#1e293b',
+    color: '#f8fafc',
+    customClass: { popup: 'border border-slate-700' }
+  });
+  return result.isConfirmed;
+};
+
+// دالة لعرض رسائل الإدخال بشكل احترافي في المنتصف
+window.customPrompt = async (title, inputType = 'text', defaultValue = '') => {
+  const result = await Swal.fire({
+    title: title,
+    input: inputType,
+    inputValue: defaultValue,
+    showCancelButton: true,
+    confirmButtonColor: '#3b82f6',
+    cancelButtonColor: '#ef4444',
+    confirmButtonText: 'حفظ',
+    cancelButtonText: 'إلغاء',
+    background: '#1e293b',
+    color: '#f8fafc',
+    inputAttributes: { style: 'text-align: center; background: #0f172a; color: white; border: 1px solid #334155;' },
+    customClass: { popup: 'border border-slate-700' }
+  });
+  return result.isConfirmed ? result.value : null;
+};
+// ==========================================
+
 window.showAlert=(msg,type='info')=>Swal.fire({text:msg,icon:type,confirmButtonText:'حسناً',confirmButtonColor:'#3b82f6',allowOutsideClick:false,background:'#1e293b',color:'#f8fafc'});
 window.getDeviceType=d=>!d?"room":(d.deviceType==="vip"?"vip":d.deviceType==="base_arabi"?"base_arabi":d.deviceType==="billiard"?"billiard":"room");
 
@@ -909,8 +948,8 @@ window.loadUsers=async()=>{
  }catch(e){showAlert("خطأ: "+e.message,"error");}
 };
 window.activateUserWithPlan=async(id,system)=>{const sel=$(`plan_${system}_${id}`);if(!sel)return;const days=Number(sel.value),plan=PLANS[days];if(!plan)return;const exp=new Date();exp.setDate(exp.getDate()+days);try{await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"active",[`systems.${system}.plan`]:plan.name,[`systems.${system}.expiryDate`]:exp});showAlert("تم.","success");await loadUsers();}catch(e){showAlert(e.message,"error");}};
-window.deactivateSystem=async(id,system)=>{if(!confirm("إيقاف؟"))return;try{await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"pending"});await loadUsers();showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
-window.deleteUser=async id=>{if(!confirm("حذف؟"))return;try{await deleteDoc(doc(db,"users",id));await loadUsers();showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
+window.deactivateSystem=async(id,system)=>{if(!await window.customConfirm("إيقاف؟"))return;try{await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"pending"});await loadUsers();showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
+window.deleteUser=async id=>{if(!await window.customConfirm("حذف؟"))return;try{await deleteDoc(doc(db,"users",id));await loadUsers();showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
 
 /* ============ Navigation ============ */
 window.goPsHome=()=>{
@@ -1208,7 +1247,7 @@ window.deletePsDevice = async id => {
  const d = psDevices.find(x=>x.id===id);
  if(!d) return;
  if(d.status==="running") return showAlert("جهاز يعمل.","warning");
- if(!confirm("حذف الجهاز؟")) return;
+ if(!await window.customConfirm("حذف الجهاز؟")) return;
  try{await deleteDoc(docRef("devices",id));closeDeviceDetail();await loadPlaystationData();showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}
 };
 
@@ -1340,7 +1379,7 @@ window.addOrderToRoom = async deviceId => {
 
 window.removeRoomOrder = async (deviceId,index) => {
  const d = psDevices.find(x=>x.id===deviceId);if(!d?.sessionId)return;
- if(!confirm("حذف الطلب؟"))return;
+ if(!await window.customConfirm("حذف الطلب؟"))return;
  const session = psSessions.find(s=>s.id===d.sessionId);if(!session)return;
  const newOrders = [...(session.orders||[])];newOrders.splice(index,1);
  session.orders = newOrders;d.currentOrders = newOrders;
@@ -1487,13 +1526,13 @@ window.addPsItem = async category => {
 };
 window.editPsItem = async id => {
  const item = psItems.find(x=>x.id===id);if(!item)return;
- const name = prompt("اسم:",item.name);if(name===null)return;
- const price = prompt("السعر:",item.price);if(price===null)return;
- const qty = prompt("الكمية:",item.qty??0);if(qty===null)return;
+ const name = await window.customPrompt("اسم:",'text',item.name); if(name===null)return;
+ const price = await window.customPrompt("السعر:",'number',item.price); if(price===null)return;
+ const qty = await window.customPrompt("الكمية:",'number',item.qty??0); if(qty===null)return;
  if(!name.trim()||!Number.isFinite(Number(price))||Number(price)<=0||!Number.isInteger(Number(qty))||Number(qty)<0) return showAlert("بيانات.","error");
  try{await updateDoc(docRef("psItems",id),{name:name.trim(),price:Number(price),qty:Number(qty),updatedAt:Date.now()});await loadPlaystationData();showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}
 };
-window.deletePsItem = async id => {if(!confirm("حذف؟"))return;try{await deleteDoc(docRef("psItems",id));await loadPlaystationData();showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
+window.deletePsItem = async id => {if(!await window.customConfirm("حذف؟"))return;try{await deleteDoc(docRef("psItems",id));await loadPlaystationData();showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
 
 function renderPsItems(){
  const drinks = psItems.filter(x=>x.category==="drink"), sand = psItems.filter(x=>x.category==="sandwich");
@@ -1548,9 +1587,9 @@ async function loadSales(){try{const s=await safeGetDocs(col("sales"));sales=s.d
 async function loadExpenses(){try{const s=await safeGetDocs(col("expenses"));expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderExpenses();}catch(e){}}
 async function loadTreasury(){try{const s=await safeGetDocs(col("treasury"));treasury=s.docs.map(d=>({id:d.id,...d.data()}));renderTreasury();}catch(e){}}
 
-window.clearTreasuryData = async () => {if(!confirm("مسح؟"))return;const snap=await safeGetDocs(col("treasury"));for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));await loadTreasury();renderStats();showAlert("تم.","success");};
+window.clearTreasuryData = async () => {if(!await window.customConfirm("مسح؟"))return;const snap=await safeGetDocs(col("treasury"));for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));await loadTreasury();renderStats();showAlert("تم.","success");};
 window.saveProduct = async () => {const name=$("pName").value.trim(),barcode=$("pBarcode").value.trim(),cost=Number($("pCost").value)||0,price=Number($("pPrice").value)||0,qty=Number($("pQty").value)||0;if(!name||price<=0)return showAlert("اسم وسعر.","warning");await setDoc(doc(col("products")),{name,barcode,cost,price,qty,createdAt:serverTimestamp()});$("pName").value="";$("pBarcode").value="";$("pCost").value="";$("pPrice").value="";$("pQty").value=10;await loadProducts();renderStats();showAlert("تم.","success");};
-window.deleteProduct = async id => {if(!confirm("حذف؟"))return;await deleteDoc(docRef("products",id));await loadProducts();renderStats();showAlert("تم.","success");};
+window.deleteProduct = async id => {if(!await window.customConfirm("حذف؟"))return;await deleteDoc(docRef("products",id));await loadProducts();renderStats();showAlert("تم.","success");};
 function renderProducts(){$("productsTable").innerHTML=products.map(p=>`<tr><td>${escapeHTML(p.name)}</td><td>${escapeHTML(p.barcode||"")}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td>${p.qty}</td><td><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||"<tr><td colspan='6'>لا منتجات</td></tr>";}
 
 window.handleBarcodeScan = e => {if(e.key==='Enter'){e.preventDefault();const code=e.target.value.trim();if(!code)return;const p=products.find(x=>x.barcode===code);if(p){if(Number(p.qty)>0){selectedProduct=p;$("saleSearch").value=p.name;$("salePrice").value=p.price;addToCart();e.target.value="";}else{showAlert("غير متوفر.","warning");e.target.value="";}}else{showAlert("باركود غير مسجل.","error");e.target.value="";}}};
@@ -1571,7 +1610,7 @@ window.addToCart = () => {
 function renderCart(){$("cartTable").innerHTML=cart.map((x,i)=>`<tr><td>${escapeHTML(x.name)}</td><td>${x.qty}</td><td>${money(x.price)} ج</td><td><b>${money(x.qty*x.price)} ج</b></td><td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td></tr>`).join("")||'<tr><td colspan="5" style="text-align:center">فارغة</td></tr>';const subtotal=cart.reduce((s,x)=>s+x.qty*x.price,0),discount=Math.max(0,Number($("saleDiscount").value)||0),addition=Math.max(0,Number($("saleAddition").value)||0),total=Math.max(0,subtotal-discount+addition);$("cartTotalDisplay").textContent=money(total);return {subtotal,discount,addition,total};}
 window.renderCart = renderCart;
 window.removeCartItem = i => {cart.splice(i,1);renderCart();};
-window.clearCart = () => {if(cart.length&&!confirm("إلغاء؟"))return;cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";selectedProduct=null;renderCart();};
+window.clearCart = () => {if(cart.length&&!await window.customConfirm("إلغاء؟"))return;cart=[];$("saleDiscount").value="0";$("saleAddition").value="0";$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";selectedProduct=null;renderCart();};
 
 window.completeSale = async () => {
  if(!cart.length)return showAlert("فارغة.","warning");
@@ -1637,7 +1676,7 @@ window.startFromReservation = async (resId,deviceId) => {
  }
 };
 
-window.deleteReservation = async id => {if(!confirm("إلغاء؟"))return;try{await deleteDoc(docRef("psReservations",id));await loadPlaystationData();renderPsReservations();showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
+window.deleteReservation = async id => {if(!await window.customConfirm("إلغاء؟"))return;try{await deleteDoc(docRef("psReservations",id));await loadPlaystationData();renderPsReservations();showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
 
 function renderPsCustomers(){
  const tbody = $("psCustomersTable");if(!tbody)return;

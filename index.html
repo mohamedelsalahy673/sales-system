@@ -22,6 +22,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 
 <style>
 :root {
@@ -175,7 +176,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
-/* ============ شاشة المبيعات (التصميم الجديد) ============ */
+/* ============ شاشة المبيعات ============ */
 #salesPage {
   height: calc(100vh - 75px);
   display: flex;
@@ -432,6 +433,25 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .swal2-html-container { color: var(--text-muted) !important; }
 .swal2-confirm { border-radius: 22px !important; padding: 8px 24px !important; background-color: var(--primary) !important; }
 .swal2-cancel { border-radius: 22px !important; padding: 8px 24px !important; background-color: var(--border-color) !important; color: white !important;}
+
+/* تنسيقات قائمة اختيار المستند */
+.doc-type-btn {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+  color: var(--text-muted);
+  transition: 0.2s;
+}
+.doc-type-btn:last-child { border-bottom: none; }
+.doc-type-btn:hover { background: rgba(59,130,246,0.1); color: white; }
+.doc-type-btn.active { background: var(--primary); color: white; font-weight: bold; }
+
+/* تنسيقات الفاتورة نفسها (عشان تطلع مظبوطة) */
+.receipt-item-table { width:100%; border-collapse:collapse; font-size:12px; margin:5px 0; }
+.receipt-item-table th, .receipt-item-table td { border-bottom: 1px solid #000; padding: 3px; }
+.receipt-item-table th { border-top: 1px solid #000; text-align: right; }
+.receipt-totals { border-top:1px solid #000; border-bottom:1px solid #000; padding:5px 0; margin-top:5px; }
 </style>
 </head>
 <body>
@@ -763,12 +783,247 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
       <div class="tile t-red" onclick="page('settings')"><div class="tile-icon">⚙</div><div class="tile-title">الإعدادات</div></div>
       <div class="tile t-sky" onclick="page('subscription')"><div class="tile-icon">⭐</div><div class="tile-title">اشتراكي</div></div>
       <div class="tile t-indigo" onclick="exportDataToExcel()"><div class="tile-icon">📥</div><div class="tile-title">نسخة Excel</div></div>
+      <div class="tile t-teal" onclick="page('barcodeSettings')"><div class="tile-icon">🏷️</div><div class="tile-title">إعداد الباركود</div></div>
+      <div class="tile t-orange" onclick="page('invoiceSettings')"><div class="tile-icon">🧾</div><div class="tile-title">تصميم الفاتورة</div></div>
     </div>
    </div>
   </div>
-  <div id="subscriptionPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>اشتراكي</h3><div class="card" style="max-width:600px;margin:auto;text-align:center"><div id="subPageDetails">...</div><div id="subPageActionBox"></div></div></div>
   
-  <!-- ==================== شاشة المبيعات الجديدة ==================== -->
+  <!-- ================= شاشة اشتراكي الجديدة ================= -->
+  <div id="subscriptionPage" class="hidden" style="background:#f1f5f9; border-radius:10px; padding:15px; color:#1e293b; direction:rtl; font-family:'Cairo', sans-serif; margin-top:10px;">
+    <button class="back-btn" onclick="page('dashboard')" style="background:#e2e8f0; color:#0f172a; border:none;">← رجوع</button>
+    
+    <!-- الترويسة العلوية -->
+    <div style="text-align:center; margin-bottom:15px;">
+      <h2 style="color:#059669; margin:0;">شكراً لثقتكم في NexPOS PRO</h2>
+      <p style="font-size:11px; color:#475569; background:#dcfce7; padding:10px; border-radius:5px; border:1px solid #86efac; line-height:1.6;">
+        عميلنا العزيز، لمحمي هذا الاشتراك في NexPOS PRO، رجاء التأكد من دقة بيانات الاشتراك ومدته وتكلفته. وتأكد من بيانات المشترك وأنها بيانات مالك المشروع فقط، وليس بيانات لأي شخص آخر. إن وجدت أي خطأ أو عدم معرفة ببرنامجك، يرجى التواصل مع خدمة العملاء فوراً. عدم دقة هذه البيانات يعرض الاشتراك للإيقاف.
+      </p>
+    </div>
+
+    <!-- بيانات الاشتراك السريعة -->
+    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-bottom:15px; text-align:center; font-size:12px;">
+      <div style="background:#fef08a; padding:10px; border:1px solid #ca8a04; border-radius:5px;">
+        <div style="color:#854d0e; font-weight:bold; margin-bottom:5px;">نوع الاشتراك</div>
+        <div id="subTypeDisplay" style="font-weight:bold; color:#0f172a;">اشتراك سنوي</div>
+      </div>
+      <div style="background:#fef08a; padding:10px; border:1px solid #ca8a04; border-radius:5px;">
+        <div style="color:#854d0e; font-weight:bold; margin-bottom:5px;">تاريخ نهاية الاشتراك</div>
+        <div id="subExpiryDate" style="font-weight:bold; color:#0f172a;">2027-06-09</div>
+      </div>
+      <div style="background:#fef08a; padding:10px; border:1px solid #ca8a04; border-radius:5px;">
+        <div style="color:#854d0e; font-weight:bold; margin-bottom:5px;">عدد الأجهزة المسموح بها</div>
+        <div id="subDevicesCount" style="font-weight:bold; color:#0f172a;">2</div>
+      </div>
+      <div style="background:#fef08a; padding:10px; border:1px solid #ca8a04; border-radius:5px;">
+        <div style="color:#854d0e; font-weight:bold; margin-bottom:5px;">تكلفة الاشتراك</div>
+        <div id="subCost" style="font-weight:bold; color:#0f172a;">1000.00 جنيه مصري</div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 150px 1fr 1fr; gap:15px;">
+      
+      <!-- القائمة الجانبية (الأزرار) -->
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button style="background:#93c5fd; color:#1e3a8a; border:none; padding:10px; text-align:right; border-radius:5px; font-weight:bold; display:flex; align-items:center; gap:8px;">📞 خدمة العملاء</button>
+        <button onclick="requestRenewal()" style="background:#fde047; color:#854d0e; border:none; padding:10px; text-align:right; border-radius:5px; font-weight:bold; display:flex; align-items:center; gap:8px;">💖 تجديد الاشتراك</button>
+        <button onclick="showAlert('تم تأكيد الاشتراك بنجاح!', 'success')" style="background:#fde047; color:#854d0e; border:none; padding:10px; text-align:right; border-radius:5px; font-weight:bold; display:flex; align-items:center; gap:8px;">✔️ تأكيد الاشتراك</button>
+        <button onclick="page('dashboard')" style="background:#fde047; color:#854d0e; border:none; padding:10px; text-align:right; border-radius:5px; font-weight:bold; display:flex; align-items:center; gap:8px;">🔒 الدخول لإشتراككم</button>
+        <button onclick="cancelDeviceLicense()" style="background:#fde047; color:#854d0e; border:none; padding:10px; text-align:right; border-radius:5px; font-weight:bold; display:flex; align-items:center; gap:8px;">❌ إلغاء ترخيص هذا الجهاز</button>
+        <button style="background:#bfdbfe; color:#1e3a8a; border:none; padding:10px; text-align:right; border-radius:5px; font-weight:bold; margin-top:10px;">👥 الموزعين المعتمدين</button>
+      </div>
+
+      <!-- بيانات الموزع -->
+      <div>
+        <h4 style="text-align:center; color:#1e3a8a; margin-bottom:10px;">بيانات الموزع</h4>
+        <table style="width:100%; font-size:12px; border-collapse:collapse;">
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">رقم الموزع</td><td style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">8</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">اسم الشركة</td><td style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">السويدي للتكنولوجيا</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">المسؤول</td><td style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">محمد السويدي</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">الدولة</td><td style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">Egypt</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">المدينة</td><td style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">الدقهلية</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">العنوان</td><td style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">المنصورة...</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">موبايل</td><td style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">01012201717</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">إيميل</td><td style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">elsewidi@hotmail.com</td></tr>
+        </table>
+        <div style="text-align:center; margin-top:10px; font-size:16px; color:#3b82f6;">
+          <i class="fab fa-whatsapp"></i> <i class="fab fa-facebook"></i>
+        </div>
+      </div>
+
+      <!-- بيانات المشترك -->
+      <div>
+        <h4 style="text-align:center; color:#1e3a8a; margin-bottom:10px;">بيانات المشترك</h4>
+        <table style="width:100%; font-size:12px; border-collapse:collapse;">
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">رقم الاشتراك</td><td id="subIdDisplay" style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">53494</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">موبايل الاشتراك</td><td id="subPhoneDisplay" style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">+201064958612</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">إيميل الاشتراك</td><td id="subEmailDisplay" style="padding:4px; background:#fef08a; border:1px solid #ca8a04;"></td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">اسم الشركة</td><td id="subShopNameDisplay" style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">High Store</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">المالك</td><td id="subOwnerNameDisplay" style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">محمود السيد بكري</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">المسؤول</td><td id="subOwnerNameDisplay2" style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">محمود السيد بكري</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">الدولة</td><td style="padding:4px; background:#fef08a; border:1px solid #ca8a04;">Egypt</td></tr>
+          <tr><td style="padding:4px; font-weight:bold; color:#475569;">ملاحظات</td><td style="padding:4px; background:#fef08a; border:1px solid #ca8a04;"></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- إدارة الأجهزة المسجلة -->
+    <div style="margin-top:15px;">
+      <h4 style="color:#1e3a8a; margin-bottom:10px;">💻 الأجهزة المسجلة على الحساب (بحد أقصى 2)</h4>
+      <table style="width:100%; font-size:12px; border-collapse:collapse; text-align:center;">
+        <thead style="background:#cbd5e1;">
+          <tr><th style="padding:5px; border:1px solid #94a3b8;">كود الجهاز</th><th style="padding:5px; border:1px solid #94a3b8;">الحالة</th><th style="padding:5px; border:1px solid #94a3b8;">إجراء</th></tr>
+        </thead>
+        <tbody id="devicesListTable">
+          <!-- هنا هتظهر الأجهزة -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- كود الجهاز -->
+    <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center; background:#e2e8f0; padding:10px; border-radius:5px; font-size:12px;">
+      <span style="font-weight:bold; color:#334155;">كود الجهاز الحالي</span>
+      <span id="deviceIdDisplay" style="font-family:monospace; color:#3b82f6; font-weight:bold; direction:ltr;">F28448FD768728B2AE0B54C54A59D106</span>
+    </div>
+  </div>
+
+  <!-- ================= شاشة تصميم نماذج الطباعة ================= -->
+  <div id="invoiceSettingsPage" class="hidden">
+    <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
+    <h3 style="color:#10b981;">🖨️ تصميم نماذج الطباعة</h3>
+    <p class="muted">1. حدد نوع المستند | 2. اختر أحد التصميمات الجاهزة أو عدل المقاس</p>
+
+    <div style="display:grid; grid-template-columns: 300px 1fr; gap:15px; margin-top:10px;">
+      
+      <!-- القائمة الجانبية (اختيار المستند والمقاس) -->
+      <div class="card" style="margin:0; padding:10px; display:flex; flex-direction:column; gap:10px;">
+        
+        <!-- 1. اختيار المستند -->
+        <div>
+          <label style="background:#3b82f6; color:white; padding:4px 8px; border-radius:4px; display:inline-block; margin-bottom:5px;">1. حدد نوع المستند</label>
+          <div style="display:flex; flex-direction:column; border:1px solid var(--border-color); border-radius:6px; overflow:hidden;">
+            <div class="doc-type-btn active" onclick="selectDocType('sales', this)">فاتورة المبيعات</div>
+            <div class="doc-type-btn" onclick="selectDocType('purchases', this)">فاتورة المشتريات</div>
+            <div class="doc-type-btn" onclick="selectDocType('sales_return', this)">فاتورة مرتجع المبيعات</div>
+            <div class="doc-type-btn" onclick="selectDocType('receipt', this)">سند قبض</div>
+            <div class="doc-type-btn" onclick="selectDocType('payment', this)">سند صرف</div>
+          </div>
+        </div>
+
+        <!-- 2. اختيار المقاس -->
+        <div>
+          <label style="background:#10b981; color:white; padding:4px 8px; border-radius:4px; display:inline-block; margin-bottom:5px;">2. اختر أحد التصميمات الجاهزة</label>
+          <select id="invPaperSize" onchange="updateInvoicePreview()" style="width:100%; padding:10px;">
+            <option value="80mm">0010 - 80mm (حراري)</option>
+            <option value="57mm">0030 - 57mm (حراري صغير)</option>
+            <option value="A4">0040 - A4 (ورق عادي)</option>
+          </select>
+        </div>
+
+        <!-- 3. إعدادات إضافية -->
+        <div style="border-top:1px solid var(--border-color); padding-top:10px;">
+          <label>اسم المحل</label>
+          <input id="invShopName" placeholder="اسم المحل" oninput="updateInvoicePreview()">
+          
+          <label>رقم الضريبي</label>
+          <input id="invTaxNumber" placeholder="XXX-XXX-XXX" oninput="updateInvoicePreview()">
+          
+          <label>عنوان المحل ورقم الهاتف</label>
+          <input id="invAddress" placeholder="العنوان..." oninput="updateInvoicePreview()">
+        </div>
+
+        <button class="big green" onclick="saveInvoiceSettings()">💾 حفظ التعديلات</button>
+      </div>
+
+      <!-- منطقة المعاينة الحية -->
+      <div class="card" style="margin:0; background:#cbd5e1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; overflow-y:auto; max-height:75vh; padding:20px;">
+        <h4 style="color:#0f172a; margin-bottom:15px;">👁️ معاينة حية</h4>
+        
+        <!-- ورقة الفاتورة -->
+        <div id="invoicePreviewContainer" style="background:white; color:black; box-shadow:0 5px 15px rgba(0,0,0,0.3); width:80mm; min-height:150mm; padding:10px; font-family:'Cairo', sans-serif; direction:rtl;">
+          <!-- المحتوى بيتولد بالجافاسكريبت -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= شاشة إعداد الباركود ================= -->
+  <div id="barcodeSettingsPage" class="hidden">
+    <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
+    <h3>🏷️ إعداد الباركود وملصقات المنتجات</h3>
+    
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:10px;">
+      
+      <!-- الإعدادات -->
+      <div class="card" style="margin:0;">
+        <h4>إعدادات الملصق</h4>
+        
+        <div class="grid" style="grid-template-columns:1fr 1fr;">
+          <div>
+            <label>الطابعة المستخدمة</label>
+            <select id="bcPrinter">
+              <option value="Xprinter XP-Q371U">Xprinter XP-Q371U</option>
+              <option value="Xprinter XP-365B">Xprinter XP-365B</option>
+              <option value="Generic Thermal 80mm">Generic Thermal 80mm</option>
+            </select>
+          </div>
+          <div>
+            <label>نوع الباركود (Barcode Type)</label>
+            <select id="bcType" onchange="updateBarcodePreview()">
+              <option value="CODE128">CODE128 (الأكثر شيوعاً)</option>
+              <option value="EAN13">EAN13 (12 أو 13 رقم)</option>
+              <option value="EAN8">EAN8 (7 أو 8 أرقام)</option>
+              <option value="UPC">UPC</option>
+              <option value="ITF14">ITF14</option>
+            </select>
+          </div>
+        </div>
+
+        <hr>
+        <h4>المقاسات (مم)</h4>
+        <div class="grid" style="grid-template-columns:1fr 1fr;">
+          <div><label>الهامش العلوي</label><input id="bcMarginTop" type="number" value="3" oninput="updateBarcodePreview()"></div>
+          <div><label>الهامش الأيسر</label><input id="bcMarginLeft" type="number" value="3" oninput="updateBarcodePreview()"></div>
+          <div><label>عرض الملصق</label><input id="bcWidth" type="number" value="32" oninput="updateBarcodePreview()"></div>
+          <div><label>طول الباركود</label><input id="bcHeight" type="number" value="6" oninput="updateBarcodePreview()"></div>
+        </div>
+
+        <hr>
+        <h4>حجم الخطوط</h4>
+        <div class="grid" style="grid-template-columns:1fr 1fr 1fr;">
+          <div><label>حجم اسم المنتج</label><input id="bcFontSizeName" type="number" value="8" oninput="updateBarcodePreview()"></div>
+          <div><label>حجم السعر</label><input id="bcFontSizePrice" type="number" value="8" oninput="updateBarcodePreview()"></div>
+          <div><label>حجم الكود</label><input id="bcFontSizeCode" type="number" value="7" oninput="updateBarcodePreview()"></div>
+        </div>
+
+        <hr>
+        <h4>خيارات الطباعة</h4>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:5px;">
+          <label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="checkbox" id="bcShowName" checked onchange="updateBarcodePreview()" style="width:auto; margin:0;"> طباعة اسم الصنف</label>
+          <label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="checkbox" id="bcShowPrice" checked onchange="updateBarcodePreview()" style="width:auto; margin:0;"> طباعة السعر</label>
+          <label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="checkbox" id="bcShowCode" checked onchange="updateBarcodePreview()" style="width:auto; margin:0;"> طباعة الكود (أرقام)</label>
+        </div>
+
+        <button class="big green" onclick="saveBarcodeSettings()" style="margin-top:15px;">💾 حفظ الإعدادات</button>
+      </div>
+
+      <!-- المعاينة -->
+      <div class="card" style="margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <h4 style="margin-bottom:15px;">👁️ معاينة حية للملصق</h4>
+        
+        <div id="barcodePreviewContainer" style="background:white; color:black; padding:10px; border-radius:5px; box-shadow:0 0 10px rgba(0,0,0,0.5); text-align:center; display:inline-block;">
+          <div id="previewName" style="font-weight:bold; font-size:8px; margin-bottom:2px;">Mahmoud Baker</div>
+          <svg id="barcodeSvg"></svg>
+          <div id="previewPrice" style="font-weight:bold; font-size:8px; margin-top:2px;">100.00 EGP</div>
+          <div id="previewCode" style="font-size:7px; margin-top:2px;">123456789012</div>
+        </div>
+        
+        <p class="muted" style="margin-top:15px; text-align:center; font-size:11px;">عدل الإعدادات على اليمين وشاهد التغيير هنا مباشرة.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= شاشة المبيعات الجديدة ================= -->
   <div id="salesPage" class="hidden">
     <div class="sahal-top-bar">
       <div style="display:flex; align-items:center; gap:10px;">
@@ -776,7 +1031,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
         <span>شاشة المبيعات</span>
       </div>
       <div style="display:flex; align-items:center; gap:10px;">
-        <span class="brand-mini" style="background:rgba(255,255,255,0.2);">NexPOS PRO — V29</span>
+        <span class="brand-mini" style="background:rgba(255,255,255,0.2);">NexPOS PRO — V30</span>
         <span id="sahalShopTitle" style="font-size:16px;">اسم المتجر</span>
       </div>
     </div>
@@ -869,7 +1124,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
       </div>
     </div>
   </div>
-  <!-- ==================== نهاية شاشة المبيعات ==================== -->
+  <!-- ================= نهاية شاشة المبيعات ================= -->
 
   <div id="productsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>المنتجات</h3><div class="card"><input id="pName" placeholder="اسم"><input id="pBarcode" placeholder="باركود"><div class="grid"><div><label>شراء</label><input id="pCost" type="number" value="0"></div><div><label>بيع</label><input id="pPrice" type="number" value="0"></div><div><label>كمية</label><input id="pQty" type="number" value="10"></div></div><button onclick="saveProduct()" class="green big">حفظ</button></div><div class="tablewrap"><table><thead><tr><th>المنتج</th><th>باركود</th><th>شراء</th><th>بيع</th><th>كمية</th><th>إجراء</th></tr></thead><tbody id="productsTable"></tbody></table></div></div>
   <div id="treasuryPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الخزينة</h3><div class="grid"><div class="stat">رصيد<strong id="treasuryBalanceDisplay">0 ج</strong></div></div><div class="card"><h3>حركة</h3><select id="tType"><option value="in">وارد</option><option value="out">صادر</option></select><input id="tAmount" type="number" placeholder="المبلغ"><input id="tNote" placeholder="البيان"><button class="big green" onclick="addTreasuryTransaction()">تسجيل</button></div><button class="red big" onclick="clearTreasuryData()">مسح الحركات</button><div class="tablewrap"><table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table></div></div>
@@ -990,6 +1245,16 @@ const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 setPersistence(auth,browserLocalPersistence).catch(e=>console.warn(e));
 enableIndexedDbPersistence(db).catch(e=>console.warn(e.code));
 
+// دالة لتوليد أو جلب كود فريد للجهاز الحالي
+function getDeviceId() {
+  let deviceId = localStorage.getItem('nexpos_device_id');
+  if (!deviceId) {
+    deviceId = 'DEV-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+    localStorage.setItem('nexpos_device_id', deviceId);
+  }
+  return deviceId;
+}
+
 function updateNetworkStatus(){const el=document.getElementById('networkStatus');if(!el)return;if(navigator.onLine){el.textContent='متصل';el.className='tag good';}else{el.textContent='⚠️ غير متصل';el.className='tag';}}
 window.addEventListener('online',updateNetworkStatus);window.addEventListener('offline',updateNetworkStatus);updateNetworkStatus();
 
@@ -1079,6 +1344,27 @@ onAuthStateChanged(auth,async user=>{
   const snap=await safeGetDoc(doc(db,"users",user.uid));
   if(!snap.exists()){if(!navigator.onLine)return;await signOut(auth);return;}
   profile=snap.data();
+
+  // ============ التحقق من عدد الأجهزة (بحد أقصى 2) ============
+  const MAX_DEVICES = 2;
+  const currentDeviceId = getDeviceId();
+  let devices = profile.devices || [];
+
+  if (!devices.includes(currentDeviceId)) {
+    if (devices.length >= MAX_DEVICES) {
+      await signOut(auth);
+      $("auth").classList.remove("hidden");
+      $("authForm").classList.add("hidden");
+      showAlert(`⚠️ لقد وصلت للحد الأقصى (${MAX_DEVICES} أجهزة). يرجى الدخول من أحد الأجهزة المسجلة أو إلغاء ترخيص جهاز من إعدادات حسابك في الجهاز الآخر.`, "error");
+      return;
+    } else {
+      devices.push(currentDeviceId);
+      await updateDoc(doc(db, "users", user.uid), { devices: devices });
+      profile.devices = devices;
+    }
+  }
+  // ==========================================================
+
   const info=systemInfo(profile,selectedSystem);
   if(info.status==="not_registered"||!subscriptionActive(info)){
       if(!navigator.onLine)return;
@@ -1106,36 +1392,178 @@ onAuthStateChanged(auth,async user=>{
  }catch(e){console.error(e);if(navigator.onLine)showAlert("خطأ: "+e.message,"error");}
 });
 
-window.openPsSubscriptionModal=()=>{
- const info=systemInfo(profile,"playstation");
- const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():(info.expiryDate?new Date(info.expiryDate):null);
- let daysLeft=0;
- if(expiry){const today=new Date();today.setHours(0,0,0,0);const exp=new Date(expiry);exp.setHours(0,0,0,0);daysLeft=Math.ceil((exp-today)/86400000);}
- $("psSubModalContent").innerHTML=`<b>النشاط:</b> ${escapeHTML(profile.shopName||"—")}<br><b>الباقة:</b> ${escapeHTML(info.plan||"—")}<br><b>المتبقي:</b> <span style="color:${daysLeft<=5?'var(--danger)':'var(--success)'};font-weight:bold;">${Math.max(0,daysLeft)} يوم</span>`;
- $("psSubModal").classList.remove("hidden");
+// دوال إعدادات الباركود
+window.updateBarcodePreview = () => {
+  const type = $("bcType").value;
+  const barcodeValue = "123456789012"; 
+  const showName = $("bcShowName").checked;
+  const showPrice = $("bcShowPrice").checked;
+  const showCode = $("bcShowCode").checked;
+  const nameEl = $("previewName");
+  const priceEl = $("previewPrice");
+  const codeEl = $("previewCode");
+  nameEl.style.display = showName ? "block" : "none";
+  priceEl.style.display = showPrice ? "block" : "none";
+  codeEl.style.display = showCode ? "block" : "none";
+  nameEl.style.fontSize = $("bcFontSizeName").value + "px";
+  priceEl.style.fontSize = $("bcFontSizePrice").value + "px";
+  codeEl.style.fontSize = $("bcFontSizeCode").value + "px";
+  const container = $("barcodePreviewContainer");
+  const widthMm = Number($("bcWidth").value);
+  container.style.width = (widthMm * 3.78) + "px"; 
+  container.style.paddingTop = $("bcMarginTop").value + "px";
+  container.style.paddingLeft = $("bcMarginLeft").value + "px";
+  try {
+    JsBarcode("#barcodeSvg", barcodeValue, {
+      format: type, lineColor: "#000", width: 1.5, height: Number($("bcHeight").value) * 3.78, displayValue: false 
+    });
+  } catch (e) { console.log("خطأ في نوع الباركود:", e.message); }
 };
-window.closePsSubscriptionModal=()=>$("psSubModal").classList.add("hidden");
+window.saveBarcodeSettings = async () => {
+  const settings = {
+    printer: $("bcPrinter").value, type: $("bcType").value, marginTop: Number($("bcMarginTop").value), marginLeft: Number($("bcMarginLeft").value),
+    width: Number($("bcWidth").value), height: Number($("bcHeight").value), fontSizeName: Number($("bcFontSizeName").value),
+    fontSizePrice: Number($("bcFontSizePrice").value), fontSizeCode: Number($("bcFontSizeCode").value),
+    showName: $("bcShowName").checked, showPrice: $("bcShowPrice").checked, showCode: $("bcShowCode").checked
+  };
+  try {
+    await setDoc(doc(db, "users", currentUser.uid), { barcodeSettings: settings }, { merge: true });
+    profile.barcodeSettings = settings;
+    showAlert("تم حفظ إعدادات الباركود بنجاح!", "success");
+  } catch (e) { showAlert("خطأ في الحفظ: " + e.message, "error"); }
+};
+window.loadBarcodeSettings = () => {
+  const s = profile?.barcodeSettings;
+  if (s) {
+    $("bcPrinter").value = s.printer || "Xprinter XP-Q371U"; $("bcType").value = s.type || "CODE128";
+    $("bcMarginTop").value = s.marginTop ?? 3; $("bcMarginLeft").value = s.marginLeft ?? 3;
+    $("bcWidth").value = s.width ?? 32; $("bcHeight").value = s.height ?? 6;
+    $("bcFontSizeName").value = s.fontSizeName ?? 8; $("bcFontSizePrice").value = s.fontSizePrice ?? 8; $("bcFontSizeCode").value = s.fontSizeCode ?? 7;
+    $("bcShowName").checked = s.showName ?? true; $("bcShowPrice").checked = s.showPrice ?? true; $("bcShowCode").checked = s.showCode ?? true;
+  }
+  updateBarcodePreview();
+};
 
-function checkPsSubscriptionStatus(){
- const info=systemInfo(profile,"playstation");
- const expiry=info.expiryDate?.toDate?info.expiryDate.toDate():(info.expiryDate?new Date(info.expiryDate):null);
- if(!expiry)return;
- const today=new Date();today.setHours(0,0,0,0);
- const exp=new Date(expiry);exp.setHours(0,0,0,0);
- const daysLeft=Math.ceil((exp-today)/86400000);
- const warn=$("psExpiryWarning");
- if(daysLeft<=0){warn.classList.add("hidden");showAlert("انتهى الاشتراك.","warning");setTimeout(()=>logout(),2000);return;}
- if(daysLeft<=5){warn.classList.remove("hidden");warn.innerHTML=`⚠️ باقي <b>${daysLeft}</b> أيام.`;}
- else warn.classList.add("hidden");
-}
+// دوال إعدادات الفاتورة
+window.currentDocType = 'sales';
+window.selectDocType = (type, element) => {
+  window.currentDocType = type;
+  document.querySelectorAll('.doc-type-btn').forEach(el => el.classList.remove('active'));
+  element.classList.add('active');
+  updateInvoicePreview();
+};
+window.updateInvoicePreview = () => {
+  const shopName = $("invShopName").value || "اسم المشروع";
+  const taxNumber = $("invTaxNumber").value || "XXX-XXX-XXX";
+  const address = $("invAddress").value || "عنوان المحل هنا";
+  const paperSize = $("invPaperSize").value;
+  const previewContainer = $("invoicePreviewContainer");
+  if (paperSize === "80mm") previewContainer.style.width = "80mm";
+  else if (paperSize === "57mm") previewContainer.style.width = "57mm";
+  else previewContainer.style.width = "210mm";
+  let headerTitle = "", tableHeaders = "", dummyItems = "", totalsHTML = "";
+  if (window.currentDocType === 'sales' || window.currentDocType === 'purchases') {
+    headerTitle = window.currentDocType === 'sales' ? "فاتورة مبيعات" : "فاتورة مشتريات";
+    tableHeaders = `<tr><th>الصنف</th><th>كمية</th><th>سعر</th><th>إجمالي</th></tr>`;
+    dummyItems = `<tr><td>منتج 1</td><td>1</td><td>115</td><td>115</td></tr><tr><td>منتج 2</td><td>1</td><td>230</td><td>230</td></tr><tr><td>منتج 3</td><td>1</td><td>345</td><td>345</td></tr>`;
+    totalsHTML = `<div style="display:flex; justify-content:space-between; font-weight:bold;"><span>المطلوب</span><span>690</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>يشمل ضريبة 15%</span><span>90</span></div><div style="display:flex; justify-content:space-between; font-weight:bold;"><span>المدفوع</span><span>690</span></div>`;
+  } else if (window.currentDocType === 'receipt' || window.currentDocType === 'payment') {
+    headerTitle = window.currentDocType === 'receipt' ? "سند قبض" : "سند صرف";
+    tableHeaders = `<tr><th>البيان</th><th>المبلغ</th></tr>`;
+    dummyItems = `<tr><td>دفعة مقدمة من العميل</td><td>500</td></tr>`;
+    totalsHTML = `<div style="display:flex; justify-content:space-between; font-weight:bold;"><span>الإجمالي</span><span>500</span></div>`;
+  } else if (window.currentDocType === 'sales_return') {
+    headerTitle = "مرتجع مبيعات"; tableHeaders = `<tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>`;
+    dummyItems = `<tr><td>منتج مرتجع</td><td>1</td><td>115</td><td>115</td></tr>`; totalsHTML = `<div style="display:flex; justify-content:space-between; font-weight:bold;"><span>المطلوب ردّه</span><span>115</span></div>`;
+  }
+  previewContainer.innerHTML = `
+    <div style="text-align:center; font-size:14px;">
+      <div style="font-weight:bold; font-size:18px; margin-bottom:5px;">${shopName}</div>
+      <div style="font-size:10px;">رقم ضريبي: ${taxNumber}</div>
+      <div style="background:#e2e8f0; padding:5px; font-weight:bold; margin:10px 0; border:1px solid #000;">${headerTitle}</div>
+      <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:5px;"><span>رقم: 262</span><span>التاريخ: ${new Date().toLocaleDateString('ar-EG')}</span></div>
+      <table class="receipt-item-table"><thead>${tableHeaders}</thead><tbody>${dummyItems}</tbody></table>
+      <div class="receipt-totals">${totalsHTML}</div>
+      <div style="margin-top:15px; font-size:11px;">${address}</div>
+      <div style="margin-top:10px; font-size:10px; color:#555;">شكراً لزيارتكم</div>
+    </div>`;
+};
+window.saveInvoiceSettings = async () => {
+  const settings = { shopName: $("invShopName").value, taxNumber: $("invTaxNumber").value, address: $("invAddress").value, paperSize: $("invPaperSize").value };
+  try { await setDoc(doc(db, "users", currentUser.uid), { invoiceSettings: settings }, { merge: true }); profile.invoiceSettings = settings; showAlert("تم حفظ إعدادات الفاتورة بنجاح!", "success"); } catch (e) { showAlert("خطأ في الحفظ: " + e.message, "error"); }
+};
+window.loadInvoiceSettings = () => {
+  const s = profile?.invoiceSettings;
+  if (s) { $("invShopName").value = s.shopName || profile.shopName || ""; $("invTaxNumber").value = s.taxNumber || ""; $("invAddress").value = s.address || ""; $("invPaperSize").value = s.paperSize || "80mm"; }
+  else { $("invShopName").value = profile?.shopName || ""; }
+  updateInvoicePreview();
+};
 
 function checkCustomerSubscription(info){
- const details=$("subPageDetails"),action=$("subPageActionBox"),tiles=$("mainTilesContainer");
- if(!subscriptionActive(info)){details.innerHTML="الباقة غير مفعلة.";action.innerHTML='<button class="green big" onclick="requestRenewal()">طلب تفعيل</button>';tiles.style.pointerEvents="none";tiles.style.opacity=".4";return;}
- const expiry=info.expiryDate.toDate?info.expiryDate.toDate():new Date(info.expiryDate),diff=Math.ceil((expiry-new Date())/86400000);
- details.innerHTML=`<b>الباقة:</b> ${escapeHTML(info.plan||"نشطة")}<br><b>المتبقي:</b> ${diff} يوم`;
- action.innerHTML='<span class="tag good">نشطة</span>';tiles.style.pointerEvents="auto";tiles.style.opacity="1";
+  if ($("subShopNameDisplay")) {
+    $("subShopNameDisplay").textContent = profile.shopName || "—";
+    $("subOwnerNameDisplay").textContent = profile.customerName || "—";
+    $("subOwnerNameDisplay2").textContent = profile.customerName || "—";
+    $("subPhoneDisplay").textContent = profile.phone || "—";
+    $("subEmailDisplay").textContent = profile.email || currentUser.email || "—";
+    $("subIdDisplay").textContent = currentUser.uid.substring(0, 5).toUpperCase();
+    $("deviceIdDisplay").textContent = getDeviceId();
+    $("subTypeDisplay").textContent = info.plan || "اشتراك غير محدد";
+    const price = info.requestedPrice || (info.plan === "سنوي" ? 900 : info.plan === "شهري" ? 100 : 0);
+    $("subCost").textContent = money(price) + " جنيه مصري";
+    
+    if (info.expiryDate) {
+      const expDate = info.expiryDate.toDate ? info.expiryDate.toDate() : new Date(info.expiryDate);
+      $("subExpiryDate").textContent = expDate.toISOString().slice(0, 10);
+      const diffDays = Math.ceil((expDate - new Date()) / (1000 * 60 * 60 * 24));
+      const diffEl = $("subDevicesCount");
+      diffEl.textContent = diffDays > 0 ? `${diffDays} يوم` : "منتهي";
+      if(diffDays <= 5) diffEl.style.color = "#ef4444"; else diffEl.style.color = "#0f172a";
+    }
+
+    const currentDeviceId = getDeviceId();
+    const devices = profile.devices || [];
+    const devicesTable = $("devicesListTable");
+    if (devicesTable) {
+      devicesTable.innerHTML = devices.map(dev => {
+        const isCurrent = dev === currentDeviceId;
+        return `<tr>
+          <td style="padding:5px; border:1px solid #94a3b8; font-family:monospace;">${dev}</td>
+          <td style="padding:5px; border:1px solid #94a3b8; color:${isCurrent ? '#16a34a' : '#475569'}; font-weight:${isCurrent ? 'bold' : 'normal'};">${isCurrent ? 'الجهاز الحالي' : 'جهاز آخر'}</td>
+          <td style="padding:5px; border:1px solid #94a3b8;">${isCurrent ? '<span style="color:#16a34a;">✔ متصل</span>' : `<button onclick="removeDevice('${dev}')" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:3px; font-size:11px; cursor:pointer;">إلغاء الترخيص</button>`}</td>
+        </tr>`;
+      }).join("");
+    }
+  }
+  const tiles = $("mainTilesContainer");
+  if (!subscriptionActive(info)) { tiles.style.pointerEvents = "none"; tiles.style.opacity = "0.4"; }
+  else { tiles.style.pointerEvents = "auto"; tiles.style.opacity = "1"; }
 }
+
+window.removeDevice = async (deviceId) => {
+  if (!await window.customConfirm("إلغاء ترخيص هذا الجهاز؟", "سيتم تسجيل الخروج من هذا الجهاز ولن تتمكن من الدخول منه حتى تسجله مرة أخرى.")) return;
+  try {
+    const currentDevices = profile.devices || [];
+    const newDevices = currentDevices.filter(d => d !== deviceId);
+    await updateDoc(doc(db, "users", currentUser.uid), { devices: newDevices });
+    profile.devices = newDevices;
+    showAlert("تم إلغاء ترخيص الجهاز بنجاح. يمكنك الآن الدخول من جهاز آخر.", "success");
+    if (deviceId === getDeviceId()) { setTimeout(() => logout(), 2000); }
+    else { checkCustomerSubscription(systemInfo(profile, selectedSystem)); }
+  } catch (e) { showAlert("خطأ: " + e.message, "error"); }
+};
+
+window.cancelDeviceLicense = async () => {
+  if (!await window.customConfirm("هل أنت متأكد من إلغاء ترخيص هذا الجهاز؟", "لن تتمكن من الدخول من هذا الجهاز حتى يتم التفعيل مرة أخرى.")) return;
+  try {
+    const currentDeviceId = getDeviceId();
+    const newDevices = (profile.devices || []).filter(d => d !== currentDeviceId);
+    await updateDoc(doc(db, "users", currentUser.uid), { devices: newDevices });
+    showAlert("تم إلغاء ترخيص هذا الجهاز. سيتم تسجيل الخروج.", "success");
+    setTimeout(() => logout(), 2000);
+  } catch (e) { showAlert("خطأ: " + e.message, "error"); }
+};
+
 window.requestRenewal=()=>{const sys=activeSystem==="playstation"?"البلايستيشن":"المبيعات";const msg=encodeURIComponent(`تجديد ${sys} - ${profile?.shopName||""}`);window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");};
 window.ownerSection=which=>{$("ownerSalesSection").classList.toggle("hidden",which!=="sales");$("ownerPsSection").classList.toggle("hidden",which!=="playstation");$("ownerSalesTab").classList.toggle("active",which==="sales");$("ownerPsTab").classList.toggle("active",which==="playstation");};
 
@@ -1807,7 +2235,7 @@ window.updateInquiryTooltip = function() {
 };
 
 window.page = name => {
-  const pages = ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription"];
+  const pages = ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription","barcodeSettings","invoiceSettings"];
   pages.forEach(p => $(p+"Page").classList.add("hidden"));
   $(name+"Page").classList.remove("hidden");
   const wrapEl = document.querySelector('.wrap');
@@ -1820,6 +2248,8 @@ window.page = name => {
   }
   if(name === "dashboard" || name === "reports") renderStats();
   if(name === "sales"){ renderCart(); window.updateInquiryTooltip(); }
+  if(name === "barcodeSettings") { loadBarcodeSettings(); }
+  if(name === "invoiceSettings") { loadInvoiceSettings(); }
 };
 
 // ============ تعليق الفاتورة ============
@@ -1970,7 +2400,21 @@ async function loadTreasury(){try{const s=await safeGetDocs(col("treasury"));tre
 window.clearTreasuryData = async () => {if(!await window.customConfirm("مسح؟"))return;const snap=await safeGetDocs(col("treasury"));for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));await loadTreasury();renderStats();showAlert("تم.","success");};
 window.saveProduct = async () => {const name=$("pName").value.trim(),barcode=$("pBarcode").value.trim(),cost=Number($("pCost").value)||0,price=Number($("pPrice").value)||0,qty=Number($("pQty").value)||0;if(!name||price<=0)return showAlert("اسم وسعر.","warning");await setDoc(doc(col("products")),{name,barcode,cost,price,qty,createdAt:serverTimestamp()});$("pName").value="";$("pBarcode").value="";$("pCost").value="";$("pPrice").value="";$("pQty").value=10;await loadProducts();renderStats();showAlert("تم.","success");};
 window.deleteProduct = async id => {if(!await window.customConfirm("حذف؟"))return;await deleteDoc(docRef("products",id));await loadProducts();renderStats();showAlert("تم.","success");};
-function renderProducts(){$("productsTable").innerHTML=products.map(p=>`<tr><td>${escapeHTML(p.name)}</td><td>${escapeHTML(p.barcode||"")}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td>${p.qty}</td><td><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||"<tr><td colspan='6'>لا منتجات</td></tr>";}
+function renderProducts(){
+  $("productsTable").innerHTML = products.map(p => `
+    <tr>
+      <td>${escapeHTML(p.name)}</td>
+      <td>${escapeHTML(p.barcode||"")}</td>
+      <td>${money(p.cost)} ج</td>
+      <td>${money(p.price)} ج</td>
+      <td>${p.qty}</td>
+      <td>
+        <button class="rowbtn secondary" onclick="printProductBarcode('${p.id}')" style="background:#8b5cf6; color:white; margin-bottom:3px;">🏷️ طباعة باركود</button>
+        <button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button>
+      </td>
+    </tr>
+  `).join("") || "<tr><td colspan='6'>لا منتجات</td></tr>";
+}
 
 // تفعيل دالة الباركود
 window.handleBarcodeScan = (e) => {
@@ -2147,8 +2591,106 @@ window.completeSale = async () => {
  }catch(e){showAlert("خطأ: "+e.message,"error");}
 };
 window.printInvoiceDirectly = inv => {
+  const s = profile?.invoiceSettings || {
+    shopName: profile?.shopName || "متجري",
+    taxNumber: "XXX-XXX-XXX",
+    address: "عنوان المحل هنا",
+    phone: "بيانات الاتصال هنا",
+    paperSize: "80mm",
+    fontSize: "14",
+    showTax: true,
+    showQR: true
+  };
+
+  let qrCodeHTML = "";
+  if (s.showQR) {
+    const qrData = encodeURIComponent(`Invoice: ${inv.number} | Total: ${inv.total} EGP`);
+    qrCodeHTML = `<div style="margin-top:10px; display:flex; justify-content:center;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${qrData}" alt="QR" style="width:60px; height:60px;">
+                  </div>`;
+  }
+
+  const taxAmount = (Number(inv.total) * 0.15).toFixed(2); 
+  let widthStyle = "80mm";
+  if (s.paperSize === "58") widthStyle = "58mm";
+  else if (s.paperSize === "A4") widthStyle = "100%";
+
   $("printArea").classList.remove("hidden");
-  $("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px"><h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة</h3><p>رقم: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr><table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}</table><hr><p>الأصناف: ${money(inv.subtotal)} ج</p><p>الخصم: -${money(inv.discount)} ج</p><p>الإضافة: +${money(inv.addition)} ج</p><h2>الإجمالي: ${money(inv.total)} ج</h2>${inv.notes ? `<p>ملاحظات: ${escapeHTML(inv.notes)}</p>` : ''}<p>تطوير: محمد الصلاحي</p></div>`;
+  $("printArea").innerHTML = `
+    <style>
+      @page { size: ${widthStyle} auto; margin: 0; }
+      .receipt-container { width: ${widthStyle}; max-width: 100%; font-family: 'Cairo', Arial, sans-serif; direction: rtl; font-size: ${s.fontSize}px; padding: 5px; box-sizing: border-box; color: #000; }
+      .receipt-table { width: 100%; border-collapse: collapse; font-size: ${s.fontSize - 2}px; margin-bottom: 5px; }
+      .receipt-table th, .receipt-table td { padding: 4px; border-bottom: 1px solid #000; }
+      .receipt-table th { text-align: right; font-weight: bold; border-top: 1px solid #000; }
+      .receipt-line { display: flex; justify-content: space-between; border-bottom: 1px solid #000; padding: 4px 0; font-size: ${s.fontSize - 2}px; }
+      .receipt-total { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 4px 0; margin-top: 5px; }
+    </style>
+    <div class="receipt-container">
+      <div style="background:#e2e8f0; padding:5px; font-weight:bold; font-size:${s.fontSize + 4}px; margin-bottom:5px; text-align:center;">${escapeHTML(s.shopName)}</div>
+      <div style="text-align:center; font-size:${s.fontSize - 4}px; margin-bottom:10px;">رقم ضريبي ${escapeHTML(s.taxNumber)}</div>
+      <div class="receipt-line">
+        <div>رقم الفاتورة: ${inv.number}</div>
+        <div>التاريخ: ${new Date().toLocaleDateString('ar-EG')}</div>
+      </div>
+      <div class="receipt-line">
+        <div>نوع الفاتورة: نقدي</div>
+        <div>الوقت: ${new Date().toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'})}</div>
+      </div>
+      <div class="receipt-line" style="margin-bottom:10px;"><div>كاشير: مدير النظام</div></div>
+      <table class="receipt-table">
+        <thead><tr><th style="text-align:right;">اسم الصنف</th><th style="text-align:center;">كمية</th><th style="text-align:left;">الإجمالي</th></tr></thead>
+        <tbody>${inv.items.map(i => `<tr><td>${escapeHTML(i.name)}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:left;">${money(i.qty * i.price)}</td></tr>`).join('')}</tbody>
+      </table>
+      <div class="receipt-total">
+        <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>المطلوب</span><span>${money(inv.total)}</span></div>
+        ${s.showTax ? `<div style="display:flex; justify-content:space-between; font-size:${s.fontSize - 4}px;"><span>يشمل ضريبة القيمة المضافة 15%</span><span>${taxAmount}</span></div>` : ''}
+        <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>المدفوع</span><span>${money(inv.total)}</span></div>
+      </div>
+      <div style="text-align:center; margin-top:10px; font-weight:bold; font-size:${s.fontSize + 2}px;">شكراً لزيارتكم</div>
+      <div style="text-align:center; margin-top:10px; font-size:${s.fontSize - 4}px; line-height:1.4;">${escapeHTML(s.address)}<br>${escapeHTML(s.phone)}</div>
+      ${qrCodeHTML}
+      ${inv.notes ? `<div style="text-align:center; margin-top:5px; font-size:${s.fontSize - 4}px;">ملاحظات: ${escapeHTML(inv.notes)}</div>` : ''}
+    </div>
+  `;
+  window.print();
+  setTimeout(() => { $("printArea").classList.add("hidden"); }, 1000);
+};
+window.printProductBarcode = (id) => {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const s = profile?.barcodeSettings || {
+    type: "CODE128", width: 32, height: 6, marginTop: 3, marginLeft: 3,
+    fontSizeName: 8, fontSizePrice: 8, fontSizeCode: 7,
+    showName: true, showPrice: true, showCode: true
+  };
+  const tempDiv = document.createElement('div');
+  document.body.appendChild(tempDiv);
+  let barcodeSvg = "";
+  try {
+    JsBarcode(tempDiv, p.barcode || p.id, { format: s.type, lineColor: "#000", width: 1.5, height: s.height * 3.78, displayValue: false });
+    barcodeSvg = tempDiv.innerHTML;
+  } catch(e) { barcodeSvg = "<div style='color:red;font-size:10px;'>Invalid Barcode</div>"; }
+  document.body.removeChild(tempDiv);
+  $("printArea").classList.remove("hidden");
+  $("printArea").innerHTML = `
+    <div style="font-family: Arial; direction: rtl; padding: 0;">
+      <style>
+        @page { size: ${s.width}mm ${s.height + 20}mm; margin: 0; }
+        .barcode-sticker { width: ${s.width}mm; padding-top: ${s.marginTop}mm; padding-left: ${s.marginLeft}mm; text-align: center; background: white; box-sizing: border-box; page-break-after: always; }
+        .bc-name { font-weight: bold; font-size: ${s.fontSizeName}px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bc-price { font-weight: bold; font-size: ${s.fontSizePrice}px; margin-top: 2px; }
+        .bc-code { font-size: ${s.fontSizeCode}px; margin-top: 2px; font-family: monospace; }
+        .bc-svg svg { max-width: 100%; height: auto; }
+      </style>
+      <div class="barcode-sticker">
+        ${s.showName ? `<div class="bc-name">${escapeHTML(p.name)}</div>` : ""}
+        <div class="bc-svg">${barcodeSvg}</div>
+        ${s.showPrice ? `<div class="bc-price">${p.price} EGP</div>` : ""}
+        ${s.showCode ? `<div class="bc-code">${p.barcode || p.id}</div>` : ""}
+      </div>
+    </div>
+  `;
   window.print();
   setTimeout(() => { $("printArea").classList.add("hidden"); }, 1000);
 };

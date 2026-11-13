@@ -60,8 +60,8 @@ h2{font-size:20px;} h3{font-size:16px;} h4{font-size:14px;}
 .top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap; padding: 4px 0; margin-bottom: 5px;}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
-.stat{background:var(--bg-card);padding:8px 10px;border-radius:8px; border: 1px solid var(--border-color); border-left: 3px solid var(--primary);}
-.stat strong{display:block;font-size:16px;margin-top:4px; color: var(--primary);}
+.stat{background:var(--bg-card);padding:8px 10px;border-radius:8px; border: 1px solid var(--border-color); border-left: 3px solid var(--primary); display: flex; flex-direction: column; justify-content: center; align-items: flex-start;}
+.stat strong{display:block;font-size:26px; font-weight:800;margin-top:4px; color: var(--primary); line-height:1.2;}
 
 .big{width:100%;margin:4px 0}
 .secondary{background:var(--bg-input);color:var(--text-main); border: 1px solid var(--border-color); box-shadow: none;}
@@ -75,7 +75,7 @@ h2{font-size:20px;} h3{font-size:16px;} h4{font-size:14px;}
 
 .tablewrap{overflow:auto;width:100%; border-radius: 8px; border: 1px solid var(--border-color); max-height: 380px;}
 table{width:100%;border-collapse:collapse;min-width:600px;}
-td,th{padding:9px 8px;border-bottom:1px solid var(--border-color);text-align:right;font-size:12px;}
+td,th{padding:9px 8px;border-bottom:1px solid var(--border-color);text-align:right;font-size:12px; word-break: break-word;}
 th { background: rgba(15,23,42,0.5); color: var(--text-muted); font-weight: 700; position: sticky; top: 0; z-index: 2;}
 .tag{border-radius:20px;padding:3px 10px;background:rgba(245,158,11,0.15);color:#fbbf24;font-size:11px;display:inline-block; font-weight: bold; border: 1px solid rgba(245,158,11,0.3);}
 .tag.good{background:rgba(16,185,129,0.15);color:#34d399; border-color: rgba(16,185,129,0.3);}
@@ -175,7 +175,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
-/* ============ شاشة المبيعات ============ */
+/* ============ شاشة المبيعات (التصميم الجديد) ============ */
 #salesPage {
   height: calc(100vh - 75px);
   display: flex;
@@ -223,34 +223,21 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   min-height: 0;
   background: var(--bg-body);
   overflow: hidden;
-  padding: 0 15px; /* مساحة جانبية */
+  padding: 0 15px;
 }
 
 .sahal-search-area {
-  padding: 15px 0;
+  padding: 10px 0;
   background: var(--bg-body);
   border-bottom: 2px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
   flex-shrink: 0;
 }
-.sahal-search-area label { font-size: 16px; font-weight: bold; margin-bottom: 6px; color: var(--text-main); }
+.sahal-search-area label { font-size: 14px; font-weight: bold; margin-bottom: 4px; color: var(--text-main); }
 .sahal-search-area input,
-.sahal-search-area select { margin: 0; padding: 14px 16px; font-size: 18px; font-weight: bold; border-radius: 10px; }
-
-.sahal-row-top {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr auto;
-  gap: 15px;
-  align-items: end;
-}
-.sahal-row-bottom {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr 1fr 1.5fr;
-  gap: 15px;
-  align-items: end;
-}
+.sahal-search-area select { margin: 0; padding: 12px 16px; font-size: 16px; font-weight: bold; border-radius: 10px; }
 
 .search-container { position: relative; }
 .search-container #searchResults {
@@ -266,11 +253,12 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   overflow-y: auto;
   box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
-.search-container #searchResults button { font-size: 16px; padding: 15px; }
+.search-container #searchResults button { font-size: 16px; padding: 15px; text-align: right; width: 100%; border-bottom: 1px solid var(--border-color); background: none; color: white; border-radius: 0;}
+.search-container #searchResults button:hover { background: rgba(59,130,246,0.2); }
 
 .inquiry-box { position: relative; display: flex; align-items: end; }
 .inquiry-btn {
-  height: 53px;
+  height: 48px;
   width: 100%;
   background: linear-gradient(135deg, #8b5cf6, #6d28d9);
   color: white;
@@ -325,50 +313,52 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .sahal-center-main .sahal-table-wrap table { min-width: 100%; }
 .sahal-center-main .sahal-table-wrap th {
   background: #059669; color: white; position: sticky; top: 0;
-  padding: 15px 10px; font-size: 16px; z-index: 3;
+  padding: 12px 8px; font-size: 14px; z-index: 3;
 }
-.sahal-center-main .sahal-table-wrap td { padding: 12px 10px; font-size: 16px; font-weight: bold; }
-.sahal-center-main .sahal-table-wrap input { font-size: 16px; padding: 8px; height: auto; }
+.sahal-center-main .sahal-table-wrap td { padding: 10px 8px; font-size: 14px; font-weight: bold; }
+.sahal-center-main .sahal-table-wrap input { font-size: 14px; padding: 6px; height: auto; text-align: center; margin: 0;}
 .empty-cart-msg { text-align: center; padding: 50px; color: var(--text-muted); font-size: 20px; font-weight: bold; }
 
-/* شريط الإجمالي والخصم */
 .sahal-bottom-bar {
   background: var(--bg-card);
   border: 2px solid var(--border-color);
   border-radius: 10px;
   display: flex;
   align-items: center;
-  padding: 15px;
+  padding: 10px;
   gap: 15px;
   flex-shrink: 0;
   margin-bottom: 15px;
+  flex-wrap: wrap;
 }
 .sahal-bottom-fields {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   flex: 1;
   align-items: center;
   flex-wrap: wrap;
+  min-width: 300px;
 }
 .sahal-bottom-fields > div { display: flex; align-items: center; gap: 8px; }
-.sahal-bottom-fields label { margin: 0; font-size: 15px; white-space: nowrap; color: var(--text-main); }
-.sahal-bottom-fields input { margin: 0; width: 90px; text-align: center; font-weight: bold; font-size: 16px; padding: 10px; }
+.sahal-bottom-fields label { margin: 0; font-size: 14px; white-space: nowrap; color: var(--text-main); }
+.sahal-bottom-fields input { margin: 0; width: 90px; text-align: center; font-weight: bold; font-size: 15px; padding: 8px; }
 
 .sahal-total-box {
   background: #059669;
   color: white;
-  padding: 12px 25px;
+  padding: 10px 25px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   gap: 15px;
   font-weight: bold;
   flex-shrink: 0;
+  min-width: 200px;
+  justify-content: center;
 }
 .sahal-total-box span { font-size: 16px; }
-.sahal-total-box h2 { margin: 0; font-size: 32px; color: white; direction: ltr; }
+.sahal-total-box h2 { margin: 0; font-size: 30px; color: white; direction: ltr; }
 
-/* شريط الأزرار السفلي */
 .sahal-bottom-actions-bar {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -382,16 +372,17 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 15px;
-  border-radius: 10px;
-  font-size: 16px;
+  padding: 12px 5px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: bold;
   cursor: pointer;
   color: white;
   transition: 0.2s;
   user-select: none;
+  flex-direction: column;
 }
-.sahal-action-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+.sahal-action-btn:hover { transform: translateY(-3px); opacity: 0.9; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
 .sahal-action-btn i { font-size: 24px; font-style: normal; }
 
 .action-sell { background: #10b981; }
@@ -506,11 +497,16 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 
 <section id="ownerPanel" class="hidden">
  <div class="card"><div class="top"><div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة العملاء</span></div><button class="red" onclick="logout()">خروج</button></div>
- <div class="grid"><div class="stat">إجمالي<strong id="totalUsers">0</strong></div><div class="stat">مبيعات<strong id="salesUsersCount">0</strong></div><div class="stat">بلايستيشن<strong id="psUsersCount">0</strong></div><div class="stat">انتظار<strong id="pendingUsersCount">0</strong></div></div>
+ <div class="grid">
+   <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>إجمالي<br><strong id="totalUsers">0</strong></div><span style="font-size:24px; opacity:0.5;">👥</span></div>
+   <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>مبيعات<br><strong id="salesUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">🛒</span></div>
+   <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>بلايستيشن<br><strong id="psUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">🎮</span></div>
+   <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>انتظار<br><strong id="pendingUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">⏳</span></div>
+ </div>
  <nav style="display:flex;gap:6px;margin:10px 0"><button id="ownerSalesTab" class="active" onclick="ownerSection('sales')" style="padding:7px 12px;">سيستم المبيعات</button><button id="ownerPsTab" onclick="ownerSection('playstation')" style="padding:7px 12px;">سيستم البلايستيشن</button></nav>
  <div id="ownerSalesSection"><h3>عملاء المبيعات</h3><div class="tablewrap"><table><thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة</th><th>الإدارة</th></tr></thead><tbody id="salesUsersTable"></tbody></table></div></div>
  <div id="ownerPsSection" class="hidden"><h3>عملاء البلايستيشن</h3><div class="tablewrap"><table><thead><tr><th>النشاط</th><th>المالك</th><th>البريد</th><th>الهاتف</th><th>الحالة</th><th>الباقة</th><th>الإدارة</th></tr></thead><tbody id="psUsersTable"></tbody></table></div></div>
- <button class="secondary big" onclick="loadUsers()">تحديث</button></div>
+ <button class="secondary big" onclick="loadUsers()" style="margin-top:10px;">تحديث</button></div>
 </section>
 
 <section id="playstationPanel" class="hidden">
@@ -750,7 +746,12 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  <div class="card" style="margin-top:0;">
   <div class="top"><div><h2 id="shopTitle">نظام المبيعات</h2><span class="muted">لوحة الإدارة</span></div><button class="red" onclick="logout()">خروج</button></div>
   <div id="dashboardPage">
-   <div class="grid"><div class="stat">المنتجات<strong id="statProducts">0</strong></div><div class="stat">الفواتير<strong id="statSales">0</strong></div><div class="stat">مبيعات اليوم<strong id="statRevenue">0 ج</strong></div><div class="stat">رصيد الخزينة<strong id="statTreasuryBalance">0 ج</strong></div></div>
+   <div class="grid">
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>المنتجات<br><strong id="statProducts">0</strong></div><span style="font-size:24px; opacity:0.5;">📦</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>الفواتير<br><strong id="statSales">0</strong></div><span style="font-size:24px; opacity:0.5;">🧾</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>مبيعات اليوم<br><strong id="statRevenue">0 ج</strong></div><span style="font-size:24px; opacity:0.5;">💰</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>رصيد الخزينة<br><strong id="statTreasuryBalance">0 ج</strong></div><span style="font-size:24px; opacity:0.5;">🏦</span></div>
+   </div>
    <div style="margin-top:8px;">
     <div class="tiles-grid" id="mainTilesContainer">
       <div class="tile t-blue" onclick="page('sales')"><div class="tile-icon">🛒</div><div class="tile-title">شاشة المبيعات</div></div>
@@ -767,29 +768,36 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   </div>
   <div id="subscriptionPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>اشتراكي</h3><div class="card" style="max-width:600px;margin:auto;text-align:center"><div id="subPageDetails">...</div><div id="subPageActionBox"></div></div></div>
   
+  <!-- ==================== شاشة المبيعات الجديدة ==================== -->
   <div id="salesPage" class="hidden">
     <div class="sahal-top-bar">
-      <span>شاشة المبيعات</span>
-      <span class="brand-mini">NexPOS PRO — V28</span>
-      <span id="sahalShopTitle">اسم المتجر</span>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:22px;">🛒</span>
+        <span>شاشة المبيعات</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="brand-mini" style="background:rgba(255,255,255,0.2);">NexPOS PRO — V29</span>
+        <span id="sahalShopTitle" style="font-size:16px;">اسم المتجر</span>
+      </div>
     </div>
 
     <div class="sahal-layout-main">
       <div class="sahal-center-main">
         
+        <!-- شريط البحث والباركود -->
         <div class="sahal-search-area">
-          <div class="sahal-row-top">
-            <div class="search-container">
-              <label>ابحث عن الصنف (بالاسم أو الباركود)</label>
-              <input id="saleSearch" oninput="searchProducts(event)" onkeypress="handleBarcodeScan(event)" placeholder="اكتب اسم الصنف أو امسح الباركود..." autocomplete="off">
-              <div id="searchResults"></div>
-            </div>
-            <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1"></div>
-            <div><label>سعر البيع</label><input id="salePrice" type="number" min="0" placeholder="0.00"></div>
+          <div class="search-container">
+            <label>ابحث عن الصنف (بالاسم أو الباركود)</label>
+            <input id="saleSearch" oninput="searchProducts(event)" onkeypress="handleBarcodeScan(event)" placeholder="اكتب اسم الصنف أو امسح الباركود..." autocomplete="off" style="font-size:20px; padding:16px;">
+            <div id="searchResults"></div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr auto; gap:10px; align-items:end;">
+            <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1" style="font-size:18px; padding:12px;"></div>
+            <div><label>سعر البيع</label><input id="salePrice" type="number" min="0" placeholder="0.00" style="font-size:18px; padding:12px;"></div>
             <div class="inquiry-box">
               <div style="width:100%;">
-                <label>استعلام</label>
-                <div class="inquiry-btn" id="inquiryBtn">🔍 استعلام
+                <label>سعر الشراء</label>
+                <div class="inquiry-btn" id="inquiryBtn" style="height:48px;">🔍 استعلام
                   <div class="inquiry-tooltip" id="inquiryTooltip">
                     سعر الشراء
                     <span class="cost-val">—</span>
@@ -797,69 +805,61 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
                 </div>
               </div>
             </div>
-            <div><button class="green" style="height:53px; width:100%; font-size:18px;" onclick="addToCart()">➕ إضافة</button></div>
-          </div>
-          
-          <div class="sahal-row-bottom">
-            <div><label>الحساب</label><select id="salePaymentType"><option value="cash">نقدي</option><option value="visa">فيزا</option><option value="wallet">محفظة</option></select></div>
-            <div><label>ملاحظات</label><input type="text" id="saleNotes" placeholder="..."></div>
-            <div><label>الخزينة</label><select id="saleTreasury"><option value="main">الرئيسية</option></select></div>
-            <div style="display:flex;gap:6px;">
-              <button class="red" style="height:53px; flex:1; margin-bottom:0; font-size:18px;" onclick="clearCart()">🗑️ تفريغ</button>
-              <button class="green" style="height:53px; flex:2; margin-bottom:0; font-size:18px;" onclick="completeSale()">💾 حفظ وبيع</button>
-            </div>
+            <div><button class="green" style="height:48px; width:100%; font-size:20px; font-weight:bold;" onclick="addToCart()">➕ إضافة</button></div>
           </div>
         </div>
 
+        <!-- السلة -->
         <div class="sahal-table-wrap">
           <table class="sahal-table">
             <thead>
               <tr>
-                <th>رقم الصنف</th>
+                <th style="width:40px;">#</th>
                 <th>اسم الصنف</th>
-                <th>الكمية</th>
-                <th>السعر</th>
-                <th>الإجمالي</th>
-                <th>خصم</th>
-                <th>النهائي</th>
-                <th>حذف</th>
+                <th style="width:80px;">الكمية</th>
+                <th style="width:100px;">السعر</th>
+                <th style="width:110px;">الإجمالي</th>
+                <th style="width:120px;">خصم الصنف</th>
+                <th style="width:110px;">النهائي</th>
+                <th style="width:60px;">حذف</th>
               </tr>
             </thead>
             <tbody id="cartTable">
-              <tr><td colspan="8" class="empty-cart-msg">ابدأ بالبحث عن صنف بالاسم أو الباركود</td></tr>
+              <tr><td colspan="8" class="empty-cart-msg">🛒 ابدأ بالبحث عن صنف أو امسح الباركود</td></tr>
             </tbody>
           </table>
         </div>
 
-        <div class="sahal-bottom-bar">
-          <div class="sahal-bottom-fields">
-            <div><label>نوع الإضافة</label> <input type="text" value="0" id="saleAdditionText"></div>
-            <div><label>إضافة</label> <input id="saleAddition" type="number" min="0" value="0" oninput="renderCart()"></div>
-            <div><label>خصم %</label> <input id="saleDiscountPct" type="number" min="0" max="100" value="0" oninput="renderCart()"></div>
-            <div><label>خصم الفكة</label> <input id="saleDiscount" type="number" min="0" value="0" oninput="renderCart()"></div>
+        <!-- شريط الإجمالي والخصم -->
+        <div class="sahal-bottom-bar" style="flex-wrap:wrap; gap:10px;">
+          <div class="sahal-bottom-fields" style="flex:1; min-width:300px;">
+            <div><label>إضافة</label><input id="saleAddition" type="number" min="0" value="0" oninput="renderCart()"></div>
+            <div><label>خصم %</label><input id="saleDiscountPct" type="number" min="0" max="100" value="0" oninput="renderCart()"></div>
+            <div><label>خصم الفكة</label><input id="saleDiscount" type="number" min="0" value="0" oninput="renderCart()"></div>
+            <div><label>ملاحظات الفاتورة</label><input type="text" id="saleNotes" placeholder="ملاحظات..."></div>
           </div>
-          <div class="sahal-total-box">
-            <span>الكل</span>
+          <div class="sahal-total-box" style="min-width:200px; justify-content:center;">
+            <span>الإجمالي</span>
             <h2 id="cartTotalDisplay">0.00</h2>
           </div>
         </div>
 
-        <!-- شريط الأزرار السفلي (تحت) -->
-        <div class="sahal-bottom-actions-bar">
-          <div class="sahal-action-btn action-sell" onclick="completeSale()">
-            <i>💵</i> <span>بيع</span>
+        <!-- الأزرار السفلية (كلها شغالة) -->
+        <div class="sahal-bottom-actions-bar" style="grid-template-columns: repeat(6, 1fr);">
+          <div class="sahal-action-btn action-sell" onclick="completeSale()" title="حفظ وبيع (F8)">
+            <i>💵</i> <span>بيع (F8)</span>
           </div>
-          <div class="sahal-action-btn action-pay" onclick="showPaymentModal()">
+          <div class="sahal-action-btn action-pay" onclick="showPaymentModal()" title="سداد سريع (F11)">
             <i>💳</i> <span>سداد (F11)</span>
           </div>
-          <div class="sahal-action-btn action-hold" onclick="saveHold()">
+          <div class="sahal-action-btn action-hold" onclick="saveHold()" title="تعليق (F12)">
             <i>⏸️</i> <span>تعليق (F12)</span>
+          </div>
+          <div class="sahal-action-btn action-hold" onclick="openHeldList()" style="background:#d97706;" title="استرجاع معلقة">
+            <i>📂</i> <span>المعلقة</span>
           </div>
           <div class="sahal-action-btn action-stock" onclick="page('products')">
             <i>📦</i> <span>المخزن</span>
-          </div>
-          <div class="sahal-action-btn action-treasury" onclick="page('treasury')">
-            <i>💰</i> <span>الخزينة</span>
           </div>
           <div class="sahal-action-btn action-home" onclick="page('dashboard')">
             <i>🏠</i> <span>الرئيسية</span>
@@ -869,6 +869,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
       </div>
     </div>
   </div>
+  <!-- ==================== نهاية شاشة المبيعات ==================== -->
 
   <div id="productsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>المنتجات</h3><div class="card"><input id="pName" placeholder="اسم"><input id="pBarcode" placeholder="باركود"><div class="grid"><div><label>شراء</label><input id="pCost" type="number" value="0"></div><div><label>بيع</label><input id="pPrice" type="number" value="0"></div><div><label>كمية</label><input id="pQty" type="number" value="10"></div></div><button onclick="saveProduct()" class="green big">حفظ</button></div><div class="tablewrap"><table><thead><tr><th>المنتج</th><th>باركود</th><th>شراء</th><th>بيع</th><th>كمية</th><th>إجراء</th></tr></thead><tbody id="productsTable"></tbody></table></div></div>
   <div id="treasuryPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الخزينة</h3><div class="grid"><div class="stat">رصيد<strong id="treasuryBalanceDisplay">0 ج</strong></div></div><div class="card"><h3>حركة</h3><select id="tType"><option value="in">وارد</option><option value="out">صادر</option></select><input id="tAmount" type="number" placeholder="المبلغ"><input id="tNote" placeholder="البيان"><button class="big green" onclick="addTreasuryTransaction()">تسجيل</button></div><button class="red big" onclick="clearTreasuryData()">مسح الحركات</button><div class="tablewrap"><table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table></div></div>
@@ -1829,6 +1830,7 @@ window.saveHold = async () => {
     await setDoc(doc(col("holds")), {
       items: cart.map(x=>({...x})),
       subtotal, discount, addition, total,
+      notes: $("saleNotes")?.value || "",
       date: new Date().toLocaleString("ar-EG"),
       createdAt: Date.now()
     });
@@ -1839,10 +1841,70 @@ window.saveHold = async () => {
     $("saleSearch").value = "";
     $("saleQty").value = "1";
     $("salePrice").value = "";
+    if($("saleNotes")) $("saleNotes").value = "";
     selectedProduct = null;
     renderCart();
+    playBeep(); // صوت تأكيد
     showAlert("تم تعليق الفاتورة.","success");
   }catch(e){showAlert(e.message,"error");}
+};
+
+// فتح قائمة المعلقة
+window.openHeldList = async () => {
+  try {
+    const snap = await getDocs(col("holds"));
+    const holds = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (!holds.length) return showAlert("لا توجد فواتير معلقة.", "info");
+
+    let html = `<div style="max-height:400px; overflow-y:auto;">`;
+    holds.forEach(h => {
+      html += `<div style="background:#0f172a; padding:10px; border-radius:8px; margin-bottom:8px; border:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <b>${money(h.total)} ج</b> - ${h.date}<br>
+          <small style="color:#94a3b8;">${h.items.length} أصناف</small>
+        </div>
+        <div style="display:flex; gap:5px;">
+          <button onclick="restoreHold('${h.id}')" style="background:#10b981; padding:6px 12px; font-size:12px;">استرجاع</button>
+          <button onclick="deleteHold('${h.id}')" style="background:#ef4444; padding:6px 12px; font-size:12px;">حذف</button>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+
+    Swal.fire({
+      title: '📂 الفواتير المعلقة',
+      html: html,
+      showConfirmButton: false,
+      showCloseButton: true,
+      background: '#1e293b',
+      color: '#f8fafc',
+      width: 500
+    });
+  } catch (e) { showAlert(e.message, "error"); }
+};
+
+// استرجاع الفاتورة
+window.restoreHold = async (id) => {
+  try {
+    const snap = await getDoc(docRef("holds", id));
+    if (!snap.exists()) return showAlert("غير موجودة.", "error");
+    const data = snap.data();
+    cart = data.items.map(x => ({ ...x })); // إرجاع الأصناف
+    $("saleDiscount").value = data.discount || 0;
+    $("saleAddition").value = data.addition || 0;
+    if($("saleNotes")) $("saleNotes").value = data.notes || "";
+    await deleteDoc(docRef("holds", id)); // مسحها من القائمة
+    Swal.close();
+    renderCart();
+    showAlert("تم استرجاع الفاتورة.", "success");
+  } catch (e) { showAlert(e.message, "error"); }
+};
+
+window.deleteHold = async (id) => {
+  if (!await customConfirm("حذف الفاتورة المعلقة؟")) return;
+  await deleteDoc(docRef("holds", id));
+  Swal.close();
+  openHeldList(); // إعادة فتح القائمة
 };
 
 // ============ شاشة السداد السريع ============
@@ -1910,35 +1972,58 @@ window.saveProduct = async () => {const name=$("pName").value.trim(),barcode=$("
 window.deleteProduct = async id => {if(!await window.customConfirm("حذف؟"))return;await deleteDoc(docRef("products",id));await loadProducts();renderStats();showAlert("تم.","success");};
 function renderProducts(){$("productsTable").innerHTML=products.map(p=>`<tr><td>${escapeHTML(p.name)}</td><td>${escapeHTML(p.barcode||"")}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td>${p.qty}</td><td><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||"<tr><td colspan='6'>لا منتجات</td></tr>";}
 
+// تفعيل دالة الباركود
+window.handleBarcodeScan = (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const val = $("saleSearch").value.trim();
+    if (!val) return;
+    const pAuto = products.find(x => x.barcode === val);
+    if (pAuto) {
+      if (Number(pAuto.qty) <= 0) return showAlert("الكمية غير متوفرة!", "warning");
+      selectedProduct = pAuto;
+      $("salePrice").value = pAuto.price;
+      playBeep(); // صوت البيب
+      addToCart();
+    } else {
+      showAlert("باركود غير موجود!", "warning");
+    }
+  }
+};
+
+// دالة صوت البيب
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = 1000; // تردد الصوت
+    gain.gain.value = 0.1;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    setTimeout(() => { osc.stop(); ctx.close(); }, 100);
+  } catch (e) { console.log('Beep error', e); }
+}
+
 window.searchProducts = (e) => {
   const val = $("saleSearch").value.trim();
   const q = val.toLowerCase();
   
-  if (val.length >= 8) {
-    const pAuto = products.find(x => x.barcode === val);
-    if (pAuto && Number(pAuto.qty) > 0) {
-      selectedProduct = pAuto;
-      $("salePrice").value = pAuto.price;
-      $("searchResults").innerHTML = "";
-      window.updateInquiryTooltip();
-      addToCart();
-      return;
-    }
-  }
-
   selectedProduct = null;
   window.updateInquiryTooltip();
-  if(!q){ $("searchResults").innerHTML = ""; return; }
+  if (!q) { $("searchResults").innerHTML = ""; return; }
   
   const m = products.filter(p => 
-    ((p.name||"").toLowerCase().includes(q) || (p.barcode||"").includes(q)) && Number(p.qty) > 0
-  ).slice(0,10);
+    ((p.name || "").toLowerCase().includes(q) || (p.barcode || "").includes(q)) && Number(p.qty) > 0
+  ).slice(0, 10);
 
   $("searchResults").innerHTML = m.map(p =>
     `<button class="result secondary" onclick="selectSaleProduct('${p.id}')">${escapeHTML(p.name)} — ${money(p.price)} ج — متاح ${p.qty}</button>`
-  ).join("") || '<div style="padding:9px">لا نتائج</div>';
+  ).join("") || '<div style="padding:9px;color:#94a3b8;">لا نتائج</div>';
   
-  if(m.length === 1){
+  if (m.length === 1) {
     selectedProduct = m[0];
     window.updateInquiryTooltip();
   }
@@ -1966,7 +2051,7 @@ window.addToCart = () => {
 function renderCart(){
  const tbody = $("cartTable");
  if(cart.length === 0){
-    tbody.innerHTML = '<tr><td colspan="8" class="empty-cart-msg">ابدأ بالبحث عن صنف بالاسم أو الباركود</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-cart-msg">🛒 ابدأ بالبحث عن صنف أو امسح الباركود</td></tr>';
  } else {
     tbody.innerHTML = cart.map((x,i)=>{
       const lineTotal = x.qty * x.price;
@@ -2045,6 +2130,7 @@ window.completeSale = async () => {
      date: inv.date,
      createdAt: Date.now()
    });
+   playBeep(); // صوت البيع
    printInvoiceDirectly(inv);
    cart = [];
    $("saleDiscount").value = "0";
@@ -2060,7 +2146,12 @@ window.completeSale = async () => {
    showAlert("تم البيع. "+money(total)+" ج","success");
  }catch(e){showAlert("خطأ: "+e.message,"error");}
 };
-window.printInvoiceDirectly = inv => {$("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px"><h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة</h3><p>رقم: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr><table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}</table><hr><p>الأصناف: ${money(inv.subtotal)} ج</p><p>الخصم: -${money(inv.discount)} ج</p><p>الإضافة: +${money(inv.addition)} ج</p><h2>الإجمالي: ${money(inv.total)} ج</h2><p>تطوير: محمد الصلاحي</p></div>`;window.print();};
+window.printInvoiceDirectly = inv => {
+  $("printArea").classList.remove("hidden");
+  $("printArea").innerHTML=`<div style="text-align:center;font-family:Arial;padding:10px"><h2>${escapeHTML(profile?.shopName||"متجري")}</h2><h3>فاتورة</h3><p>رقم: ${inv.number}</p><p>التاريخ: ${inv.date}</p><hr><table style="width:100%;min-width:0"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price)}</td></tr>`).join("")}</table><hr><p>الأصناف: ${money(inv.subtotal)} ج</p><p>الخصم: -${money(inv.discount)} ج</p><p>الإضافة: +${money(inv.addition)} ج</p><h2>الإجمالي: ${money(inv.total)} ج</h2>${inv.notes ? `<p>ملاحظات: ${escapeHTML(inv.notes)}</p>` : ''}<p>تطوير: محمد الصلاحي</p></div>`;
+  window.print();
+  setTimeout(() => { $("printArea").classList.add("hidden"); }, 1000);
+};
 window.addTreasuryTransaction = async () => {const type=$("tType").value,amount=Number($("tAmount").value)||0,note=$("tNote").value.trim();if(amount<=0)return showAlert("مبلغ.","warning");await setDoc(doc(col("treasury")),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});$("tAmount").value="";$("tNote").value="";await loadTreasury();renderStats();showAlert("تم.","success");};
 function renderTreasury(){let tIn=0,tOut=0;$("treasuryTable").innerHTML=treasury.map(t=>{if(t.type==="in")tIn+=Number(t.amount)||0;else tOut+=Number(t.amount)||0;return `<tr><td><span class="tag ${t.type==="in"?"good":""}">${t.type==="in"?"وارد":"صادر"}</span></td><td>${money(t.amount)} ج</td><td>${escapeHTML(t.note||"")}</td><td>${t.date||""}</td></tr>`;}).join("")||"<tr><td colspan='4'>لا حركات</td></tr>";$("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" ج";}
 window.addExpense = async () => {const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value)||0;if(!name||amount<=0)return showAlert("املأ.","warning");const date=new Date().toLocaleString("ar-EG");await setDoc(doc(col("expenses")),{name,amount,date});await setDoc(doc(col("treasury")),{type:"out",amount,note:"مصروف: "+name,date});$("expenseName").value="";$("expenseAmount").value="";await loadBusiness();showAlert("تم.","success");};
@@ -2145,11 +2236,18 @@ function renderPsReports(){
 // ============ اختصارات الكيبورد لشاشة المبيعات ============
 document.addEventListener('keydown', (e) => {
   const salesVisible = !$("salesPage")?.classList.contains("hidden");
-  if(!salesVisible) return;
-  if(e.key === "F11"){ e.preventDefault(); showPaymentModal(); return; }
-  if(e.key === "F12"){ e.preventDefault(); saveHold(); return; }
-  if(e.key === "Escape"){
-    if(cart.length > 0 && !e.target.matches('input,select,textarea')){
+  if (!salesVisible) return;
+  
+  // منع الاختصارات لو الكاشير بيكتب في input
+  if (e.target.matches('input,select,textarea') && e.key !== 'Escape' && e.key !== 'F8' && e.key !== 'F11' && e.key !== 'F12') return;
+
+  if (e.key === "F8") { e.preventDefault(); completeSale(); return; }
+  if (e.key === "F11") { e.preventDefault(); showPaymentModal(); return; }
+  if (e.key === "F12") { e.preventDefault(); saveHold(); return; }
+  if (e.key === "F2") { e.preventDefault(); $("saleSearch").focus(); return; }
+  if (e.key === "F4") { e.preventDefault(); $("saleQty").focus(); $("saleQty").select(); return; }
+  if (e.key === "Escape") {
+    if (cart.length > 0 && !e.target.matches('input,select,textarea')) {
       e.preventDefault();
       clearCart();
     }

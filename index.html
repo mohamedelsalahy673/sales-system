@@ -366,6 +366,32 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .receipt-item-table th, .receipt-item-table td { border-bottom: 1px solid #000; padding: 3px; }
 .receipt-item-table th { border-top: 1px solid #000; text-align: right; }
 .receipt-totals { border-top:1px solid #000; border-bottom:1px solid #000; padding:5px 0; margin-top:5px; }
+
+/* تظبيط الارتفاعات عشان الشاشات تلم في الشاشة (Full Screen) */
+#customerPanel, #ownerPanel, #playstationPanel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+}
+#customerPanel > .card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-bottom: 0 !important;
+}
+#dashboardPage, #salesPage, #productsPage, #treasuryPage, #historyPage, 
+#expensesPage, #reportsPage, #settingsPage, #subscriptionPage, 
+#barcodeSettingsPage, #invoiceSettingsPage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+#dashboardPage { overflow-y: auto; }
 </style>
 </head>
 <body>
@@ -429,7 +455,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <section id="pendingScreen" class="hidden"><div class="card" style="max-width:520px;margin:20px auto;text-align:center"><h2>تم إنشاء حسابك!</h2><p class="muted">انتظر موافقة المالك.</p><div id="pendingDetails" style="line-height:2;margin:12px 0; font-size:13px;"></div><button class="big green" onclick="sendWhatsAppActivation()">تواصل مع المطور</button><button class="big secondary" onclick="location.reload()">العودة</button></div></section>
 
 <section id="ownerPanel" class="hidden">
- <div class="card"><div class="top"><div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة العملاء</span></div><button class="red" onclick="logout()">خروج</button></div>
+ <div class="card"><div class="top"><div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة العملاء</span></div></div>
  <div class="grid">
    <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>إجمالي<br><strong id="totalUsers">0</strong></div><span style="font-size:24px; opacity:0.5;">👥</span></div>
    <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>مبيعات<br><strong id="salesUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">🛒</span></div>
@@ -702,7 +728,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
       <div class="tile t-indigo" onclick="exportDataToExcel()"><div class="tile-icon">📥</div><div class="tile-title">نسخة Excel</div></div>
       <div class="tile t-teal" onclick="page('barcodeSettings')"><div class="tile-icon">🏷️</div><div class="tile-title">إعداد الباركود</div></div>
       <div class="tile t-orange" onclick="page('invoiceSettings')"><div class="tile-icon">🧾</div><div class="tile-title">تصميم الفاتورة</div></div>
-      <div class="tile t-dark" onclick="page('psSettings')"><div class="tile-icon">🎮</div><div class="tile-title">إعدادات البلايستيشن</div></div>
     </div>
    </div>
   </div>
@@ -943,18 +968,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <!-- ================= شاشة إعدادات البلايستيشن ================= -->
-  <div id="psSettingsPage" class="hidden">
-    <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
-    <h3>إعدادات البلايستيشن</h3>
-    <div class="card" style="max-width:600px">
-      <h3>إدارة الحساب</h3>
-      <button class="big red" onclick="logout()">تسجيل الخروج من السيستم</button>
-      <hr>
-      <p class="muted">يمكنك تسجيل الخروج من هنا بأمان.</p>
-    </div>
-  </div>
-
   <!-- ================= شاشة المبيعات الجديدة (ملء الشاشة) ================= -->
   <div id="salesPage" class="hidden">
     <div class="sahal-top-bar">
@@ -963,7 +976,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
         <span>شاشة المبيعات</span>
       </div>
       <div style="display:flex; align-items:center; gap:10px;">
-        <span class="brand-mini" style="background:rgba(255,255,255,0.2);">NexPOS PRO — V31</span>
+        <span class="brand-mini" style="background:rgba(255,255,255,0.2);">NexPOS PRO — V32</span>
         <span id="sahalShopTitle" style="font-size:14px;">اسم المتجر</span>
       </div>
     </div>
@@ -2194,7 +2207,7 @@ window.updateInquiryTooltip = function() {
 };
 
 window.page = name => {
-  const pages = ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription","barcodeSettings","invoiceSettings","psSettings"];
+  const pages = ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription","barcodeSettings","invoiceSettings"];
   pages.forEach(p => $(p+"Page").classList.add("hidden"));
   $(name+"Page").classList.remove("hidden");
   const wrapEl = document.querySelector('.wrap');

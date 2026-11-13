@@ -375,7 +375,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  <div></div>
  <div>
    <span id="networkStatus" class="tag good" style="padding:2px 8px; font-size:10px;">متصل بالخادم</span>
-   <button class="secondary" onclick="support()" style="padding:5px 10px; font-size:11px;">الدعم الفني</button>
  </div>
 </header>
 
@@ -449,9 +448,12 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  <div class="card ps-top-card">
   <div class="top" style="margin-bottom:6px;">
     <div style="display:flex; align-items:center; gap:8px;">
-      <h2 style="margin:0; font-size:17px;" id="psShopTitleDisplay">سيستم البلايستيشن</h2>
+      <h2 style="margin:0; font-size:17px;">سيستم البلايستيشن</h2>
     </div>
-    <button class="red" onclick="logout()" style="padding:6px 12px; font-size:12px;">تسجيل الخروج</button>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span id="networkStatusPS" class="tag good" style="padding:2px 8px; font-size:10px;">متصل</span>
+      <button class="secondary" onclick="support()" style="padding:5px 10px; font-size:11px;">الدعم الفني</button>
+    </div>
   </div>
   <div class="grid">
    <div class="stat">إجمالي<strong id="psTotalDevices">0</strong></div>
@@ -640,6 +642,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     <h3>تفاصيل اشتراكي</h3>
     <div id="psSubModalContent" style="line-height:2;margin:12px 0;text-align:center;font-size:13px;">جاري التحميل...</div>
     <button class="big green" onclick="requestRenewal()">طلب تجديد</button>
+    <button class="big red" onclick="logout()" style="margin-top:8px;">تسجيل الخروج</button>
     <hr>
     <div class="social-links">
       <a class="btn-whatsapp" href="https://wa.me/201062883414" target="_blank">واتساب</a>
@@ -678,7 +681,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 
 <section id="customerPanel" class="hidden">
  <div class="card" style="margin-top:0;">
-  <div class="top"><div><h2 id="shopTitle">نظام المبيعات</h2><span class="muted">لوحة الإدارة</span></div><button class="red" onclick="logout()">خروج</button></div>
+  <div class="top"><div><h2 id="shopTitle">نظام المبيعات</h2><span class="muted">لوحة الإدارة</span></div></div>
   <div id="dashboardPage">
    <div class="grid">
      <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>المنتجات<br><strong id="statProducts">0</strong></div><span style="font-size:24px; opacity:0.5;">📦</span></div>
@@ -699,6 +702,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
       <div class="tile t-indigo" onclick="exportDataToExcel()"><div class="tile-icon">📥</div><div class="tile-title">نسخة Excel</div></div>
       <div class="tile t-teal" onclick="page('barcodeSettings')"><div class="tile-icon">🏷️</div><div class="tile-title">إعداد الباركود</div></div>
       <div class="tile t-orange" onclick="page('invoiceSettings')"><div class="tile-icon">🧾</div><div class="tile-title">تصميم الفاتورة</div></div>
+      <div class="tile t-dark" onclick="page('psSettings')"><div class="tile-icon">🎮</div><div class="tile-title">إعدادات البلايستيشن</div></div>
     </div>
    </div>
   </div>
@@ -939,6 +943,18 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
+  <!-- ================= شاشة إعدادات البلايستيشن ================= -->
+  <div id="psSettingsPage" class="hidden">
+    <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
+    <h3>إعدادات البلايستيشن</h3>
+    <div class="card" style="max-width:600px">
+      <h3>إدارة الحساب</h3>
+      <button class="big red" onclick="logout()">تسجيل الخروج من السيستم</button>
+      <hr>
+      <p class="muted">يمكنك تسجيل الخروج من هنا بأمان.</p>
+    </div>
+  </div>
+
   <!-- ================= شاشة المبيعات الجديدة (ملء الشاشة) ================= -->
   <div id="salesPage" class="hidden">
     <div class="sahal-top-bar">
@@ -1049,7 +1065,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   <div id="historyPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الفواتير</h3><div class="tablewrap"><table><thead><tr><th>رقم</th><th>التاريخ</th><th>الإجمالي</th><th>إجراء</th></tr></thead><tbody id="salesTable"></tbody></table></div></div>
   <div id="expensesPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>المصروفات</h3><div class="card"><input id="expenseName" placeholder="البيان"><input id="expenseAmount" type="number" placeholder="المبلغ"><button onclick="addExpense()" class="green big">حفظ</button></div><div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div></div>
   <div id="reportsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>التقارير</h3><div class="grid"><div class="stat">المبيعات<strong id="reportRevenue">0 ج</strong></div><div class="stat">المصروفات<strong id="reportExpenses">0 ج</strong></div><div class="stat">الربح<strong id="reportNet">0 ج</strong></div></div></div>
-  <div id="settingsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الإعدادات</h3><div class="card" style="max-width:600px"><h3>اسم المحل</h3><input id="settingsShopName"><button class="big" onclick="updateShopNameSetting()">حفظ</button></div><div class="card" style="max-width:600px"><h3>البريد</h3><input id="settingsEmail" type="email"><button class="big purple" onclick="updateCustomerEmailSetting()">تغيير</button></div><div class="card" style="max-width:600px"><h3>كلمة المرور</h3><input id="newCustomerPassword" type="password"><button class="big dark" onclick="updateCustomerPassword()">تغيير</button></div></div>
+  <div id="settingsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الإعدادات</h3><div class="card" style="max-width:600px"><h3>اسم المحل</h3><input id="settingsShopName"><button class="big" onclick="updateShopNameSetting()">حفظ</button></div><div class="card" style="max-width:600px"><h3>البريد</h3><input id="settingsEmail" type="email"><button class="big purple" onclick="updateCustomerEmailSetting()">تغيير</button></div><div class="card" style="max-width:600px"><h3>كلمة المرور</h3><input id="newCustomerPassword" type="password"><button class="big dark" onclick="updateCustomerPassword()">تغيير</button></div><div class="card" style="max-width:600px"><h3>تسجيل الخروج</h3><button class="big red" onclick="logout()">خروج</button></div></div>
  </div>
 </section>
 
@@ -1296,7 +1312,6 @@ onAuthStateChanged(auth,async user=>{
   if(selectedSystem==="playstation"){
     document.querySelector('.wrap').style.overflowY='hidden';
     $("playstationPanel").classList.remove("hidden");
-    $("psShopTitleDisplay").textContent = profile.shopName || "سيستم البلايستيشن";
     goPsHome();
     await loadPlaystationData();
     checkPsSubscriptionStatus();
@@ -2179,7 +2194,7 @@ window.updateInquiryTooltip = function() {
 };
 
 window.page = name => {
-  const pages = ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription","barcodeSettings","invoiceSettings"];
+  const pages = ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription","barcodeSettings","invoiceSettings","psSettings"];
   pages.forEach(p => $(p+"Page").classList.add("hidden"));
   $(name+"Page").classList.remove("hidden");
   const wrapEl = document.querySelector('.wrap');

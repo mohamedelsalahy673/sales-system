@@ -396,43 +396,108 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 </head>
 <body>
 
-<!-- ================= صفحة الترحيب (Landing Page) ================= -->
-<section id="landingPage" style="background:var(--bg-body); height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:20px; overflow-y:auto;">
-  <div style="max-width: 800px; margin: auto;">
-    <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS" style="height:100px; width:auto; margin-bottom:20px; border-radius:20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-    
-    <h1 style="font-size: 36px; color: var(--primary); margin-bottom: 10px;">NexPOS PRO</h1>
-    <h2 style="font-size: 20px; color: var(--text-main); margin-bottom: 20px;">السيستم الأقوى لإدارة المبيعات والبلايستيشن</h2>
-    
-    <p style="font-size: 16px; color: var(--text-muted); line-height: 1.8; margin-bottom: 30px;">
-      النظام الشامل لإدارة محلك، مخازنك، وخزينتك بكل سهولة واحترافية. سواء كنت بتدير سوبر ماركت، مطعم، أو صالة بلايستيشن، NexPOS PRO هو الحل اللي هيسهل عليك شغلك ويحمي أرباحك.
-    </p>
+<!-- ================= صفحة الهبوط الاحترافية (Landing Page) ================= -->
+<section id="landingPage" style="background:#fff; height:100vh; display:flex; flex-direction:column; overflow-y:auto; font-family:'Cairo', sans-serif; direction:rtl;">
+  
+  <!-- الشريط العلوي (Navbar) -->
+  <nav style="display:flex; justify-content:space-between; align-items:center; padding:10px 40px; border-bottom:2px solid #e2e8f0; background:white; position:sticky; top:0; z-index:100;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS" style="height:40px; border-radius:8px;">
+      <span style="font-size:20px; font-weight:800; color:#059669;">NexPOS</span>
+    </div>
+    <div style="display:flex; gap:20px; color:#334155; font-weight:600; font-size:14px;">
+      <a href="#" onclick="showLanding('home')" style="color:#059669; text-decoration:none; border-bottom:3px solid #059669; padding-bottom:5px;" id="navHome">البداية</a>
+      <a href="#" onclick="showLanding('download')" style="text-decoration:none; color:#64748b;" id="navDownload">تحميل</a>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button onclick="enterSystem()" style="background:#059669; color:white; border:none; padding:8px 20px; border-radius:6px; font-weight:bold; cursor:pointer;">تسجيل الدخول</button>
+    </div>
+  </nav>
 
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:40px;">
-      <div class="card" style="padding:15px;">
-        <h3 style="color:var(--success); margin:0 0 10px 0;">🛒 سيستم الكاشير</h3>
-        <p class="muted" style="margin:0; font-size:13px;">سرعة في البيع، دعم الباركود، وطباعة فواتير احترافية.</p>
+  <!-- الشريط الأصفر (تنبيه) -->
+  <div style="background:#facc15; color:#422006; text-align:center; padding:8px; font-size:12px; font-weight:bold;">
+    تم اعتماد NexPOS رسمياً كأفضل سيستم لإدارة المحلات.
+  </div>
+
+  <!-- ================= القسم الأول: الصفحة الرئيسية ================= -->
+  <div id="landingHomeContent" style="flex:1; display:flex; align-items:center; justify-content:space-between; padding:40px 60px; background:url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=2070&auto=format&fit=crop') center/cover; position:relative;">
+    
+    <!-- طبقة غامقة فوق الصورة عشان الكلام يبان -->
+    <div style="position:absolute; inset:0; background:linear-gradient(to left, rgba(15,23,42,0.9), rgba(15,23,42,0.6));"></div>
+
+    <!-- المحتوى النصي -->
+    <div style="position:relative; z-index:10; max-width:550px; color:white;">
+      <h1 style="font-size:42px; font-weight:800; margin-bottom:20px; line-height:1.3; color:#fff;">السيستم الأقوى لإدارة المحلات والمخازن</h1>
+      
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:30px; font-size:16px;">
+        <div style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981;">✔</span> سرعة فائقة في الكاشير</div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981;">✔</span> إدارة كاملة للمخزون</div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981;">✔</span> تقارير أرباح دقيقة</div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981;">✔</span> نظام بلايستيشن متكامل</div>
       </div>
-      <div class="card" style="padding:15px;">
-        <h3 style="color:var(--purple); margin:0 0 10px 0;">🎮 إدارة البلايستيشن</h3>
-        <p class="muted" style="margin:0; font-size:13px;">إدارة الرومات، الـ VIP، البلياردو، وحساب الوقت تلقائياً.</p>
-      </div>
-      <div class="card" style="padding:15px;">
-        <h3 style="color:var(--warning); margin:0 0 10px 0;">📦 إدارة المخازن</h3>
-        <p class="muted" style="margin:0; font-size:13px;">متابعة الكميات، التنبيه بنقص المخزون، وتقارير دقيقة.</p>
+
+      <div style="display:flex; gap:15px;">
+        <button onclick="showLanding('download')" style="background:#059669; color:white; border:none; padding:15px 40px; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; box-shadow:0 10px 20px rgba(5,150,105,0.3); display:flex; align-items:center; gap:10px;">
+          📥 تحميل البرنامج
+        </button>
+        <button onclick="enterSystem()" style="background:white; color:#0f172a; border:none; padding:15px 30px; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; display:flex; align-items:center; gap:10px;">
+          🚀 دخول السيستم
+        </button>
+        <!-- زرار تثبيت التطبيق (PWA) -->
+        <button id="installAppBtn" onclick="installPWA()" class="hidden" style="background:#3b82f6; color:white; border:none; padding:15px 30px; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; display:flex; align-items:center; gap:10px;">
+          📲 تثبيت التطبيق
+        </button>
       </div>
     </div>
 
-    <button class="big green" onclick="enterSystem()" style="font-size: 22px; padding: 15px 40px; border-radius: 50px; box-shadow: 0 10px 20px rgba(16,185,129,0.4); width: auto; display: inline-flex; align-items: center; gap: 10px; margin:auto;">
-      🚀 دخول السيستم الآن
-    </button>
-    
-    <p style="margin-top:20px; font-size:12px; color:var(--text-muted);">
-      تطوير: محمد الصلاحي | للتواصل: <a href="https://wa.me/201062883414" style="color:var(--primary);">واتساب</a>
-    </p>
+    <!-- صورة توضيحية -->
+    <div style="position:relative; z-index:10; width:450px; background:#1e293b; border-radius:12px; padding:10px; box-shadow:0 20px 40px rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1);">
+      <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="شاشة السيستم" style="width:100%; border-radius:8px; opacity:0.8;">
+    </div>
+  </div>
+
+  <!-- ================= القسم الثاني: صفحة التحميل (تسجيل البيانات) ================= -->
+  <div id="landingDownloadContent" class="hidden" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px; background:#f8fafc;">
+    <div style="max-width:500px; width:100%; background:white; padding:30px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+      <div style="text-align:center; margin-bottom:20px;">
+        <h2 style="color:#0f172a; margin-bottom:10px;">سجل لتحميل البرنامج</h2>
+        <p style="color:#64748b; font-size:14px;">أدخل بياناتك للحصول على رابط الدخول المباشر للسيستم.</p>
+      </div>
+
+      <label style="font-weight:bold; color:#334155;">الإسم</label>
+      <input id="dlName" type="text" placeholder="الاسم بالكامل" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:15px; outline:none;">
+
+      <label style="font-weight:bold; color:#334155;">رقم الموبايل (واتساب)</label>
+      <input id="dlPhone" type="tel" placeholder="01xxxxxxxxx" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:15px; outline:none;">
+
+      <label style="font-weight:bold; color:#334155;">نشاط المشروع</label>
+      <input id="dlActivity" type="text" placeholder="مثال: سوبر ماركت / صالة بلايستيشن" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:15px; outline:none;">
+
+      <label style="font-weight:bold; color:#334155;">البريد الإلكتروني</label>
+      <input id="dlEmail" type="email" placeholder="example@mail.com" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:25px; outline:none;">
+
+      <button onclick="submitDownloadRequest()" style="width:100%; background:#059669; color:white; border:none; padding:15px; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; display:flex; justify-content:center; align-items:center; gap:10px; box-shadow:0 5px 15px rgba(5,150,105,0.3);">
+        💬 استلام رابط الدخول (واتساب)
+      </button>
+      <p style="text-align:center; font-size:12px; color:#94a3b8; margin-top:15px;">سيتم توجيهك للواتساب لتأكيد الطلب واستلام الرابط.</p>
+    </div>
+  </div>
+
+  <!-- قسم المميزات السفلي -->
+  <div style="padding:20px 60px; background:#f8fafc; display:flex; justify-content:space-around; text-align:center;">
+    <div>
+      <h3 style="color:#0f172a; margin-bottom:5px;">إدارة المخازن</h3>
+    </div>
+    <div>
+      <h3 style="color:#0f172a; margin-bottom:5px;">الفواتير</h3>
+    </div>
+    <div>
+      <h3 style="color:#0f172a; margin-bottom:5px;">التقارير</h3>
+    </div>
   </div>
 </section>
 
+<!-- ================= باقي السيستم (يبدأ مخفي) ================= -->
 <div class="wrap hidden" id="appWrap">
 <header class="top" style="padding: 2px 0; margin-bottom: 0;">
  <div></div>
@@ -769,19 +834,15 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
    </div>
   </div>
   
-  <!-- ================= شاشة اشتراكي (مضغوطة وبياناتك) ================= -->
+  <!-- ================= شاشة اشتراكي ================= -->
   <div id="subscriptionPage" class="hidden" style="background:#f1f5f9; border-radius:10px; padding:10px; color:#1e293b; direction:rtl; font-family:'Cairo', sans-serif; margin-top:5px; font-size:12px; height: calc(100vh - 100px); display:flex; flex-direction:column; overflow:hidden;">
     <button class="back-btn" onclick="page('dashboard')" style="background:#e2e8f0; color:#0f172a; border:none; padding:5px 10px; width:fit-content; margin-bottom:5px;">← رجوع</button>
-    
-    <!-- الترويسة العلوية -->
     <div style="text-align:center; margin-bottom:10px;">
       <h3 style="color:#059669; margin:0; font-size:16px;">شكراً لثقتكم في NexPOS PRO</h3>
       <p style="font-size:10px; color:#475569; background:#dcfce7; padding:6px; border-radius:5px; border:1px solid #86efac; line-height:1.4; margin-top:5px;">
         عميلنا العزيز، لمحمي هذا الاشتراك في NexPOS PRO، رجاء التأكد من دقة بيانات الاشتراك ومدته وتكلفته.
       </p>
     </div>
-
-    <!-- بيانات الاشتراك السريعة -->
     <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:5px; margin-bottom:10px; text-align:center;">
       <div style="background:#fef08a; padding:5px; border:1px solid #ca8a04; border-radius:5px;">
         <div style="color:#854d0e; font-weight:bold; font-size:10px;">نوع الاشتراك</div>
@@ -800,11 +861,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
         <div id="subCost" style="font-weight:bold; color:#0f172a; font-size:13px;">...</div>
       </div>
     </div>
-
-    <!-- الجزء الرئيسي -->
     <div style="display:grid; grid-template-columns: 140px 1fr 1fr; gap:10px; align-items:start; flex:1; overflow-y:auto;">
-      
-      <!-- القائمة الجانبية -->
       <div style="display:flex; flex-direction:column; gap:5px;">
         <button onclick="support()" style="background:#93c5fd; color:#1e3a8a; border:none; padding:6px; text-align:right; border-radius:5px; font-weight:bold; font-size:11px; display:flex; align-items:center; gap:5px;">📞 خدمة العملاء</button>
         <button onclick="requestRenewal()" style="background:#fde047; color:#854d0e; border:none; padding:6px; text-align:right; border-radius:5px; font-weight:bold; font-size:11px; display:flex; align-items:center; gap:5px;">💖 تجديد الاشتراك</button>
@@ -812,8 +869,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
         <button onclick="page('dashboard')" style="background:#fde047; color:#854d0e; border:none; padding:6px; text-align:right; border-radius:5px; font-weight:bold; font-size:11px; display:flex; align-items:center; gap:5px;">🔒 الدخول</button>
         <button onclick="cancelDeviceLicense()" style="background:#fde047; color:#854d0e; border:none; padding:6px; text-align:right; border-radius:5px; font-weight:bold; font-size:11px; display:flex; align-items:center; gap:5px;">❌ إلغاء الترخيص</button>
       </div>
-
-      <!-- بيانات الموزع (بياناتك) -->
       <div>
         <h4 style="text-align:center; color:#1e3a8a; margin:0 0 5px 0; font-size:13px;">بيانات الموزع</h4>
         <table style="width:100%; font-size:11px; border-collapse:collapse;">
@@ -827,8 +882,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
           <tr><td style="padding:3px; font-weight:bold; color:#475569; border:1px solid #cbd5e1;">إيميل</td><td style="padding:3px; background:#fef08a; border:1px solid #ca8a04;">mohamed.18882@icloud.com</td></tr>
         </table>
       </div>
-
-      <!-- بيانات المشترك -->
       <div>
         <h4 style="text-align:center; color:#1e3a8a; margin:0 0 5px 0; font-size:13px;">بيانات المشترك</h4>
         <table style="width:100%; font-size:11px; border-collapse:collapse;">
@@ -840,8 +893,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
         </table>
       </div>
     </div>
-
-    <!-- إدارة الأجهزة -->
     <div style="margin-top:10px; display:grid; grid-template-columns: 1.5fr 1fr; gap:10px; flex-shrink:0;">
       <div>
         <h4 style="color:#1e3a8a; margin:0 0 5px 0; font-size:12px;">💻 الأجهزة المسجلة (بحد أقصى 2)</h4>
@@ -866,11 +917,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     <p class="muted">1. حدد نوع المستند | 2. اختر أحد التصميمات الجاهزة أو عدل المقاس</p>
 
     <div style="display:grid; grid-template-columns: 300px 1fr; gap:15px; margin-top:10px;">
-      
-      <!-- القائمة الجانبية (اختيار المستند والمقاس) -->
       <div class="card" style="margin:0; padding:10px; display:flex; flex-direction:column; gap:10px;">
-        
-        <!-- 1. اختيار المستند -->
         <div>
           <label style="background:#3b82f6; color:white; padding:4px 8px; border-radius:4px; display:inline-block; margin-bottom:5px;">1. حدد نوع المستند</label>
           <div style="display:flex; flex-direction:column; border:1px solid var(--border-color); border-radius:6px; overflow:hidden;">
@@ -881,8 +928,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
             <div class="doc-type-btn" onclick="selectDocType('payment', this)">سند صرف</div>
           </div>
         </div>
-
-        <!-- 2. اختيار المقاس -->
         <div>
           <label style="background:#10b981; color:white; padding:4px 8px; border-radius:4px; display:inline-block; margin-bottom:5px;">2. اختر أحد التصميمات الجاهزة</label>
           <select id="invPaperSize" onchange="updateInvoicePreview()" style="width:100%; padding:10px;">
@@ -891,29 +936,19 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
             <option value="A4">0040 - A4 (ورق عادي)</option>
           </select>
         </div>
-
-        <!-- 3. إعدادات إضافية -->
         <div style="border-top:1px solid var(--border-color); padding-top:10px;">
           <label>اسم المحل</label>
           <input id="invShopName" placeholder="اسم المحل" oninput="updateInvoicePreview()">
-          
           <label>رقم الضريبي</label>
           <input id="invTaxNumber" placeholder="XXX-XXX-XXX" oninput="updateInvoicePreview()">
-          
           <label>عنوان المحل ورقم الهاتف</label>
           <input id="invAddress" placeholder="العنوان..." oninput="updateInvoicePreview()">
         </div>
-
         <button class="big green" onclick="saveInvoiceSettings()">💾 حفظ التعديلات</button>
       </div>
-
-      <!-- منطقة المعاينة الحية -->
       <div class="card" style="margin:0; background:#cbd5e1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; overflow-y:auto; max-height:75vh; padding:20px;">
         <h4 style="color:#0f172a; margin-bottom:15px;">👁️ معاينة حية</h4>
-        
-        <!-- ورقة الفاتورة -->
         <div id="invoicePreviewContainer" style="background:white; color:black; box-shadow:0 5px 15px rgba(0,0,0,0.3); width:80mm; min-height:150mm; padding:10px; font-family:'Cairo', sans-serif; direction:rtl;">
-          <!-- المحتوى بيتولد بالجافاسكريبت -->
         </div>
       </div>
     </div>
@@ -923,13 +958,9 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   <div id="barcodeSettingsPage" class="hidden">
     <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
     <h3>🏷️ إعداد الباركود وملصقات المنتجات</h3>
-    
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:10px;">
-      
-      <!-- الإعدادات -->
       <div class="card" style="margin:0;">
         <h4>إعدادات الملصق</h4>
-        
         <div class="grid" style="grid-template-columns:1fr 1fr;">
           <div>
             <label>الطابعة المستخدمة</label>
@@ -950,7 +981,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
             </select>
           </div>
         </div>
-
         <hr>
         <h4>المقاسات (مم)</h4>
         <div class="grid" style="grid-template-columns:1fr 1fr;">
@@ -959,7 +989,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
           <div><label>عرض الملصق</label><input id="bcWidth" type="number" value="32" oninput="updateBarcodePreview()"></div>
           <div><label>طول الباركود</label><input id="bcHeight" type="number" value="6" oninput="updateBarcodePreview()"></div>
         </div>
-
         <hr>
         <h4>حجم الخطوط</h4>
         <div class="grid" style="grid-template-columns:1fr 1fr 1fr;">
@@ -967,7 +996,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
           <div><label>حجم السعر</label><input id="bcFontSizePrice" type="number" value="8" oninput="updateBarcodePreview()"></div>
           <div><label>حجم الكود</label><input id="bcFontSizeCode" type="number" value="7" oninput="updateBarcodePreview()"></div>
         </div>
-
         <hr>
         <h4>خيارات الطباعة</h4>
         <div style="display:flex; flex-direction:column; gap:8px; margin-top:5px;">
@@ -975,37 +1003,25 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
           <label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="checkbox" id="bcShowPrice" checked onchange="updateBarcodePreview()" style="width:auto; margin:0;"> طباعة السعر</label>
           <label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="checkbox" id="bcShowCode" checked onchange="updateBarcodePreview()" style="width:auto; margin:0;"> طباعة الكود (أرقام)</label>
         </div>
-
         <button class="big green" onclick="saveBarcodeSettings()" style="margin-top:15px;">💾 حفظ الإعدادات</button>
       </div>
-
-      <!-- المعاينة -->
       <div class="card" style="margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
         <h4 style="margin-bottom:15px;">👁️ معاينة حية للملصق</h4>
-        
         <div id="barcodePreviewContainer" style="background:white; color:black; padding:10px; border-radius:5px; box-shadow:0 0 10px rgba(0,0,0,0.5); text-align:center; display:inline-block; width: 250px;">
-          <!-- اسم النشاط -->
           <div id="previewShopName" style="font-weight:bold; font-size:14px; margin-bottom:5px; border-bottom:1px solid #ccc; padding-bottom:3px;">اسم النشاط</div>
-          
-          <!-- الباركود -->
           <div style="display:flex; justify-content:center; width:100%; overflow:hidden;">
             <svg id="barcodeSvg" style="max-width:100%;"></svg>
           </div>
-          
-          <!-- اسم المنتج -->
           <div id="previewName" style="font-weight:bold; font-size:10px; margin-top:5px;">اسم المنتج</div>
-          
-          <!-- السعر والكود -->
           <div id="previewPrice" style="font-weight:bold; font-size:10px; margin-top:2px;">100.00 EGP</div>
           <div id="previewCode" style="font-size:9px; margin-top:2px; color:#555;">123456789012</div>
         </div>
-        
         <p class="muted" style="margin-top:15px; text-align:center; font-size:11px;">عدل الإعدادات على اليمين وشاهد التغيير هنا مباشرة.</p>
       </div>
     </div>
   </div>
 
-  <!-- ================= شاشة المبيعات الجديدة (ملء الشاشة) ================= -->
+  <!-- ================= شاشة المبيعات ================= -->
   <div id="salesPage" class="hidden">
     <div class="sahal-top-bar">
       <div style="display:flex; align-items:center; gap:10px;">
@@ -1019,9 +1035,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
 
     <div class="sahal-layout-main">
-      <!-- الجزء الأيمن (البحث والسلة) -->
       <div class="sahal-center-main">
-        
         <div class="sahal-search-area">
           <div class="search-container">
             <label>ابحث عن الصنف (بالاسم أو الباركود)</label>
@@ -1049,24 +1063,19 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
             </tbody>
           </table>
         </div>
-
       </div>
 
-      <!-- الجزء الأيسر (الإجمالي والأزرار) -->
       <div class="sahal-left-sidebar">
-        
         <div class="sahal-total-box">
           <span>الإجمالي المطلوب</span>
           <h2 id="cartTotalDisplay">0.00</h2>
         </div>
-
         <div class="sahal-controls-grid">
           <div><label>إضافة</label><input id="saleAddition" type="number" min="0" value="0" oninput="renderCart()"></div>
           <div><label>خصم %</label><input id="saleDiscountPct" type="number" min="0" max="100" value="0" oninput="renderCart()"></div>
           <div><label>خصم الفكة</label><input id="saleDiscount" type="number" min="0" value="0" oninput="renderCart()"></div>
           <div><label>ملاحظات</label><input type="text" id="saleNotes" placeholder="..." style="text-align:right;"></div>
         </div>
-
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:5px;">
            <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1" style="margin:0;"></div>
            <div><label>السعر</label><input id="salePrice" type="number" min="0" placeholder="0.00" style="margin:0;"></div>
@@ -1082,7 +1091,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
               </div>
             </div>
         </div>
-
         <div class="sahal-left-actions">
           <div class="sahal-action-btn action-sell" onclick="completeSale()">
             <i>💵</i> <span>حفظ وبيع</span>
@@ -1104,7 +1112,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -1230,9 +1237,122 @@ setPersistence(auth,browserLocalPersistence).catch(e=>console.warn(e));
 enableIndexedDbPersistence(db).catch(e=>console.warn(e.code));
 
 window.enterSystem = () => {
-  document.getElementById("landingPage").style.display = "none";
+  document.getElementById("landingPage").classList.add("hidden");
   document.getElementById("appWrap").classList.remove("hidden");
   document.getElementById("auth").classList.remove("hidden");
+};
+
+// اكتشاف التطبيق المثبت (PWA)
+window.addEventListener('DOMContentLoaded', () => {
+  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+    document.getElementById('landingPage').classList.add('hidden');
+    document.getElementById('appWrap').classList.remove('hidden');
+    document.getElementById('auth').classList.remove('hidden');
+  }
+});
+
+// التبديل بين الصفحة الرئيسية وصفحة التحميل في الستارة
+window.showLanding = (page) => {
+  const homeContent = $("landingHomeContent");
+  const downloadContent = $("landingDownloadContent");
+  const navHome = $("navHome");
+  const navDownload = $("navDownload");
+
+  if (page === 'home') {
+    homeContent.classList.remove("hidden");
+    downloadContent.classList.add("hidden");
+    navHome.style.color = '#059669'; navHome.style.borderBottom = '3px solid #059669';
+    navDownload.style.color = '#64748b'; navDownload.style.borderBottom = 'none';
+  } else {
+    homeContent.classList.add("hidden");
+    downloadContent.classList.remove("hidden");
+    navDownload.style.color = '#059669'; navDownload.style.borderBottom = '3px solid #059669';
+    navHome.style.color = '#64748b'; navHome.style.borderBottom = 'none';
+  }
+};
+
+// كود إرسال اللينك + التسجيل التلقائي
+window.submitDownloadRequest = async () => {
+  const name = $("dlName").value.trim();
+  const phone = $("dlPhone").value.trim();
+  const activity = $("dlActivity").value.trim();
+  const email = $("dlEmail").value.trim();
+
+  if(!name || !phone || !activity || !email) {
+    return showAlert("من فضلك املأ جميع البيانات أولاً.", "warning");
+  }
+
+  // 1. إرسال رسالة الواتساب للعميل (بشكل اختياري حسب رغبته)
+  let cleanPhone = phone.replace(/\D/g, ''); 
+  if(cleanPhone.startsWith('0')) { cleanPhone = '20' + cleanPhone.substring(1); }
+  const systemLink = "https://mohamedelsalahy673.github.io/sales-system/";
+  const message = `مرحباً ${name}،\nشكراً لاهتمامك بسيستم NexPOS PRO لإدارة (${activity}).\n\nتفضل رابط الدخول المباشر للسيستم:\n${systemLink}\n\nيمكنك الآن البدء في استخدام السيستم فوراً.`;
+  
+  window.open(`https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(message)}`, "_blank");
+
+  // 2. إنشاء الحساب تلقائياً
+  showAlert("جاري تجهيز حسابك... يرجى الانتظار لحظات.", "info");
+  const autoPassword = "Nex" + Math.random().toString(36).slice(-6) + "!";
+
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, autoPassword);
+    
+    const sysData = {status:"active", plan:"تجربة", requestedPlan:"تجربة", requestedPrice:0, requestedDays:7, expiryDate:new Date(new Date().setDate(new Date().getDate() + 7))};
+    const systems = {};
+    systems['sales'] = sysData;
+
+    await setDoc(doc(db, "users", cred.user.uid), {
+      shopName: activity,
+      customerName: name,
+      phone: phone,
+      email: email,
+      role: "customer",
+      systems: systems,
+      devices: [getDeviceId()],
+      createdAt: serverTimestamp()
+    });
+
+    selectedSystem = 'sales';
+    activeSystem = 'sales';
+    
+    document.getElementById("landingPage").classList.add("hidden");
+    document.getElementById("appWrap").classList.remove("hidden");
+    document.getElementById("auth").classList.add("hidden");
+    
+    showAlert("تم إنشاء حسابك بنجاح! أهلاً بك في NexPOS.", "success");
+
+  } catch (e) {
+    if(e.code === "auth/email-already-in-use") {
+      showAlert("هذا البريد مسجل بالفعل. سيتم تحويلك لتسجيل الدخول.", "warning");
+      document.getElementById("landingPage").classList.add("hidden");
+      document.getElementById("appWrap").classList.remove("hidden");
+      document.getElementById("auth").classList.remove("hidden");
+    } else {
+      showAlert("حدث خطأ في إنشاء الحساب: " + e.message, "error");
+    }
+  }
+};
+
+// كود تثبيت التطبيق (PWA)
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installAppBtn').classList.remove('hidden');
+});
+
+window.installPWA = async () => {
+  if (!deferredPrompt) {
+    showAlert("التثبيت مش مدعوم في المتصفح ده حالياً.", "info");
+    return;
+  }
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if (outcome === 'accepted') {
+    showAlert("تم تثبيت التطبيق بنجاح!", "success");
+  }
+  deferredPrompt = null;
+  document.getElementById('installAppBtn').classList.add('hidden');
 };
 
 // دالة لتوليد أو جلب كود فريد للجهاز الحالي
@@ -1319,69 +1439,114 @@ window.register=async()=>{
  }catch(e){registeringNow=false;message(e.code==="auth/email-already-in-use"?"البريد مسجل.":"تعذر: "+(e.code||e.message));}
 };
 window.sendWhatsAppActivation=()=>{const d=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:"",phone:"",system:selectedSystem,plan:"غير محددة"};const msg=encodeURIComponent(`طلب تفعيل\nالنشاط: ${d.shop}\nالبريد: ${d.email}\nالنظام: ${d.system}`);window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");};
-window.logout=async()=>{if(psTimer)clearInterval(psTimer);document.querySelector('.wrap').style.overflowY='auto';await signOut(auth);location.reload();};
+window.logout=async()=>{
+  if(psTimer)clearInterval(psTimer);
+  document.querySelector('.wrap').style.overflowY='auto';
+  await signOut(auth);
+  document.getElementById("landingPage").classList.remove("hidden");
+  document.getElementById("appWrap").classList.add("hidden");
+  document.getElementById("auth").classList.add("hidden");
+  location.reload();
+};
 window.support=()=>{
   const msg = encodeURIComponent(`مرحباً م. محمد الصلاحي، أنا عميل في NexPOS PRO (${profile?.shopName || "نشاطي"})، وأحتاج مساعدة بخصوص السيستم.`);
   window.open(`https://wa.me/201062883414?text=${msg}`, "_blank");
 };
 
-onAuthStateChanged(auth,async user=>{
- currentUser=user;
- if(registeringNow)return;
- if(!user){if(psTimer)clearInterval(psTimer);["customerPanel","ownerPanel","playstationPanel","pendingScreen"].forEach(x=>$(x).classList.add("hidden"));$("auth").classList.remove("hidden");$("authForm").classList.add("hidden");return;}
- try{
-  if(user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase()){
-    $("auth").classList.add("hidden");$("authForm").classList.add("hidden");$("ownerPanel").classList.remove("hidden");
-    await loadUsers();return;
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if(registeringNow) return;
+
+  if(!user) {
+    if(psTimer) clearInterval(psTimer);
+    ["customerPanel", "ownerPanel", "playstationPanel", "pendingScreen"].forEach(x => $(x).classList.add("hidden"));
+    $("auth").classList.remove("hidden");
+    $("authForm").classList.add("hidden");
+    
+    // لو التطبيق مثبت (Standalone) نخفي الستارة، لو متصفح عادي نظهرها
+    if (!window.matchMedia('(display-mode: standalone)').matches && window.navigator.standalone !== true) {
+       document.getElementById("landingPage").classList.remove("hidden");
+       document.getElementById("appWrap").classList.add("hidden");
+    } else {
+       document.getElementById("landingPage").classList.add("hidden");
+       document.getElementById("appWrap").classList.remove("hidden");
+    }
+    return;
   }
-  const snap=await safeGetDoc(doc(db,"users",user.uid));
-  if(!snap.exists()){if(!navigator.onLine)return;await signOut(auth);return;}
-  profile=snap.data();
 
-  // ============ التحقق من عدد الأجهزة (بحد أقصى 2) ============
-  const MAX_DEVICES = 2;
-  const currentDeviceId = getDeviceId();
-  let devices = profile.devices || [];
+  try {
+    if(user.email?.toLowerCase() === OWNER_EMAIL.toLowerCase()) {
+      $("auth").classList.add("hidden");
+      $("authForm").classList.add("hidden");
+      $("ownerPanel").classList.remove("hidden");
+      await loadUsers();
+      return;
+    }
 
-  if (!devices.includes(currentDeviceId)) {
-    if (devices.length >= MAX_DEVICES) {
+    const snap = await safeGetDoc(doc(db, "users", user.uid));
+    if(!snap.exists()) { 
+      if(!navigator.onLine) return; 
+      await signOut(auth); 
+      return; 
+    }
+    profile = snap.data();
+
+    const MAX_DEVICES = 2;
+    const currentDeviceId = getDeviceId();
+    let devices = profile.devices || [];
+
+    if (!devices.includes(currentDeviceId)) {
+      if (devices.length >= MAX_DEVICES) {
+        await signOut(auth);
+        $("auth").classList.remove("hidden");
+        $("authForm").classList.add("hidden");
+        showAlert(`⚠️ لقد وصلت للحد الأقصى (${MAX_DEVICES} أجهزة). يرجى الدخول من أحد الأجهزة المسجلة.`, "error");
+        return;
+      } else {
+        devices.push(currentDeviceId);
+        await updateDoc(doc(db, "users", user.uid), { devices: devices });
+        profile.devices = devices;
+      }
+    }
+
+    const info = systemInfo(profile, selectedSystem);
+    if(info.status === "not_registered" || !subscriptionActive(info)) {
+      if(!navigator.onLine) return;
       await signOut(auth);
       $("auth").classList.remove("hidden");
-      $("authForm").classList.add("hidden");
-      showAlert(`⚠️ لقد وصلت للحد الأقصى (${MAX_DEVICES} أجهزة). يرجى الدخول من أحد الأجهزة المسجلة أو إلغاء ترخيص جهاز من إعدادات حسابك في الجهاز الآخر.`, "error");
+      message(info.status === "pending" ? "قيد التفعيل." : "اشتراك غير نشط.");
       return;
-    } else {
-      devices.push(currentDeviceId);
-      await updateDoc(doc(db, "users", user.uid), { devices: devices });
-      profile.devices = devices;
     }
-  }
-  // ==========================================================
 
-  const info=systemInfo(profile,selectedSystem);
-  if(info.status==="not_registered"||!subscriptionActive(info)){
-      if(!navigator.onLine)return;
-      await signOut(auth);$("auth").classList.remove("hidden");message(info.status==="pending"?"قيد التفعيل.":"اشتراك غير نشط.");return;
-  }
-  activeSystem=selectedSystem;$("auth").classList.add("hidden");$("authForm").classList.add("hidden");$("pendingScreen").classList.add("hidden");
+    activeSystem = selectedSystem;
+    
+    document.getElementById("landingPage").classList.add("hidden");
+    document.getElementById("auth").classList.add("hidden");
+    document.getElementById("authForm").classList.add("hidden");
+    document.getElementById("pendingScreen").classList.add("hidden");
+    document.getElementById("appWrap").classList.remove("hidden");
 
-  if(selectedSystem==="playstation"){
-    document.querySelector('.wrap').style.overflowY='hidden';
-    $("playstationPanel").classList.remove("hidden");
-    goPsHome();
-    await loadPlaystationData();
-    checkPsSubscriptionStatus();
-    startPsTimer();
-  } else {
-    $("customerPanel").classList.remove("hidden");
-    $("shopTitle").textContent=profile.shopName||"نظام المبيعات";
-    $("sahalShopTitle").textContent=profile.shopName||"متجري";
-    $("settingsShopName").value=profile.shopName||"";
-    $("settingsEmail").value=profile.email||user.email||"";
-    checkCustomerSubscription(info);
-    await loadBusiness();
+    if(selectedSystem === "playstation") {
+      document.querySelector('.wrap').style.overflowY = 'hidden';
+      $("playstationPanel").classList.remove("hidden");
+      $("psShopTitleDisplay").textContent = profile.shopName || "سيستم البلايستيشن";
+      goPsHome();
+      await loadPlaystationData();
+      checkPsSubscriptionStatus();
+      startPsTimer();
+    } else {
+      $("customerPanel").classList.remove("hidden");
+      $("shopTitle").textContent = profile.shopName || "نظام المبيعات";
+      $("sahalShopTitle").textContent = profile.shopName || "متجري";
+      $("settingsShopName").value = profile.shopName || "";
+      $("settingsEmail").value = profile.email || user.email || "";
+      checkCustomerSubscription(info);
+      await loadBusiness();
+    }
+  } catch(e) {
+    console.error(e);
+    if(navigator.onLine) showAlert("خطأ: " + e.message, "error");
   }
- }catch(e){console.error(e);if(navigator.onLine)showAlert("خطأ: "+e.message,"error");}
 });
 
 // دوال إعدادات الباركود
@@ -2460,7 +2625,7 @@ function playBeep() {
     osc.frequency.value = 1000; // تردد الصوت
     gain.gain.value = 0.1;
     osc.connect(gain);
-    gain.connect(ctx.destination);
+    osc.connect(ctx.destination);
     osc.start();
     setTimeout(() => { osc.stop(); ctx.close(); }, 100);
   } catch (e) { console.log('Beep error', e); }

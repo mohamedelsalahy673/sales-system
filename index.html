@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- ============ كود تحسين محركات البحث (SEO) ============ -->
-<title>NexPOS PRO | سيستم كاشير ونظام مبيعات وإدارة بلايستيشن</title>
-<meta name="description" content="NexPOS PRO هو أفضل سيستم كاشير ونظام إدارة مبيعات متكامل. برنامج محاسبة وإدارة مخازن، ونظام بلايستيشن لإدارة الرومات والـ VIP والبلياردو.">
+<title>NexPOS PRO | أفضل سيستم كاشير وإدارة مبيعات وبلايستيشن في مصر</title>
+<meta name="description" content="NexPOS PRO هو النظام المتكامل لإدارة محلك. سيستم كاشير سريع، إدارة مخازن، تقارير أرباح، ونظام بلايستيشن لإدارة الرومات والـ VIP والبلياردو. اطلب نسختك الآن!">
 <meta name="keywords" content="سيستم, كاشير, سيستم مبيعات, برنامج مبيعات, سيستم بلايستيشن, برنامج بلايستيشن, إدارة مخازن, نقاط بيع, NexPOS">
 <meta name="google-site-verification" content="jiyqOFPs0SoJIjbutlNuIyM5bpgHcbhpPYKLc8Fr_lc" />
 <!-- ================================================== -->
@@ -396,7 +396,44 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 </head>
 <body>
 
-<div class="wrap" id="appWrap">
+<!-- ================= صفحة الترحيب (Landing Page) ================= -->
+<section id="landingPage" style="background:var(--bg-body); height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:20px; overflow-y:auto;">
+  <div style="max-width: 800px; margin: auto;">
+    <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS" style="height:100px; width:auto; margin-bottom:20px; border-radius:20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+    
+    <h1 style="font-size: 36px; color: var(--primary); margin-bottom: 10px;">NexPOS PRO</h1>
+    <h2 style="font-size: 20px; color: var(--text-main); margin-bottom: 20px;">السيستم الأقوى لإدارة المبيعات والبلايستيشن</h2>
+    
+    <p style="font-size: 16px; color: var(--text-muted); line-height: 1.8; margin-bottom: 30px;">
+      النظام الشامل لإدارة محلك، مخازنك، وخزينتك بكل سهولة واحترافية. سواء كنت بتدير سوبر ماركت، مطعم، أو صالة بلايستيشن، NexPOS PRO هو الحل اللي هيسهل عليك شغلك ويحمي أرباحك.
+    </p>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:40px;">
+      <div class="card" style="padding:15px;">
+        <h3 style="color:var(--success); margin:0 0 10px 0;">🛒 سيستم الكاشير</h3>
+        <p class="muted" style="margin:0; font-size:13px;">سرعة في البيع، دعم الباركود، وطباعة فواتير احترافية.</p>
+      </div>
+      <div class="card" style="padding:15px;">
+        <h3 style="color:var(--purple); margin:0 0 10px 0;">🎮 إدارة البلايستيشن</h3>
+        <p class="muted" style="margin:0; font-size:13px;">إدارة الرومات، الـ VIP، البلياردو، وحساب الوقت تلقائياً.</p>
+      </div>
+      <div class="card" style="padding:15px;">
+        <h3 style="color:var(--warning); margin:0 0 10px 0;">📦 إدارة المخازن</h3>
+        <p class="muted" style="margin:0; font-size:13px;">متابعة الكميات، التنبيه بنقص المخزون، وتقارير دقيقة.</p>
+      </div>
+    </div>
+
+    <button class="big green" onclick="enterSystem()" style="font-size: 22px; padding: 15px 40px; border-radius: 50px; box-shadow: 0 10px 20px rgba(16,185,129,0.4); width: auto; display: inline-flex; align-items: center; gap: 10px; margin:auto;">
+      🚀 دخول السيستم الآن
+    </button>
+    
+    <p style="margin-top:20px; font-size:12px; color:var(--text-muted);">
+      تطوير: محمد الصلاحي | للتواصل: <a href="https://wa.me/201062883414" style="color:var(--primary);">واتساب</a>
+    </p>
+  </div>
+</section>
+
+<div class="wrap hidden" id="appWrap">
 <header class="top" style="padding: 2px 0; margin-bottom: 0;">
  <div></div>
  <div>
@@ -404,7 +441,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  </div>
 </header>
 
-<section id="auth">
+<section id="auth" class="hidden">
  <div style="text-align:center;margin:20px 0 10px">
    <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS" style="height:70px; width:auto; margin-bottom:10px; border-radius:14px; object-fit:contain; box-shadow: 0 8px 20px rgba(0,0,0,0.5);">
    <h2 style="margin:6px 0;">مرحبًا بك في NexPOS PRO</h2>
@@ -1191,6 +1228,12 @@ const OWNER_EMAIL="melsalahy689@gmail.com",OWNER_USERNAME="elsalahy",SUPPORT_PHO
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 setPersistence(auth,browserLocalPersistence).catch(e=>console.warn(e));
 enableIndexedDbPersistence(db).catch(e=>console.warn(e.code));
+
+window.enterSystem = () => {
+  document.getElementById("landingPage").style.display = "none";
+  document.getElementById("appWrap").classList.remove("hidden");
+  document.getElementById("auth").classList.remove("hidden");
+};
 
 // دالة لتوليد أو جلب كود فريد للجهاز الحالي
 function getDeviceId() {

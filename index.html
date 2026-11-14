@@ -89,15 +89,15 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 /* ============ شاشة البلايستيشن ============ */
 #playstationPanel { height: calc(100vh - 60px); display: flex; flex-direction: column; overflow: hidden; }
 #playstationPanel .ps-top-card { flex-shrink: 0; margin: 0 0 8px !important; padding: 10px 12px !important; }
-#psHomeScreen { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
-.tiles-grid{ display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:repeat(3, 1fr); gap:8px; flex: 1; min-height: 0; margin-top:8px; }
+#psHomeScreen { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow-y: auto; }
+.tiles-grid{ display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:auto; gap:8px; flex: 1; min-height: 0; margin-top:8px; }
 
 .tile{ 
   padding:8px 10px; border-radius:12px; color:white; cursor:pointer; 
   transition: transform 0.15s ease, box-shadow 0.15s ease; 
   border: 1px solid rgba(255,255,255,0.1); 
   display:flex; flex-direction:column; justify-content:center; align-items:center;
-  overflow:hidden; position:relative; min-height: 0; text-align: center;
+  overflow:hidden; position:relative; min-height: 90px; text-align: center;
 }
 .tile:hover { transform: translateY(-2px); box-shadow: 0 8px 14px -4px rgba(0,0,0,0.5); }
 .tile .tile-icon{font-size:32px; line-height:1; z-index: 2; margin-bottom: 10px; text-shadow: 1px 1px 3px rgba(0,0,0,0.4);}
@@ -391,7 +391,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     overflow: hidden;
     min-height: 0;
 }
-#dashboardPage { overflow-y: auto; }
+#dashboardPage { overflow-y: auto !important; padding-bottom: 20px; }
 </style>
 </head>
 <body>
@@ -399,7 +399,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <!-- ================= صفحة الهبوط الاحترافية (Landing Page) ================= -->
 <section id="landingPage" style="background:#fff; height:100vh; display:flex; flex-direction:column; overflow-y:auto; font-family:'Cairo', sans-serif; direction:rtl;">
   
-  <!-- الشريط العلوي (Navbar) -->
   <nav style="display:flex; justify-content:space-between; align-items:center; padding:10px 40px; border-bottom:2px solid #e2e8f0; background:white; position:sticky; top:0; z-index:100;">
     <div style="display:flex; align-items:center; gap:10px;">
       <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS" style="height:40px; border-radius:8px;">
@@ -414,12 +413,10 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </nav>
 
-  <!-- الشريط الأصفر (تنبيه) -->
   <div style="background:#facc15; color:#422006; text-align:center; padding:8px; font-size:12px; font-weight:bold;">
     تم اعتماد NexPOS رسمياً كأفضل سيستم لإدارة المحلات.
   </div>
 
-  <!-- ================= القسم الأول: الصفحة الرئيسية ================= -->
   <div id="landingHomeContent" style="flex:1; display:flex; align-items:center; justify-content:space-between; padding:40px 60px; background:url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=2070&auto=format&fit=crop') center/cover; position:relative;">
     
     <div style="position:absolute; inset:0; background:linear-gradient(to left, rgba(15,23,42,0.9), rgba(15,23,42,0.6));"></div>
@@ -441,7 +438,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
         <button onclick="enterSystem()" style="background:white; color:#0f172a; border:none; padding:15px 30px; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; display:flex; align-items:center; gap:10px;">
           🚀 دخول السيستم
         </button>
-        <!-- زرار تثبيت التطبيق (PWA) -->
         <button id="installAppBtn" onclick="installPWA()" class="hidden" style="background:#3b82f6; color:white; border:none; padding:15px 30px; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; display:flex; align-items:center; gap:10px;">
           📲 تثبيت التطبيق
         </button>
@@ -453,7 +449,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <!-- ================= القسم الثاني: صفحة التحميل ================= -->
   <div id="landingDownloadContent" class="hidden" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px; background:#f8fafc;">
     <div style="max-width:500px; width:100%; background:white; padding:30px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
       <div style="text-align:center; margin-bottom:20px;">
@@ -480,17 +475,10 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <!-- قسم المميزات السفلي -->
   <div style="padding:20px 60px; background:#f8fafc; display:flex; justify-content:space-around; text-align:center;">
-    <div>
-      <h3 style="color:#0f172a; margin-bottom:5px;">إدارة المخازن</h3>
-    </div>
-    <div>
-      <h3 style="color:#0f172a; margin-bottom:5px;">الفواتير</h3>
-    </div>
-    <div>
-      <h3 style="color:#0f172a; margin-bottom:5px;">التقارير</h3>
-    </div>
+    <div><h3 style="color:#0f172a; margin-bottom:5px;">إدارة المخازن</h3></div>
+    <div><h3 style="color:#0f172a; margin-bottom:5px;">الفواتير</h3></div>
+    <div><h3 style="color:#0f172a; margin-bottom:5px;">التقارير</h3></div>
   </div>
 </section>
 
@@ -1458,7 +1446,6 @@ onAuthStateChanged(auth, async user => {
     $("auth").classList.remove("hidden");
     $("authForm").classList.add("hidden");
     
-    // لو التطبيق مثبت (Standalone) نخفي الستارة، لو متصفح عادي نظهرها
     if (!window.matchMedia('(display-mode: standalone)').matches && window.navigator.standalone !== true) {
        document.getElementById("landingPage").classList.remove("hidden");
        document.getElementById("appWrap").classList.add("hidden");
@@ -1524,7 +1511,7 @@ onAuthStateChanged(auth, async user => {
     if(selectedSystem === "playstation") {
       document.querySelector('.wrap').style.overflowY = 'hidden';
       $("playstationPanel").classList.remove("hidden");
-      $("psShopTitleDisplay").textContent = profile.shopName || "سيستم البلايستيشن";
+      if($("psShopTitleDisplay")) $("psShopTitleDisplay").textContent = profile.shopName || "سيستم البلايستيشن";
       goPsHome();
       await loadPlaystationData();
       checkPsSubscriptionStatus();

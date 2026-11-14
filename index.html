@@ -391,7 +391,19 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     overflow: hidden;
     min-height: 0;
 }
-#dashboardPage { overflow-y: auto !important; padding-bottom: 20px; }
+#dashboardPage { overflow-y: auto !important; height: 100%; padding-bottom: 20px; }
+#psHomeScreen { overflow-y: auto !important; height: 100%; padding-bottom: 20px; }
+#customerPanel > .card, #playstationPanel > .card { overflow-y: auto !important; }
+
+/* تصغير المربعات في اللابتوب عشان تلم */
+@media (max-height: 800px) {
+  .tile-title { font-size: 16px !important; }
+  .tile-icon { font-size: 24px !important; }
+  .tile { padding: 5px !important; min-height: 70px !important; }
+  .stat strong { font-size: 18px !important; }
+  #dashboardPage .tiles-grid { grid-template-rows: repeat(auto-fill, minmax(80px, 1fr)) !important; }
+  #psHomeScreen .tiles-grid { grid-template-rows: repeat(auto-fill, minmax(80px, 1fr)) !important; }
+}
 </style>
 </head>
 <body>
@@ -432,46 +444,18 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
       </div>
 
       <div style="display:flex; gap:15px;">
-        <button onclick="showLanding('download')" style="background:#059669; color:white; border:none; padding:15px 40px; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; box-shadow:0 10px 20px rgba(5,150,105,0.3); display:flex; align-items:center; gap:10px;">
+        <!-- الزرار الذكي -->
+        <button id="smartDownloadBtn" onclick="handleSmartDownload()" style="background:#059669; color:white; border:none; padding:15px 40px; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; box-shadow:0 10px 20px rgba(5,150,105,0.3); display:flex; align-items:center; gap:10px;">
           📥 تحميل البرنامج
         </button>
         <button onclick="enterSystem()" style="background:white; color:#0f172a; border:none; padding:15px 30px; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; display:flex; align-items:center; gap:10px;">
           🚀 دخول السيستم
-        </button>
-        <button id="installAppBtn" onclick="installPWA()" class="hidden" style="background:#3b82f6; color:white; border:none; padding:15px 30px; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; display:flex; align-items:center; gap:10px;">
-          📲 تثبيت التطبيق
         </button>
       </div>
     </div>
 
     <div style="position:relative; z-index:10; width:450px; background:#1e293b; border-radius:12px; padding:10px; box-shadow:0 20px 40px rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1);">
       <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="شاشة السيستم" style="width:100%; border-radius:8px; opacity:0.8;">
-    </div>
-  </div>
-
-  <div id="landingDownloadContent" class="hidden" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px; background:#f8fafc;">
-    <div style="max-width:500px; width:100%; background:white; padding:30px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
-      <div style="text-align:center; margin-bottom:20px;">
-        <h2 style="color:#0f172a; margin-bottom:10px;">سجل لتحميل البرنامج</h2>
-        <p style="color:#64748b; font-size:14px;">أدخل بياناتك للحصول على رابط الدخول المباشر للسيستم.</p>
-      </div>
-
-      <label style="font-weight:bold; color:#334155;">الإسم</label>
-      <input id="dlName" type="text" placeholder="الاسم بالكامل" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:15px; outline:none;">
-
-      <label style="font-weight:bold; color:#334155;">رقم الموبايل (واتساب)</label>
-      <input id="dlPhone" type="tel" placeholder="01xxxxxxxxx" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:15px; outline:none;">
-
-      <label style="font-weight:bold; color:#334155;">نشاط المشروع</label>
-      <input id="dlActivity" type="text" placeholder="مثال: سوبر ماركت / صالة بلايستيشن" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:15px; outline:none;">
-
-      <label style="font-weight:bold; color:#334155;">البريد الإلكتروني</label>
-      <input id="dlEmail" type="email" placeholder="example@mail.com" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:8px; margin-bottom:25px; outline:none;">
-
-      <button onclick="submitDownloadRequest()" style="width:100%; background:#059669; color:white; border:none; padding:15px; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; display:flex; justify-content:center; align-items:center; gap:10px; box-shadow:0 5px 15px rgba(5,150,105,0.3);">
-        💬 استلام رابط الدخول (واتساب)
-      </button>
-      <p style="text-align:center; font-size:12px; color:#94a3b8; margin-top:15px;">سيتم توجيهك للواتساب لتأكيد الطلب واستلام الرابط.</p>
     </div>
   </div>
 
@@ -1227,8 +1211,29 @@ window.enterSystem = () => {
   document.getElementById("auth").classList.remove("hidden");
 };
 
-// اكتشاف التطبيق المثبت (PWA)
+// ============ الزرار الذكي (تحميل APK للموبايل - تثبيت PWA للكمبيوتر) ============
+let isMobileDevice = false;
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
 window.addEventListener('DOMContentLoaded', () => {
+  // اكتشاف نوع الجهاز
+  isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  const btn = document.getElementById('smartDownloadBtn');
+  if (btn) {
+    if (isMobileDevice) {
+      btn.innerHTML = '📥 تحميل تطبيق الأندرويد (APK)';
+    } else {
+      btn.innerHTML = '💻 تثبيت البرنامج على الكمبيوتر';
+    }
+  }
+
+  // لو التطبيق مفتوح كـ Standalone (متثبت)، ادخل على طول
   if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
     document.getElementById('landingPage').classList.add('hidden');
     document.getElementById('appWrap').classList.remove('hidden');
@@ -1236,106 +1241,36 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// التبديل بين الصفحة الرئيسية وصفحة التحميل في الستارة
-window.showLanding = (page) => {
-  const homeContent = $("landingHomeContent");
-  const downloadContent = $("landingDownloadContent");
-  const navHome = $("navHome");
-  const navDownload = $("navDownload");
-
-  if (page === 'home') {
-    homeContent.classList.remove("hidden");
-    downloadContent.classList.add("hidden");
-    navHome.style.color = '#059669'; navHome.style.borderBottom = '3px solid #059669';
-    navDownload.style.color = '#64748b'; navDownload.style.borderBottom = 'none';
+window.handleSmartDownload = () => {
+  if (isMobileDevice) {
+    downloadAPK();
   } else {
-    homeContent.classList.add("hidden");
-    downloadContent.classList.remove("hidden");
-    navDownload.style.color = '#059669'; navDownload.style.borderBottom = '3px solid #059669';
-    navHome.style.color = '#64748b'; navHome.style.borderBottom = 'none';
+    installPWA();
   }
 };
 
-// كود إرسال اللينك + التسجيل التلقائي
-window.submitDownloadRequest = async () => {
-  const name = $("dlName").value.trim();
-  const phone = $("dlPhone").value.trim();
-  const activity = $("dlActivity").value.trim();
-  const email = $("dlEmail").value.trim();
-
-  if(!name || !phone || !activity || !email) {
-    return showAlert("من فضلك املأ جميع البيانات أولاً.", "warning");
-  }
-
-  let cleanPhone = phone.replace(/\D/g, ''); 
-  if(cleanPhone.startsWith('0')) { cleanPhone = '20' + cleanPhone.substring(1); }
-  const systemLink = "https://mohamedelsalahy673.github.io/sales-system/";
-  const message = `مرحباً ${name}،\nشكراً لاهتمامك بسيستم NexPOS PRO لإدارة (${activity}).\n\nتفضل رابط الدخول المباشر للسيستم:\n${systemLink}\n\nيمكنك الآن البدء في استخدام السيستم فوراً.`;
+window.downloadAPK = () => {
+  // رابط Google Drive المباشر
+  const apkLink = "https://drive.google.com/uc?export=download&id=1t-RlQxuvEMbBkjbWMDe_N5tlcE3rjwLG"; 
   
-  window.open(`https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(message)}`, "_blank");
-
-  showAlert("جاري تجهيز حسابك... يرجى الانتظار لحظات.", "info");
-  const autoPassword = "Nex" + Math.random().toString(36).slice(-6) + "!";
-
-  try {
-    const cred = await createUserWithEmailAndPassword(auth, email, autoPassword);
-    
-    const sysData = {status:"active", plan:"تجربة", requestedPlan:"تجربة", requestedPrice:0, requestedDays:7, expiryDate:new Date(new Date().setDate(new Date().getDate() + 7))};
-    const systems = {};
-    systems['sales'] = sysData;
-
-    await setDoc(doc(db, "users", cred.user.uid), {
-      shopName: activity,
-      customerName: name,
-      phone: phone,
-      email: email,
-      role: "customer",
-      systems: systems,
-      devices: [getDeviceId()],
-      createdAt: serverTimestamp()
-    });
-
-    selectedSystem = 'sales';
-    activeSystem = 'sales';
-    
-    document.getElementById("landingPage").classList.add("hidden");
-    document.getElementById("appWrap").classList.remove("hidden");
-    document.getElementById("auth").classList.add("hidden");
-    
-    showAlert("تم إنشاء حسابك بنجاح! أهلاً بك في NexPOS.", "success");
-
-  } catch (e) {
-    if(e.code === "auth/email-already-in-use") {
-      showAlert("هذا البريد مسجل بالفعل. سيتم تحويلك لتسجيل الدخول.", "warning");
-      document.getElementById("landingPage").classList.add("hidden");
-      document.getElementById("appWrap").classList.remove("hidden");
-      document.getElementById("auth").classList.remove("hidden");
-    } else {
-      showAlert("حدث خطأ في إنشاء الحساب: " + e.message, "error");
-    }
-  }
+  window.open(apkLink, "_blank");
+  
+  showAlert("جاري تحويلك لصفحة التحميل... لو ظهرت لك رسالة من جوجل بتحذير أمني، اضغط على زر (Download anyway) أو (تحميل على أي حال) لبدء تحميل التطبيق.", "info");
 };
-
-// كود تثبيت التطبيق (PWA)
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('installAppBtn').classList.remove('hidden');
-});
 
 window.installPWA = async () => {
-  if (!deferredPrompt) {
-    showAlert("التثبيت مش مدعوم في المتصفح ده حالياً.", "info");
-    return;
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      showAlert("تم تثبيت التطبيق بنجاح على جهازك!", "success");
+    }
+    deferredPrompt = null;
+  } else if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+    showAlert("البرنامج مثبت بالفعل على جهازك! يمكنك فتحه من الشاشة الرئيسية.", "info");
+  } else {
+    showAlert("لتثبيت البرنامج على جهازك:\n\n1. اضغط على زر المشاركة (Share) أو الثلاث نقاط في المتصفح.\n2. اختر 'إضافة إلى الشاشة الرئيسية' (Add to Home Screen) أو 'تثبيت التطبيق'.", "info");
   }
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  if (outcome === 'accepted') {
-    showAlert("تم تثبيت التطبيق بنجاح!", "success");
-  }
-  deferredPrompt = null;
-  document.getElementById('installAppBtn').classList.add('hidden');
 };
 
 // دالة لتوليد أو جلب كود فريد للجهاز الحالي

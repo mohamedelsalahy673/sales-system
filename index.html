@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- ============ كود تحسين محركات البحث (SEO) ============ -->
 <title>NexPOS PRO | أفضل سيستم كاشير وإدارة مبيعات وبلايستيشن في مصر</title>
 <meta name="description" content="NexPOS PRO هو النظام المتكامل لإدارة محلك. سيستم كاشير سريع، إدارة مخازن، تقارير أرباح، ونظام بلايستيشن لإدارة الرومات والـ VIP والبلياردو. اطلب نسختك الآن!">
 <meta name="keywords" content="سيستم, كاشير, سيستم مبيعات, برنامج مبيعات, سيستم بلايستيشن, برنامج بلايستيشن, إدارة مخازن, نقاط بيع, NexPOS">
@@ -710,22 +709,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   </div>
 </div>
 
-<div id="psConfirmInvoiceModal" class="modal-overlay hidden" onclick="if(event.target===this) cancelPsInvoice();">
-  <div class="modal-box" style="max-width:400px;border-top:5px solid var(--success);">
-    <h3 style="text-align:center;margin-top:0;">تأكيد الفاتورة</h3><hr>
-    <div id="psConfirmInvoiceContent" style="line-height:1.8;font-size:13px;"></div>
-    <div style="background:rgba(15,23,42,0.5);padding:10px;border-radius:8px;margin:10px 0;border:1px dashed var(--border-color);">
-      <label style="color:var(--danger);margin-bottom:4px;display:block;">خصم (اختياري):</label>
-      <input type="number" id="psConfirmDiscountInput" placeholder="0.00" min="0" step="0.01" style="margin:0;font-size:14px;text-align:center;" oninput="updateConfirmModalTotal()">
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-      <button class="green" onclick="confirmAndPrintPsInvoice(false)" style="grid-column:1/-1;">✔ تأكيد</button>
-      <button class="dark" onclick="confirmAndPrintPsInvoice(true)">🖨️ وطباعة</button>
-      <button class="red" onclick="cancelPsInvoice()">✖ إلغاء</button>
-    </div>
-  </div>
-</div>
-
 <div id="forgotPasswordModal" class="modal-overlay hidden" onclick="if(event.target===this) closeForgotModal();">
   <div class="modal-box" style="max-width:380px;text-align:center;">
     <button class="modal-close" onclick="closeForgotModal()">✕</button>
@@ -798,11 +781,32 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <!-- إعداد الباركود -->
+  <!-- إعداد و طباعة الباركود (محدث ليطابق التصميم المطلوب تماماً) -->
   <div id="barcodeSettingsPage" class="hidden">
     <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
-    <h3>🏷️ إعداد الباركود</h3>
-    <button class="big green" onclick="saveBarcodeSettings()">💾 حفظ</button>
+    <h3 style="color:#10b981;">🏷️ طباعة باركود المنتجات (تصميم مخصص)</h3>
+    <div style="display:grid; grid-template-columns: 320px 1fr; gap:15px; margin-top:10px;">
+      <div class="card" style="margin:0; padding:12px; display:flex; flex-direction:column; gap:8px;">
+        <label>اختر المنتج لطباعة الباركود الخاص به</label>
+        <select id="barcodeProductSelect" onchange="generateBarcodePreview()" style="padding:8px; font-weight:bold;">
+          <option value="">-- اختر منتج --</option>
+        </select>
+        <label>أو اكتب رقم الباركود يدوياً</label>
+        <input id="customBarcodeInput" placeholder="مثال: 5128211" oninput="generateBarcodePreview()">
+        <label>اسم الصنف الظاهر أسفل الباركود</label>
+        <input id="customBaritemNameInput" placeholder="مثال: 11 برو ماكس / 512 / 82%" oninput="generateBarcodePreview()">
+        <button class="big green" onclick="printBarcodeSticker()" style="margin-top:10px;">🖨️ طباعة ملصق الباركود</button>
+      </div>
+      <div class="card" style="margin:0; background:#f8fafc; color:#0f172a; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; border: 2px dashed var(--border-color);">
+        <div style="font-size:12px; color:#64748b; margin-bottom:10px; font-weight:bold;">معاينة ملصق الباركود (مطابق لطلبك):</div>
+        <!-- تصميم الملصق تماماً كالصورة -->
+        <div id="barcodeStickerCard" style="background:white; color:black; width:220px; padding:12px 10px; border-radius:8px; border:1px solid #cbd5e1; text-align:center; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+          <div id="stickerShopName" style="font-size:14px; font-weight:bold; margin-bottom:4px; color:#0f172a;">Mahmoud Baker</div>
+          <div style="margin: 4px 0;"><svg id="barcodeSvgPreview" style="max-width:100%; height:45px;"></svg></div>
+          <div id="stickerItemName" style="font-size:12px; font-weight:bold; color:#1e293b; margin-top:2px; direction:rtl;">11 برو ماكس / 512 / 82%</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ================= شاشة المبيعات الجديدة كلياً (POS Pro) ================= -->
@@ -1382,12 +1386,124 @@ window.restorePosHold = async (id) => {
   await deleteDoc(docRef("holds", id)); Swal.close(); renderPosCart();
 };
 
-window.page = name => {
-  ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription","barcodeSettings","invoiceSettings"].forEach(p => $(p+"Page").classList.add("hidden"));
-  $(name+"Page").classList.remove("hidden");
-  document.querySelector('.wrap').style.overflowY = name === "sales" ? 'hidden' : 'auto';
+window.page = async name => {
+  ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription","barcodeSettings","invoiceSettings"].forEach(p => $(p+"Page")?.classList.add("hidden"));
+  $(name+"Page")?.classList.remove("hidden");
+  if(document.querySelector('.wrap')) {
+    document.querySelector('.wrap').style.overflowY = name === "sales" ? 'hidden' : 'auto';
+  }
   if (name === "dashboard") renderStats();
   if (name === "sales") renderPosProductsGrid();
+  if (name === "barcodeSettings") initBarcodeSettingsPage();
+
+  if (name === "subscription") {
+    try {
+      let subInfo = null;
+      if (currentUser) {
+        const snap = await safeGetDoc(doc(db, "users", currentUser.uid));
+        if (snap && snap.exists()) {
+          const dat = snap.data();
+          subInfo = dat.systems?.sales || dat.systems?.playstation || {};
+        }
+      }
+      if (!subInfo && profile) {
+        subInfo = profile.systems?.sales || {};
+      }
+      
+      const subType = subInfo?.plan || subInfo?.requestedPlan || "نشط";
+      let expiryText = "غير محدد";
+      let remainingDays = "---";
+      
+      if (subInfo?.expiryDate) {
+        const expDate = subInfo.expiryDate.toDate ? subInfo.expiryDate.toDate() : new Date(subInfo.expiryDate);
+        expiryText = expDate.toLocaleDateString("ar-EG");
+        const diffTime = expDate - new Date();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        remainingDays = diffDays > 0 ? `${diffDays} يوم` : "منتهي";
+      }
+      
+      if ($("subTypeDisplay")) $("subTypeDisplay").textContent = subType;
+      if ($("subExpiryDate")) $("subExpiryDate").textContent = expiryText;
+      if ($("subDevicesCount")) $("subDevicesCount").textContent = remainingDays;
+    } catch (err) {
+      console.warn("Error loading subscription info:", err);
+    }
+  }
+};
+
+// دوال إعداد وطباعة الباركود المطابقة للصورة
+function initBarcodeSettingsPage() {
+  const select = $("barcodeProductSelect");
+  if (!select) return;
+  select.innerHTML = '<option value="">-- اختر من قائمة المنتجات --</option>' + products.map(p => `<option value="${p.id}">${escapeHTML(p.name)} (${p.barcode || 'بدون باركود'})</option>`).join("");
+  if (products.length > 0) {
+    select.value = products[0].id;
+    $("customBarcodeInput").value = products[0].barcode || "123456789";
+    $("customBaritemNameInput").value = products[0].name;
+  } else {
+    $("customBarcodeInput").value = "123456789";
+    $("customBaritemNameInput").value = "11 برو ماكس / 512 / 82%";
+  }
+  generateBarcodePreview();
+}
+
+window.barcodeProductSelectChange = () => {
+  const id = $("barcodeProductSelect").value;
+  const p = products.find(x => x.id === id);
+  if (p) {
+    $("customBarcodeInput").value = p.barcode || "123456789";
+    $("customBaritemNameInput").value = p.name;
+    generateBarcodePreview();
+  }
+};
+
+window.generateBarcodePreview = () => {
+  const shopName = profile?.shopName || "Mahmoud Baker";
+  const barcodeVal = $("customBarcodeInput")?.value.trim() || "123456789";
+  const itemName = $("customBaritemNameInput")?.value.trim() || "اسم الصنف";
+
+  if ($("stickerShopName")) $("stickerShopName").textContent = shopName;
+  if ($("stickerItemName")) $("stickerItemName").textContent = itemName;
+
+  try {
+    if ($("barcodeSvgPreview")) {
+      JsBarcode("#barcodeSvgPreview", barcodeVal, {
+        format: "CODE128",
+        lineColor: "#000",
+        width: 1.5,
+        height: 38,
+        displayValue: false
+      });
+    }
+  } catch(e) { console.warn(e); }
+};
+
+window.printBarcodeSticker = () => {
+  const shopName = profile?.shopName || "Mahmoud Baker";
+  const barcodeVal = $("customBarcodeInput")?.value.trim() || "123456789";
+  const itemName = $("customBaritemNameInput")?.value.trim() || "اسم الصنف";
+
+  $("printArea").classList.remove("hidden");
+  $("printArea").innerHTML = `
+    <div style="width: 50mm; height: 30mm; background: white; color: black; font-family: 'Cairo', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2mm; text-align: center; box-sizing: border-box; margin: auto;">
+      <div style="font-size: 11px; font-weight: bold; margin-bottom: 2mm; color: #000;">${escapeHTML(shopName)}</div>
+      <div style="margin: 1mm 0;"><svg id="printBarcodeSvg"></svg></div>
+      <div style="font-size: 10px; font-weight: bold; margin-top: 1mm; color: #000; direction: rtl;">${escapeHTML(itemName)}</div>
+    </div>
+  `;
+
+  try {
+    JsBarcode("#printBarcodeSvg", barcodeVal, {
+      format: "CODE128",
+      lineColor: "#000",
+      width: 1.3,
+      height: 32,
+      displayValue: false
+    });
+  } catch(e) {}
+
+  window.print();
+  setTimeout(() => $("printArea").classList.add("hidden"), 1000);
 };
 
 window.printInvoiceDirectly = inv => {
@@ -1414,7 +1530,7 @@ window.saveProduct = async () => {
 window.deleteProduct = async id => { if(await window.customConfirm("حذف؟")) { await deleteDoc(docRef("products",id)); await loadProducts(); renderStats(); } };
 
 async function loadBusiness(){ await Promise.all([loadProducts(),loadSales(),loadExpenses(),loadTreasury()]); renderStats(); }
-async function loadProducts(){ const s=await safeGetDocs(col("products")); products=s.docs.map(d=>({id:d.id,...d.data()})); renderProducts(); renderPosProductsGrid(); }
+async function loadProducts(){ const s=await safeGetDocs(col("products")); products=s.docs.map(d=>({id:d.id,...d.data()})); renderProducts(); renderPosProductsGrid(); if($("barcodeSettingsPage") && !$("barcodeSettingsPage").classList.contains("hidden")) initBarcodeSettingsPage(); }
 async function loadSales(){ const s=await safeGetDocs(col("sales")); sales=s.docs.map(d=>({id:d.id,...d.data()})); renderSales(); }
 async function loadExpenses(){ const s=await safeGetDocs(col("expenses")); expenses=s.docs.map(d=>({id:d.id,...d.data()})); renderExpenses(); }
 async function loadTreasury(){ const s=await safeGetDocs(col("treasury")); treasury=s.docs.map(d=>({id:d.id,...d.data()})); renderTreasury(); }

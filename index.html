@@ -380,18 +380,18 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 
 <section id="pendingScreen" class="hidden"><div class="card" style="max-width:520px;margin:20px auto;text-align:center"><h2>تم إنشاء حسابك!</h2><p class="muted">انتظر موافقة المالك.</p><div id="pendingDetails" style="line-height:2;margin:12px 0; font-size:13px;"></div><button class="big green" onclick="sendWhatsAppActivation()">تواصل مع المطور</button><button class="big secondary" onclick="location.reload()">العودة</button></div></section>
 
-<!-- ================= لوحة تحكم المالك المركزية ================= -->
+<!-- ================= لوحة تحكم المالك المركزية الاحترافية ================= -->
 <section id="ownerPanel" class="hidden" style="overflow-y:auto;">
  <div class="card">
    <div class="top">
-     <div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة العملاء والأجهزة المتصلة وتعديل البيانات</span></div>
+     <div><h2>لوحة التحكم المركزية (المالك)</h2><span class="muted">إدارة العملاء، الصلاحيات، والباقات بشكل كامل</span></div>
      <button class="red" onclick="logout()" style="padding:6px 12px; font-size:12px;">تسجيل الخروج</button>
    </div>
    <div class="grid">
-     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>إجمالي<br><strong id="totalUsers">0</strong></div><span style="font-size:24px; opacity:0.5;">👥</span></div>
-     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>مبيعات<br><strong id="salesUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">🛒</span></div>
-     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>بلايستيشن<br><strong id="psUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">🎮</span></div>
-     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>انتظار<br><strong id="pendingUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">⏳</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>إجمالي العملاء<br><strong id="totalUsers">0</strong></div><span style="font-size:24px; opacity:0.5;">👥</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>عملاء المبيعات<br><strong id="salesUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">🛒</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>عملاء البلايستيشن<br><strong id="psUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">🎮</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>قيد الانتظار<br><strong id="pendingUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">⏳</span></div>
    </div>
    <nav style="display:flex;gap:6px;margin:10px 0">
      <button id="ownerSalesTab" class="active" onclick="ownerSection('sales')" style="padding:7px 12px;">سيستم المبيعات</button>
@@ -409,8 +409,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
              <th>الهاتف</th>
              <th>الحالة</th>
              <th>الباقة</th>
-             <th>الأجهزة المسموحة والمتصلة</th>
-             <th>الإدارة</th>
+             <th>الإدارة والتحكم</th>
            </tr>
          </thead>
          <tbody id="salesUsersTable"></tbody>
@@ -429,19 +428,18 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
              <th>الهاتف</th>
              <th>الحالة</th>
              <th>الباقة</th>
-             <th>الأجهزة المسموحة والمتصلة</th>
-             <th>الإدارة</th>
+             <th>الإدارة والتحكم</th>
            </tr>
          </thead>
          <tbody id="psUsersTable"></tbody>
        </table>
      </div>
    </div>
-   <button class="secondary big" onclick="loadUsers()" style="margin-top:10px;">تحديث البيانات</button>
+   <button class="secondary big" onclick="loadUsers()" style="margin-top:10px;">🔄 تحديث البيانات</button>
  </div>
 </section>
 
-<!-- نافذة تعديل بيانات العميل من لوحة تحكم المالك -->
+<!-- نافذة تعديل بيانات العميل الاحترافية من لوحة تحكم المالك -->
 <div id="editUserModal" class="modal-overlay hidden" onclick="if(event.target===this) closeEditUserModal();">
   <div class="modal-box" style="max-width:400px; border-top:5px solid var(--purple);">
     <button class="modal-close" onclick="closeEditUserModal()">✕</button>
@@ -781,15 +779,15 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <!-- إعداد و طباعة الباركود (محدث ليطابق التصميم المطلوب تماماً) -->
+  <!-- إعداد و طباعة الباركود (مطابق للصورة تماماً) -->
   <div id="barcodeSettingsPage" class="hidden">
     <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
     <h3 style="color:#10b981;">🏷️ طباعة باركود المنتجات (تصميم مخصص)</h3>
     <div style="display:grid; grid-template-columns: 320px 1fr; gap:15px; margin-top:10px;">
       <div class="card" style="margin:0; padding:12px; display:flex; flex-direction:column; gap:8px;">
         <label>اختر المنتج لطباعة الباركود الخاص به</label>
-        <select id="barcodeProductSelect" onchange="generateBarcodePreview()" style="padding:8px; font-weight:bold;">
-          <option value="">-- اختر منتج --</option>
+        <select id="barcodeProductSelect" onchange="barcodeProductSelectChange()" style="padding:8px; font-weight:bold;">
+          <option value="">-- اختر من قائمة المنتجات --</option>
         </select>
         <label>أو اكتب رقم الباركود يدوياً</label>
         <input id="customBarcodeInput" placeholder="مثال: 5128211" oninput="generateBarcodePreview()">
@@ -799,7 +797,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
       </div>
       <div class="card" style="margin:0; background:#f8fafc; color:#0f172a; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; border: 2px dashed var(--border-color);">
         <div style="font-size:12px; color:#64748b; margin-bottom:10px; font-weight:bold;">معاينة ملصق الباركود (مطابق لطلبك):</div>
-        <!-- تصميم الملصق تماماً كالصورة -->
         <div id="barcodeStickerCard" style="background:white; color:black; width:220px; padding:12px 10px; border-radius:8px; border:1px solid #cbd5e1; text-align:center; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
           <div id="stickerShopName" style="font-size:14px; font-weight:bold; margin-bottom:4px; color:#0f172a;">Mahmoud Baker</div>
           <div style="margin: 4px 0;"><svg id="barcodeSvgPreview" style="max-width:100%; height:45px;"></svg></div>
@@ -812,7 +809,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   <!-- ================= شاشة المبيعات الجديدة كلياً (POS Pro) ================= -->
   <div id="salesPage" class="hidden" style="height: calc(100vh - 10px); display: flex; flex-direction: column; overflow: hidden; background: var(--bg-body); border-radius: 8px;">
     
-    <!-- شريط علوي احترافي -->
     <div style="background: linear-gradient(90deg, #047857, #059669); color: white; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; font-weight: bold; flex-shrink: 0;">
       <div style="display: flex; align-items: center; gap: 10px;">
         <span style="font-size: 22px;">🛒</span>
@@ -824,13 +820,9 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
       </div>
     </div>
 
-    <!-- تقسيم الشاشة الرئيسي (شبكة المنتجات يمين + الفاتورة يسار) -->
     <div style="display: flex; flex: 1; min-height: 0; overflow: hidden; gap: 8px; padding: 8px;">
       
-      <!-- القسم الأيمن: كتالوج المنتجات والأقسام -->
       <div style="flex: 1.3; display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; min-width: 0;">
-        
-        <!-- شريط البحث والتصنيفات -->
         <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; flex-shrink: 0;">
           <input id="posProductSearch" oninput="filterPosProducts()" placeholder="🔍 ابحث عن صنف بالاسم أو امسح الباركود..." style="margin: 0; padding: 10px; font-size: 14px; font-weight: bold; border-radius: 8px;">
           <div id="posCategoriesBar" style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px;">
@@ -841,16 +833,10 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
           </div>
         </div>
 
-        <!-- شبكة المنتجات الكروت -->
-        <div id="posProductsGrid" style="flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; align-content: start; padding-right: 4px;">
-          <!-- تعبئة تلقائية -->
-        </div>
+        <div id="posProductsGrid" style="flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; align-content: start; padding-right: 4px;"></div>
       </div>
 
-      <!-- القسم الأيسر: سلة المشتريات والحسابات -->
       <div style="flex: 1; display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; min-width: 0;">
-        
-        <!-- جدول الفاتورة -->
         <div style="flex: 1; background: var(--bg-input); border-radius: 8px; overflow-y: auto; border: 1px solid var(--border-color); min-height: 0;">
           <table style="width: 100%; border-collapse: collapse;">
             <thead>
@@ -868,7 +854,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
           </table>
         </div>
 
-        <!-- حسابات الإجمالي والخصومات -->
         <div style="background: rgba(15,23,42,0.6); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; margin-top: 8px; flex-shrink: 0;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <span style="font-size: 14px; font-weight: bold; color: var(--text-muted);">الإجمالي المطلوب:</span>
@@ -883,7 +868,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
           <input id="posSaleNotes" type="text" placeholder="ملاحظات الفاتورة (اسم العميل أو تفاصيل)..." style="padding: 6px; font-size: 11px; margin: 0;">
         </div>
 
-        <!-- أزرار الإجراءات السريعة -->
         <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 6px; margin-top: 8px; flex-shrink: 0;">
           <button class="green" onclick="completePosSale()" style="padding: 10px; font-size: 15px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 6px;">💵 حفظ وبيع سريـع</button>
           <button class="orange" onclick="savePosHold()" style="padding: 10px; font-size: 13px; font-weight: bold;">⏸️ تعليق</button>
@@ -899,7 +883,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <!-- نافذة البيع السريع / صنف حر -->
   <div id="quickCashItemModal" class="modal-overlay hidden" onclick="if(event.target===this) closeQuickCashModal();">
     <div class="modal-box" style="max-width: 360px; border-top: 5px solid var(--success);">
       <button class="modal-close" onclick="closeQuickCashModal()">✕</button>
@@ -1126,8 +1109,8 @@ window.loadUsers=async()=>{
   const render=(arr,sys)=>arr.map(u=>{
    const info=systemInfo(u,sys),exp=info.expiryDate?.toDate?info.expiryDate.toDate():info.expiryDate,ex=exp&&new Date(exp)<new Date();
    let st="نشط"; if(info.status==="pending")st="جديد"; else if(ex)st="منتهي";
-   return `<tr><td><b>${escapeHTML(u.shopName||"")}</b></td><td>${escapeHTML(u.customerName||"")}</td><td>${escapeHTML(u.email||"")}</td><td><span class="tag ${st==='نشط'?'good':''}">${st}</span></td><td>${planControls(u,sys)}</td></tr>`;
-  }).join("")||'<tr><td colspan="5">لا يوجد عملاء</td></tr>';
+   return `<tr><td><b>${escapeHTML(u.shopName||"")}</b></td><td>${escapeHTML(u.customerName||"")}</td><td>${escapeHTML(u.email||"")}</td><td>${escapeHTML(u.phone||"")}</td><td><span class="tag ${st==='نشط'?'good':''}">${st}</span></td><td><b>${escapeHTML(info.plan||"")}</b></td><td>${planControls(u,sys)}</td></tr>`;
+  }).join("")||'<tr><td colspan="7">لا يوجد عملاء</td></tr>';
   $("salesUsersTable").innerHTML=render(salesList,"sales");
   $("psUsersTable").innerHTML=render(psList,"playstation");
  }catch(e){console.warn(e);}
@@ -1431,7 +1414,6 @@ window.page = async name => {
   }
 };
 
-// دوال إعداد وطباعة الباركود المطابقة للصورة
 function initBarcodeSettingsPage() {
   const select = $("barcodeProductSelect");
   if (!select) return;

@@ -779,7 +779,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <!-- إعداد و طباعة الباركود -->
+  <!-- إعداد و طباعة الباركود (مطابق للصورة تماماً) -->
   <div id="barcodeSettingsPage" class="hidden">
     <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
     <h3 style="color:#10b981;">🏷️ طباعة باركود المنتجات (تصميم مخصص)</h3>
@@ -796,7 +796,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
         <button class="big green" onclick="printBarcodeSticker()" style="margin-top:10px;">🖨️ طباعة ملصق الباركود</button>
       </div>
       <div class="card" style="margin:0; background:#f8fafc; color:#0f172a; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; border: 2px dashed var(--border-color);">
-        <div style="font-size:12px; color:#64748b; margin-bottom:10px; font-weight:bold;">معاينة ملصق الباركود:</div>
+        <div style="font-size:12px; color:#64748b; margin-bottom:10px; font-weight:bold;">معاينة ملصق الباركود (مطابق لطلبك):</div>
         <div id="barcodeStickerCard" style="background:white; color:black; width:220px; padding:12px 10px; border-radius:8px; border:1px solid #cbd5e1; text-align:center; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
           <div id="stickerShopName" style="font-size:14px; font-weight:bold; margin-bottom:4px; color:#0f172a;">Mahmoud Baker</div>
           <div style="margin: 4px 0;"><svg id="barcodeSvgPreview" style="max-width:100%; height:45px;"></svg></div>
@@ -898,36 +898,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <!-- صفحة المنتجات مع زر طباعة الباركود بجانب زر الحذف -->
-  <div id="productsPage" class="hidden">
-    <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
-    <h3>المنتجات</h3>
-    <div class="card">
-      <input id="pName" placeholder="اسم الصنف">
-      <input id="pBarcode" placeholder="رقم الباركود">
-      <div class="grid">
-        <div><label>شراء</label><input id="pCost" type="number" value="0"></div>
-        <div><label>بيع</label><input id="pPrice" type="number" value="0"></div>
-        <div><label>كمية</label><input id="pQty" type="number" value="10"></div>
-      </div>
-      <button onclick="saveProduct()" class="green big">حفظ المنتج</button>
-    </div>
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr>
-            <th>المنتج</th>
-            <th>باركود</th>
-            <th>سعر البيع</th>
-            <th>الكمية</th>
-            <th>الإجراءات</th>
-          </tr>
-        </thead>
-        <tbody id="productsTable"></tbody>
-      </table>
-    </div>
-  </div>
-
+  <div id="productsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>المنتجات</h3><div class="card"><input id="pName" placeholder="اسم"><input id="pBarcode" placeholder="باركود"><div class="grid"><div><label>شراء</label><input id="pCost" type="number" value="0"></div><div><label>بيع</label><input id="pPrice" type="number" value="0"></div><div><label>كمية</label><input id="pQty" type="number" value="10"></div></div><button onclick="saveProduct()" class="green big">حفظ</button></div><div class="tablewrap"><table><thead><tr><th>المنتج</th><th>باركود</th><th>شراء</th><th>بيع</th><th>كمية</th><th>إجراء</th></tr></thead><tbody id="productsTable"></tbody></table></div></div>
   <div id="treasuryPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الخزينة</h3><div class="grid"><div class="stat">رصيد<strong id="treasuryBalanceDisplay">0 ج</strong></div></div><div class="card"><h3>حركة</h3><select id="tType"><option value="in">وارد</option><option value="out">صادر</option></select><input id="tAmount" type="number" placeholder="المبلغ"><input id="tNote" placeholder="البيان"><button class="big green" onclick="addTreasuryTransaction()">تسجيل</button></div><div class="tablewrap"><table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table></div></div>
   <div id="historyPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الفواتير</h3><div class="tablewrap"><table><thead><tr><th>رقم</th><th>التاريخ</th><th>الإجمالي</th><th>إجراء</th></tr></thead><tbody id="salesTable"></tbody></table></div></div>
   <div id="expensesPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>المصروفات</h3><div class="card"><input id="expenseName" placeholder="البيان"><input id="expenseAmount" type="number" placeholder="المبلغ"><button onclick="addExpense()" class="green big">حفظ</button></div><div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div></div>
@@ -1489,38 +1460,6 @@ window.generateBarcodePreview = () => {
   } catch(e) { console.warn(e); }
 };
 
-// دالة طباعة الباركود للمنتج مباشرة من جدول المنتجات
-window.printProductBarcode = (productId) => {
-  const p = products.find(x => x.id === productId);
-  if (!p) return showAlert("المنتج غير موجود!", "warning");
-
-  const shopName = profile?.shopName || "Mahmoud Baker";
-  const barcodeVal = p.barcode || "123456789";
-  const itemName = p.name;
-
-  $("printArea").classList.remove("hidden");
-  $("printArea").innerHTML = `
-    <div style="width: 50mm; height: 30mm; background: white; color: black; font-family: 'Cairo', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2mm; text-align: center; box-sizing: border-box; margin: auto;">
-      <div style="font-size: 11px; font-weight: bold; margin-bottom: 2mm; color: #000;">${escapeHTML(shopName)}</div>
-      <div style="margin: 1mm 0;"><svg id="printBarcodeSvg"></svg></div>
-      <div style="font-size: 10px; font-weight: bold; margin-top: 1mm; color: #000; direction: rtl;">${escapeHTML(itemName)}</div>
-    </div>
-  `;
-
-  try {
-    JsBarcode("#printBarcodeSvg", barcodeVal, {
-      format: "CODE128",
-      lineColor: "#000",
-      width: 1.3,
-      height: 32,
-      displayValue: false
-    });
-  } catch(e) {}
-
-  window.print();
-  setTimeout(() => $("printArea").classList.add("hidden"), 1000);
-};
-
 window.printBarcodeSticker = () => {
   const shopName = profile?.shopName || "Mahmoud Baker";
   const barcodeVal = $("customBarcodeInput")?.value.trim() || "123456789";
@@ -1578,21 +1517,7 @@ async function loadSales(){ const s=await safeGetDocs(col("sales")); sales=s.doc
 async function loadExpenses(){ const s=await safeGetDocs(col("expenses")); expenses=s.docs.map(d=>({id:d.id,...d.data()})); renderExpenses(); }
 async function loadTreasury(){ const s=await safeGetDocs(col("treasury")); treasury=s.docs.map(d=>({id:d.id,...d.data()})); renderTreasury(); }
 
-function renderProducts(){ 
-  $("productsTable").innerHTML = products.map(p => `
-    <tr>
-      <td>${escapeHTML(p.name)}</td>
-      <td>${escapeHTML(p.barcode||"")}</td>
-      <td>${money(p.price)} ج</td>
-      <td>${p.qty}</td>
-      <td>
-        <button class="rowbtn green" onclick="printProductBarcode('${p.id}')">🖨️ طباعة</button>
-        <button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button>
-      </td>
-    </tr>
-  `).join("") || "<tr><td colspan='5'>لا منتجات</td></tr>"; 
-}
-
+function renderProducts(){ $("productsTable").innerHTML = products.map(p => `<tr><td>${escapeHTML(p.name)}</td><td>${escapeHTML(p.barcode||"")}</td><td>${money(p.price)} ج</td><td>${p.qty}</td><td><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("") || "<tr><td colspan='5'>لا منتجات</td></tr>"; }
 function renderTreasury(){ let tIn=0, tOut=0; treasury.forEach(t=>{ if(t.type==="in") tIn+=Number(t.amount)||0; else tOut+=Number(t.amount)||0; }); $("treasuryBalanceDisplay").textContent = money(tIn-tOut)+" ج"; }
 function renderExpenses(){ $("expensesTable").innerHTML = expenses.map(e=>`<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا مصروفات</td></tr>"; }
 function renderSales(){ $("salesTable").innerHTML = sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td></tr>`).join("")||"<tr><td colspan='4'>لا فواتير</td></tr>"; }

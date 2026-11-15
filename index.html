@@ -458,7 +458,8 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <body>
 
 <!-- ================= صفحة الهبوط الاحترافية (Landing Page) ================= -->
-<section id="landingPage" style="background:#fff; height:100vh; display:flex; flex-direction:column; overflow-y:auto; font-family:'Cairo', sans-serif; direction:rtl;">
+<!-- تم إضافة كلاس hidden هنا عشان متظهرش افتراضياً للبرنامج -->
+<section id="landingPage" class="hidden" style="background:#fff; height:100vh; display:flex; flex-direction:column; overflow-y:auto; font-family:'Cairo', sans-serif; direction:rtl;">
   
   <nav style="display:flex; justify-content:space-between; align-items:center; padding:10px 40px; border-bottom:2px solid #e2e8f0; background:white; position:sticky; top:0; z-index:100;">
     <div style="display:flex; align-items:center; gap:10px;">
@@ -1153,7 +1154,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'nexpos-cache-v3';
+      const CACHE_NAME = 'nexpos-cache-v5';
       const urlsToCache = ['/', '/manifest.json'];
 
       self.addEventListener('install', event => {
@@ -1260,7 +1261,6 @@ window.enterSystem = () => {
   document.getElementById("landingPage").classList.add("hidden");
   document.getElementById("appWrap").classList.remove("hidden");
   document.getElementById("auth").classList.remove("hidden");
-  // محاولة ملء الإيميل المحفوظ
   const savedEmail = localStorage.getItem('nexpos_last_email');
   if(savedEmail && $("loginEmail")) $("loginEmail").value = savedEmail;
 };
@@ -1287,15 +1287,22 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // محاولة ملء الإيميل المحفوظ
   const savedEmail = localStorage.getItem('nexpos_last_email');
   if(savedEmail && $("loginEmail")) $("loginEmail").value = savedEmail;
 
-  // لو التطبيق مفتوح كـ Standalone (متثبت)، ادخل على طول
-  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+  // التحقق من طريقة فتح البرنامج
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const isPWA = window.location.search.includes('pwa=true'); // لو الاختصار فيه علامة pwa
+
+  if (isStandalone || isPWA) {
+    // لو متثبت كتطبيق أو مفتوح من اختصار PWA، ادخل على طول لشاشة الدخول
     document.getElementById('landingPage').classList.add('hidden');
     document.getElementById('appWrap').classList.remove('hidden');
     document.getElementById('auth').classList.remove('hidden');
+  } else {
+    // لو مفتوح من المتصفح العادي، اعرض صفحة الهبوط
+    document.getElementById('landingPage').classList.remove('hidden');
+    document.getElementById('appWrap').classList.add('hidden');
   }
 });
 
@@ -1324,10 +1331,8 @@ window.installPWA = async () => {
       showAlert("تم تثبيت التطبيق بنجاح على جهازك!", "success");
     }
     deferredPrompt = null;
-  } else if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-    showAlert("البرنامج مثبت بالفعل على جهازك! يمكنك فتحه من الشاشة الرئيسية.", "info");
   } else {
-    showAlert("لتثبيت البرنامج على جهازك:\n\n1. اضغط على زر المشاركة (Share) أو الثلاث نقاط في المتصفح.\n2. اختر 'إضافة إلى الشاشة الرئيسية' (Add to Home Screen) أو 'تثبيت التطبيق'.", "info");
+    showAlert("لتثبيت البرنامج على جهازك:\n\n1. اضغط على زر القائمة (الثلاث نقاط) في أعلى المتصفح.\n2. اختر 'تثبيت التطبيق' أو 'إضافة إلى الشاشة الرئيسية'.\n3. لو ملقيتش الخيار ده، يبقى المتصفح مش بيدعم التثبيت المباشر، جرب تفتح الموقع على Google Chrome.", "info");
   }
 };
 
@@ -1444,7 +1449,10 @@ onAuthStateChanged(auth, async user => {
     $("auth").classList.remove("hidden");
     $("authForm").classList.add("hidden");
     
-    if (!window.matchMedia('(display-mode: standalone)').matches && window.navigator.standalone !== true) {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const isPWA = window.location.search.includes('pwa=true');
+    
+    if (!isStandalone && !isPWA) {
        document.getElementById("landingPage").classList.remove("hidden");
        document.getElementById("appWrap").classList.add("hidden");
     } else {
@@ -1463,7 +1471,7 @@ onAuthStateChanged(auth, async user => {
       return;
     }
 
-    // --- التعديل الأهم: الاعتماد على الكاش المحلي لو مفيش نت ---
+    // --- الاعتماد على الكاش المحلي لو مفيش نت ---
     let snap = null;
     try {
       snap = await safeGetDoc(doc(db, "users", user.uid));
@@ -1612,6 +1620,7 @@ window.saveBarcodeSettings = async () => {
   try {
     await setDoc(doc(db, "users", currentUser.uid), { barcodeSettings: settings }, { merge: true });
     profile.barcodeSettings = settings;
+    localStorage.setItem('nexpos_profile', JSON.stringify(profile));
     showAlert("تم حفظ إعدادات الباركود بنجاح!", "success");
   } catch (e) { showAlert("خطأ في الحفظ: " + e.message, "error"); }
 };
@@ -1673,7 +1682,7 @@ window.updateInvoicePreview = () => {
 };
 window.saveInvoiceSettings = async () => {
   const settings = { shopName: $("invShopName").value, taxNumber: $("invTaxNumber").value, address: $("invAddress").value, paperSize: $("invPaperSize").value };
-  try { await setDoc(doc(db, "users", currentUser.uid), { invoiceSettings: settings }, { merge: true }); profile.invoiceSettings = settings; showAlert("تم حفظ إعدادات الفاتورة بنجاح!", "success"); } catch (e) { showAlert("خطأ في الحفظ: " + e.message, "error"); }
+  try { await setDoc(doc(db, "users", currentUser.uid), { invoiceSettings: settings }, { merge: true }); profile.invoiceSettings = settings; localStorage.setItem('nexpos_profile', JSON.stringify(profile)); showAlert("تم حفظ إعدادات الفاتورة بنجاح!", "success"); } catch (e) { showAlert("خطأ في الحفظ: " + e.message, "error"); }
 };
 window.loadInvoiceSettings = () => {
   const s = profile?.invoiceSettings;

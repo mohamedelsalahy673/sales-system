@@ -1153,7 +1153,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'nexpos-cache-v2';
+      const CACHE_NAME = 'nexpos-cache-v3';
       const urlsToCache = ['/', '/manifest.json'];
 
       self.addEventListener('install', event => {
@@ -1254,12 +1254,15 @@ const firebaseConfig={apiKey:"AIzaSyABpb7h1WXzodOKoxoRvvkXZSrPQ6UgZiA",authDomai
 const OWNER_EMAIL="melsalahy689@gmail.com",OWNER_USERNAME="elsalahy",SUPPORT_PHONE="201062883414",PS_DEFAULT_HOURLY_RATE=40,PS_MIN_SESSION_MINUTES=30;
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 setPersistence(auth,browserLocalPersistence).catch(e=>console.warn(e));
-enableIndexedDbPersistence(db).catch(e=>console.warn(e.code));
+try { enableIndexedDbPersistence(db).catch(e=>console.warn(e.code)); } catch(e) { console.warn(e); }
 
 window.enterSystem = () => {
   document.getElementById("landingPage").classList.add("hidden");
   document.getElementById("appWrap").classList.remove("hidden");
   document.getElementById("auth").classList.remove("hidden");
+  // محاولة ملء الإيميل المحفوظ
+  const savedEmail = localStorage.getItem('nexpos_last_email');
+  if(savedEmail && $("loginEmail")) $("loginEmail").value = savedEmail;
 };
 
 // ============ الزرار الذكي (تحميل APK للموبايل - تثبيت PWA للكمبيوتر) ============
@@ -1283,6 +1286,10 @@ window.addEventListener('DOMContentLoaded', () => {
       btn.innerHTML = '💻 تثبيت البرنامج على الكمبيوتر';
     }
   }
+
+  // محاولة ملء الإيميل المحفوظ
+  const savedEmail = localStorage.getItem('nexpos_last_email');
+  if(savedEmail && $("loginEmail")) $("loginEmail").value = savedEmail;
 
   // لو التطبيق مفتوح كـ Standalone (متثبت)، ادخل على طول
   if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
@@ -1337,7 +1344,7 @@ function getDeviceId() {
 function updateNetworkStatus(){const el=document.getElementById('networkStatus');if(!el)return;if(navigator.onLine){el.textContent='متصل';el.className='tag good';}else{el.textContent='⚠️ غير متصل';el.className='tag';}}
 window.addEventListener('online',updateNetworkStatus);window.addEventListener('offline',updateNetworkStatus);updateNetworkStatus();
 
-let currentUser=null,profile=null,selectedSystem="sales",activeSystem="sales",registeringNow=false;
+let currentUser=null,profile=null,selectedSystem=localStorage.getItem('nexpos_selected_system')||"sales",activeSystem="sales",registeringNow=false;
 let products=[],sales=[],expenses=[],treasury=[],cart=[],selectedProduct=null,lastRegisteredUser=null;
 let psDevices=[],psItems=[],psSessions=[],psReservations=[],psTimer=null,psEndingDevices=new Set();
 let currentShiftCloseTime=0,currentPsSection="home";
@@ -1361,6 +1368,7 @@ function subscriptionActive(data){if(!data||data.status!=="active"||!data.expiry
 
 window.openAuth=(system,mode)=>{
  selectedSystem=system;
+ localStorage.setItem('nexpos_selected_system', system); // حفظ النظام المختار
  $("authForm").classList.remove("hidden");
  $("customerLoginBox").classList.toggle("hidden",mode!=="login"||system==="owner");
  $("registerBox").classList.toggle("hidden",mode!=="register");
@@ -1376,9 +1384,12 @@ window.login=async()=>{
   if(!email||!password)return message("أدخل البيانات.");
   if(!navigator.onLine)return message("تسجيل الدخول يحتاج إنترنت.");
   const cred=await signInWithEmailAndPassword(auth,email,password);
+  localStorage.setItem('nexpos_last_email', email); // حفظ الإيميل
   if(cred.user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase())return;
   const snap=await getDoc(doc(db,"users",cred.user.uid));
   if(!snap.exists()){await signOut(auth);return message("لا توجد بيانات.");}
+  profile = snap.data();
+  localStorage.setItem('nexpos_profile', JSON.stringify(profile)); // حفظ البروفايل محلياً
   const si=systemInfo(snap.data(),selectedSystem);
   if(si.status==="not_registered"){await signOut(auth);return message("غير مسجل في هذا النظام.");}
   if(!subscriptionActive(si)){await signOut(auth);return message(si.status==="pending"?"قيد المراجعة.":"انتهى الاشتراك.");}
@@ -1410,6 +1421,7 @@ window.register=async()=>{
 window.sendWhatsAppActivation=()=>{const d=lastRegisteredUser||{name:"عميل",shop:"نشاط",email:"",phone:"",system:selectedSystem,plan:"غير محددة"};const msg=encodeURIComponent(`طلب تفعيل\nالنشاط: ${d.shop}\nالبريد: ${d.email}\nالنظام: ${d.system}`);window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");};
 window.logout=async()=>{
   if(psTimer)clearInterval(psTimer);
+  localStorage.removeItem('nexpos_profile'); // مسح البروفايل عند تسجيل الخروج
   document.querySelector('.wrap').style.overflowY='auto';
   await signOut(auth);
   document.getElementById("landingPage").classList.remove("hidden");
@@ -1451,39 +1463,60 @@ onAuthStateChanged(auth, async user => {
       return;
     }
 
-    const snap = await safeGetDoc(doc(db, "users", user.uid));
-    if(!snap.exists()) { 
-      if(!navigator.onLine) return; 
-      await signOut(auth); 
-      return; 
+    // --- التعديل الأهم: الاعتماد على الكاش المحلي لو مفيش نت ---
+    let snap = null;
+    try {
+      snap = await safeGetDoc(doc(db, "users", user.uid));
+    } catch (err) {
+      console.log("فشل الاتصال بالسيرفر، جاري الاعتماد على الكاش المحلي...");
     }
-    profile = snap.data();
+
+    let cachedProfile = null;
+    try { cachedProfile = JSON.parse(localStorage.getItem('nexpos_profile') || 'null'); } catch(e){}
+
+    if (snap && snap.exists()) {
+      profile = snap.data();
+      localStorage.setItem('nexpos_profile', JSON.stringify(profile)); // تحديث الكاش
+    } else if (!navigator.onLine && cachedProfile && cachedProfile.systems) {
+      profile = cachedProfile; // استخدام الكاش لو مفيش نت
+    } else {
+      if(!navigator.onLine) return showAlert("أنت غير متصل بالإنترنت ولا توجد بيانات محفوظة مسبقاً.", "error");
+      await signOut(auth);
+      return;
+    }
+    // -----------------------------------------------------
 
     const MAX_DEVICES = 2;
     const currentDeviceId = getDeviceId();
     let devices = profile.devices || [];
 
     if (!devices.includes(currentDeviceId)) {
-      if (devices.length >= MAX_DEVICES) {
+      // التحقق من عدد الأجهزة يتم فقط لو فيه نت
+      if (devices.length >= MAX_DEVICES && navigator.onLine) {
         await signOut(auth);
         $("auth").classList.remove("hidden");
         $("authForm").classList.add("hidden");
         showAlert(`⚠️ لقد وصلت للحد الأقصى (${MAX_DEVICES} أجهزة). يرجى الدخول من أحد الأجهزة المسجلة.`, "error");
         return;
-      } else {
+      } else if (navigator.onLine) {
         devices.push(currentDeviceId);
         await updateDoc(doc(db, "users", user.uid), { devices: devices });
         profile.devices = devices;
+        localStorage.setItem('nexpos_profile', JSON.stringify(profile)); // تحديث الكاش
       }
     }
 
     const info = systemInfo(profile, selectedSystem);
     if(info.status === "not_registered" || !subscriptionActive(info)) {
-      if(!navigator.onLine) return;
-      await signOut(auth);
-      $("auth").classList.remove("hidden");
-      message(info.status === "pending" ? "قيد التفعيل." : "اشتراك غير نشط.");
-      return;
+      if(!navigator.onLine) {
+         // لو أوفلاين خليه يكمل بالبيانات المخزنة عشان ميتطردش
+         console.log("يعمل أوفلاين، تم تخطي التحقق من الاشتراك");
+      } else {
+         await signOut(auth);
+         $("auth").classList.remove("hidden");
+         message(info.status === "pending" ? "قيد التفعيل." : "اشتراك غير نشط.");
+         return;
+      }
     }
 
     activeSystem = selectedSystem;
@@ -1702,6 +1735,7 @@ window.removeDevice = async (deviceId) => {
     const newDevices = currentDevices.filter(d => d !== deviceId);
     await updateDoc(doc(db, "users", currentUser.uid), { devices: newDevices });
     profile.devices = newDevices;
+    localStorage.setItem('nexpos_profile', JSON.stringify(profile));
     showAlert("تم إلغاء ترخيص الجهاز بنجاح. يمكنك الآن الدخول من جهاز آخر.", "success");
     if (deviceId === getDeviceId()) { setTimeout(() => logout(), 2000); }
     else { checkCustomerSubscription(systemInfo(profile, selectedSystem)); }
@@ -2556,8 +2590,8 @@ window.showPaymentModal = async () => {
   }
 };
 
-window.updateShopNameSetting = async () => {const n=$("settingsShopName").value.trim();if(!n)return showAlert("اسم.","warning");try{await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;$("shopTitle").textContent=n;$("sahalShopTitle").textContent=n;showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
-window.updateCustomerEmailSetting = async () => {const n=$("settingsEmail").value.trim();if(!n)return showAlert("بريد.","warning");try{await updateEmail(auth.currentUser,n);await updateDoc(doc(db,"users",currentUser.uid),{email:n});profile.email=n;showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
+window.updateShopNameSetting = async () => {const n=$("settingsShopName").value.trim();if(!n)return showAlert("اسم.","warning");try{await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;localStorage.setItem('nexpos_profile', JSON.stringify(profile));$("shopTitle").textContent=n;$("sahalShopTitle").textContent=n;showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
+window.updateCustomerEmailSetting = async () => {const n=$("settingsEmail").value.trim();if(!n)return showAlert("بريد.","warning");try{await updateEmail(auth.currentUser,n);await updateDoc(doc(db,"users",currentUser.uid),{email:n});profile.email=n;localStorage.setItem('nexpos_profile', JSON.stringify(profile));showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
 window.updateCustomerPassword = async () => {const p=$("newCustomerPassword").value;if(!p||p.length<6)return showAlert("6 أحرف.","warning");try{await updatePassword(auth.currentUser,p);$("newCustomerPassword").value="";showAlert("تم.","success");}catch(e){showAlert(e.message,"error");}};
 
 async function loadBusiness(){await Promise.all([loadProducts().catch(e=>console.warn(e)),loadSales().catch(e=>console.warn(e)),loadExpenses().catch(e=>console.warn(e)),loadTreasury().catch(e=>console.warn(e))]);renderStats();}

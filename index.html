@@ -110,6 +110,81 @@ th { background: rgba(15,23,42,0.5); color: var(--text-muted); font-weight: 700;
 .rowbtn{padding:5px 9px;margin:2px;font-size:11px; border-radius: 5px;}
 .msg{padding:9px;border-radius:8px;background:rgba(239,68,68,0.1);color:#f87171;margin-top:8px;font-size:12px;border:1px solid rgba(239,68,68,0.3); font-weight: bold;}
 hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
+.result{display:block;width:100%;text-align:right;margin:0;border-radius:0; border: none; border-bottom: 1px solid var(--border-color); font-size:12px; padding:9px 10px;}
+
+/* ============ شاشة البلايستيشن ============ */
+#playstationPanel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+#playstationPanel .ps-top-card { flex-shrink: 0; margin: 0 0 8px !important; padding: 10px 12px !important; }
+#psHomeScreen { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow-y: auto; }
+.tiles-grid{ display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:auto; gap:8px; flex: 1; min-height: 0; margin-top:8px; }
+
+.tile{ 
+  padding:8px 10px; border-radius:12px; color:white; cursor:pointer; 
+  transition: transform 0.15s ease, box-shadow 0.15s ease; 
+  border: 1px solid rgba(255,255,255,0.1); 
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  overflow:hidden; position:relative; min-height: 90px; text-align: center;
+}
+.tile:hover { transform: translateY(-2px); box-shadow: 0 8px 14px -4px rgba(0,0,0,0.5); }
+.tile .tile-icon{font-size:32px; line-height:1; z-index: 2; margin-bottom: 10px; text-shadow: 1px 1px 3px rgba(0,0,0,0.4);}
+.tile .tile-title{font-size:22px; font-weight:700; line-height:1.2; z-index: 2; text-shadow: 1px 1px 4px rgba(0,0,0,0.6);}
+.tile .tile-sub{display: none;}
+.tile .tile-badge{ position:absolute; top:8px; right:8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); padding:2px 8px; border-radius:14px; font-size:12px; font-weight:bold; border: 1px solid rgba(255,255,255,0.2); z-index: 2; }
+
+.t-blue{background:linear-gradient(135deg,#2563eb,#1d4ed8);}
+.t-green{background:linear-gradient(135deg,#059669,#047857);}
+.t-orange{background:linear-gradient(135deg,#d97706,#b45309);}
+.t-purple{background:linear-gradient(135deg,#7c3aed,#6d28d9);}
+.t-dark{background:linear-gradient(135deg,#1e293b,#0f172a);}
+.t-teal{background:linear-gradient(135deg,#0d9488,#0f766e);}
+.t-indigo{background:linear-gradient(135deg,#4f46e5,#3730a3);}
+.t-sky{background:linear-gradient(135deg,#0284c7,#0369a1);}
+.t-pink{background:linear-gradient(135deg,#db2777,#be185d);}
+.t-red{background:linear-gradient(135deg,#ef4444,#b91c1c);}
+
+/* ============ صفحة أجهزة ============ */
+.devices-page { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+.devices-page-header { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.devices-page-title { font-size: 17px; font-weight: 700; margin: 0; }
+.devices-mini-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; overflow-y: auto; padding-left: 4px; }
+.devices-mini-grid::-webkit-scrollbar { width: 6px; }
+.devices-mini-grid::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+
+.dev-mini { background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 10px; padding: 8px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.15s ease; position: relative; min-height: 80px; }
+.dev-mini:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+.dev-mini.running { border-color: var(--success); box-shadow: 0 0 12px rgba(16,185,129,0.3); }
+.dev-mini.running::before { content: ''; position: absolute; top: 6px; left: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.6); } 50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(16,185,129,0); } }
+.dev-mini.billiard-mini { border-top: 3px solid #db2777; }
+.dev-mini.vip-mini { border-top: 3px solid var(--purple); }
+.dev-mini.base-mini { border-top: 3px solid var(--warning); }
+.dev-mini .dev-name { font-size: 13px; font-weight: 700; color: var(--text-main); padding-left: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dev-mini .dev-status { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.dev-mini.running .dev-status { color: var(--success); font-weight: bold; }
+.dev-mini .dev-time { font-family: monospace; direction: ltr; font-size: 13px; color: var(--success); font-weight: 700; margin-top: 4px; }
+.dev-mini .dev-customer { font-size: 10px; color: #f87171; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.devices-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); font-size: 14px; text-align: center; padding: 40px; }
+
+/* ============ مودال تفاصيل الجهاز ============ */
+.device-modal-box { max-width: 500px; width: 100%; max-height: 92vh; overflow-y: auto; border: 2px solid var(--border-color); border-radius: 14px; padding: 16px; background: var(--bg-card); position: relative; }
+.device-modal-box::-webkit-scrollbar { width: 6px; }
+.device-modal-box::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+.device-modal-box.running-modal { border-top: 4px solid var(--success); }
+.device-modal-box.vip-modal { border-top: 4px solid var(--purple); }
+.device-modal-box.base-modal { border-top: 4px solid var(--warning); }
+.device-modal-box.billiard-modal { border-top: 4px solid #db2777; }
+
+.detail-device-time { font-size: 32px; font-weight: 700; color: var(--success); text-align: center; padding: 12px 4px; direction: ltr; font-family: monospace; background: rgba(16,185,129,0.08); border-radius: 10px; margin: 8px 0; }
+.detail-device-time.idle { color: var(--text-muted); background: rgba(148,163,184,0.08); }
+.device-modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.device-modal-actions button { padding: 10px 8px; font-size: 13px; }
+.order-list { background: rgba(15,23,42,0.5); border-radius: 8px; padding: 10px; margin-top: 8px; border: 1px solid var(--border-color); max-height: 180px; overflow-y: auto; }
+.order-line { display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: 6px 0; border-bottom: 1px solid var(--border-color); font-size: 12px; }
+.mode-note { background: rgba(59,130,246,0.1); color: #60a5fa; border-radius: 6px; padding: 7px; font-size: 11px; margin: 8px 0; border: 1px solid rgba(59,130,246,0.2); }
+.billiard-games-box { display: flex; align-items: center; justify-content: space-between; background: rgba(219,39,119,0.15); border: 2px solid rgba(219,39,119,0.4); border-radius: 10px; padding: 10px 14px; margin: 8px 0; }
+.billiard-games-box .games-num { font-size: 28px; font-weight: bold; color: #f472b6; }
+.billiard-info { background: rgba(219,39,119,0.08); border: 1px solid rgba(219,39,119,0.25); border-radius: 8px; padding: 8px; margin: 6px 0; font-size: 11px; }
+.billiard-info b { color: #f472b6; }
 
 /* ============ Auth ============ */
 .auth-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
@@ -127,6 +202,10 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .modal-close{position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; padding: 0; border-radius: 50%; background: var(--bg-input); color: var(--text-muted); font-size: 16px; display: grid; place-items: center; border: 1px solid var(--border-color);}
 .modal-close:hover { background: var(--danger); color: white; }
 
+.social-links{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.social-links a{padding:6px 10px;border-radius:6px;color:white;text-decoration:none;font-size:12px;font-weight:bold;}
+.btn-whatsapp{background:#25D366}.btn-facebook{background:#1877F2}.btn-insta{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
+
 @media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
 
 .swal2-popup { font-family: 'Cairo', Arial, sans-serif !important; border-radius: 12px !important; direction: rtl; background: var(--bg-card) !important; color: var(--text-main) !important; border: 1px solid var(--border-color);}
@@ -135,44 +214,132 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .swal2-confirm { border-radius: 22px !important; padding: 8px 24px !important; background-color: var(--primary) !important; }
 .swal2-cancel { border-radius: 22px !important; padding: 8px 24px !important; background-color: var(--border-color) !important; color: white !important;}
 
-#customerPanel, #ownerPanel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
-#customerPanel > .card { flex: 1; display: flex; flex-direction: column; overflow: hidden; margin-bottom: 0 !important; }
+.doc-type-btn {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+  color: var(--text-muted);
+  transition: 0.2s;
+}
+.doc-type-btn:last-child { border-bottom: none; }
+.doc-type-btn:hover { background: rgba(59,130,246,0.1); color: white; }
+.doc-type-btn.active { background: var(--primary); color: white; font-weight: bold; }
+
+.receipt-item-table { width:100%; border-collapse:collapse; font-size:12px; margin:5px 0; }
+.receipt-item-table th, .receipt-item-table td { border-bottom: 1px solid #000; padding: 3px; }
+.receipt-item-table th { border-top: 1px solid #000; text-align: right; }
+.receipt-totals { border-top:1px solid #000; border-bottom:1px solid #000; padding:5px 0; margin-top:5px; }
+
+#customerPanel, #ownerPanel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+#customerPanel > .card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-bottom: 0 !important;
+}
 #dashboardPage, #salesPage, #productsPage, #treasuryPage, #historyPage, 
 #expensesPage, #reportsPage, #settingsPage, #subscriptionPage, 
-#barcodeSettingsPage, #invoiceSettingsPage { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
-#dashboardPage, #settingsPage, #invoiceSettingsPage { overflow-y: auto !important; height: 100%; padding-bottom: 20px; }
-#customerPanel > .card { overflow-y: auto !important; }
+#barcodeSettingsPage, #invoiceSettingsPage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+#dashboardPage, #settingsPage { overflow-y: auto !important; height: 100%; padding-bottom: 20px; }
+#psHomeScreen { overflow-y: auto !important; height: 100%; padding-bottom: 20px; }
+#customerPanel > .card, #playstationPanel > .card { overflow-y: auto !important; }
+
+@media (max-height: 800px) {
+  .tile-title { font-size: 16px !important; }
+  .tile-icon { font-size: 24px !important; }
+  .tile { padding: 5px !important; min-height: 70px !important; }
+  .stat strong { font-size: 18px !important; }
+  #dashboardPage .tiles-grid { grid-template-rows: repeat(auto-fill, minmax(80px, 1fr)) !important; }
+  #psHomeScreen .tiles-grid { grid-template-rows: repeat(auto-fill, minmax(80px, 1fr)) !important; }
+}
 </style>
 </head>
 <body>
 
+<!-- ================= صفحة الهبوط الاحترافية (Landing Page) ================= -->
 <section id="landingPage" class="hidden" style="background:#fff; height:100vh; display:flex; flex-direction:column; overflow-y:auto; font-family:'Cairo', sans-serif; direction:rtl;">
   <nav style="display:flex; justify-content:space-between; align-items:center; padding:10px 40px; border-bottom:2px solid #e2e8f0; background:white; position:sticky; top:0; z-index:100;">
     <div style="display:flex; align-items:center; gap:10px;">
       <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS" style="height:40px; border-radius:8px;">
       <span style="font-size:20px; font-weight:800; color:#059669;">NexPOS</span>
     </div>
-    <div><button onclick="enterSystem()" style="background:#059669; color:white; border:none; padding:8px 20px; border-radius:6px; font-weight:bold; cursor:pointer;">تسجيل الدخول</button></div>
+    <div style="display:flex; gap:20px; color:#334155; font-weight:600; font-size:14px;">
+      <a href="#" onclick="showLanding('home')" style="color:#059669; text-decoration:none; border-bottom:3px solid #059669; padding-bottom:5px;" id="navHome">البداية</a>
+      <a href="#" onclick="showLanding('download')" style="text-decoration:none; color:#64748b;" id="navDownload">تحميل</a>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button onclick="enterSystem()" style="background:#059669; color:white; border:none; padding:8px 20px; border-radius:6px; font-weight:bold; cursor:pointer;">تسجيل الدخول</button>
+    </div>
   </nav>
-  <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:40px;">
-    <h1>مرحباً بك في NexPOS PRO</h1>
+
+  <div style="background:#facc15; color:#422006; text-align:center; padding:8px; font-size:12px; font-weight:bold;">
+    تم اعتماد NexPOS رسمياً كأفضل سيستم لإدارة المحلات.
+  </div>
+
+  <div id="landingHomeContent" style="flex:1; display:flex; align-items:center; justify-content:space-between; padding:40px 60px; background:url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=2070&auto=format&fit=crop') center/cover; position:relative;">
+    <div style="position:absolute; inset:0; background:linear-gradient(to left, rgba(15,23,42,0.9), rgba(15,23,42,0.6));"></div>
+    <div style="position:relative; z-index:10; max-width:550px; color:white;">
+      <h1 style="font-size:42px; font-weight:800; margin-bottom:20px; line-height:1.3; color:#fff;">السيستم الأقوى لإدارة المحلات والمخازن</h1>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:30px; font-size:16px;">
+        <div style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981;">✔</span> سرعة فائقة في الكاشير</div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981;">✔</span> إدارة كاملة للمخزون</div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981;">✔</span> تقارير أرباح دقيقة</div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981;">✔</span> نظام بلايستيشن متكامل</div>
+      </div>
+      <div style="display:flex; gap:15px;">
+        <button id="smartDownloadBtn" onclick="handleSmartDownload()" style="background:#059669; color:white; border:none; padding:15px 40px; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; box-shadow:0 10px 20px rgba(5,150,105,0.3); display:flex; align-items:center; gap:10px;">
+          📥 تحميل البرنامج
+        </button>
+        <button onclick="enterSystem()" style="background:white; color:#0f172a; border:none; padding:15px 30px; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer; display:flex; align-items:center; gap:10px;">
+          🚀 دخول السيستم
+        </button>
+      </div>
+    </div>
+    <div style="position:relative; z-index:10; width:450px; background:#1e293b; border-radius:12px; padding:10px; box-shadow:0 20px 40px rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1);">
+      <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="شاشة السيستم" style="width:100%; border-radius:8px; opacity:0.8;">
+    </div>
+  </div>
+
+  <div style="padding:20px 60px; background:#f8fafc; display:flex; justify-content:space-around; text-align:center;">
+    <div><h3 style="color:#0f172a; margin-bottom:5px;">إدارة المخازن</h3></div>
+    <div><h3 style="color:#0f172a; margin-bottom:5px;">الفواتير</h3></div>
+    <div><h3 style="color:#0f172a; margin-bottom:5px;">التقارير</h3></div>
   </div>
 </section>
 
+<!-- ================= باقي السيستم ================= -->
 <div class="wrap hidden" id="appWrap">
 <header class="top" style="padding: 2px 0; margin-bottom: 0; flex-shrink: 0;">
  <div></div>
- <div><span id="networkStatus" class="tag good" style="padding:2px 8px; font-size:10px;">متصل بالخادم</span></div>
+ <div>
+   <span id="networkStatus" class="tag good" style="padding:2px 8px; font-size:10px;">متصل بالخادم</span>
+ </div>
 </header>
 
 <section id="auth" class="hidden" style="flex:1; overflow-y:auto;">
  <div style="text-align:center;margin:20px 0 10px">
-   <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS" style="height:70px; width:auto; margin-bottom:10px; border-radius:14px; object-fit:contain;">
+   <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS" style="height:70px; width:auto; margin-bottom:10px; border-radius:14px; object-fit:contain; box-shadow: 0 8px 20px rgba(0,0,0,0.5);">
    <h2 style="margin:6px 0;">مرحبًا بك في NexPOS PRO</h2>
+   <p class="muted">اختر النظام الذي تريد الدخول إليه</p>
  </div>
  <div class="auth-grid">
-  <div class="auth-card"><div class="auth-icon">▦</div><h3>سيستم المبيعات</h3><button class="big" onclick="openAuth('sales','login')">دخول</button></div>
-  <div class="auth-card owner"><div class="auth-icon">⚙</div><h3>لوحة التحكم</h3><button class="big purple" onclick="openAuth('owner','login')">دخول</button></div>
+  <div class="auth-card"><div class="auth-icon">▦</div><h3>سيستم المبيعات</h3><p class="muted">إدارة المبيعات والمخازن</p><button class="big" onclick="openAuth('sales','login')">تسجيل الدخول</button><button class="big secondary" onclick="openAuth('sales','register')">إنشاء حساب</button></div>
+  <div class="auth-card ps"><div class="auth-icon">🎮</div><h3>سيستم البلايستيشن</h3><p class="muted">إدارة الرومات وVIP والبلياردو</p><button class="big green" onclick="openAuth('playstation','login')">تسجيل الدخول</button><button class="big secondary" onclick="openAuth('playstation','register')">إنشاء حساب</button></div>
+  <div class="auth-card owner"><div class="auth-icon">⚙</div><h3>لوحة التحكم</h3><p class="muted">إدارة العملاء</p><button class="big purple" onclick="openAuth('owner','login')">دخول</button></div>
  </div>
 </section>
 
@@ -181,12 +348,29 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     <button class="modal-close" onclick="backToGate()">✕</button>
     <div class="top" style="margin-bottom:10px;"><h3 id="authFormTitle">تسجيل الدخول</h3></div>
     <div id="customerLoginBox">
-      <label>البريد الإلكتروني</label><input id="loginEmail" type="email">
-      <label>كلمة المرور</label><input id="loginPassword" type="password">
+      <label>البريد الإلكتروني</label><input id="loginEmail" type="email" placeholder="example@mail.com">
+      <label>كلمة المرور</label><input id="loginPassword" type="password" placeholder="********">
       <button class="big" onclick="login()">دخول</button>
+      <div style="text-align:center; margin-top:10px;"><a href="#" onclick="forgotPassword(); return false;" style="color:var(--primary); font-size:12px; font-weight:bold;">هل نسيت كلمة المرور؟</a></div>
+    </div>
+    <div id="registerBox" class="hidden">
+     <label>اسم النشاط</label><input id="regShop" placeholder="اسم المحل">
+     <label>اسم المسؤول</label><input id="regName" placeholder="اسمك">
+     <label>رقم الهاتف</label><input id="regPhone" placeholder="01xxxxxxxxx">
+     <label>البريد الإلكتروني</label><input id="regEmail" type="email" placeholder="example@mail.com">
+     <label>كلمة المرور</label><input id="regPassword" type="password" placeholder="أكثر من 6 أحرف">
+     <label>اختر الباقة</label>
+     <select id="regPlan">
+       <option value="30">شهري - 100 جنيه</option>
+       <option value="90">3 شهور - 250 جنيه</option>
+       <option value="365">سنوي - 900 جنيه</option>
+       <option value="36500">دائم - 3000 جنيه</option>
+     </select>
+     <button class="big green" onclick="register()">إنشاء</button>
+     <p class="muted">لن يتم التفعيل إلا بعد موافقة المالك.</p>
     </div>
     <div id="ownerBox" class="hidden">
-      <label>اسم المستخدم</label><input id="ownerUsername">
+      <label>اسم المستخدم</label><input id="ownerUsername" placeholder="admin">
       <label>كلمة المرور</label><input id="ownerPassword" type="password">
       <button class="big dark" onclick="ownerLogin()">دخول</button>
     </div>
@@ -194,110 +378,602 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   </div>
 </div>
 
+<section id="pendingScreen" class="hidden"><div class="card" style="max-width:520px;margin:20px auto;text-align:center"><h2>تم إنشاء حسابك!</h2><p class="muted">انتظر موافقة المالك.</p><div id="pendingDetails" style="line-height:2;margin:12px 0; font-size:13px;"></div><button class="big green" onclick="sendWhatsAppActivation()">تواصل مع المطور</button><button class="big secondary" onclick="location.reload()">العودة</button></div></section>
+
+<!-- ================= لوحة تحكم المالك المركزية الاحترافية ================= -->
 <section id="ownerPanel" class="hidden" style="overflow-y:auto;">
  <div class="card">
-   <h2>لوحة التحكم المركزية</h2>
-   <button class="red" onclick="logout()">خروج</button>
+   <div class="top">
+     <div><h2>لوحة التحكم المركزية (المالك)</h2><span class="muted">إدارة العملاء، الصلاحيات، والباقات بشكل كامل</span></div>
+     <button class="red" onclick="logout()" style="padding:6px 12px; font-size:12px;">تسجيل الخروج</button>
+   </div>
+   <div class="grid">
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>إجمالي العملاء<br><strong id="totalUsers">0</strong></div><span style="font-size:24px; opacity:0.5;">👥</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>عملاء المبيعات<br><strong id="salesUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">🛒</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>عملاء البلايستيشن<br><strong id="psUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">🎮</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>قيد الانتظار<br><strong id="pendingUsersCount">0</strong></div><span style="font-size:24px; opacity:0.5;">⏳</span></div>
+   </div>
+   <nav style="display:flex;gap:6px;margin:10px 0">
+     <button id="ownerSalesTab" class="active" onclick="ownerSection('sales')" style="padding:7px 12px;">سيستم المبيعات</button>
+     <button id="ownerPsTab" onclick="ownerSection('playstation')" style="padding:7px 12px;">سيستم البلايستيشن</button>
+   </nav>
+   <div id="ownerSalesSection">
+     <h3>عملاء المبيعات</h3>
+     <div class="tablewrap">
+       <table>
+         <thead>
+           <tr>
+             <th>النشاط</th>
+             <th>المالك</th>
+             <th>البريد</th>
+             <th>الهاتف</th>
+             <th>الحالة</th>
+             <th>الباقة</th>
+             <th>الإدارة والتحكم</th>
+           </tr>
+         </thead>
+         <tbody id="salesUsersTable"></tbody>
+       </table>
+     </div>
+   </div>
+   <div id="ownerPsSection" class="hidden">
+     <h3>عملاء البلايستيشن</h3>
+     <div class="tablewrap">
+       <table>
+         <thead>
+           <tr>
+             <th>النشاط</th>
+             <th>المالك</th>
+             <th>البريد</th>
+             <th>الهاتف</th>
+             <th>الحالة</th>
+             <th>الباقة</th>
+             <th>الإدارة والتحكم</th>
+           </tr>
+         </thead>
+         <tbody id="psUsersTable"></tbody>
+       </table>
+     </div>
+   </div>
+   <button class="secondary big" onclick="loadUsers()" style="margin-top:10px;">🔄 تحديث البيانات</button>
  </div>
 </section>
 
+<!-- نافذة تعديل بيانات العميل الاحترافية من لوحة تحكم المالك -->
+<div id="editUserModal" class="modal-overlay hidden" onclick="if(event.target===this) closeEditUserModal();">
+  <div class="modal-box" style="max-width:400px; border-top:5px solid var(--purple);">
+    <button class="modal-close" onclick="closeEditUserModal()">✕</button>
+    <h3 style="margin-bottom:8px;">✏️ تعديل بيانات الحساب</h3>
+    <input type="hidden" id="editUserId">
+    
+    <label>اسم النشاط / المحل</label>
+    <input id="editUserShop" placeholder="اسم المحل">
+    
+    <label>اسم المسؤول (المالك)</label>
+    <input id="editUserName" placeholder="اسم المسؤول">
+    
+    <label>البريد الإلكتروني (اسم المستخدم)</label>
+    <input id="editUserEmail" type="email" placeholder="example@mail.com">
+    
+    <div style="background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.3); padding:8px; border-radius:8px; margin-top:6px;">
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; color:#c4b5fd; margin:0;">
+        <input type="checkbox" id="sendPasswordResetCheck" style="width:auto; margin:0;">
+        إرسال رابط تغيير كلمة المرور لبريد العميل
+      </label>
+    </div>
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
+      <button class="purple" onclick="saveUserEdits()">💾 حفظ التعديلات</button>
+      <button class="secondary" onclick="closeEditUserModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= سيستم البلايستيشن ================= -->
+<section id="playstationPanel" class="hidden">
+ <div id="psExpiryWarning" class="hidden" style="background:rgba(245,158,11,0.1); color:#fbbf24; padding:8px; border-radius:8px; text-align:center; font-weight:bold; font-size:12px; margin-bottom:6px; border:1px solid rgba(245,158,11,0.3);"></div>
+
+ <div class="card ps-top-card">
+  <div class="top" style="margin-bottom:6px;">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <h2 style="margin:0; font-size:17px;">سيستم البلايستيشن</h2>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span id="networkStatusPS" class="tag good" style="padding:2px 8px; font-size:10px;">متصل</span>
+      <button class="secondary" onclick="support()" style="padding:5px 10px; font-size:11px;">الدعم الفني</button>
+    </div>
+  </div>
+  <div class="grid">
+   <div class="stat">إجمالي<strong id="psTotalDevices">0</strong></div>
+   <div class="stat" id="statLabel1">رومات<strong id="psRoomDevices">0</strong></div>
+   <div class="stat" id="statLabel2">VIP<strong id="psVipDevices">0</strong></div>
+   <div class="stat" id="statLabel3">قاعدة<strong id="psBaseDevices">0</strong></div>
+   <div class="stat" id="statLabel4">بلياردو<strong id="psBilliardDevices">0</strong></div>
+   <div class="stat" style="border-left-color:var(--success);">تعمل<strong id="psRunningDevices" style="color:var(--success);">0</strong></div>
+   <div class="stat">مشروبات<strong id="psDrinksCount">0</strong></div>
+   <div class="stat">سندوتشات<strong id="psSandwichesCount">0</strong></div>
+  </div>
+ </div>
+
+ <div id="psHomeScreen">
+   <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-top:8px; margin-bottom:8px;">
+     <button class="dark" onclick="showPsSection('customers')">🏆 العملاء</button>
+     <button class="orange" onclick="openPsShiftModal()">💵 الوردية</button>
+     <button class="purple" onclick="openPsSubscriptionModal()">⭐ اشتراكي</button>
+     <button class="secondary" onclick="showPsSection('reports')">📊 التقارير</button>
+     <button class="secondary" onclick="openCustomizeTilesModal()" style="border-color:var(--primary); color:#60a5fa;">⚙️ تخصيص الواجهة</button>
+   </div>
+
+   <div class="tiles-grid">
+     <div class="tile t-blue" ondblclick="quickEditTile(1)" onclick="showPsSection('devices')" title="انقر مرتين لتعديل الاسم"><div class="tile-icon">🎮</div><div class="tile-title" id="tileTitle1">أجهزة الرومات</div><span class="tile-badge" id="psHomeRoomCount">0</span></div>
+     <div class="tile t-purple" ondblclick="quickEditTile(2)" onclick="showPsSection('vip')" title="انقر مرتين لتعديل الاسم"><div class="tile-icon">⭐</div><div class="tile-title" id="tileTitle2">صالة VIP</div><span class="tile-badge" id="psHomeVipCount">0</span></div>
+     <div class="tile t-orange" ondblclick="quickEditTile(3)" onclick="showPsSection('base_arabi')" title="انقر مرتين لتعديل الاسم"><div class="tile-icon">🏛</div><div class="tile-title" id="tileTitle3">القاعدة العربي</div><span class="tile-badge" id="psHomeBaseCount">0</span></div>
+     <div class="tile t-pink" ondblclick="quickEditTile(4)" onclick="showPsSection('billiard')" title="انقر مرتين لتعديل الاسم"><div class="tile-icon">🎱</div><div class="tile-title" id="tileTitle4">البلياردو</div><span class="tile-badge" id="psHomeBilliardCount">0</span></div>
+     
+     <div class="tile t-green" onclick="showPsSection('running')"><div class="tile-icon">🟢</div><div class="tile-title">تعمل الآن</div><span class="tile-badge" id="psHomeRunningCount">0</span></div>
+     <div class="tile t-sky" onclick="showPsSection('drinks')"><div class="tile-icon">🥤</div><div class="tile-title">المشروبات</div><span class="tile-badge" id="psHomeDrinksCount">0</span></div>
+     <div class="tile t-teal" onclick="showPsSection('sandwiches')"><div class="tile-icon">🥪</div><div class="tile-title">السندوتشات</div><span class="tile-badge" id="psHomeSandCount">0</span></div>
+     <div class="tile t-indigo" onclick="showPsSection('sessions')"><div class="tile-icon">📄</div><div class="tile-title">سجل الجلسات</div></div>
+     <div class="tile t-dark" onclick="showPsSection('reservations')"><div class="tile-icon">📅</div><div class="tile-title">الحجوزات</div></div>
+   </div>
+ </div>
+
+ <div id="psDevicesSection" class="devices-page hidden">
+   <div class="devices-page-header">
+     <button class="back-btn" onclick="goPsHome()">← رجوع</button>
+     <h3 class="devices-page-title" id="secTitle1">أجهزة الرومات</h3>
+     <button class="green" onclick="openAddDeviceModal('room')">➕ إضافة جهاز</button>
+   </div>
+   <div class="devices-mini-grid" id="psDevicesList"></div>
+ </div>
+
+ <div id="psVipSection" class="devices-page hidden">
+   <div class="devices-page-header">
+     <button class="back-btn" onclick="goPsHome()">← رجوع</button>
+     <h3 class="devices-page-title" id="secTitle2">صالة VIP</h3>
+     <button class="purple" onclick="openAddDeviceModal('vip')">➕ إضافة جهاز</button>
+   </div>
+   <div class="devices-mini-grid" id="psVipDevicesList"></div>
+ </div>
+
+ <div id="psBaseArabiSection" class="devices-page hidden">
+   <div class="devices-page-header">
+     <button class="back-btn" onclick="goPsHome()">← رجوع</button>
+     <h3 class="devices-page-title" id="secTitle3">القاعدة العربي</h3>
+     <button class="dark" onclick="openAddDeviceModal('base_arabi')">➕ إضافة جهاز</button>
+   </div>
+   <div class="devices-mini-grid" id="psBaseArabiDevicesList"></div>
+ </div>
+
+ <div id="psBilliardSection" class="devices-page hidden">
+   <div class="devices-page-header">
+     <button class="back-btn" onclick="goPsHome()">← رجوع</button>
+     <h3 class="devices-page-title" id="secTitle4">طاولات البلياردو</h3>
+     <button class="pink" onclick="openAddDeviceModal('billiard')">➕ إضافة طاولة</button>
+   </div>
+   <div class="devices-mini-grid" id="psBilliardDevicesList"></div>
+ </div>
+
+ <div id="psRunningSection" class="hidden" style="height:100%;overflow-y:auto;">
+   <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+   <div class="card">
+     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+       <h3 style="margin:0;">🟢 الأجهزة التي تعمل الآن</h3>
+       <button class="secondary" onclick="renderPsRunning()">تحديث</button>
+     </div>
+     <div class="tablewrap" style="margin-top:8px;">
+       <table>
+         <thead><tr><th>الجهاز</th><th>القسم</th><th>العميل</th><th>بدأ في</th><th>المدة</th><th>الوقت المتبقي</th><th>الإجمالي الحالي</th><th>إجراء</th></tr></thead>
+         <tbody id="psRunningTable"></tbody>
+       </table>
+     </div>
+   </div>
+ </div>
+
+ <div id="psDrinksSection" class="hidden" style="height:100%;overflow-y:auto;">
+   <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+   <div class="card"><h3>إضافة مشروب</h3><div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;"><div><label>اسم</label><input id="psDrinkName" placeholder="بيبسي"></div><div><label>السعر</label><input id="psDrinkPrice" type="number" min="0" step=".01"></div><div><label>الكمية</label><input id="psDrinkQty" type="number" min="0" value="1"></div><button class="green" onclick="addPsItem('drink')">إضافة</button></div></div>
+   <div class="tablewrap"><table><thead><tr><th>المشروب</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psDrinksTable"></tbody></table></div>
+ </div>
+
+ <div id="psSandwichesSection" class="hidden" style="height:100%;overflow-y:auto;">
+   <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+   <div class="card"><h3>إضافة سندوتش</h3><div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;"><div><label>اسم</label><input id="psSandwichName" placeholder="بطاطس"></div><div><label>السعر</label><input id="psSandwichPrice" type="number" min="0" step=".01"></div><div><label>الكمية</label><input id="psSandwichQty" type="number" min="0" value="1"></div><button class="green" onclick="addPsItem('sandwich')">إضافة</button></div></div>
+   <div class="tablewrap"><table><thead><tr><th>السندوتش</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psSandwichesTable"></tbody></table></div>
+ </div>
+
+ <div id="psSessionsSection" class="hidden" style="height:100%;overflow-y:auto;">
+    <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;">
+        <h3 style="margin:0;">سجل الجلسات</h3>
+        <button class="secondary" onclick="loadPlaystationData()">تحديث</button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin:10px 0;background:rgba(15,23,42,0.4);padding:8px;border-radius:8px;flex-wrap:wrap;border:1px solid var(--border-color);">
+        <label style="margin:0;font-size:12px;">عرض يوم:</label>
+        <input type="date" id="psSessionDateFilter" style="width:auto;margin:0;padding:6px;font-size:12px;" onchange="renderPsSessions()">
+        <button class="secondary" onclick="document.getElementById('psSessionDateFilter').value='';renderPsSessions();">الكل</button>
+        <button class="secondary" onclick="document.getElementById('psSessionDateFilter').value=new Date().toISOString().slice(0,10);renderPsSessions();">اليوم</button>
+      </div>
+      <div class="grid"><div class="stat">عدد الجلسات<strong id="psSessionsTotal">0</strong></div><div class="stat">إيرادات اليوم<strong id="psSessionsRevenue2">0 ج</strong></div></div>
+      <div class="tablewrap"><table><thead><tr><th>رقم الفاتورة</th><th>العميل</th><th>الجهاز</th><th>البداية</th><th>النهاية</th><th>المدة</th><th>اللعب</th><th>الإضافات</th><th>الخصم</th><th>الإجمالي</th><th>الفاتورة</th></tr></thead><tbody id="psSessionsTable"></tbody></table></div>
+    </div>
+ </div>
+
+ <div id="psReservationsSection" class="hidden" style="height:100%;overflow-y:auto;">
+    <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+    <div class="card">
+      <h3>📅 إضافة حجز</h3>
+      <div class="grid">
+        <div><label>الجهاز</label><select id="resDeviceId"></select></div>
+        <div><label>اسم العميل</label><input id="resCustomerName" placeholder="اسم"></div>
+        <div><label>الهاتف (اختياري)</label><input id="resCustomerPhone" placeholder="01xxxxxxxxx"></div>
+        <div><label>الوقت</label><input id="resTime" type="time"></div>
+        <div style="display:flex;align-items:end;"><button class="big purple" onclick="addReservation()">حجز</button></div>
+      </div>
+    </div>
+    <h3>الحجوزات</h3>
+    <div class="tablewrap"><table><thead><tr><th>العميل</th><th>الهاتف</th><th>الجهاز</th><th>الوقت</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody id="psReservationsTable"></tbody></table></div>
+ </div>
+
+ <div id="psCustomersSection" class="hidden" style="height:100%;overflow-y:auto;">
+    <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+    <div class="card"><h3>🏆 سجل العملاء</h3><div class="tablewrap"><table><thead><tr><th>#</th><th>اسم العميل</th><th>عدد الزيارات</th><th>إجمالي المدفوع</th><th>آخر زيارة</th></tr></thead><tbody id="psCustomersTable"></tbody></table></div></div>
+ </div>
+
+ <div id="psReportsSection" class="hidden" style="height:100%;overflow-y:auto;">
+    <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;"><h3 style="margin:0;">📊 التقارير</h3><button class="secondary" onclick="loadPlaystationData()">تحديث</button></div>
+      <div class="grid" style="margin:10px 0;"><div class="stat">إجمالي إيرادات<strong id="psTotalRevenueAll">0 ج</strong></div><div class="stat">إجمالي جلسات<strong id="psTotalSessionsAll">0</strong></div></div>
+      <h4>إيرادات آخر 7 أيام</h4>
+      <div style="background:var(--bg-card);padding:12px;border-radius:10px;margin-bottom:12px;border:1px solid var(--border-color);height:240px;"><canvas id="revenueChart"></canvas></div>
+      <h4>توزيع الإيرادات</h4>
+      <div style="background:var(--bg-card);padding:12px;border-radius:10px;width:100%;max-width:420px;margin:auto;border:1px solid var(--border-color);height:280px;"><canvas id="typeChart"></canvas></div>
+    </div>
+ </div>
+</section>
+
+<!-- النوافذ المنبثقة -->
+<div id="customizeTilesModal" class="modal-overlay hidden" onclick="if(event.target===this) closeCustomizeTilesModal();">
+  <div class="modal-box" style="max-width:380px;">
+    <button class="modal-close" onclick="closeCustomizeTilesModal()">✕</button>
+    <h3 style="margin-bottom:6px;">⚙️ تخصيص أسماء الخانات الأربع</h3>
+    <p class="muted" style="font-size:11px; margin-bottom:10px;">عدّل أسماء الأقسام الرئيسية بما يناسب نشاطك:</p>
+    <label>الخانة الأولى (الزرقاء):</label><input id="customTile1" placeholder="أجهزة الرومات">
+    <label>الخانة الثانية (البنفسجية):</label><input id="customTile2" placeholder="صالة VIP">
+    <label>الخانة الثالثة (البرتقالية):</label><input id="customTile3" placeholder="القاعدة العربي">
+    <label>الخانة الرابعة (الوردية):</label><input id="customTile4" placeholder="البلياردو">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
+      <button class="green" onclick="saveCustomTiles()">💾 حفظ</button>
+      <button class="secondary" onclick="closeCustomizeTilesModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div id="addDeviceModal" class="modal-overlay hidden" onclick="if(event.target===this) closeAddDeviceModal();">
+  <div class="modal-box" style="max-width:420px;">
+    <button class="modal-close" onclick="closeAddDeviceModal()">✕</button>
+    <h3 id="addDeviceTitle" style="margin-bottom:10px;">➕ إضافة جهاز / طاولة</h3>
+    <label>اختر القسم</label>
+    <select id="newDeviceTypeSelect" onchange="onDeviceTypeChange(this.value)">
+      <option value="room">🎮 بلايستيشن (القسم الأول)</option>
+      <option value="vip">⭐ بلايستيشن VIP (القسم الثاني)</option>
+      <option value="base_arabi">🏛 بلايستيشن (القسم الثالث)</option>
+      <option value="billiard">🎱 بلياردو (طاولة)</option>
+    </select>
+    <label>اسم الجهاز / الطاولة</label><input id="newDeviceName" placeholder="روم 1">
+    <label>سعر الساعة بالجنيه</label><input id="newDeviceRate" type="number" min=".01" step=".01" placeholder="40">
+    <div id="newDeviceGameBox" class="hidden">
+      <label>سعر الجيم بالجنيه (للبلياردو)</label><input id="newDeviceGamePrice" type="number" min=".01" step=".01" placeholder="20">
+    </div>
+    <button class="green big" onclick="submitAddDevice()" style="margin-top:10px;">إضافة وحفظ</button>
+  </div>
+</div>
+
+<div id="deviceDetailModal" class="modal-overlay hidden" onclick="if(event.target===this) closeDeviceDetail();">
+  <div id="deviceDetailBox" class="device-modal-box">
+    <button class="modal-close" onclick="closeDeviceDetail()">✕</button>
+    <div id="deviceDetailContent"></div>
+  </div>
+</div>
+
+<div id="psShiftModal" class="modal-overlay hidden" onclick="if(event.target===this) this.classList.add('hidden');">
+  <div class="modal-box" style="max-width:380px;text-align:center;border-top:5px solid var(--warning);">
+    <button class="modal-close" onclick="document.getElementById('psShiftModal').classList.add('hidden')">✕</button>
+    <h3>💵 الوردية</h3>
+    <div style="background:rgba(15,23,42,0.5);padding:14px;border-radius:8px;margin:10px 0;border:1px solid var(--border-color);">
+      <div style="font-size:12px;color:var(--text-muted);">إجمالي الوردية</div>
+      <h2 id="psShiftTotalDisplay" style="color:var(--success);font-size:30px;margin:6px 0;">0 ج</h2>
+      <div id="psShiftDateDisplay" style="font-size:11px;color:var(--text-muted);"></div>
+    </div>
+    <div style="display:grid;gap:8px;"><button class="orange big" onclick="closePsShift()">تقفيل الوردية</button><button class="secondary big" onclick="document.getElementById('psShiftModal').classList.add('hidden')">إغلاق</button></div>
+  </div>
+</div>
+
+<div id="psSubModal" class="modal-overlay hidden" onclick="if(event.target===this) closePsSubscriptionModal();">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closePsSubscriptionModal()">✕</button>
+    <h3>تفاصيل اشتراكي والإعدادات</h3>
+    <div id="psSubModalContent" style="line-height:2;margin:10px 0;text-align:center;font-size:13px;">جاري التحميل...</div>
+    <div style="background:rgba(15,23,42,0.5); padding:10px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:10px;">
+      <h4 style="margin-bottom:6px; color:#a78bfa;">🔑 تغيير كلمة المرور</h4>
+      <input id="psCurrentPassword" type="password" placeholder="كلمة المرور الحالية" style="margin-bottom:6px;">
+      <input id="psNewPassword" type="password" placeholder="كلمة المرور الجديدة (6 أحرف فأكثر)" style="margin-bottom:6px;">
+      <button class="big purple" onclick="changeOwnPassword('ps')">تحديث كلمة المرور</button>
+    </div>
+    <button class="big green" onclick="requestRenewal()">طلب تجديد</button>
+    <button class="big red" onclick="logout()" style="margin-top:8px;">تسجيل الخروج</button>
+  </div>
+</div>
+
+<div id="forgotPasswordModal" class="modal-overlay hidden" onclick="if(event.target===this) closeForgotModal();">
+  <div class="modal-box" style="max-width:380px;text-align:center;">
+    <button class="modal-close" onclick="closeForgotModal()">✕</button>
+    <div style="font-size:36px;margin-bottom:8px;">🔑</div>
+    <h3>استعادة كلمة المرور</h3>
+    <input type="email" id="forgotEmailInput" placeholder="email@mail.com" style="text-align:center;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;"><button class="green" onclick="submitForgotPassword()">إرسال</button><button class="secondary" onclick="closeForgotModal()">إلغاء</button></div>
+  </div>
+</div>
+
+<!-- ================= سيستم المبيعات ================= -->
 <section id="customerPanel" class="hidden">
  <div class="card" style="margin-top:0;">
   <div class="top"><div><h2 id="shopTitle">نظام المبيعات</h2><span class="muted">لوحة الإدارة</span></div></div>
   <div id="dashboardPage">
    <div class="grid">
-     <div class="stat">المنتجات<br><strong id="statProducts">0</strong></div>
-     <div class="stat">الفواتير<br><strong id="statSales">0</strong></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>المنتجات<br><strong id="statProducts">0</strong></div><span style="font-size:24px; opacity:0.5;">📦</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>الفواتير<br><strong id="statSales">0</strong></div><span style="font-size:24px; opacity:0.5;">🧾</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>مبيعات اليوم<br><strong id="statRevenue">0 ج</strong></div><span style="font-size:24px; opacity:0.5;">💰</span></div>
+     <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>رصيد الخزينة<br><strong id="statTreasuryBalance">0 ج</strong></div><span style="font-size:24px; opacity:0.5;">🏦</span></div>
    </div>
    <div style="margin-top:8px;">
-    <div class="tiles-grid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
-      <div class="tile" style="background:#2563eb; padding:15px; border-radius:10px; color:white; cursor:pointer;" onclick="page('sales')">🛒 شاشة المبيعات</div>
-      <div class="tile" style="background:#059669; padding:15px; border-radius:10px; color:white; cursor:pointer;" onclick="page('products')">📦 المنتجات</div>
-      <div class="tile" style="background:#f59e0b; padding:15px; border-radius:10px; color:white; cursor:pointer;" onclick="page('invoiceSettings')">🧾 تصميم الفاتورة</div>
+    <div class="tiles-grid" id="mainTilesContainer">
+      <div class="tile t-blue" onclick="page('sales')"><div class="tile-icon">🛒</div><div class="tile-title">شاشة المبيعات</div></div>
+      <div class="tile t-green" onclick="page('products')"><div class="tile-icon">📦</div><div class="tile-title">المنتجات</div></div>
+      <div class="tile t-orange" onclick="page('treasury')"><div class="tile-icon">💰</div><div class="tile-title">الخزينة</div></div>
+      <div class="tile t-purple" onclick="page('history')"><div class="tile-icon">🧾</div><div class="tile-title">الفواتير</div></div>
+      <div class="tile t-dark" onclick="page('expenses')"><div class="tile-icon">📝</div><div class="tile-title">المصروفات</div></div>
+      <div class="tile t-teal" onclick="page('reports')"><div class="tile-icon">📊</div><div class="tile-title">التقارير</div></div>
+      <div class="tile t-red" onclick="page('settings')"><div class="tile-icon">⚙</div><div class="tile-title">الإعدادات</div></div>
+      <div class="tile t-sky" onclick="page('subscription')"><div class="tile-icon">⭐</div><div class="tile-title">اشتراكي</div></div>
+      <div class="tile t-indigo" onclick="exportDataToExcel()"><div class="tile-icon">📥</div><div class="tile-title">نسخة Excel</div></div>
+      <div class="tile t-teal" onclick="page('barcodeSettings')"><div class="tile-icon">🏷️</div><div class="tile-title">إعداد الباركود</div></div>
+      <div class="tile t-orange" onclick="page('invoiceSettings')"><div class="tile-icon">🧾</div><div class="tile-title">تصميم الفاتورة</div></div>
     </div>
    </div>
   </div>
+  
+  <!-- شاشة اشتراكي -->
+  <div id="subscriptionPage" class="hidden" style="background:#f1f5f9; border-radius:10px; padding:10px; color:#1e293b; direction:rtl; font-family:'Cairo', sans-serif; margin-top:5px; font-size:12px; height: calc(100vh - 100px); display:flex; flex-direction:column; overflow:hidden;">
+    <button class="back-btn" onclick="page('dashboard')" style="background:#e2e8f0; color:#0f172a; border:none; padding:5px 10px; width:fit-content; margin-bottom:5px;">← رجوع</button>
+    <div style="text-align:center; margin-bottom:10px;">
+      <h3 style="color:#059669; margin:0; font-size:16px;">شكراً لثقتكم في NexPOS PRO</h3>
+    </div>
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+      <div>نوع الاشتراك: <b id="subTypeDisplay">...</b></div>
+      <div>نهاية الاشتراك: <b id="subExpiryDate">...</b></div>
+      <div>الأيام المتبقية: <b id="subDevicesCount">...</b></div>
+    </div>
+    <button class="big green" onclick="requestRenewal()">تجديد الاشتراك</button>
+  </div>
 
-  <!-- صفحة تصميم الفاتورة المطورة -->
+  <!-- تصميم نماذج الطباعة -->
   <div id="invoiceSettingsPage" class="hidden">
     <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
-    <h3 style="color:#10b981;">🧾 تصميم ونماذج الفاتورة</h3>
-    <div style="display:grid; grid-template-columns: 320px 1fr; gap:15px; margin-top:10px;">
-      
-      <div class="card" style="margin:0; padding:12px; display:flex; flex-direction:column; gap:8px;">
+    <h3 style="color:#10b981;">🖨️ تصميم نماذج الطباعة</h3>
+    <div style="display:grid; grid-template-columns: 300px 1fr; gap:15px; margin-top:10px;">
+      <div class="card" style="margin:0; padding:10px; display:flex; flex-direction:column; gap:10px;">
         <label>مقاس الورق</label>
         <select id="invPaperSize" onchange="updateInvoicePreview()">
           <option value="80mm">80mm حراري</option>
           <option value="A4">A4 عادي</option>
         </select>
-        
-        <label>اسم المحل / النشاط</label>
-        <input id="invShopNameInput" placeholder="Mahmoud Baker" oninput="updateInvoicePreview()">
-        
-        <label>الرقم الضريبي (اختياري)</label>
-        <input id="invTaxNumberInput" placeholder="مثال: 30012345600003" oninput="updateInvoicePreview()">
-        
-        <label>موقع النشاط (العنوان)</label>
-        <input id="invLocationInput" placeholder="مثال: الزقازيق - شارع المديرية" oninput="updateInvoicePreview()">
-        
-        <label>أرقام التواصل</label>
-        <input id="invPhonesInput" placeholder="مثال: 01060600554" oninput="updateInvoicePreview()">
-        
-        <label>شروط وضمان الفاتورة</label>
-        <input id="invWarrantyInput" placeholder="مثال: الضمان ساري لمدة سنة ضد عيوب الصناعة" oninput="updateInvoicePreview()">
-        
-        <button class="big green" onclick="saveInvoiceSettings()" style="margin-top:10px;">💾 حفظ إعدادات الفاتورة</button>
+        <label>اسم المحل</label><input id="invShopName" oninput="updateInvoicePreview()">
+        <button class="big green" onclick="saveInvoiceSettings()">💾 حفظ</button>
       </div>
-
-      <!-- معاينة الفاتورة حية -->
-      <div class="card" style="margin:0; background:#f8fafc; color:#0f172a; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; border: 2px dashed var(--border-color);">
-        <div style="font-size:12px; color:#64748b; margin-bottom:10px; font-weight:bold;">معاينة الفاتورة المباشرة:</div>
-        <div id="invoicePreviewBox" style="background:white; color:black; width:280px; padding:15px; border-radius:8px; border:1px solid #cbd5e1; text-align:center; box-shadow:0 4px 6px rgba(0,0,0,0.1); font-family:'Cairo', sans-serif;">
-          <div id="prevShopName" style="font-size:16px; font-weight:bold; color:#0f172a;">Mahmoud Baker</div>
-          <div id="prevTaxNumber" style="font-size:11px; color:#334155; margin-top:2px;" class="hidden"></div>
-          <div id="prevLocation" style="font-size:11px; color:#334155; margin-top:2px;" class="hidden"></div>
-          <div id="prevPhones" style="font-size:11px; color:#334155; margin-top:2px;" class="hidden"></div>
-          <hr style="margin:8px 0; border-top:1px dashed #cbd5e1;">
-          <div style="font-size:11px; text-align:right; margin-bottom:5px;">رقم الفاتورة: INV-9842</div>
-          <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:8px;">
-            <tr style="border-bottom:1px solid #000;"><th style="text-align:right; padding:3px;">الصنف</th><th style="text-align:center; padding:3px;">كمية</th><th style="text-align:left; padding:3px;">السعر</th></tr>
-            <tr><td style="text-align:right; padding:3px;">سماعة أبل برو</td><td style="text-align:center; padding:3px;">1</td><td style="text-align:left; padding:3px;">450 ج</td></tr>
-          </table>
-          <hr style="margin:8px 0; border-top:1px dashed #cbd5e1;">
-          <div style="font-size:13px; font-weight:bold; text-align:left;">الإجمالي: 450.00 ج</div>
-          <div id="prevWarranty" style="font-size:10px; color:#475569; margin-top:10px; border-top:1px solid #e2e8f0; padding-top:6px;" class="hidden"></div>
-        </div>
+      <div class="card" style="margin:0; background:#cbd5e1; display:flex; flex-direction:column; align-items:center; padding:20px;">
+        <div id="invoicePreviewContainer" style="background:white; color:black; width:80mm; min-height:100mm; padding:10px;"></div>
       </div>
-
     </div>
   </div>
 
-  <div id="salesPage" class="hidden">
+  <!-- إعداد و طباعة الباركود -->
+  <div id="barcodeSettingsPage" class="hidden">
     <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
-    <h3>شاشة المبيعات</h3>
+    <h3 style="color:#10b981;">🏷️ طباعة باركود المنتجات (تصميم مخصص)</h3>
+    <div style="display:grid; grid-template-columns: 320px 1fr; gap:15px; margin-top:10px;">
+      <div class="card" style="margin:0; padding:12px; display:flex; flex-direction:column; gap:8px;">
+        <label>اختر المنتج لطباعة الباركود الخاص به</label>
+        <select id="barcodeProductSelect" onchange="barcodeProductSelectChange()" style="padding:8px; font-weight:bold;">
+          <option value="">-- اختر من قائمة المنتجات --</option>
+        </select>
+        <label>أو اكتب رقم الباركود يدوياً</label>
+        <input id="customBarcodeInput" placeholder="مثال: 5128211" oninput="generateBarcodePreview()">
+        <label>اسم الصنف الظاهر أسفل الباركود</label>
+        <input id="customBaritemNameInput" placeholder="مثال: 11 برو ماكس / 512 / 82%" oninput="generateBarcodePreview()">
+        <button class="big green" onclick="printBarcodeSticker()" style="margin-top:10px;">🖨️ طباعة ملصق الباركود</button>
+      </div>
+      <div class="card" style="margin:0; background:#f8fafc; color:#0f172a; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; border: 2px dashed var(--border-color);">
+        <div style="font-size:12px; color:#64748b; margin-bottom:10px; font-weight:bold;">معاينة ملصق الباركود:</div>
+        <div id="barcodeStickerCard" style="background:white; color:black; width:220px; padding:12px 10px; border-radius:8px; border:1px solid #cbd5e1; text-align:center; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+          <div id="stickerShopName" style="font-size:14px; font-weight:bold; margin-bottom:4px; color:#0f172a;">Mahmoud Baker</div>
+          <div style="margin: 4px 0;"><svg id="barcodeSvgPreview" style="max-width:100%; height:45px;"></svg></div>
+          <div id="stickerItemName" style="font-size:12px; font-weight:bold; color:#1e293b; margin-top:2px; direction:rtl;">11 برو ماكس / 512 / 82%</div>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <!-- ================= شاشة المبيعات الجديدة كلياً (POS Pro) ================= -->
+  <div id="salesPage" class="hidden" style="height: calc(100vh - 10px); display: flex; flex-direction: column; overflow: hidden; background: var(--bg-body); border-radius: 8px;">
+    
+    <div style="background: linear-gradient(90deg, #047857, #059669); color: white; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; font-weight: bold; flex-shrink: 0;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 22px;">🛒</span>
+        <span style="font-size: 18px;">نقطة الكاشير السريع (POS Pro)</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button onclick="openQuickCashItemModal()" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 5px 12px; font-size: 12px; border-radius: 6px; color: white;">⚡ صنف حر / بيع سريع</button>
+        <span id="posShopTitle" style="font-size: 14px; background: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 6px;">متجري</span>
+      </div>
+    </div>
+
+    <div style="display: flex; flex: 1; min-height: 0; overflow: hidden; gap: 8px; padding: 8px;">
+      
+      <div style="flex: 1.3; display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; min-width: 0;">
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; flex-shrink: 0;">
+          <input id="posProductSearch" oninput="filterPosProducts()" placeholder="🔍 ابحث عن صنف بالاسم أو امسح الباركود..." style="margin: 0; padding: 10px; font-size: 14px; font-weight: bold; border-radius: 8px;">
+          <div id="posCategoriesBar" style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px;">
+            <button class="category-btn active green" onclick="filterByCategory('all', this)" style="padding: 6px 14px; font-size: 12px; border-radius: 20px; white-space: nowrap;">الكل</button>
+            <button class="category-btn secondary" onclick="filterByCategory('accessories', this)" style="padding: 6px 14px; font-size: 12px; border-radius: 20px; white-space: nowrap;">إكسسوارات</button>
+            <button class="category-btn secondary" onclick="filterByCategory('maintenance', this)" style="padding: 6px 14px; font-size: 12px; border-radius: 20px; white-space: nowrap;">صيانة قطع غيار</button>
+            <button class="category-btn secondary" onclick="filterByCategory('devices', this)" style="padding: 6px 14px; font-size: 12px; border-radius: 20px; white-space: nowrap;">أجهزة وموبايلات</button>
+          </div>
+        </div>
+
+        <div id="posProductsGrid" style="flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; align-content: start; padding-right: 4px;"></div>
+      </div>
+
+      <div style="flex: 1; display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; min-width: 0;">
+        <div style="flex: 1; background: var(--bg-input); border-radius: 8px; overflow-y: auto; border: 1px solid var(--border-color); min-height: 0;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: rgba(15,23,42,0.8); position: sticky; top: 0; z-index: 2;">
+                <th style="padding: 6px; font-size: 11px;">الصنف</th>
+                <th style="padding: 6px; font-size: 11px; width: 90px; text-align:center;">الكمية</th>
+                <th style="padding: 6px; font-size: 11px;">السعر</th>
+                <th style="padding: 6px; font-size: 11px;">الإجمالي</th>
+                <th style="padding: 6px; font-size: 11px; width: 35px;">✕</th>
+              </tr>
+            </thead>
+            <tbody id="posCartTableBody">
+              <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 40px; font-size: 14px;">🛒 السلة فارغة.. اضغط على أي منتج للإضافة</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="background: rgba(15,23,42,0.6); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; margin-top: 8px; flex-shrink: 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 14px; font-weight: bold; color: var(--text-muted);">الإجمالي المطلوب:</span>
+            <h2 id="posGrandTotalDisplay" style="margin: 0; font-size: 28px; color: #34d399; direction: ltr;">0.00 ج</h2>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px;">
+            <div><label style="font-size: 10px; margin-bottom: 2px;">إضافة رسوم</label><input id="posAddition" type="number" min="0" value="0" oninput="renderPosCart()" style="padding: 4px; font-size: 12px; text-align: center; margin:0;"></div>
+            <div><label style="font-size: 10px; margin-bottom: 2px;">خصم %</label><input id="posDiscountPct" type="number" min="0" max="100" value="0" oninput="renderPosCart()" style="padding: 4px; font-size: 12px; text-align: center; margin:0;"></div>
+            <div><label style="font-size: 10px; margin-bottom: 2px;">خصم نقدي</label><input id="posDiscountCash" type="number" min="0" value="0" oninput="renderPosCart()" style="padding: 4px; font-size: 12px; text-align: center; margin:0;"></div>
+          </div>
+          <input id="posSaleNotes" type="text" placeholder="ملاحظات الفاتورة (اسم العميل أو تفاصيل)..." style="padding: 6px; font-size: 11px; margin: 0;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 6px; margin-top: 8px; flex-shrink: 0;">
+          <button class="green" onclick="completePosSale()" style="padding: 10px; font-size: 15px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 6px;">💵 حفظ وبيع سريـع</button>
+          <button class="orange" onclick="savePosHold()" style="padding: 10px; font-size: 13px; font-weight: bold;">⏸️ تعليق</button>
+          <button class="secondary" onclick="openPosHeldList()" style="padding: 10px; font-size: 13px; font-weight: bold;">📂 المعلقة</button>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 6px; flex-shrink: 0;">
+          <button class="secondary" onclick="page('dashboard')" style="padding: 6px 12px; font-size: 11px;">🏠 الرئيسية</button>
+          <button class="secondary" onclick="clearPosCart()" style="background: rgba(239,68,68,0.2); color: #f87171; border-color: rgba(239,68,68,0.4); padding: 6px 12px; font-size: 11px;">🗑️ تفريغ السلة</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="quickCashItemModal" class="modal-overlay hidden" onclick="if(event.target===this) closeQuickCashModal();">
+    <div class="modal-box" style="max-width: 360px; border-top: 5px solid var(--success);">
+      <button class="modal-close" onclick="closeQuickCashModal()">✕</button>
+      <h3 style="margin-bottom: 8px;">⚡ إضافة صنف حر / خدمة سريعة</h3>
+      <label>اسم الصنف / الخدمة</label>
+      <input id="quickItemName" placeholder="خدمة صيانة سريعة">
+      <label>السعر المطلوب (جنية)</label>
+      <input id="quickItemPrice" type="number" min="0.01" step="0.01" placeholder="100">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px;">
+        <button class="green" onclick="addQuickCashItemToCart()">➕ إضافة</button>
+        <button class="secondary" onclick="closeQuickCashModal()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- صفحة المنتجات مع زر طباعة الباركود بجانب زر الحذف -->
   <div id="productsPage" class="hidden">
     <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
     <h3>المنتجات</h3>
+    <div class="card">
+      <input id="pName" placeholder="اسم الصنف">
+      <input id="pBarcode" placeholder="رقم الباركود">
+      <div class="grid">
+        <div><label>شراء</label><input id="pCost" type="number" value="0"></div>
+        <div><label>بيع</label><input id="pPrice" type="number" value="0"></div>
+        <div><label>كمية</label><input id="pQty" type="number" value="10"></div>
+      </div>
+      <button onclick="saveProduct()" class="green big">حفظ المنتج</button>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>المنتج</th>
+            <th>باركود</th>
+            <th>سعر البيع</th>
+            <th>الكمية</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="productsTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="treasuryPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الخزينة</h3><div class="grid"><div class="stat">رصيد<strong id="treasuryBalanceDisplay">0 ج</strong></div></div><div class="card"><h3>حركة</h3><select id="tType"><option value="in">وارد</option><option value="out">صادر</option></select><input id="tAmount" type="number" placeholder="المبلغ"><input id="tNote" placeholder="البيان"><button class="big green" onclick="addTreasuryTransaction()">تسجيل</button></div><div class="tablewrap"><table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table></div></div>
+  <div id="historyPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الفواتير</h3><div class="tablewrap"><table><thead><tr><th>رقم</th><th>التاريخ</th><th>الإجمالي</th><th>إجراء</th></tr></thead><tbody id="salesTable"></tbody></table></div></div>
+  <div id="expensesPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>المصروفات</h3><div class="card"><input id="expenseName" placeholder="البيان"><input id="expenseAmount" type="number" placeholder="المبلغ"><button onclick="addExpense()" class="green big">حفظ</button></div><div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div></div>
+  <div id="reportsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>التقارير</h3><div class="grid"><div class="stat">المبيعات<strong id="reportRevenue">0 ج</strong></div><div class="stat">المصروفات<strong id="reportExpenses">0 ج</strong></div><div class="stat">الربح<strong id="reportNet">0 ج</strong></div></div></div>
+  
+  <div id="settingsPage" class="hidden">
+    <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
+    <h3>الإعدادات</h3>
+    <div class="card" style="max-width:600px"><h3>اسم المحل</h3><input id="settingsShopName"><button class="big" onclick="updateShopNameSetting()">حفظ</button></div>
+    <div class="card" style="max-width:600px"><h3>البريد الإلكتروني</h3><input id="settingsEmail" type="email"><button class="big purple" onclick="updateCustomerEmailSetting()">تغيير البريد</button></div>
+    <div class="card" style="max-width:600px">
+      <h3>🔑 تغيير كلمة المرور الخاصة بك</h3>
+      <label>كلمة المرور الحالية</label><input id="salesCurrentPassword" type="password" placeholder="********">
+      <label>كلمة المرور الجديدة</label><input id="salesNewPassword" type="password" placeholder="أكثر من 6 أحرف">
+      <button class="big dark" onclick="changeOwnPassword('sales')">تحديث كلمة المرور</button>
+    </div>
+    <div class="card" style="max-width:600px"><h3>تسجيل الخروج</h3><button class="big red" onclick="logout()">خروج</button></div>
   </div>
  </div>
 </section>
 
 <div id="printArea" class="hidden"></div>
 
-<footer style="text-align:center; padding:8px; border-top:1px solid var(--border-color); margin-top:auto; font-size:12px; color:var(--text-muted);">
+<footer style="text-align:center; padding:8px; border-top:1px solid var(--border-color); margin-top:auto; font-size:12px; color:var(--text-muted); letter-spacing:0.3px; flex-shrink: 0;">
   جميع الحقوق محفوظة © 2026 | تصميم وتطوير <strong style="color:var(--primary);">محمد الصلاحي</strong>
 </footer>
 </div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import {getAuth,setPersistence,browserLocalPersistence,signInWithEmailAndPassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-import {getFirestore,doc,getDoc,getDocs,setDoc,updateDoc,collection,serverTimestamp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import {getAuth,setPersistence,browserLocalPersistence,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,EmailAuthProvider,reauthenticateWithCredential,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {getFirestore,enableIndexedDbPersistence,doc,setDoc,getDoc,getDocFromServer,getDocFromCache,getDocs,getDocsFromCache,getDocsFromServer,updateDoc,collection,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+window.customConfirm = async (title, text = "") => {
+  const result = await Swal.fire({title: title, text: text, icon: 'warning', showCancelButton: true, confirmButtonColor: '#3b82f6', cancelButtonColor: '#ef4444', confirmButtonText: 'نعم', cancelButtonText: 'إلغاء', background: '#1e293b', color: '#f8fafc'});
+  return result.isConfirmed;
+};
+window.customPrompt = async (title, inputType = 'text', defaultValue = '') => {
+  const result = await Swal.fire({title: title, input: inputType, inputValue: defaultValue, showCancelButton: true, confirmButtonColor: '#3b82f6', cancelButtonColor: '#ef4444', confirmButtonText: 'حفظ', cancelButtonText: 'إلغاء', background: '#1e293b', color: '#f8fafc'});
+  return result.isConfirmed ? result.value : null;
+};
+window.showAlert=(msg,type='info')=>Swal.fire({text:msg,icon:type,confirmButtonText:'حسناً',confirmButtonColor:'#3b82f6',background:'#1e293b',color:'#f8fafc'});
+window.getDeviceType=d=>!d?"room":(d.deviceType==="vip"?"vip":d.deviceType==="base_arabi"?"base_arabi":d.deviceType==="billiard"?"billiard":"room");
 
 const firebaseConfig={apiKey:"AIzaSyABpb7h1WXzodOKoxoRvvkXZSrPQ6UgZiA",authDomain:"nexpos-14155.firebaseapp.com",projectId:"nexpos-14155",storageBucket:"nexpos-14155.firebasestorage.app",messagingSenderId:"932284131293",appId:"1:932284131293:web:00d6237b1f155ae5daf834"};
-const OWNER_EMAIL="melsalahy689@gmail.com",OWNER_USERNAME="elsalahy";
+const OWNER_EMAIL="melsalahy689@gmail.com",OWNER_USERNAME="elsalahy",SUPPORT_PHONE="201062883414",PS_DEFAULT_HOURLY_RATE=40,PS_MIN_SESSION_MINUTES=30;
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 setPersistence(auth,browserLocalPersistence).catch(e=>console.warn(e));
 
@@ -307,114 +983,636 @@ window.enterSystem = () => {
   document.getElementById("auth").classList.remove("hidden");
 };
 
-let currentUser=null,profile=null,selectedSystem="sales";
+let currentUser=null,profile=null,selectedSystem=localStorage.getItem('nexpos_selected_system')||"sales",activeSystem="sales",registeringNow=false;
+let products=[],sales=[],expenses=[],treasury=[],lastRegisteredUser=null;
+let psDevices=[],psItems=[],psSessions=[],psReservations=[],psTimer=null,psEndingDevices=new Set();
+let currentDetailDeviceId=null,addDeviceType=null;
+
 const $=id=>document.getElementById(id);
+const money=n=>(Number(n)||0).toLocaleString("ar-EG",{minimumFractionDigits:2,maximumFractionDigits:2});
 const shopRef=()=>`shops/${currentUser.uid}`;
 const col=name=>collection(db,shopRef(),name);
+const docRef=(name,id)=>doc(db,shopRef(),name,id);
+const PLANS={30:{name:"شهري",price:100},90:{name:"3 شهور",price:250},365:{name:"سنوي",price:900},36500:{name:"دائم",price:3000}};
+
+async function safeGetDocs(r){try{return await getDocsFromServer(r);}catch(e){return await getDocsFromCache(r);}}
+async function safeGetDoc(r){try{return await getDocFromServer(r);}catch(e){return await getDocFromCache(r);}}
+function message(t){$("authMsg").textContent=t;$("authMsg").classList.remove("hidden");}
+function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function systemInfo(p,sys){return p.systems?.[sys]||{status:"not_registered",plan:"غير محدد",expiryDate:null};}
+function subscriptionActive(data){if(!data||data.status!=="active"||!data.expiryDate)return false;const exp=data.expiryDate.toDate?data.expiryDate.toDate():new Date(data.expiryDate);return exp>new Date();}
 
 window.openAuth=(system,mode)=>{
- selectedSystem=system;
+ selectedSystem=system; localStorage.setItem('nexpos_selected_system', system);
  $("authForm").classList.remove("hidden");
- $("customerLoginBox").classList.toggle("hidden",system==="owner");
+ $("customerLoginBox").classList.toggle("hidden",mode!=="login"||system==="owner");
+ $("registerBox").classList.toggle("hidden",mode!=="register");
  $("ownerBox").classList.toggle("hidden",system!=="owner");
+ $("authFormTitle").textContent=system==="owner"?"دخول لوحة التحكم":(system==="sales"?"سيستم المبيعات":"سيستم البلايستيشن")+" - "+(mode==="login"?"دخول":"إنشاء");
+ $("authMsg").classList.add("hidden");
 };
 window.backToGate=()=>$("authForm").classList.add("hidden");
 
 window.login=async()=>{
  try{
   const email=$("loginEmail").value.trim(),password=$("loginPassword").value;
-  if(!email||!password)return;
-  await signInWithEmailAndPassword(auth,email,password);
- }catch(e){console.warn(e);}
+  if(!email||!password)return message("أدخل البيانات.");
+  const cred=await signInWithEmailAndPassword(auth,email,password);
+  localStorage.setItem('nexpos_last_email', email);
+  if(cred.user.email?.toLowerCase()===OWNER_EMAIL.toLowerCase())return;
+  const snap=await getDoc(doc(db,"users",cred.user.uid));
+  if(!snap.exists()){await signOut(auth);return message("لا توجد بيانات.");}
+  profile = snap.data(); localStorage.setItem('nexpos_profile', JSON.stringify(profile));
+  const si=systemInfo(snap.data(),selectedSystem);
+  if(si.status==="not_registered"){await signOut(auth);return message("غير مسجل في هذا النظام.");}
+  if(!subscriptionActive(si)){await signOut(auth);return message("انتهى الاشتراك.");}
+ }catch(e){message("تعذر: "+(e.code||e.message));}
 };
-window.ownerLogin=async()=>{try{await signInWithEmailAndPassword(auth,OWNER_EMAIL,$("ownerPassword").value);}catch(e){}};
-window.logout=async()=>{await signOut(auth);location.reload();};
+window.forgotPassword=()=>{$("forgotEmailInput").value="";$("forgotPasswordModal").classList.remove("hidden");};
+window.closeForgotModal=()=>$("forgotPasswordModal").classList.add("hidden");
+window.submitForgotPassword=async()=>{const email=$("forgotEmailInput").value.trim();if(!email)return showAlert("أدخل البريد.","warning");try{await sendPasswordResetEmail(auth,email);showAlert("تم الإرسال.","success");closeForgotModal();}catch(e){showAlert(e.message,"error");}};
+window.ownerLogin=async()=>{try{if($("ownerUsername").value.trim().toLowerCase()!==OWNER_USERNAME)return message("اسم غير صحيح.");const p=$("ownerPassword").value;if(!p)return message("أدخل كلمة المرور.");await signInWithEmailAndPassword(auth,OWNER_EMAIL,p);}catch(e){message("تعذر");}};
+
+window.register=async()=>{
+ const shop=$("regShop").value.trim(),name=$("regName").value.trim(),phone=$("regPhone").value.trim(),email=$("regEmail").value.trim(),password=$("regPassword").value,days=Number($("regPlan").value);
+ if(!shop||!name||!phone||!email||!password)return message("أكمل البيانات.");
+ const plan=PLANS[days];
+ try{
+  registeringNow=true;
+  const cred=await createUserWithEmailAndPassword(auth,email,password);
+  const sysData={status:"pending",plan:"غير مفعل",requestedPlan:plan.name,requestedPrice:plan.price,requestedDays:days,expiryDate:null,requestedAt:serverTimestamp()};
+  const systems={};systems[selectedSystem]=sysData;
+  await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",maxDevices:1,devices:[],systems,createdAt:serverTimestamp()});
+  lastRegisteredUser={name,shop,email,phone,system:selectedSystem,plan:plan.name};
+  $("pendingDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(shop)}<br><b>الباقة:</b> ${plan.name}`;
+  await signOut(auth);registeringNow=false;
+  $("auth").classList.add("hidden");$("authForm").classList.add("hidden");$("pendingScreen").classList.remove("hidden");
+ }catch(e){registeringNow=false;message("تعذر: "+e.message);}
+};
+window.sendWhatsAppActivation=()=>{const d=lastRegisteredUser||{shop:"نشاط",email:"",system:selectedSystem};const msg=encodeURIComponent(`طلب تفعيل\nالنشاط: ${d.shop}\nالبريد: ${d.email}`);window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`,"_blank");};
+window.logout=async()=>{if(psTimer)clearInterval(psTimer);localStorage.removeItem('nexpos_profile');await signOut(auth);location.reload();};
+window.support=()=>{const msg=encodeURIComponent(`مرحباً م. محمد الصلاحي، أحتاج مساعدة في NexPOS PRO.`);window.open(`https://wa.me/201062883414?text=${msg}`,"_blank");};
 
 onAuthStateChanged(auth, async user => {
   currentUser = user;
+  if(registeringNow) return;
   if(!user) {
-    ["customerPanel", "ownerPanel", "auth"].forEach(x => $(x).classList.add("hidden"));
+    if(psTimer) clearInterval(psTimer);
+    ["customerPanel", "ownerPanel", "playstationPanel", "pendingScreen"].forEach(x => $(x).classList.add("hidden"));
+    $("auth").classList.remove("hidden");
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    if (!isStandalone) { $("landingPage").classList.remove("hidden"); $("appWrap").classList.add("hidden"); }
-    else { $("landingPage").classList.add("hidden"); $("appWrap").classList.remove("hidden"); }
+    if (!isStandalone) { document.getElementById("landingPage").classList.remove("hidden"); document.getElementById("appWrap").classList.add("hidden"); }
+    else { document.getElementById("landingPage").classList.add("hidden"); document.getElementById("appWrap").classList.remove("hidden"); }
     return;
   }
+
   try {
     if(user.email?.toLowerCase() === OWNER_EMAIL.toLowerCase()) {
-      $("landingPage").classList.add("hidden"); $("appWrap").classList.remove("hidden");
-      $("auth").classList.add("hidden"); $("ownerPanel").classList.remove("hidden");
+      document.getElementById("landingPage").classList.add("hidden");
+      document.getElementById("appWrap").classList.remove("hidden");
+      $("auth").classList.add("hidden"); $("authForm").classList.add("hidden");
+      $("ownerPanel").classList.remove("hidden");
+      await loadUsers();
       return;
     }
-    const snap = await getDoc(doc(db, "users", user.uid));
-    if (snap.exists()) { profile = snap.data(); }
-    $("landingPage").classList.add("hidden"); $("auth").classList.add("hidden"); $("appWrap").classList.remove("hidden");
-    $("customerPanel").classList.remove("hidden");
-    $("shopTitle").textContent = profile?.shopName || "نظام المبيعات";
+    const snap = await safeGetDoc(doc(db, "users", user.uid));
+    if (snap && snap.exists()) { profile = snap.data(); localStorage.setItem('nexpos_profile', JSON.stringify(profile)); }
+    
+    activeSystem = selectedSystem;
+    document.getElementById("landingPage").classList.add("hidden");
+    document.getElementById("auth").classList.add("hidden"); $("authForm").classList.add("hidden");
+    document.getElementById("appWrap").classList.remove("hidden");
+
+    if(selectedSystem === "playstation") {
+      document.querySelector('.wrap').style.overflowY = 'hidden';
+      $("playstationPanel").classList.remove("hidden");
+      goPsHome(); await loadPlaystationData(); startPsTimer();
+    } else {
+      $("customerPanel").classList.remove("hidden");
+      $("shopTitle").textContent = profile?.shopName || "نظام المبيعات";
+      $("posShopTitle").textContent = profile?.shopName || "متجري";
+      await loadBusiness();
+    }
   } catch(e) { console.error(e); }
 });
 
-window.page = name => {
-  ["dashboard","sales","products","invoiceSettings"].forEach(p => $(p+"Page")?.classList.add("hidden"));
-  $(name+"Page")?.classList.remove("hidden");
-  if (name === "invoiceSettings") {
-    loadInvoiceSettingsToUI();
-  }
+window.changeOwnPassword = async (sysPrefix) => {
+  const currentInput = $(sysPrefix === 'ps' ? 'psCurrentPassword' : 'salesCurrentPassword');
+  const newInput = $(sysPrefix === 'ps' ? 'psNewPassword' : 'salesNewPassword');
+  const currentPass = currentInput?.value || "", newPass = newInput?.value || "";
+  if (!currentPass || !newPass) return showAlert("أدخل كلمة المرور الحالية والجديدة.", "warning");
+  if (newPass.length < 6) return showAlert("كلمة المرور الجديدة 6 أحرف على الأقل.", "warning");
+  try {
+    const user = auth.currentUser;
+    const credential = EmailAuthProvider.credential(user.email, currentPass);
+    await reauthenticateWithCredential(user, credential);
+    await updatePassword(user, newPass);
+    currentInput.value = ""; newInput.value = "";
+    showAlert("تم تغيير كلمة المرور بنجاح!", "success");
+  } catch (error) { showAlert("كلمة المرور الحالية غير صحيحة.", "error"); }
 };
 
-function loadInvoiceSettingsToUI() {
-  const inv = profile?.invoiceSettings || {};
-  $("invShopNameInput").value = inv.shopName || profile?.shopName || "Mahmoud Baker";
-  $("invTaxNumberInput").value = inv.taxNumber || "";
-  $("invLocationInput").value = inv.location || "";
-  $("invPhonesInput").value = inv.phones || "";
-  $("invWarrantyInput").value = inv.warranty || "";
-  updateInvoicePreview();
+window.ownerSection=which=>{$("ownerSalesSection").classList.toggle("hidden",which!=="sales");$("ownerPsSection").classList.toggle("hidden",which!=="playstation");$("ownerSalesTab").classList.toggle("active",which==="sales");$("ownerPsTab").classList.toggle("active",which==="playstation");};
+
+function planControls(u,system){
+ const info=systemInfo(u,system);if(info.status==="not_registered")return `<span class="muted">غير مسجل</span>`;
+ const rd=Number(info.requestedDays)||30;
+ return `<select id="plan_${system}_${u.id}" style="width:75px;font-size:11px;padding:3px;"><option value="30" ${rd===30?"selected":""}>شهري</option><option value="365" ${rd===365?"selected":""}>سنوي</option></select>
+ <button class="rowbtn green" onclick="activateUserWithPlan('${u.id}','${system}')">تفعيل</button>
+ <button class="rowbtn purple" onclick="openEditUserModal('${u.id}', '${escapeHTML(u.shopName||"")}', '${escapeHTML(u.customerName||"")}', '${escapeHTML(u.email||"")}')">✏️ تعديل</button>
+ <button class="rowbtn red" onclick="deactivateSystem('${u.id}','${system}')">إيقاف</button>`;
 }
 
-window.updateInvoicePreview = () => {
-  const shopName = $("invShopNameInput")?.value.trim() || "Mahmoud Baker";
-  const taxNumber = $("invTaxNumberInput")?.value.trim() || "";
-  const location = $("invLocationInput")?.value.trim() || "";
-  const phones = $("invPhonesInput")?.value.trim() || "";
-  const warranty = $("invWarrantyInput")?.value.trim() || "";
-
-  $("prevShopName").textContent = shopName;
-
-  const taxEl = $("prevTaxNumber");
-  if (taxNumber) { taxEl.textContent = `الرقم الضريبي: ${taxNumber}`; taxEl.classList.remove("hidden"); }
-  else { taxEl.classList.add("hidden"); }
-
-  const locEl = $("prevLocation");
-  if (location) { locEl.textContent = `العنوان: ${location}`; locEl.classList.remove("hidden"); }
-  else { locEl.classList.add("hidden"); }
-
-  const phoneEl = $("prevPhones");
-  if (phones) { phoneEl.textContent = `هاتف: ${phones}`; phoneEl.classList.remove("hidden"); }
-  else { phoneEl.classList.add("hidden"); }
-
-  const warEl = $("prevWarranty");
-  if (warranty) { warEl.textContent = warranty; warEl.classList.remove("hidden"); }
-  else { warEl.classList.add("hidden"); }
+window.loadUsers=async()=>{
+ try{
+  const snap=await getDocs(collection(db,"users"));
+  const list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="superowner" && u.email?.toLowerCase() !== OWNER_EMAIL.toLowerCase());
+  const salesList=list.filter(u=>systemInfo(u,"sales").status!=="not_registered");
+  const psList=list.filter(u=>systemInfo(u,"playstation").status!=="not_registered");
+  const validUsers = list.filter(u => systemInfo(u,"sales").status!=="not_registered" || systemInfo(u,"playstation").status!=="not_registered");
+  $("totalUsers").textContent = validUsers.length;
+  $("salesUsersCount").textContent = salesList.length;
+  $("psUsersCount").textContent = psList.length;
+  $("pendingUsersCount").textContent = validUsers.reduce((c,u)=>c+(systemInfo(u,"sales").status==="pending"?1:0)+(systemInfo(u,"playstation").status==="pending"?1:0),0);
+  
+  const render=(arr,sys)=>arr.map(u=>{
+   const info=systemInfo(u,sys),exp=info.expiryDate?.toDate?info.expiryDate.toDate():info.expiryDate,ex=exp&&new Date(exp)<new Date();
+   let st="نشط"; if(info.status==="pending")st="جديد"; else if(ex)st="منتهي";
+   return `<tr><td><b>${escapeHTML(u.shopName||"")}</b></td><td>${escapeHTML(u.customerName||"")}</td><td>${escapeHTML(u.email||"")}</td><td>${escapeHTML(u.phone||"")}</td><td><span class="tag ${st==='نشط'?'good':''}">${st}</span></td><td><b>${escapeHTML(info.plan||"")}</b></td><td>${planControls(u,sys)}</td></tr>`;
+  }).join("")||'<tr><td colspan="7">لا يوجد عملاء</td></tr>';
+  $("salesUsersTable").innerHTML=render(salesList,"sales");
+  $("psUsersTable").innerHTML=render(psList,"playstation");
+ }catch(e){console.warn(e);}
 };
 
-window.saveInvoiceSettings = async () => {
-  const invoiceSettings = {
-    shopName: $("invShopNameInput").value.trim(),
-    taxNumber: $("invTaxNumberInput").value.trim(),
-    location: $("invLocationInput").value.trim(),
-    phones: $("invPhonesInput").value.trim(),
-    warranty: $("invWarrantyInput").value.trim(),
-    paperSize: $("invPaperSize").value
+window.openEditUserModal = (id, shop, name, email) => {
+  $("editUserId").value = id; $("editUserShop").value = shop; $("editUserName").value = name; $("editUserEmail").value = email;
+  $("sendPasswordResetCheck").checked = false; $("editUserModal").classList.remove("hidden");
+};
+window.closeEditUserModal = () => $("editUserModal").classList.add("hidden");
+window.saveUserEdits = async () => {
+  const id = $("editUserId").value, newShop = $("editUserShop").value.trim(), newName = $("editUserName").value.trim(), newEmail = $("editUserEmail").value.trim();
+  if (!newShop || !newName || !newEmail) return showAlert("املأ الحقول.", "warning");
+  await updateDoc(doc(db, "users", id), { shopName: newShop, customerName: newName, email: newEmail });
+  if ($("sendPasswordResetCheck").checked) await sendPasswordResetEmail(auth, newEmail);
+  showAlert("تم التحديث!", "success"); closeEditUserModal(); await loadUsers();
+};
+window.activateUserWithPlan=async(id,system)=>{const sel=$(`plan_${system}_${id}`);const days=Number(sel.value),plan=PLANS[days];const exp=new Date();exp.setDate(exp.getDate()+days);await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"active",[`systems.${system}.plan`]:plan.name,[`systems.${system}.expiryDate`]:exp});showAlert("تم التفعيل.","success");await loadUsers();};
+window.deactivateSystem=async(id,system)=>{await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"pending"});await loadUsers();};
+
+function getTileNames() {
+  const saved = profile?.customTiles || {};
+  return {
+    1: saved.tile1 || localStorage.getItem("ps_tile_1") || "أجهزة الرومات",
+    2: saved.tile2 || localStorage.getItem("ps_tile_2") || "صالة VIP",
+    3: saved.tile3 || localStorage.getItem("ps_tile_3") || "القاعدة العربي",
+    4: saved.tile4 || localStorage.getItem("ps_tile_4") || "البلياردو"
   };
-  if (!profile) profile = {};
-  profile.invoiceSettings = invoiceSettings;
-  if (currentUser) {
-    await updateDoc(doc(db, "users", currentUser.uid), { invoiceSettings });
-  }
-  Swal.fire({ text: "تم حفظ إعدادات الفاتورة وتحديث المعاينة بنجاح!", icon: "success", background: "#1e293b", color: "#f8fafc", confirmButtonColor: "#3b82f6" });
+}
+function applySavedTileNames() {
+  const names = getTileNames();
+  if($("tileTitle1")) $("tileTitle1").textContent = names[1];
+  if($("tileTitle2")) $("tileTitle2").textContent = names[2];
+  if($("tileTitle3")) $("tileTitle3").textContent = names[3];
+  if($("tileTitle4")) $("tileTitle4").textContent = names[4];
+}
+window.openCustomizeTilesModal = () => {
+  const names = getTileNames();
+  $("customTile1").value = names[1]; $("customTile2").value = names[2]; $("customTile3").value = names[3]; $("customTile4").value = names[4];
+  $("customizeTilesModal").classList.remove("hidden");
+};
+window.closeCustomizeTilesModal = () => $("customizeTilesModal").classList.add("hidden");
+window.saveCustomTiles = async () => {
+  const customTiles = { tile1: $("customTile1").value.trim()||"أجهزة الرومات", tile2: $("customTile2").value.trim()||"صالة VIP", tile3: $("customTile3").value.trim()||"القاعدة العربي", tile4: $("customTile4").value.trim()||"البلياردو" };
+  localStorage.setItem("ps_tile_1", customTiles.tile1); localStorage.setItem("ps_tile_2", customTiles.tile2);
+  localStorage.setItem("ps_tile_3", customTiles.tile3); localStorage.setItem("ps_tile_4", customTiles.tile4);
+  if (profile) profile.customTiles = customTiles;
+  applySavedTileNames(); closeCustomizeTilesModal();
+  if (currentUser) setDoc(doc(db, "users", currentUser.uid), { customTiles }, { merge: true }).catch(()=>{});
+  showAlert("تم الحفظ!", "success");
 };
 
-window.enterSystem();
+window.goPsHome=()=>{
+ ["psHomeScreen","psDevicesSection","psVipSection","psBaseArabiSection","psBilliardSection","psRunningSection","psDrinksSection","psSandwichesSection","psSessionsSection","psReservationsSection","psCustomersSection","psReportsSection"].forEach(id=>$(id)?.classList.add("hidden"));
+ $("psHomeScreen").classList.remove("hidden"); applySavedTileNames();
+};
+window.showPsSection=which=>{
+ ["psHomeScreen","psDevicesSection","psVipSection","psBaseArabiSection","psBilliardSection","psRunningSection","psDrinksSection","psSandwichesSection","psSessionsSection","psReservationsSection","psCustomersSection","psReportsSection"].forEach(id=>$(id)?.classList.add("hidden"));
+ const map={devices:"psDevicesSection",vip:"psVipSection",base_arabi:"psBaseArabiSection",billiard:"psBilliardSection",running:"psRunningSection",drinks:"psDrinksSection",sandwiches:"psSandwichesSection",sessions:"psSessionsSection",reservations:"psReservationsSection",customers:"psCustomersSection",reports:"psReportsSection"};
+ if(map[which])$(map[which]).classList.remove("hidden");
+ if(which==="running")renderPsRunning();
+ if(which==="sessions")renderPsSessions();
+ if(which==="reports")renderPsReports();
+};
+
+window.loadPlaystationData=async function(){
+ if(!currentUser)return;
+ try{
+  const [ds,is,ss]=await Promise.all([safeGetDocs(col("devices")),safeGetDocs(col("psItems")),safeGetDocs(col("psSessions"))]);
+  psDevices=ds.docs.map(d=>({id:d.id,...d.data()})); psItems=is.docs.map(d=>({id:d.id,...d.data()})); psSessions=ss.docs.map(d=>({id:d.id,...d.data()}));
+  renderPsMiniDevices(); renderPsStats();
+ }catch(e){console.warn(e);}
+};
+
+function renderPsMiniDevices(){
+ const buildCard = d => {
+   const isRunning = d.status === "running";
+   return `<div class="dev-mini ${isRunning?"running":""}" onclick="openDeviceDetail('${d.id}')">
+     <div class="dev-name">${escapeHTML(d.name)}</div>
+     <div class="dev-status">${isRunning?"🟢 يعمل":"⚪ جاهز"}</div>
+   </div>`;
+ };
+ $("psDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="room").map(buildCard).join("") || '<div class="devices-empty">لا توجد أجهزة.</div>';
+ $("psVipDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="vip").map(buildCard).join("") || '<div class="devices-empty">لا توجد أجهزة.</div>';
+ $("psBaseArabiDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="base_arabi").map(buildCard).join("") || '<div class="devices-empty">لا توجد أجهزة.</div>';
+ $("psBilliardDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="billiard").map(buildCard).join("") || '<div class="devices-empty">لا توجد طاولات.</div>';
+}
+
+window.openAddDeviceModal = type => { addDeviceType = type; $("newDeviceTypeSelect").value = type; $("newDeviceName").value=""; $("newDeviceRate").value=""; $("addDeviceModal").classList.remove("hidden"); };
+window.closeAddDeviceModal = () => $("addDeviceModal").classList.add("hidden");
+window.submitAddDevice = async () => {
+ const name = $("newDeviceName").value.trim(), rate = Number($("newDeviceRate").value);
+ if(!name || rate<=0) return showAlert("أدخل بيانات صحيحة.","warning");
+ await setDoc(doc(col("devices")),{name, deviceType:addDeviceType, status:"idle", hourlyRate:rate, createdAt:Date.now()});
+ closeAddDeviceModal(); await loadPlaystationData(); showAlert("تمت الإضافة.","success");
+};
+
+window.openDeviceDetail = id => { currentDetailDeviceId = id; refreshDeviceDetail(); $("deviceDetailModal").classList.remove("hidden"); };
+window.closeDeviceDetail = () => { $("deviceDetailModal").classList.add("hidden"); currentDetailDeviceId = null; };
+function refreshDeviceDetail(){
+ const d = psDevices.find(x=>x.id===currentDetailDeviceId); if(!d) return;
+ $("deviceDetailContent").innerHTML = `<h3>${escapeHTML(d.name)}</h3><button class="red big" onclick="deletePsDevice('${d.id}')">🗑 حذف الجهاز</button><button class="secondary big" onclick="closeDeviceDetail()" style="margin-top:6px;">إغلاق</button>`;
+}
+window.deletePsDevice = async id => { await deleteDoc(docRef("devices",id)); closeDeviceDetail(); await loadPlaystationData(); };
+
+function startPsTimer(){
+ if(psTimer)clearInterval(psTimer);
+ psTimer=setInterval(()=>{},1000);
+}
+window.renderPsRunning = () => {};
+window.renderPsSessions = () => {};
+window.renderPsReports = () => {};
+window.addPsItem = async () => {};
+window.openPsShiftModal = () => $("psShiftModal").classList.remove("hidden");
+window.closePsShift = () => $("psShiftModal").classList.add("hidden");
+window.requestRenewal = () => window.open(`https://wa.me/${SUPPORT_PHONE}`,"_blank");
+window.cancelPsInvoice = () => $("psConfirmInvoiceModal").classList.add("hidden");
+window.confirmAndPrintPsInvoice = () => $("psConfirmInvoiceModal").classList.add("hidden");
+
+// ================= دوال شاشة المبيعات الجديدة (POS Pro) =================
+let posCart = [];
+let currentCategoryFilter = 'all';
+
+window.openQuickCashItemModal = () => {
+  $("quickItemName").value = ""; $("quickItemPrice").value = "";
+  $("quickCashItemModal").classList.remove("hidden");
+};
+window.closeQuickCashModal = () => $("quickCashItemModal").classList.add("hidden");
+
+window.addQuickCashItemToCart = () => {
+  const name = $("quickItemName").value.trim(), price = Number($("quickItemPrice").value);
+  if (!name || price <= 0) return showAlert("أدخل اسم السعر.", "warning");
+  posCart.push({ productId: "quick_" + Date.now(), name, qty: 1, price, cost: 0, isQuick: true });
+  closeQuickCashModal(); renderPosCart();
+};
+
+window.filterByCategory = (category, btnElement) => {
+  currentCategoryFilter = category;
+  document.querySelectorAll('.category-btn').forEach(b => { b.classList.remove('active', 'green'); b.classList.add('secondary'); });
+  btnElement.classList.remove('secondary'); btnElement.classList.add('active', 'green');
+  renderPosProductsGrid();
+};
+
+function renderPosProductsGrid(searchTerm = '') {
+  const grid = $("posProductsGrid"); if (!grid) return;
+  let filtered = products.filter(p => Number(p.qty) > 0);
+  if (searchTerm) {
+    const q = searchTerm.toLowerCase();
+    filtered = filtered.filter(p => (p.name || "").toLowerCase().includes(q) || (p.barcode || "").includes(q));
+  }
+  grid.innerHTML = filtered.map(p => `
+    <div onclick="addPosProductToCart('${p.id}')" style="background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 10px; padding: 8px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; min-height: 85px;">
+      <div style="font-size: 12px; font-weight: bold;">${escapeHTML(p.name)}</div>
+      <div style="display: flex; justify-content: space-between; margin-top: 6px;">
+        <span style="font-size: 13px; font-weight: 800; color: #34d399; direction: ltr;">${money(p.price)} ج</span>
+        <span style="font-size: 10px; background: rgba(59,130,246,0.15); color: #60a5fa; padding: 2px 6px; border-radius: 4px;">متاح: ${p.qty}</span>
+      </div>
+    </div>
+  `).join('') || '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 30px;">لا توجد منتجات</div>';
+}
+
+window.filterPosProducts = () => renderPosProductsGrid($("posProductSearch").value.trim());
+
+window.addPosProductToCart = (productId) => {
+  const p = products.find(x => x.id === productId);
+  if (!p || Number(p.qty) <= 0) return showAlert("غير متوفر!", "warning");
+  const existing = posCart.find(x => x.productId === productId);
+  if (existing) {
+    if (existing.qty + 1 > Number(p.qty)) return showAlert("تتجاوز المخزون!", "warning");
+    existing.qty += 1;
+  } else {
+    posCart.push({ productId: p.id, name: p.name, qty: 1, price: Number(p.price), cost: Number(p.cost)||0 });
+  }
+  renderPosCart();
+};
+
+window.changePosItemQty = (index, delta) => {
+  const item = posCart[index]; if (!item) return;
+  if (!item.isQuick) {
+    const p = products.find(x => x.id === item.productId);
+    if (item.qty + delta > Number(p?.qty || 0)) return showAlert("تتجاوز المخزون.", "warning");
+  }
+  item.qty += delta;
+  if (item.qty <= 0) posCart.splice(index, 1);
+  renderPosCart();
+};
+
+window.removePosCartItem = index => { posCart.splice(index, 1); renderPosCart(); };
+window.clearPosCart = () => { posCart = []; renderPosCart(); };
+
+function renderPosCart() {
+  const tbody = $("posCartTableBody"); if (!tbody) return;
+  if (posCart.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 40px;">🛒 السلة فارغة</td></tr>`;
+    $("posGrandTotalDisplay").textContent = "0.00 ج";
+    return;
+  }
+  tbody.innerHTML = posCart.map((x, i) => `
+    <tr>
+      <td style="padding: 6px; font-weight: bold;">${escapeHTML(x.name)}</td>
+      <td style="padding: 6px; text-align: center;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+          <button onclick="changePosItemQty(${i}, -1)" style="padding: 2px 6px; background: var(--border-color);">-</button>
+          <span><b>${x.qty}</b></span>
+          <button onclick="changePosItemQty(${i}, 1)" style="padding: 2px 6px; background: var(--border-color);">+</button>
+        </div>
+      </td>
+      <td>${money(x.price)}</td>
+      <td><b>${money(x.qty * x.price)} ج</b></td>
+      <td><button class="rowbtn red" onclick="removePosCartItem(${i})">✕</button></td>
+    </tr>
+  `).join("");
+
+  const subtotal = posCart.reduce((s, x) => s + x.qty * x.price, 0);
+  const discountPct = Math.max(0, Math.min(100, Number($("posDiscountPct").value) || 0));
+  const discountCash = Math.max(0, Number($("posDiscountCash").value) || 0);
+  const addition = Math.max(0, Number($("posAddition").value) || 0);
+  const totalDiscount = Number((subtotal * discountPct / 100).toFixed(2)) + discountCash;
+  const total = Math.max(0, subtotal - totalDiscount + addition);
+  $("posGrandTotalDisplay").textContent = money(total) + " ج";
+  return { subtotal, discount: totalDiscount, addition, total };
+}
+
+window.completePosSale = async () => {
+  if (!posCart.length) return showAlert("السلة فارغة.", "warning");
+  const { subtotal, discount, addition, total } = renderPosCart();
+  const inv = { number: "INV-" + Date.now().toString().slice(-6), subtotal, discount, addition, total, items: posCart.map(x=>({...x})), date: new Date().toLocaleString("ar-EG"), createdAt: Date.now() };
+  for (const item of posCart) {
+    if (!item.isQuick) {
+      const p = products.find(x => x.id === item.productId);
+      if (p) await updateDoc(docRef("products", item.productId), { qty: Number(p.qty) - Number(item.qty) });
+    }
+  }
+  await setDoc(doc(col("sales")), inv);
+  await setDoc(doc(col("treasury")), { type: "in", amount: total, note: `فاتورة #${inv.number}`, date: inv.date, createdAt: Date.now() });
+  printInvoiceDirectly(inv); posCart = []; renderPosCart(); loadBusiness(); showAlert("تم البيع بنجاح!", "success");
+};
+
+window.savePosHold = async () => {
+  if (!posCart.length) return showAlert("السلة فارغة.", "warning");
+  const { subtotal, discount, addition, total } = renderPosCart();
+  await setDoc(doc(col("holds")), { items: posCart.map(x=>({...x})), subtotal, discount, addition, total, notes: $("posSaleNotes")?.value || "", date: new Date().toLocaleString("ar-EG"), createdAt: Date.now() });
+  posCart = []; renderPosCart(); showAlert("تم تعليق الفاتورة.", "success");
+};
+
+window.openPosHeldList = async () => {
+  const snap = await getDocs(col("holds")), holds = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  if (!holds.length) return showAlert("لا توجد فواتير معلقة.", "info");
+  let html = `<div style="max-height:350px; overflow-y:auto;">` + holds.map(h => `<div style="background:#0f172a; padding:8px; border-radius:8px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;"><div><b>${money(h.total)} ج</b> - ${h.date}</div><button onclick="restorePosHold('${h.id}')" style="background:#10b981; padding:4px 10px; font-size:11px;">استرجاع</button></div>`).join("") + `</div>`;
+  Swal.fire({ title: '📂 الفواتير المعلقة', html, showConfirmButton: false, showCloseButton: true, background: '#1e293b', color: '#f8fafc' });
+};
+
+window.restorePosHold = async (id) => {
+  const snap = await getDoc(docRef("holds", id)); if (!snap.exists()) return;
+  const data = snap.data(); posCart = data.items.map(x => ({ ...x }));
+  await deleteDoc(docRef("holds", id)); Swal.close(); renderPosCart();
+};
+
+window.page = async name => {
+  ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription","barcodeSettings","invoiceSettings"].forEach(p => $(p+"Page")?.classList.add("hidden"));
+  $(name+"Page")?.classList.remove("hidden");
+  if(document.querySelector('.wrap')) {
+    document.querySelector('.wrap').style.overflowY = name === "sales" ? 'hidden' : 'auto';
+  }
+  if (name === "dashboard") renderStats();
+  if (name === "sales") renderPosProductsGrid();
+  if (name === "barcodeSettings") initBarcodeSettingsPage();
+
+  if (name === "subscription") {
+    try {
+      let subInfo = null;
+      if (currentUser) {
+        const snap = await safeGetDoc(doc(db, "users", currentUser.uid));
+        if (snap && snap.exists()) {
+          const dat = snap.data();
+          subInfo = dat.systems?.sales || dat.systems?.playstation || {};
+        }
+      }
+      if (!subInfo && profile) {
+        subInfo = profile.systems?.sales || {};
+      }
+      
+      const subType = subInfo?.plan || subInfo?.requestedPlan || "نشط";
+      let expiryText = "غير محدد";
+      let remainingDays = "---";
+      
+      if (subInfo?.expiryDate) {
+        const expDate = subInfo.expiryDate.toDate ? subInfo.expiryDate.toDate() : new Date(subInfo.expiryDate);
+        expiryText = expDate.toLocaleDateString("ar-EG");
+        const diffTime = expDate - new Date();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        remainingDays = diffDays > 0 ? `${diffDays} يوم` : "منتهي";
+      }
+      
+      if ($("subTypeDisplay")) $("subTypeDisplay").textContent = subType;
+      if ($("subExpiryDate")) $("subExpiryDate").textContent = expiryText;
+      if ($("subDevicesCount")) $("subDevicesCount").textContent = remainingDays;
+    } catch (err) {
+      console.warn("Error loading subscription info:", err);
+    }
+  }
+};
+
+function initBarcodeSettingsPage() {
+  const select = $("barcodeProductSelect");
+  if (!select) return;
+  select.innerHTML = '<option value="">-- اختر من قائمة المنتجات --</option>' + products.map(p => `<option value="${p.id}">${escapeHTML(p.name)} (${p.barcode || 'بدون باركود'})</option>`).join("");
+  if (products.length > 0) {
+    select.value = products[0].id;
+    $("customBarcodeInput").value = products[0].barcode || "123456789";
+    $("customBaritemNameInput").value = products[0].name;
+  } else {
+    $("customBarcodeInput").value = "123456789";
+    $("customBaritemNameInput").value = "11 برو ماكس / 512 / 82%";
+  }
+  generateBarcodePreview();
+}
+
+window.barcodeProductSelectChange = () => {
+  const id = $("barcodeProductSelect").value;
+  const p = products.find(x => x.id === id);
+  if (p) {
+    $("customBarcodeInput").value = p.barcode || "123456789";
+    $("customBaritemNameInput").value = p.name;
+    generateBarcodePreview();
+  }
+};
+
+window.generateBarcodePreview = () => {
+  const shopName = profile?.shopName || "Mahmoud Baker";
+  const barcodeVal = $("customBarcodeInput")?.value.trim() || "123456789";
+  const itemName = $("customBaritemNameInput")?.value.trim() || "اسم الصنف";
+
+  if ($("stickerShopName")) $("stickerShopName").textContent = shopName;
+  if ($("stickerItemName")) $("stickerItemName").textContent = itemName;
+
+  try {
+    if ($("barcodeSvgPreview")) {
+      JsBarcode("#barcodeSvgPreview", barcodeVal, {
+        format: "CODE128",
+        lineColor: "#000",
+        width: 1.5,
+        height: 38,
+        displayValue: false
+      });
+    }
+  } catch(e) { console.warn(e); }
+};
+
+// دالة طباعة الباركود للمنتج مباشرة من جدول المنتجات
+window.printProductBarcode = (productId) => {
+  const p = products.find(x => x.id === productId);
+  if (!p) return showAlert("المنتج غير موجود!", "warning");
+
+  const shopName = profile?.shopName || "Mahmoud Baker";
+  const barcodeVal = p.barcode || "123456789";
+  const itemName = p.name;
+
+  $("printArea").classList.remove("hidden");
+  $("printArea").innerHTML = `
+    <div style="width: 50mm; height: 30mm; background: white; color: black; font-family: 'Cairo', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2mm; text-align: center; box-sizing: border-box; margin: auto;">
+      <div style="font-size: 11px; font-weight: bold; margin-bottom: 2mm; color: #000;">${escapeHTML(shopName)}</div>
+      <div style="margin: 1mm 0;"><svg id="printBarcodeSvg"></svg></div>
+      <div style="font-size: 10px; font-weight: bold; margin-top: 1mm; color: #000; direction: rtl;">${escapeHTML(itemName)}</div>
+    </div>
+  `;
+
+  try {
+    JsBarcode("#printBarcodeSvg", barcodeVal, {
+      format: "CODE128",
+      lineColor: "#000",
+      width: 1.3,
+      height: 32,
+      displayValue: false
+    });
+  } catch(e) {}
+
+  window.print();
+  setTimeout(() => $("printArea").classList.add("hidden"), 1000);
+};
+
+window.printBarcodeSticker = () => {
+  const shopName = profile?.shopName || "Mahmoud Baker";
+  const barcodeVal = $("customBarcodeInput")?.value.trim() || "123456789";
+  const itemName = $("customBaritemNameInput")?.value.trim() || "اسم الصنف";
+
+  $("printArea").classList.remove("hidden");
+  $("printArea").innerHTML = `
+    <div style="width: 50mm; height: 30mm; background: white; color: black; font-family: 'Cairo', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2mm; text-align: center; box-sizing: border-box; margin: auto;">
+      <div style="font-size: 11px; font-weight: bold; margin-bottom: 2mm; color: #000;">${escapeHTML(shopName)}</div>
+      <div style="margin: 1mm 0;"><svg id="printBarcodeSvg"></svg></div>
+      <div style="font-size: 10px; font-weight: bold; margin-top: 1mm; color: #000; direction: rtl;">${escapeHTML(itemName)}</div>
+    </div>
+  `;
+
+  try {
+    JsBarcode("#printBarcodeSvg", barcodeVal, {
+      format: "CODE128",
+      lineColor: "#000",
+      width: 1.3,
+      height: 32,
+      displayValue: false
+    });
+  } catch(e) {}
+
+  window.print();
+  setTimeout(() => $("printArea").classList.add("hidden"), 1000);
+};
+
+window.printInvoiceDirectly = inv => {
+  $("printArea").classList.remove("hidden");
+  $("printArea").innerHTML = `<div style="width:80mm; font-family:Cairo; direction:rtl; padding:5px;"><h3 style="text-align:center;">${escapeHTML(profile?.shopName||"متجري")}</h3><p>فاتورة: ${inv.number}</p><hr><table style="width:100%;font-size:12px;"><thead><tr><th>الصنف</th><th>كمية</th><th>إجمالي</th></tr></thead><tbody>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.qty*i.price)}</td></tr>`).join('')}</tbody></table><hr><h3>الإجمالي: ${money(inv.total)} ج</h3></div>`;
+  window.print(); setTimeout(() => $("printArea").classList.add("hidden"), 1000);
+};
+
+window.addTreasuryTransaction = async () => {
+  const type=$("tType").value, amount=Number($("tAmount").value)||0, note=$("tNote").value.trim();
+  if(amount<=0)return;
+  await setDoc(doc(col("treasury")),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});
+  $("tAmount").value=""; $("tNote").value=""; await loadBusiness();
+};
+
+window.saveProduct = async () => {
+  const name=$("pName").value.trim(), barcode=$("pBarcode").value.trim(), cost=Number($("pCost").value)||0, price=Number($("pPrice").value)||0, qty=Number($("pQty").value)||0;
+  if(!name||price<=0)return showAlert("أدخل اسم وسعر.","warning");
+  await setDoc(doc(col("products")),{name, barcode, cost, price, qty, createdAt:serverTimestamp()});
+  $("pName").value=""; $("pBarcode").value=""; $("pCost").value=""; $("pPrice").value=""; $("pQty").value=10;
+  await loadProducts(); renderStats(); showAlert("تم الحفظ.","success");
+};
+
+window.deleteProduct = async id => { if(await window.customConfirm("حذف؟")) { await deleteDoc(docRef("products",id)); await loadProducts(); renderStats(); } };
+
+async function loadBusiness(){ await Promise.all([loadProducts(),loadSales(),loadExpenses(),loadTreasury()]); renderStats(); }
+async function loadProducts(){ const s=await safeGetDocs(col("products")); products=s.docs.map(d=>({id:d.id,...d.data()})); renderProducts(); renderPosProductsGrid(); if($("barcodeSettingsPage") && !$("barcodeSettingsPage").classList.contains("hidden")) initBarcodeSettingsPage(); }
+async function loadSales(){ const s=await safeGetDocs(col("sales")); sales=s.docs.map(d=>({id:d.id,...d.data()})); renderSales(); }
+async function loadExpenses(){ const s=await safeGetDocs(col("expenses")); expenses=s.docs.map(d=>({id:d.id,...d.data()})); renderExpenses(); }
+async function loadTreasury(){ const s=await safeGetDocs(col("treasury")); treasury=s.docs.map(d=>({id:d.id,...d.data()})); renderTreasury(); }
+
+function renderProducts(){ 
+  $("productsTable").innerHTML = products.map(p => `
+    <tr>
+      <td>${escapeHTML(p.name)}</td>
+      <td>${escapeHTML(p.barcode||"")}</td>
+      <td>${money(p.price)} ج</td>
+      <td>${p.qty}</td>
+      <td>
+        <button class="rowbtn green" onclick="printProductBarcode('${p.id}')">🖨️ طباعة</button>
+        <button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button>
+      </td>
+    </tr>
+  `).join("") || "<tr><td colspan='5'>لا منتجات</td></tr>"; 
+}
+
+function renderTreasury(){ let tIn=0, tOut=0; treasury.forEach(t=>{ if(t.type==="in") tIn+=Number(t.amount)||0; else tOut+=Number(t.amount)||0; }); $("treasuryBalanceDisplay").textContent = money(tIn-tOut)+" ج"; }
+function renderExpenses(){ $("expensesTable").innerHTML = expenses.map(e=>`<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا مصروفات</td></tr>"; }
+function renderSales(){ $("salesTable").innerHTML = sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td></tr>`).join("")||"<tr><td colspan='4'>لا فواتير</td></tr>"; }
+function renderStats(){
+  $("statProducts").textContent = products.length; $("statSales").textContent = sales.length;
+  const today = new Date().toLocaleDateString("ar-EG");
+  const todayRev = sales.filter(s=>(s.date||"").startsWith(today)).reduce((sum,s)=>sum+Number(s.total||0),0);
+  $("statRevenue").textContent = money(todayRev)+" ج";
+  let tIn=0, tOut=0; treasury.forEach(t=>{ if(t.type==="in") tIn+=Number(t.amount)||0; else tOut+=Number(t.amount)||0; });
+  $("statTreasuryBalance").textContent = money(tIn-tOut)+" ج";
+}
+
+window.updateShopNameSetting = async () => { const n=$("settingsShopName").value.trim(); if(!n)return; await updateDoc(doc(db,"users",currentUser.uid),{shopName:n}); profile.shopName=n; $("shopTitle").textContent=n; $("posShopTitle").textContent=n; showAlert("تم.","success"); };
+window.updateCustomerEmailSetting = async () => { const n=$("settingsEmail").value.trim(); if(!n)return; await updateEmail(auth.currentUser,n); await updateDoc(doc(db,"users",currentUser.uid),{email:n}); showAlert("تم.","success"); };
+window.saveInvoiceSettings = async () => { showAlert("تم الحفظ.", "success"); };
+window.saveBarcodeSettings = async () => { showAlert("تم الحفظ.", "success"); };
+window.updateInvoicePreview = () => {};
+window.exportDataToExcel = () => { const wb=XLSX.utils.book_new(); if(products.length)XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(products),"المنتجات"); XLSX.writeFile(wb,"NexPOS.xlsx"); };
+
+window.goPsHome();
 </script>
 </body>
 </html>

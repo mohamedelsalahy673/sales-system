@@ -406,7 +406,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     overflow: hidden;
     min-height: 0;
 }
-#dashboardPage { overflow-y: auto !important; height: 100%; padding-bottom: 20px; }
+#dashboardPage, #settingsPage { overflow-y: auto !important; height: 100%; padding-bottom: 20px; }
 #psHomeScreen { overflow-y: auto !important; height: 100%; padding-bottom: 20px; }
 #customerPanel > .card, #playstationPanel > .card { overflow-y: auto !important; }
 
@@ -536,7 +536,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <section id="ownerPanel" class="hidden" style="overflow-y:auto;">
  <div class="card">
    <div class="top">
-     <div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة العملاء والأجهزة المتصلة</span></div>
+     <div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة العملاء والأجهزة المتصلة وتعديل البيانات</span></div>
      <button class="red" onclick="logout()" style="padding:6px 12px; font-size:12px;">تسجيل الخروج</button>
    </div>
    <div class="grid">
@@ -593,6 +593,36 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  </div>
 </section>
 
+<!-- نافذة تعديل بيانات العميل من لوحة تحكم المالك -->
+<div id="editUserModal" class="modal-overlay hidden" onclick="if(event.target===this) closeEditUserModal();">
+  <div class="modal-box" style="max-width:400px; border-top:5px solid var(--purple);">
+    <button class="modal-close" onclick="closeEditUserModal()">✕</button>
+    <h3 style="margin-bottom:8px;">✏️ تعديل بيانات الحساب</h3>
+    <input type="hidden" id="editUserId">
+    
+    <label>اسم النشاط / المحل</label>
+    <input id="editUserShop" placeholder="اسم المحل">
+    
+    <label>اسم المسؤول (المالك)</label>
+    <input id="editUserName" placeholder="اسم المسؤول">
+    
+    <label>البريد الإلكتروني (اسم المستخدم)</label>
+    <input id="editUserEmail" type="email" placeholder="example@mail.com">
+    
+    <div style="background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.3); padding:8px; border-radius:8px; margin-top:6px;">
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; color:#c4b5fd; margin:0;">
+        <input type="checkbox" id="sendPasswordResetCheck" style="width:auto; margin:0;">
+        إرسال رابط تغيير كلمة المرور لبريد العميل
+      </label>
+    </div>
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
+      <button class="purple" onclick="saveUserEdits()">💾 حفظ التعديلات</button>
+      <button class="secondary" onclick="closeEditUserModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
 <!-- ================= سيستم البلايستيشن ================= -->
 <section id="playstationPanel" class="hidden">
  <div id="psExpiryWarning" class="hidden" style="background:rgba(245,158,11,0.1); color:#fbbf24; padding:8px; border-radius:8px; text-align:center; font-weight:bold; font-size:12px; margin-bottom:6px; border:1px solid rgba(245,158,11,0.3);"></div>
@@ -629,13 +659,11 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
    </div>
 
    <div class="tiles-grid">
-     <!-- أول 4 خانات قابلة للتعديل (بالنقر المزدوج أو من زر تخصيص الواجهة) -->
      <div class="tile t-blue" ondblclick="quickEditTile(1)" onclick="showPsSection('devices')" title="انقر مرتين لتعديل الاسم"><div class="tile-icon">🎮</div><div class="tile-title" id="tileTitle1">أجهزة الرومات</div><span class="tile-badge" id="psHomeRoomCount">0</span></div>
      <div class="tile t-purple" ondblclick="quickEditTile(2)" onclick="showPsSection('vip')" title="انقر مرتين لتعديل الاسم"><div class="tile-icon">⭐</div><div class="tile-title" id="tileTitle2">صالة VIP</div><span class="tile-badge" id="psHomeVipCount">0</span></div>
      <div class="tile t-orange" ondblclick="quickEditTile(3)" onclick="showPsSection('base_arabi')" title="انقر مرتين لتعديل الاسم"><div class="tile-icon">🏛</div><div class="tile-title" id="tileTitle3">القاعدة العربي</div><span class="tile-badge" id="psHomeBaseCount">0</span></div>
      <div class="tile t-pink" ondblclick="quickEditTile(4)" onclick="showPsSection('billiard')" title="انقر مرتين لتعديل الاسم"><div class="tile-icon">🎱</div><div class="tile-title" id="tileTitle4">البلياردو</div><span class="tile-badge" id="psHomeBilliardCount">0</span></div>
      
-     <!-- باقي الخانات الثابتة -->
      <div class="tile t-green" onclick="showPsSection('running')"><div class="tile-icon">🟢</div><div class="tile-title">تعمل الآن</div><span class="tile-badge" id="psHomeRunningCount">0</span></div>
      <div class="tile t-sky" onclick="showPsSection('drinks')"><div class="tile-icon">🥤</div><div class="tile-title">المشروبات</div><span class="tile-badge" id="psHomeDrinksCount">0</span></div>
      <div class="tile t-teal" onclick="showPsSection('sandwiches')"><div class="tile-icon">🥪</div><div class="tile-title">السندوتشات</div><span class="tile-badge" id="psHomeSandCount">0</span></div>
@@ -830,11 +858,20 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   </div>
 </div>
 
+<!-- نافذة اشتراكي وتغيير كلمة المرور في سيستم البلايستيشن -->
 <div id="psSubModal" class="modal-overlay hidden" onclick="if(event.target===this) closePsSubscriptionModal();">
   <div class="modal-box">
     <button class="modal-close" onclick="closePsSubscriptionModal()">✕</button>
-    <h3>تفاصيل اشتراكي</h3>
-    <div id="psSubModalContent" style="line-height:2;margin:12px 0;text-align:center;font-size:13px;">جاري التحميل...</div>
+    <h3>تفاصيل اشتراكي والإعدادات</h3>
+    <div id="psSubModalContent" style="line-height:2;margin:10px 0;text-align:center;font-size:13px;">جاري التحميل...</div>
+    
+    <div style="background:rgba(15,23,42,0.5); padding:10px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:10px;">
+      <h4 style="margin-bottom:6px; color:#a78bfa;">🔑 تغيير كلمة المرور</h4>
+      <input id="psCurrentPassword" type="password" placeholder="كلمة المرور الحالية" style="margin-bottom:6px;">
+      <input id="psNewPassword" type="password" placeholder="كلمة المرور الجديدة (6 أحرف فأكثر)" style="margin-bottom:6px;">
+      <button class="big purple" onclick="changeOwnPassword('ps')">تحديث كلمة المرور</button>
+    </div>
+
     <button class="big green" onclick="requestRenewal()">طلب تجديد</button>
     <button class="big red" onclick="logout()" style="margin-top:8px;">تسجيل الخروج</button>
     <hr>
@@ -1144,7 +1181,23 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   <div id="historyPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الفواتير</h3><div class="tablewrap"><table><thead><tr><th>رقم</th><th>التاريخ</th><th>الإجمالي</th><th>إجراء</th></tr></thead><tbody id="salesTable"></tbody></table></div></div>
   <div id="expensesPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>المصروفات</h3><div class="card"><input id="expenseName" placeholder="البيان"><input id="expenseAmount" type="number" placeholder="المبلغ"><button onclick="addExpense()" class="green big">حفظ</button></div><div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div></div>
   <div id="reportsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>التقارير</h3><div class="grid"><div class="stat">المبيعات<strong id="reportRevenue">0 ج</strong></div><div class="stat">المصروفات<strong id="reportExpenses">0 ج</strong></div><div class="stat">الربح<strong id="reportNet">0 ج</strong></div></div></div>
-  <div id="settingsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الإعدادات</h3><div class="card" style="max-width:600px"><h3>اسم المحل</h3><input id="settingsShopName"><button class="big" onclick="updateShopNameSetting()">حفظ</button></div><div class="card" style="max-width:600px"><h3>البريد</h3><input id="settingsEmail" type="email"><button class="big purple" onclick="updateCustomerEmailSetting()">تغيير</button></div><div class="card" style="max-width:600px"><h3>كلمة المرور</h3><input id="newCustomerPassword" type="password"><button class="big dark" onclick="updateCustomerPassword()">تغيير</button></div><div class="card" style="max-width:600px"><h3>تسجيل الخروج</h3><button class="big red" onclick="logout()">خروج</button></div></div>
+  
+  <!-- صفحة الإعدادات المحدثة في سيستم المبيعات -->
+  <div id="settingsPage" class="hidden">
+    <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
+    <h3>الإعدادات</h3>
+    <div class="card" style="max-width:600px"><h3>اسم المحل</h3><input id="settingsShopName"><button class="big" onclick="updateShopNameSetting()">حفظ</button></div>
+    <div class="card" style="max-width:600px"><h3>البريد الإلكتروني</h3><input id="settingsEmail" type="email"><button class="big purple" onclick="updateCustomerEmailSetting()">تغيير البريد</button></div>
+    <div class="card" style="max-width:600px">
+      <h3>🔑 تغيير كلمة المرور الخاصة بك</h3>
+      <label>كلمة المرور الحالية</label>
+      <input id="salesCurrentPassword" type="password" placeholder="********">
+      <label>كلمة المرور الجديدة</label>
+      <input id="salesNewPassword" type="password" placeholder="أكثر من 6 أحرف">
+      <button class="big dark" onclick="changeOwnPassword('sales')">تحديث كلمة المرور</button>
+    </div>
+    <div class="card" style="max-width:600px"><h3>تسجيل الخروج</h3><button class="big red" onclick="logout()">خروج</button></div>
+  </div>
  </div>
 </section>
 
@@ -1176,7 +1229,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import {getAuth,setPersistence,browserLocalPersistence,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {getAuth,setPersistence,browserLocalPersistence,createUserWithEmailAndPassword,signInWithEmailAndPassword,updatePassword,updateEmail,EmailAuthProvider,reauthenticateWithCredential,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import {getFirestore,enableIndexedDbPersistence,doc,setDoc,getDoc,getDocFromServer,getDocFromCache,getDocs,getDocsFromCache,getDocsFromServer,updateDoc,collection,deleteDoc,serverTimestamp,runTransaction} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 window.customConfirm = async (title, text = "") => {
@@ -1479,24 +1532,65 @@ onAuthStateChanged(auth, async user => {
   }
 });
 
+// ============ دالة تغيير كلمة المرور الخاصة لكل سيستم ============
+window.changeOwnPassword = async (sysPrefix) => {
+  const currentInput = $(sysPrefix === 'ps' ? 'psCurrentPassword' : 'salesCurrentPassword');
+  const newInput = $(sysPrefix === 'ps' ? 'psNewPassword' : 'salesNewPassword');
+  const currentPass = currentInput?.value || "";
+  const newPass = newInput?.value || "";
+
+  if (!currentPass || !newPass) return showAlert("يرجى إدخال كلمة المرور الحالية والجديدة.", "warning");
+  if (newPass.length < 6) return showAlert("كلمة المرور الجديدة يجب أن تكون 6 أحرف على الأقل.", "warning");
+  if (!navigator.onLine) return showAlert("تغيير كلمة المرور يتطلب اتصالاً بالإنترنت.", "warning");
+
+  try {
+    const user = auth.currentUser;
+    if (!user || !user.email) return showAlert("يرجى تسجيل الدخول أولاً.", "error");
+
+    const credential = EmailAuthProvider.credential(user.email, currentPass);
+    await reauthenticateWithCredential(user, credential);
+    await updatePassword(user, newPass);
+
+    currentInput.value = "";
+    newInput.value = "";
+    showAlert("تم تغيير كلمة المرور بنجاح! برجاء الاحتفاظ بها للدخول مستقبلاً.", "success");
+  } catch (error) {
+    if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+      showAlert("كلمة المرور الحالية غير صحيحة.", "error");
+    } else {
+      showAlert("حدث خطأ: " + error.message, "error");
+    }
+  }
+};
+
 // ============ دوال لوحة تحكم المالك المركزية ============
 window.ownerSection=which=>{$("ownerSalesSection").classList.toggle("hidden",which!=="sales");$("ownerPsSection").classList.toggle("hidden",which!=="playstation");$("ownerSalesTab").classList.toggle("active",which==="sales");$("ownerPsTab").classList.toggle("active",which==="playstation");};
 
 function planControls(u,system){
  const info=systemInfo(u,system);if(info.status==="not_registered")return `<span class="muted">غير مسجل</span>`;
  const rd=Number(info.requestedDays)||30;
- return `<select id="plan_${system}_${u.id}" style="width:90px;font-size:11px;padding:4px;margin:0;"><option value="30" ${rd===30?"selected":""}>شهري</option><option value="90" ${rd===90?"selected":""}>3 شهور</option><option value="365" ${rd===365?"selected":""}>سنوي</option><option value="36500" ${rd===36500?"selected":""}>دائم</option></select><button class="rowbtn green" onclick="activateUserWithPlan('${u.id}','${system}')">تفعيل</button><button class="rowbtn red" onclick="deactivateSystem('${u.id}','${system}')">إيقاف</button><button class="rowbtn dark" onclick="deleteUser('${u.id}')">حذف</button>`;
+ return `
+   <select id="plan_${system}_${u.id}" style="width:85px;font-size:11px;padding:4px;margin:0;"><option value="30" ${rd===30?"selected":""}>شهري</option><option value="90" ${rd===90?"selected":""}>3 شهور</option><option value="365" ${rd===365?"selected":""}>سنوي</option><option value="36500" ${rd===36500?"selected":""}>دائم</option></select>
+   <button class="rowbtn green" onclick="activateUserWithPlan('${u.id}','${system}')">تفعيل</button>
+   <button class="rowbtn purple" onclick="openEditUserModal('${u.id}', '${escapeHTML(u.shopName||"")}', '${escapeHTML(u.customerName||"")}', '${escapeHTML(u.email||"")}')">✏️ تعديل البيانات</button>
+   <button class="rowbtn red" onclick="deactivateSystem('${u.id}','${system}')">إيقاف</button>
+   <button class="rowbtn dark" onclick="deleteUser('${u.id}')">حذف</button>
+ `;
 }
 
 window.loadUsers=async()=>{
  try{
   const snap=await getDocs(collection(db,"users"));
-  const list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="superowner");
-  $("totalUsers").textContent=list.length;
+  const list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.role!=="superowner" && u.email?.toLowerCase() !== OWNER_EMAIL.toLowerCase());
   const salesList=list.filter(u=>systemInfo(u,"sales").status!=="not_registered");
   const psList=list.filter(u=>systemInfo(u,"playstation").status!=="not_registered");
-  $("salesUsersCount").textContent=salesList.length;$("psUsersCount").textContent=psList.length;
-  $("pendingUsersCount").textContent=list.reduce((c,u)=>c+(systemInfo(u,"sales").status==="pending"?1:0)+(systemInfo(u,"playstation").status==="pending"?1:0),0);
+  
+  // حساب الإجمالي الفعلي للحسابات المسجلة في النظامين فقط (يحل مشكلة ظهور 6 بدلاً من 2)
+  const validUsers = list.filter(u => systemInfo(u,"sales").status!=="not_registered" || systemInfo(u,"playstation").status!=="not_registered");
+  $("totalUsers").textContent = validUsers.length;
+  $("salesUsersCount").textContent = salesList.length;
+  $("psUsersCount").textContent = psList.length;
+  $("pendingUsersCount").textContent = validUsers.reduce((c,u)=>c+(systemInfo(u,"sales").status==="pending"?1:0)+(systemInfo(u,"playstation").status==="pending"?1:0),0);
   
   const render=(arr,sys)=>arr.map(u=>{
    const info=systemInfo(u,sys),exp=info.expiryDate?.toDate?info.expiryDate.toDate():info.expiryDate,ex=exp&&new Date(exp)<new Date();
@@ -1534,6 +1628,50 @@ window.loadUsers=async()=>{
   $("salesUsersTable").innerHTML=render(salesList,"sales");
   $("psUsersTable").innerHTML=render(psList,"playstation");
  }catch(e){showAlert("خطأ: "+e.message,"error");}
+};
+
+// دوال نافذة تعديل بيانات العميل من لوحة المالك
+window.openEditUserModal = (id, shop, name, email) => {
+  $("editUserId").value = id;
+  $("editUserShop").value = shop;
+  $("editUserName").value = name;
+  $("editUserEmail").value = email;
+  $("sendPasswordResetCheck").checked = false;
+  $("editUserModal").classList.remove("hidden");
+};
+
+window.closeEditUserModal = () => {
+  $("editUserModal").classList.add("hidden");
+};
+
+window.saveUserEdits = async () => {
+  const id = $("editUserId").value;
+  const newShop = $("editUserShop").value.trim();
+  const newName = $("editUserName").value.trim();
+  const newEmail = $("editUserEmail").value.trim();
+  const sendReset = $("sendPasswordResetCheck").checked;
+
+  if (!newShop || !newName || !newEmail) return showAlert("يرجى ملء جميع الحقول الأساسية.", "warning");
+
+  try {
+    await updateDoc(doc(db, "users", id), {
+      shopName: newShop,
+      customerName: newName,
+      email: newEmail
+    });
+
+    if (sendReset) {
+      await sendPasswordResetEmail(auth, newEmail);
+      showAlert("تم تحديث بيانات العميل بنجاح، وإرسال رابط تعيين كلمة مرور جديدة إلى بريده الإلكتروني!", "success");
+    } else {
+      showAlert("تم تحديث اسم المستخدم وبيانات العميل بنجاح!", "success");
+    }
+
+    closeEditUserModal();
+    await loadUsers();
+  } catch (e) {
+    showAlert("خطأ أثناء التعديل: " + e.message, "error");
+  }
 };
 
 window.updateUserMaxDevices = async (userId) => {
@@ -2191,7 +2329,6 @@ window.showPaymentModal = async () => {
 
 window.updateShopNameSetting = async () => {const n=$("settingsShopName").value.trim();if(!n)return;await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;$("shopTitle").textContent=n;$("sahalShopTitle").textContent=n;showAlert("تم.","success");};
 window.updateCustomerEmailSetting = async () => {const n=$("settingsEmail").value.trim();if(!n)return;await updateEmail(auth.currentUser,n);await updateDoc(doc(db,"users",currentUser.uid),{email:n});showAlert("تم.","success");};
-window.updateCustomerPassword = async () => {const p=$("newCustomerPassword").value;if(!p||p.length<6)return;await updatePassword(auth.currentUser,p);$("newCustomerPassword").value="";showAlert("تم.","success");};
 
 async function loadBusiness(){await Promise.all([loadProducts(),loadSales(),loadExpenses(),loadTreasury()]);renderStats();}
 async function loadProducts(){const s=await safeGetDocs(col("products"));products=s.docs.map(d=>({id:d.id,...d.data()}));renderProducts();}
@@ -2243,6 +2380,12 @@ function renderCart(){
 }
 window.updateLineDiscount = (index, value) => { if(cart[index]) { cart[index].lineDiscount = Math.max(0, Number(value)||0); renderCart(); } };
 window.renderCart = renderCart; window.removeCartItem = i => {cart.splice(i,1);renderCart();};
+window.updateInquiryTooltip = () => {
+  const tip = $("inquiryTooltip");
+  if (!tip) return;
+  const p = selectedProduct || (cart.length ? products.find(x => x.id === cart[cart.length - 1].productId) : null);
+  tip.innerHTML = p ? `سعر الشراء<span class="cost-val">${money(p.cost)} ج</span>` : `سعر الشراء<span class="cost-val">—</span>`;
+};
 
 window.completeSale = async () => {
  if(!cart.length) return showAlert("السلة فارغة.","warning");

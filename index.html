@@ -9,8 +9,9 @@
 <meta name="keywords" content="سيستم, كاشير, سيستم مبيعات, برنامج مبيعات, سيستم بلايستيشن, برنامج بلايستيشن, إدارة مخازن, نقاط بيع, NexPOS">
 <meta name="google-site-verification" content="jiyqOFPs0SoJIjbutlNuIyM5bpgHcbhpPYKLc8Fr_lc" />
 
-<!-- ============ إضافات هامة جداً لجوجل (تمت الإضافة) ============ -->
-<link rel="canonical" href="https://mohamedelsalahy673.github.io/" />
+<!-- ============ إضافات هامة جداً لجوجل ============ -->
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://mohamedelsalahy673.github.io/sales-system/" />
 
 <!-- بيانات منظمة لجوجل (تخبر جوجل باسم الموقع الرسمي) -->
 <script type="application/ld+json">
@@ -18,7 +19,7 @@
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "NexPOS PRO",
-  "url": "https://mohamedelsalahy673.github.io/",
+  "url": "https://mohamedelsalahy673.github.io/sales-system/",
   "description": "نظام كاشير احترافي لإدارة المبيعات والمخازن وأجهزة البلايستيشن.",
   "publisher": {
     "@type": "Organization",
@@ -48,16 +49,17 @@
 }
 </script>
 
-<!-- وسوم السوشيال ميديا (Open Graph) لفيسبوك وواتساب -->
+<!-- وسوم السوشيال ميديا (Open Graph) -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://mohamedelsalahy673.github.io/">
+<meta property="og:site_name" content="NexPOS PRO">
+<meta property="og:url" content="https://mohamedelsalahy673.github.io/sales-system/">
 <meta property="og:title" content="NexPOS PRO | أفضل سيستم كاشير وإدارة مبيعات وبلايستيشن">
 <meta property="og:description" content="النظام المتكامل لإدارة محلك. سيستم كاشير سريع، إدارة مخازن، تقارير أرباح، ونظام بلايستيشن متكامل.">
 <meta property="og:image" content="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
 
 <!-- وسوم تويتر -->
 <meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="https://mohamedelsalahy673.github.io/">
+<meta property="twitter:url" content="https://mohamedelsalahy673.github.io/sales-system/">
 <meta property="twitter:title" content="NexPOS PRO | أفضل سيستم كاشير وإدارة مبيعات وبلايستيشن">
 <meta property="twitter:description" content="النظام المتكامل لإدارة محلك. سيستم كاشير سريع، إدارة مخازن، تقارير أرباح، ونظام بلايستيشن متكامل.">
 <meta property="twitter:image" content="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
@@ -168,12 +170,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .t-sky{background:linear-gradient(135deg,#0284c7,#0369a1);}
 .t-pink{background:linear-gradient(135deg,#db2777,#be185d);}
 .t-red{background:linear-gradient(135deg,#ef4444,#b91c1c);}
-
-#psHomeScreen > div:last-child { flex-shrink: 0; margin-top: 8px !important; gap: 6px !important; display: grid !important; grid-template-columns: repeat(4, 1fr) !important; }
-#psHomeScreen > div:last-child button { padding: 7px 6px !important; font-size: 11px !important; }
-#playstationPanel .grid { gap: 6px; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
-#playstationPanel .stat { padding: 5px 7px; border-radius: 6px; }
-#playstationPanel .stat strong { font-size: 13px; margin-top: 2px; }
 
 /* ============ صفحة أجهزة ============ */
 .devices-page { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
@@ -618,6 +614,14 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  </div>
 
  <div id="psHomeScreen">
+   <!-- الأزرار تم نقلها هنا لتظهر في الأعلى -->
+   <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-top:8px; margin-bottom:8px;">
+     <button class="dark" onclick="showPsSection('customers')">🏆 العملاء</button>
+     <button class="orange" onclick="openPsShiftModal()">💵 الوردية</button>
+     <button class="purple" onclick="openPsSubscriptionModal()">⭐ اشتراكي</button>
+     <button class="secondary" onclick="showPsSection('reports')">📊 التقارير</button>
+   </div>
+
    <div class="tiles-grid">
      <div class="tile t-blue" onclick="showPsSection('devices')"><div class="tile-icon">🎮</div><div class="tile-title">أجهزة الرومات</div><span class="tile-badge" id="psHomeRoomCount">0</span></div>
      <div class="tile t-purple" onclick="showPsSection('vip')"><div class="tile-icon">⭐</div><div class="tile-title">صالة VIP</div><span class="tile-badge" id="psHomeVipCount">0</span></div>
@@ -628,12 +632,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
      <div class="tile t-teal" onclick="showPsSection('sandwiches')"><div class="tile-icon">🥪</div><div class="tile-title">السندوتشات</div><span class="tile-badge" id="psHomeSandCount">0</span></div>
      <div class="tile t-indigo" onclick="showPsSection('sessions')"><div class="tile-icon">📄</div><div class="tile-title">سجل الجلسات</div></div>
      <div class="tile t-dark" onclick="showPsSection('reservations')"><div class="tile-icon">📅</div><div class="tile-title">الحجوزات</div></div>
-   </div>
-   <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-top:8px;">
-     <button class="dark" onclick="showPsSection('customers')">🏆 العملاء</button>
-     <button class="orange" onclick="openPsShiftModal()">💵 الوردية</button>
-     <button class="purple" onclick="openPsSubscriptionModal()">⭐ اشتراكي</button>
-     <button class="secondary" onclick="showPsSection('reports')">📊 التقارير</button>
    </div>
  </div>
 
@@ -1155,7 +1153,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'nexpos-cache-v1';
+      const CACHE_NAME = 'nexpos-cache-v2';
       const urlsToCache = ['/', '/manifest.json'];
 
       self.addEventListener('install', event => {
@@ -1518,6 +1516,27 @@ onAuthStateChanged(auth, async user => {
     if(navigator.onLine) showAlert("خطأ: " + e.message, "error");
   }
 });
+
+// ============ إصلاح دالة الاشتراك المفقودة ============
+window.checkPsSubscriptionStatus = () => {
+    const info = systemInfo(profile, "playstation");
+    let content = `<p>حالة الاشتراك: <b style="color:${info.status === 'active' ? '#10b981' : '#ef4444'}">${info.status === "active" ? "نشط" : "غير نشط"}</b></p>`;
+    if(info.expiryDate) {
+        const exp = info.expiryDate.toDate ? info.expiryDate.toDate() : new Date(info.expiryDate);
+        content += `<p>تاريخ الانتهاء: <b>${exp.toLocaleDateString('ar-EG')}</b></p>`;
+    }
+    if($("psSubModalContent")) $("psSubModalContent").innerHTML = content;
+};
+
+window.openPsSubscriptionModal = () => {
+    checkPsSubscriptionStatus(); 
+    $("psSubModal").classList.remove("hidden");
+};
+
+window.closePsSubscriptionModal = () => {
+    $("psSubModal").classList.add("hidden");
+};
+// ====================================================
 
 // دوال إعدادات الباركود
 window.updateBarcodePreview = () => {

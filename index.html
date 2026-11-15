@@ -9,7 +9,6 @@
 <meta name="keywords" content="سيستم, كاشير, سيستم مبيعات, برنامج مبيعات, سيستم بلايستيشن, برنامج بلايستيشن, إدارة مخازن, نقاط بيع, NexPOS">
 <meta name="google-site-verification" content="jiyqOFPs0SoJIjbutlNuIyM5bpgHcbhpPYKLc8Fr_lc" />
 
-<!-- ============ إضافات هامة جداً لجوجل ============ -->
 <meta name="robots" content="index, follow" />
 <link rel="canonical" href="https://mohamedelsalahy673.github.io/sales-system/" />
 
@@ -31,34 +30,12 @@
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "NexPOS PRO",
-  "operatingSystem": "Web, Android, iOS",
-  "applicationCategory": "BusinessApplication",
-  "description": "النظام المتكامل لإدارة المبيعات والمخازن وأجهزة البلايستيشن.",
-  "offers": {
-    "@type": "Offer",
-    "price": "100",
-    "priceCurrency": "EGP"
-  }
-}
-</script>
-
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NexPOS PRO">
 <meta property="og:url" content="https://mohamedelsalahy673.github.io/sales-system/">
 <meta property="og:title" content="NexPOS PRO | أفضل سيستم كاشير وإدارة مبيعات وبلايستيشن">
 <meta property="og:description" content="النظام المتكامل لإدارة محلك. سيستم كاشير سريع، إدارة مخازن، تقارير أرباح، ونظام بلايستيشن متكامل.">
 <meta property="og:image" content="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
-
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="https://mohamedelsalahy673.github.io/sales-system/">
-<meta property="twitter:title" content="NexPOS PRO | أفضل سيستم كاشير وإدارة مبيعات وبلايستيشن">
-<meta property="twitter:description" content="النظام المتكامل لإدارة محلك. سيستم كاشير سريع، إدارة مخازن، تقارير أرباح، ونظام بلايستيشن متكامل.">
-<meta property="twitter:image" content="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png">
 
 <meta name="theme-color" content="#0f172a">
 <link rel="manifest" href="manifest.json">
@@ -99,7 +76,7 @@ label{font-size:12px;font-weight:600;color:var(--text-muted); display:block; mar
 h2,h3,h4{margin-top:0; font-weight: 700;}
 h2{font-size:20px;} h3{font-size:16px;} h4{font-size:14px;}
 
-.wrap{max-width:100%; margin:auto; padding:5px 10px; width:100%; height: 100vh; overflow-y: auto; overflow-x: hidden;}
+.wrap{max-width:100%; margin:auto; padding:5px 10px; width:100%; height: 100vh; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column;}
 .wrap::-webkit-scrollbar { width: 8px; }
 .wrap::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
@@ -137,7 +114,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .result{display:block;width:100%;text-align:right;margin:0;border-radius:0; border: none; border-bottom: 1px solid var(--border-color); font-size:12px; padding:9px 10px;}
 
 /* ============ شاشة البلايستيشن ============ */
-#playstationPanel { height: calc(100vh - 60px); display: flex; flex-direction: column; overflow: hidden; }
+#playstationPanel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
 #playstationPanel .ps-top-card { flex-shrink: 0; margin: 0 0 8px !important; padding: 10px 12px !important; }
 #psHomeScreen { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow-y: auto; }
 .tiles-grid{ display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:auto; gap:8px; flex: 1; min-height: 0; margin-top:8px; }
@@ -406,12 +383,12 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .receipt-item-table th { border-top: 1px solid #000; text-align: right; }
 .receipt-totals { border-top:1px solid #000; border-bottom:1px solid #000; padding:5px 0; margin-top:5px; }
 
-#customerPanel, #ownerPanel, #playstationPanel {
+#customerPanel, #ownerPanel {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    height: 100%;
+    min-height: 0;
 }
 #customerPanel > .card {
     flex: 1;
@@ -498,14 +475,14 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 
 <!-- ================= باقي السيستم ================= -->
 <div class="wrap hidden" id="appWrap">
-<header class="top" style="padding: 2px 0; margin-bottom: 0;">
+<header class="top" style="padding: 2px 0; margin-bottom: 0; flex-shrink: 0;">
  <div></div>
  <div>
    <span id="networkStatus" class="tag good" style="padding:2px 8px; font-size:10px;">متصل بالخادم</span>
  </div>
 </header>
 
-<section id="auth" class="hidden">
+<section id="auth" class="hidden" style="flex:1; overflow-y:auto;">
  <div style="text-align:center;margin:20px 0 10px">
    <img src="https://i.postimg.cc/SRJsHjzc/11621A70-315F-417C-A16C-2D33171E68BC.png" alt="NexPOS" style="height:70px; width:auto; margin-bottom:10px; border-radius:14px; object-fit:contain; box-shadow: 0 8px 20px rgba(0,0,0,0.5);">
    <h2 style="margin:6px 0;">مرحبًا بك في NexPOS PRO</h2>
@@ -556,7 +533,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <section id="pendingScreen" class="hidden"><div class="card" style="max-width:520px;margin:20px auto;text-align:center"><h2>تم إنشاء حسابك!</h2><p class="muted">انتظر موافقة المالك.</p><div id="pendingDetails" style="line-height:2;margin:12px 0; font-size:13px;"></div><button class="big green" onclick="sendWhatsAppActivation()">تواصل مع المطور</button><button class="big secondary" onclick="location.reload()">العودة</button></div></section>
 
 <!-- ================= لوحة تحكم المالك المركزية ================= -->
-<section id="ownerPanel" class="hidden">
+<section id="ownerPanel" class="hidden" style="overflow-y:auto;">
  <div class="card">
    <div class="top">
      <div><h2>لوحة التحكم المركزية</h2><span class="muted">إدارة العملاء والأجهزة المتصلة</span></div>
@@ -632,10 +609,10 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   </div>
   <div class="grid">
    <div class="stat">إجمالي<strong id="psTotalDevices">0</strong></div>
-   <div class="stat">رومات<strong id="psRoomDevices">0</strong></div>
-   <div class="stat">VIP<strong id="psVipDevices">0</strong></div>
-   <div class="stat">قاعدة<strong id="psBaseDevices">0</strong></div>
-   <div class="stat">بلياردو<strong id="psBilliardDevices">0</strong></div>
+   <div class="stat" id="statLabel1">رومات<strong id="psRoomDevices">0</strong></div>
+   <div class="stat" id="statLabel2">VIP<strong id="psVipDevices">0</strong></div>
+   <div class="stat" id="statLabel3">قاعدة<strong id="psBaseDevices">0</strong></div>
+   <div class="stat" id="statLabel4">بلياردو<strong id="psBilliardDevices">0</strong></div>
    <div class="stat" style="border-left-color:var(--success);">تعمل<strong id="psRunningDevices" style="color:var(--success);">0</strong></div>
    <div class="stat">مشروبات<strong id="psDrinksCount">0</strong></div>
    <div class="stat">سندوتشات<strong id="psSandwichesCount">0</strong></div>
@@ -643,18 +620,22 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  </div>
 
  <div id="psHomeScreen">
-   <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-top:8px; margin-bottom:8px;">
+   <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-top:8px; margin-bottom:8px;">
      <button class="dark" onclick="showPsSection('customers')">🏆 العملاء</button>
      <button class="orange" onclick="openPsShiftModal()">💵 الوردية</button>
      <button class="purple" onclick="openPsSubscriptionModal()">⭐ اشتراكي</button>
      <button class="secondary" onclick="showPsSection('reports')">📊 التقارير</button>
+     <button class="secondary" onclick="openCustomizeTilesModal()" style="border-color:var(--primary); color:#60a5fa;">⚙️ تخصيص الواجهة</button>
    </div>
 
    <div class="tiles-grid">
-     <div class="tile t-blue" onclick="showPsSection('devices')"><div class="tile-icon">🎮</div><div class="tile-title">أجهزة الرومات</div><span class="tile-badge" id="psHomeRoomCount">0</span></div>
-     <div class="tile t-purple" onclick="showPsSection('vip')"><div class="tile-icon">⭐</div><div class="tile-title">صالة VIP</div><span class="tile-badge" id="psHomeVipCount">0</span></div>
-     <div class="tile t-orange" onclick="showPsSection('base_arabi')"><div class="tile-icon">🏛</div><div class="tile-title">القاعدة العربي</div><span class="tile-badge" id="psHomeBaseCount">0</span></div>
-     <div class="tile t-pink" onclick="showPsSection('billiard')"><div class="tile-icon">🎱</div><div class="tile-title">البلياردو</div><span class="tile-badge" id="psHomeBilliardCount">0</span></div>
+     <!-- أول 4 خانات قابلة للتعديل (بالنقر المزدوج أو من زر تخصيص الواجهة) -->
+     <div class="tile t-blue" ondblclick="quickEditTile(1)" onclick="showPsSection('devices')" title="انقر مرتين لتعديل الاسم"><div class="tile-icon">🎮</div><div class="tile-title" id="tileTitle1">أجهزة الرومات</div><span class="tile-badge" id="psHomeRoomCount">0</span></div>
+     <div class="tile t-purple" ondblclick="quickEditTile(2)" onclick="showPsSection('vip')" title="انقر مرتين لتعديل الاسم"><div class="tile-icon">⭐</div><div class="tile-title" id="tileTitle2">صالة VIP</div><span class="tile-badge" id="psHomeVipCount">0</span></div>
+     <div class="tile t-orange" ondblclick="quickEditTile(3)" onclick="showPsSection('base_arabi')" title="انقر مرتين لتعديل الاسم"><div class="tile-icon">🏛</div><div class="tile-title" id="tileTitle3">القاعدة العربي</div><span class="tile-badge" id="psHomeBaseCount">0</span></div>
+     <div class="tile t-pink" ondblclick="quickEditTile(4)" onclick="showPsSection('billiard')" title="انقر مرتين لتعديل الاسم"><div class="tile-icon">🎱</div><div class="tile-title" id="tileTitle4">البلياردو</div><span class="tile-badge" id="psHomeBilliardCount">0</span></div>
+     
+     <!-- باقي الخانات الثابتة -->
      <div class="tile t-green" onclick="showPsSection('running')"><div class="tile-icon">🟢</div><div class="tile-title">تعمل الآن</div><span class="tile-badge" id="psHomeRunningCount">0</span></div>
      <div class="tile t-sky" onclick="showPsSection('drinks')"><div class="tile-icon">🥤</div><div class="tile-title">المشروبات</div><span class="tile-badge" id="psHomeDrinksCount">0</span></div>
      <div class="tile t-teal" onclick="showPsSection('sandwiches')"><div class="tile-icon">🥪</div><div class="tile-title">السندوتشات</div><span class="tile-badge" id="psHomeSandCount">0</span></div>
@@ -666,7 +647,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  <div id="psDevicesSection" class="devices-page hidden">
    <div class="devices-page-header">
      <button class="back-btn" onclick="goPsHome()">← رجوع</button>
-     <h3 class="devices-page-title">🎮 أجهزة الرومات</h3>
+     <h3 class="devices-page-title" id="secTitle1">أجهزة الرومات</h3>
      <button class="green" onclick="openAddDeviceModal('room')">➕ إضافة جهاز</button>
    </div>
    <div class="devices-mini-grid" id="psDevicesList"></div>
@@ -675,7 +656,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  <div id="psVipSection" class="devices-page hidden">
    <div class="devices-page-header">
      <button class="back-btn" onclick="goPsHome()">← رجوع</button>
-     <h3 class="devices-page-title">⭐ صالة VIP</h3>
+     <h3 class="devices-page-title" id="secTitle2">صالة VIP</h3>
      <button class="purple" onclick="openAddDeviceModal('vip')">➕ إضافة جهاز</button>
    </div>
    <div class="devices-mini-grid" id="psVipDevicesList"></div>
@@ -684,7 +665,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  <div id="psBaseArabiSection" class="devices-page hidden">
    <div class="devices-page-header">
      <button class="back-btn" onclick="goPsHome()">← رجوع</button>
-     <h3 class="devices-page-title">🏛 القاعدة العربي</h3>
+     <h3 class="devices-page-title" id="secTitle3">القاعدة العربي</h3>
      <button class="dark" onclick="openAddDeviceModal('base_arabi')">➕ إضافة جهاز</button>
    </div>
    <div class="devices-mini-grid" id="psBaseArabiDevicesList"></div>
@@ -693,7 +674,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  <div id="psBilliardSection" class="devices-page hidden">
    <div class="devices-page-header">
      <button class="back-btn" onclick="goPsHome()">← رجوع</button>
-     <h3 class="devices-page-title">🎱 طاولات البلياردو</h3>
+     <h3 class="devices-page-title" id="secTitle4">طاولات البلياردو</h3>
      <button class="pink" onclick="openAddDeviceModal('billiard')">➕ إضافة طاولة</button>
    </div>
    <div class="devices-mini-grid" id="psBilliardDevicesList"></div>
@@ -780,16 +761,52 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 </section>
 
 <!-- النوافذ المنبثقة -->
+<!-- نافذة تخصيص أسماء الخانات الأربع -->
+<div id="customizeTilesModal" class="modal-overlay hidden" onclick="if(event.target===this) closeCustomizeTilesModal();">
+  <div class="modal-box" style="max-width:380px;">
+    <button class="modal-close" onclick="closeCustomizeTilesModal()">✕</button>
+    <h3 style="margin-bottom:6px;">⚙️ تخصيص أسماء الخانات الأربع</h3>
+    <p class="muted" style="font-size:11px; margin-bottom:10px;">عدّل أسماء الأقسام الرئيسية بما يناسب نشاطك (وسيتم حفظها تلقائياً):</p>
+    
+    <label>الخانة الأولى (الزرقاء):</label>
+    <input id="customTile1" placeholder="مثال: أجهزة الرومات">
+    
+    <label>الخانة الثانية (البنفسجية):</label>
+    <input id="customTile2" placeholder="مثال: صالة VIP">
+    
+    <label>الخانة الثالثة (البرتقالية):</label>
+    <input id="customTile3" placeholder="مثال: القاعدة العربي">
+    
+    <label>الخانة الرابعة (الوردية):</label>
+    <input id="customTile4" placeholder="مثال: البلياردو">
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
+      <button class="green" onclick="saveCustomTiles()">💾 حفظ التعديلات</button>
+      <button class="secondary" onclick="closeCustomizeTilesModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة إضافة جهاز أو طاولة مع اختيار النوع -->
 <div id="addDeviceModal" class="modal-overlay hidden" onclick="if(event.target===this) closeAddDeviceModal();">
   <div class="modal-box" style="max-width:420px;">
     <button class="modal-close" onclick="closeAddDeviceModal()">✕</button>
-    <h3 id="addDeviceTitle" style="margin-bottom:10px;">إضافة جهاز</h3>
-    <label>اسم الجهاز</label><input id="newDeviceName" placeholder="مثال: روم 1">
+    <h3 id="addDeviceTitle" style="margin-bottom:10px;">➕ إضافة جهاز / طاولة</h3>
+    
+    <label>اختر القسم (بلايستيشن أو بلياردو)</label>
+    <select id="newDeviceTypeSelect" onchange="onDeviceTypeChange(this.value)">
+      <option value="room">🎮 بلايستيشن (القسم الأول)</option>
+      <option value="vip">⭐ بلايستيشن VIP (القسم الثاني)</option>
+      <option value="base_arabi">🏛 بلايستيشن (القسم الثالث)</option>
+      <option value="billiard">🎱 بلياردو (طاولة)</option>
+    </select>
+
+    <label>اسم الجهاز / الطاولة</label><input id="newDeviceName" placeholder="مثال: روم 1 أو طاولة 1">
     <label>سعر الساعة بالجنيه</label><input id="newDeviceRate" type="number" min=".01" step=".01" placeholder="40">
     <div id="newDeviceGameBox" class="hidden">
-      <label>سعر الجيم بالجنيه</label><input id="newDeviceGamePrice" type="number" min=".01" step=".01" placeholder="20">
+      <label>سعر الجيم بالجنيه (خاص للبلياردو)</label><input id="newDeviceGamePrice" type="number" min=".01" step=".01" placeholder="20">
     </div>
-    <button class="green big" onclick="submitAddDevice()" style="margin-top:10px;">إضافة</button>
+    <button class="green big" onclick="submitAddDevice()" style="margin-top:10px;">إضافة وحفظ</button>
   </div>
 </div>
 
@@ -1132,7 +1149,11 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 </section>
 
 <div id="printArea" class="hidden"></div>
-<footer class="muted" style="text-align:center;padding:8px;border-top:1px solid var(--border-color);margin-top:6px;font-size:11px;">تطوير: محمد الصلاحي</footer>
+
+<!-- حقوق الملكية بالصيغة المطلوبة -->
+<footer style="text-align:center; padding:8px; border-top:1px solid var(--border-color); margin-top:auto; font-size:12px; color:var(--text-muted); letter-spacing:0.3px; flex-shrink: 0;">
+  جميع الحقوق محفوظة © 2026 | تصميم وتطوير <strong style="color:var(--primary);">محمد الصلاحي</strong>
+</footer>
 </div>
 
 <script>
@@ -1213,6 +1234,7 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('landingPage').classList.remove('hidden');
     document.getElementById('appWrap').classList.add('hidden');
   }
+  applySavedTileNames();
 });
 
 window.handleSmartDownload = () => { if (isMobileDevice) downloadAPK(); else installPWA(); };
@@ -1232,7 +1254,6 @@ window.installPWA = async () => {
   }
 };
 
-// ============ دالة توليد اسم وكود فريد واضح للجهاز ============
 function getDeviceId() {
   let deviceId = localStorage.getItem('nexpos_device_id');
   if (!deviceId) {
@@ -1263,7 +1284,6 @@ let currentUser=null,profile=null,selectedSystem=localStorage.getItem('nexpos_se
 let products=[],sales=[],expenses=[],treasury=[],cart=[],selectedProduct=null,lastRegisteredUser=null;
 let psDevices=[],psItems=[],psSessions=[],psReservations=[],psTimer=null,psEndingDevices=new Set();
 let currentShiftCloseTime=0,currentPsSection="home";
-let revenueChartInstance=null,typeChartInstance=null;
 let currentDetailDeviceId=null,addDeviceType=null;
 
 const $=id=>document.getElementById(id);
@@ -1325,7 +1345,6 @@ window.register=async()=>{
   const cred=await createUserWithEmailAndPassword(auth,email,password);
   const sysData={status:"pending",plan:"غير مفعل",requestedPlan:plan.name,requestedPrice:plan.price,requestedDays:days,expiryDate:null,requestedAt:serverTimestamp()};
   const systems={};systems[selectedSystem]=sysData;
-  // تعيين الحد الأقصى الافتراضي للأجهزة ليكون 1 عند إنشاء الحساب
   await setDoc(doc(db,"users",cred.user.uid),{shopName:shop,customerName:name,phone,email,role:"customer",maxDevices:1,devices:[],systems,createdAt:serverTimestamp()});
   lastRegisteredUser={name,shop,email,phone,system:selectedSystem,plan:plan.name};
   $("pendingDetails").innerHTML=`<b>النشاط:</b> ${escapeHTML(shop)}<br><b>الباقة:</b> ${plan.name}`;
@@ -1349,7 +1368,6 @@ window.support=()=>{
   window.open(`https://wa.me/201062883414?text=${msg}`, "_blank");
 };
 
-// ============ التحقق من الجلسة وعدد الأجهزة المسموح بها ============
 onAuthStateChanged(auth, async user => {
   currentUser = user;
   if(registeringNow) return;
@@ -1401,7 +1419,6 @@ onAuthStateChanged(auth, async user => {
       return;
     }
 
-    // التحقق من الحد الأقصى للأجهزة المحددة من المالك (الافتراضي 1)
     const MAX_DEVICES = Number(profile.maxDevices) || 1;
     const currentDeviceId = getDeviceId();
     let devices = profile.devices || [];
@@ -1442,6 +1459,7 @@ onAuthStateChanged(auth, async user => {
     if(selectedSystem === "playstation") {
       document.querySelector('.wrap').style.overflowY = 'hidden';
       $("playstationPanel").classList.remove("hidden");
+      applySavedTileNames();
       goPsHome();
       await loadPlaystationData();
       checkPsSubscriptionStatus();
@@ -1461,7 +1479,7 @@ onAuthStateChanged(auth, async user => {
   }
 });
 
-// ============ دوال لوحة تحكم المالك (تعديل عدد الأجهزة وفك الارتباط) ============
+// ============ دوال لوحة تحكم المالك المركزية ============
 window.ownerSection=which=>{$("ownerSalesSection").classList.toggle("hidden",which!=="sales");$("ownerPsSection").classList.toggle("hidden",which!=="playstation");$("ownerSalesTab").classList.toggle("active",which==="sales");$("ownerPsTab").classList.toggle("active",which==="playstation");};
 
 function planControls(u,system){
@@ -1542,7 +1560,92 @@ window.activateUserWithPlan=async(id,system)=>{const sel=$(`plan_${system}_${id}
 window.deactivateSystem=async(id,system)=>{if(!await window.customConfirm("إيقاف؟"))return;try{await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"pending"});await loadUsers();showAlert("تم الإيقاف.","success");}catch(e){showAlert(e.message,"error");}};
 window.deleteUser=async id=>{if(!await window.customConfirm("حذف الحساب نهائياً؟"))return;try{await deleteDoc(doc(db,"users",id));await loadUsers();showAlert("تم الحذف.","success");}catch(e){showAlert(e.message,"error");}};
 
-// ============ باقي دوال النظام (الاشتراك، الباركود، الفواتير، المبيعات، البلايستيشن) ============
+// ============ دوال تخصيص الخانات الأربع الأولى وحفظها ============
+function getTileNames() {
+  const saved = profile?.customTiles || {};
+  return {
+    1: saved.tile1 || localStorage.getItem("ps_tile_1") || "أجهزة الرومات",
+    2: saved.tile2 || localStorage.getItem("ps_tile_2") || "صالة VIP",
+    3: saved.tile3 || localStorage.getItem("ps_tile_3") || "القاعدة العربي",
+    4: saved.tile4 || localStorage.getItem("ps_tile_4") || "البلياردو"
+  };
+}
+
+function applySavedTileNames() {
+  const names = getTileNames();
+  if($("tileTitle1")) $("tileTitle1").textContent = names[1];
+  if($("tileTitle2")) $("tileTitle2").textContent = names[2];
+  if($("tileTitle3")) $("tileTitle3").textContent = names[3];
+  if($("tileTitle4")) $("tileTitle4").textContent = names[4];
+
+  if($("secTitle1")) $("secTitle1").textContent = names[1];
+  if($("secTitle2")) $("secTitle2").textContent = names[2];
+  if($("secTitle3")) $("secTitle3").textContent = names[3];
+  if($("secTitle4")) $("secTitle4").textContent = names[4];
+}
+
+window.openCustomizeTilesModal = () => {
+  const names = getTileNames();
+  $("customTile1").value = names[1];
+  $("customTile2").value = names[2];
+  $("customTile3").value = names[3];
+  $("customTile4").value = names[4];
+  $("customizeTilesModal").classList.remove("hidden");
+};
+
+window.closeCustomizeTilesModal = () => {
+  $("customizeTilesModal").classList.add("hidden");
+};
+
+window.saveCustomTiles = async () => {
+  const t1 = $("customTile1").value.trim() || "أجهزة الرومات";
+  const t2 = $("customTile2").value.trim() || "صالة VIP";
+  const t3 = $("customTile3").value.trim() || "القاعدة العربي";
+  const t4 = $("customTile4").value.trim() || "البلياردو";
+
+  localStorage.setItem("ps_tile_1", t1);
+  localStorage.setItem("ps_tile_2", t2);
+  localStorage.setItem("ps_tile_3", t3);
+  localStorage.setItem("ps_tile_4", t4);
+
+  const customTiles = { tile1: t1, tile2: t2, tile3: t3, tile4: t4 };
+  if (profile) profile.customTiles = customTiles;
+  localStorage.setItem('nexpos_profile', JSON.stringify(profile));
+
+  applySavedTileNames();
+  closeCustomizeTilesModal();
+
+  if (currentUser && navigator.onLine) {
+    try {
+      await setDoc(doc(db, "users", currentUser.uid), { customTiles }, { merge: true });
+    } catch (e) { console.warn(e); }
+  }
+  showAlert("تم تحديث أسماء الخانات وحفظها بنجاح!", "success");
+};
+
+window.quickEditTile = async (tileNum) => {
+  const names = getTileNames();
+  const newName = await customPrompt(`تعديل اسم الخانة رقم ${tileNum}:`, 'text', names[tileNum]);
+  if (newName !== null && newName.trim() !== "") {
+    const clean = newName.trim();
+    localStorage.setItem(`ps_tile_${tileNum}`, clean);
+    const customTiles = {
+      tile1: tileNum === 1 ? clean : names[1],
+      tile2: tileNum === 2 ? clean : names[2],
+      tile3: tileNum === 3 ? clean : names[3],
+      tile4: tileNum === 4 ? clean : names[4]
+    };
+    if (profile) profile.customTiles = customTiles;
+    localStorage.setItem('nexpos_profile', JSON.stringify(profile));
+    applySavedTileNames();
+    if (currentUser && navigator.onLine) {
+      setDoc(doc(db, "users", currentUser.uid), { customTiles }, { merge: true }).catch(()=>{});
+    }
+    showAlert("تم التحديث!", "success");
+  }
+};
+
+// ============ باقي دوال النظام ============
 window.checkPsSubscriptionStatus = () => {
     const info = systemInfo(profile, "playstation");
     const maxDev = Number(profile.maxDevices) || 1;
@@ -1691,7 +1794,7 @@ window.requestRenewal = () => {
   window.open(`https://wa.me/201062883414?text=${msg}`, "_blank");
 };
 
-// ============ دوال البلايستيشن ============
+// ============ دوال البلايستيشن المحدثة ============
 window.goPsHome=()=>{
  ["psHomeScreen","psDevicesSection","psVipSection","psBaseArabiSection","psBilliardSection","psRunningSection","psDrinksSection","psSandwichesSection","psSessionsSection","psReservationsSection","psCustomersSection","psReportsSection"].forEach(id=>$(id)?.classList.add("hidden"));
  $("psHomeScreen").classList.remove("hidden"); currentPsSection="home"; renderPsHomeBadges();
@@ -1727,6 +1830,7 @@ function renderPsHomeBadges(){
  $("psHomeRunningCount").textContent=psDevices.filter(d=>d.status==="running").length;
  $("psHomeDrinksCount").textContent=psItems.filter(x=>x.category==="drink").length;
  $("psHomeSandCount").textContent=psItems.filter(x=>x.category==="sandwich").length;
+ applySavedTileNames();
 }
 
 function renderPsMiniDevices(){
@@ -1748,16 +1852,24 @@ function renderPsMiniDevices(){
    </div>`;
  };
  $("psDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="room").map(buildMiniCard).join("") || '<div class="devices-empty">لا توجد أجهزة.</div>';
- $("psVipDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="vip").map(buildMiniCard).join("") || '<div class="devices-empty">لا توجد أجهزة VIP.</div>';
- $("psBaseArabiDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="base_arabi").map(buildMiniCard).join("") || '<div class="devices-empty">لا توجد أجهزة في القاعدة.</div>';
- $("psBilliardDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="billiard").map(buildMiniCard).join("") || '<div class="devices-empty">لا توجد طاولات بلياردو.</div>';
+ $("psVipDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="vip").map(buildMiniCard).join("") || '<div class="devices-empty">لا توجد أجهزة.</div>';
+ $("psBaseArabiDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="base_arabi").map(buildMiniCard).join("") || '<div class="devices-empty">لا توجد أجهزة.</div>';
+ $("psBilliardDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="billiard").map(buildMiniCard).join("") || '<div class="devices-empty">لا توجد طاولات.</div>';
 }
 
 window.openAddDeviceModal = (type) => {
- addDeviceType = type; const titles = {room:"إضافة روم",vip:"إضافة جهاز VIP",base_arabi:"إضافة جهاز للقاعدة",billiard:"إضافة طاولة بلياردو"};
- $("addDeviceTitle").textContent = titles[type] || "إضافة جهاز"; $("newDeviceName").value = ""; $("newDeviceRate").value = ""; $("newDeviceGamePrice").value = "";
- $("newDeviceGameBox").classList.toggle("hidden", type !== "billiard"); $("addDeviceModal").classList.remove("hidden");
+ addDeviceType = type;
+ $("newDeviceTypeSelect").value = type;
+ $("newDeviceName").value = ""; $("newDeviceRate").value = ""; $("newDeviceGamePrice").value = "";
+ $("newDeviceGameBox").classList.toggle("hidden", type !== "billiard"); 
+ $("addDeviceModal").classList.remove("hidden");
 };
+
+window.onDeviceTypeChange = (val) => {
+ addDeviceType = val;
+ $("newDeviceGameBox").classList.toggle("hidden", val !== "billiard");
+};
+
 window.closeAddDeviceModal = () => $("addDeviceModal").classList.add("hidden");
 window.submitAddDevice = async () => {
  const name = $("newDeviceName").value.trim(), rate = Number($("newDeviceRate").value);
@@ -1767,7 +1879,7 @@ window.submitAddDevice = async () => {
  try{
    const data = {name, deviceType: addDeviceType, status: "idle", startedAt: null, endAt: null, hourlyRate: rate, createdAt: Date.now()};
    if(addDeviceType === "billiard"){ data.billiardGamePrice = gamePrice; data.billiardGames = 0; }
-   await setDoc(doc(col("devices")), data); closeAddDeviceModal(); await loadPlaystationData(); showAlert("تمت الإضافة.","success");
+   await setDoc(doc(col("devices")), data); closeAddDeviceModal(); await loadPlaystationData(); showAlert("تمت الإضافة بنجاح.","success");
  }catch(e){showAlert("تعذر: "+e.message,"error");}
 };
 
@@ -1783,8 +1895,9 @@ function refreshDeviceDetail(){
 
 function buildDeviceDetailContent(d){
  const running = d.status === "running", dType = window.getDeviceType(d);
+ const names = getTileNames();
  const isVip = dType==="vip", isBase = dType==="base_arabi", isBill = dType==="billiard";
- const icon = isVip?"⭐":isBase?"🏛":isBill?"🎱":"🎮", typeLabel = isVip?"VIP":isBase?"القاعدة العربي":isBill?"بلياردو":"روم";
+ const icon = isVip?"⭐":isBase?"🏛":isBill?"🎱":"🎮", typeLabel = isVip?names[2]:isBase?names[3]:isBill?names[4]:names[1];
  const orders = d.currentOrders || psSessions.find(s=>s.id===d.sessionId)?.orders || [];
  const orderTotal = orders.reduce((a,o)=>a+Number(o.lineTotal??(Number(o.price||0)*Number(o.qty||0))),0);
  const itemOptions = psItems.map(i=>`<option value="${i.id}">${escapeHTML(i.name)} - ${money(i.price)} ج</option>`).join("");
@@ -1802,7 +1915,7 @@ function buildDeviceDetailContent(d){
    } else {
      modeExtra = `<label>تمديد الوقت</label><div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;"><select id="psExtend_${d.id}"><option value="30">نصف ساعة</option><option value="60">ساعة</option><option value="90">ساعة ونصف</option><option value="120">ساعتان</option></select><button class="green" onclick="extendPsDevice('${d.id}')">تمديد</button></div>`;
    }
-   return `<div class="top" style="margin-bottom:6px;"><h3 style="margin:0;">${icon} ${escapeHTML(d.name)} <span class="tag" style="font-size:10px;">${typeLabel}</span></h3><span class="tag good">يعمل</span></div>
+   return `<div class="top" style="margin-bottom:6px;"><h3 style="margin:0;">${icon} ${escapeHTML(d.name)} <span class="tag" style="font-size:10px;">${escapeHTML(typeLabel)}</span></h3><span class="tag good">يعمل</span></div>
    ${d.customerName ? `<p style="text-align:center;font-weight:bold;color:#f87171;font-size:13px;margin:4px 0;">👤 ${escapeHTML(d.customerName)}</p>`:''}
    <div class="detail-device-time" id="detailClock">${timeStr}</div>
    <p class="muted" style="text-align:center;font-size:11px;margin:4px 0;">${autoMode||gamesMode?"الوقت المنقضي":"الوقت المتبقي"}</p>${modeExtra}
@@ -1818,7 +1931,7 @@ function buildDeviceDetailContent(d){
  let pricesEdit = `<label>سعر الساعة</label><div style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:8px;"><input id="psRate_${d.id}" type="number" min=".01" step=".01" value="${Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE}" style="margin:0;"><button class="secondary" onclick="updatePsRate('${d.id}')">حفظ</button></div>`;
  if(isBill) pricesEdit += `<label>سعر الجيم</label><div style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:8px;"><input id="psGame_${d.id}" type="number" min=".01" step=".01" value="${Number(d.billiardGamePrice)||20}" style="margin:0;"><button class="secondary" onclick="updatePsGamePrice('${d.id}')">حفظ</button></div>`;
  
- return `<div class="top" style="margin-bottom:6px;"><h3 style="margin:0;">${icon} ${escapeHTML(d.name)} <span class="tag" style="font-size:10px;">${typeLabel}</span></h3><span class="tag">جاهز</span></div>
+ return `<div class="top" style="margin-bottom:6px;"><h3 style="margin:0;">${icon} ${escapeHTML(d.name)} <span class="tag" style="font-size:10px;">${escapeHTML(typeLabel)}</span></h3><span class="tag">جاهز</span></div>
  <div class="detail-device-time idle">00:00:00</div>${pricesEdit}<label>اسم العميل</label><input id="psCustomerName_${d.id}" placeholder="اتركه فارغاً"><label>طريقة الحساب</label><select id="psMode_${d.id}" onchange="togglePsMode('${d.id}',${isBill})">${startModes}</select>${extraInputs}
  <div class="device-modal-actions"><button class="green" onclick="startPsDeviceFromModal('${d.id}')" style="grid-column:1/-1;">▶ بدء الجلسة</button><button class="red" onclick="deletePsDevice('${d.id}')" style="grid-column:1/-1;">🗑 حذف الجهاز</button></div>`;
 }
@@ -2033,16 +2146,6 @@ window.closePsShift = async () => {
  if(await window.customConfirm("تقفيل الوردية وتصفير عداد اليوم؟")){
    await setDoc(doc(col("psShifts"),"current"),{closedAt:Date.now(),date:new Date().toLocaleString("ar-EG")});currentShiftCloseTime=Date.now();$("psShiftModal").classList.add("hidden");showAlert("تم التقفيل.","success");
  }
-};
-
-// ============ دوال المبيعات والكاشير ============
-window.updateInquiryTooltip = function() {
-  const tip = document.getElementById('inquiryTooltip'); if (!tip) return;
-  let product = selectedProduct || (cart.length === 1 ? products.find(p => p.id === cart[0].productId) : null);
-  if (product) {
-    const cost = Number(product.cost)||0, profit = (Number(product.price)||0) - cost;
-    tip.innerHTML = `سعر الشراء<span class="cost-val">${money(cost)} ج</span><span style="display:block;font-size:11px;color:${profit >= 0 ? '#34d399' : '#f87171'};margin-top:2px;">الربح: ${money(profit)} ج</span>`;
-  } else tip.innerHTML = `سعر الشراء<span class="cost-val">—</span>`;
 };
 
 window.page = name => {

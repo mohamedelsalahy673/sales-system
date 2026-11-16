@@ -113,7 +113,7 @@ th { background: rgba(15,23,42,0.5); color: var(--text-muted); font-weight: 700;
 hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
 .result{display:block;width:100%;text-align:right;margin:0;border-radius:0; border: none; border-bottom: 1px solid var(--border-color); font-size:12px; padding:9px 10px;}
 
-/* ============ زرار استعلام سعر الشراء (تصميم احترافي) ============ */
+/* ============ زرار استعلام سعر الشراء ============ */
 .inquiry-box { position: relative; display: inline-block; width: 100%; }
 .inquiry-btn {
   background: linear-gradient(135deg, #1e293b, #0f172a);
@@ -238,7 +238,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
-/* ============ شاشة المبيعات (مرفوعة لأعلى تماماً) ============ */
+/* ============ شاشة المبيعات ============ */
 #salesPage {
   height: 100vh;
   display: flex;
@@ -465,7 +465,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
 </head>
 <body>
 
-<!-- ================= صفحة الهبوط الاحترافية (Landing Page) ================= -->
+<!-- ================= صفحة الهبوط الاحترافية ================= -->
 <section id="landingPage" class="hidden" style="background:#fff; height:100vh; display:flex; flex-direction:column; overflow-y:auto; font-family:'Cairo', sans-serif; direction:rtl;">
   <nav style="display:flex; justify-content:space-between; align-items:center; padding:10px 40px; border-bottom:2px solid #e2e8f0; background:white; position:sticky; top:0; z-index:100;">
     <div style="display:flex; align-items:center; gap:10px;">
@@ -832,12 +832,11 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
 </section>
 
 <!-- النوافذ المنبثقة -->
-<!-- نافذة تخصيص أسماء الخانات الأربع -->
 <div id="customizeTilesModal" class="modal-overlay hidden" onclick="if(event.target===this) closeCustomizeTilesModal();">
   <div class="modal-box" style="max-width:380px;">
     <button class="modal-close" onclick="closeCustomizeTilesModal()">✕</button>
     <h3 style="margin-bottom:6px;">⚙️ تخصيص أسماء الخانات الأربع</h3>
-    <p class="muted" style="font-size:11px; margin-bottom:10px;">عدّل أسماء الأقسام الرئيسية بما يناسب نشاطك (وسيتم حفظها تلقائياً):</p>
+    <p class="muted" style="font-size:11px; margin-bottom:10px;">عدّل أسماء الأقسام الرئيسية بما يناسب نشاطك:</p>
     
     <label>الخانة الأولى (الزرقاء):</label>
     <input id="customTile1" placeholder="مثال: أجهزة الرومات">
@@ -858,13 +857,12 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
   </div>
 </div>
 
-<!-- نافذة إضافة جهاز أو طاولة مع اختيار النوع -->
 <div id="addDeviceModal" class="modal-overlay hidden" onclick="if(event.target===this) closeAddDeviceModal();">
   <div class="modal-box" style="max-width:420px;">
     <button class="modal-close" onclick="closeAddDeviceModal()">✕</button>
     <h3 id="addDeviceTitle" style="margin-bottom:10px;">➕ إضافة جهاز / طاولة</h3>
     
-    <label>اختر القسم (بلايستيشن أو بلياردو)</label>
+    <label>اختر القسم</label>
     <select id="newDeviceTypeSelect" onchange="onDeviceTypeChange(this.value)">
       <option value="room">🎮 بلايستيشن (القسم الأول)</option>
       <option value="vip">⭐ بلايستيشن VIP (القسم الثاني)</option>
@@ -901,7 +899,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
   </div>
 </div>
 
-<!-- نافذة اشتراكي وتغيير كلمة المرور في سيستم البلايستيشن -->
 <div id="psSubModal" class="modal-overlay hidden" onclick="if(event.target===this) closePsSubscriptionModal();">
   <div class="modal-box">
     <button class="modal-close" onclick="closePsSubscriptionModal()">✕</button>
@@ -982,7 +979,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
   </div>
  </div>
 
-  <!-- شاشة اشتراكي -->
   <div id="subscriptionPage" class="hidden" style="background:#f1f5f9; border-radius:10px; padding:10px; color:#1e293b; direction:rtl; font-family:'Cairo', sans-serif; margin-top:5px; font-size:12px; height: calc(100vh - 100px); display:flex; flex-direction:column; overflow:hidden;">
     <button class="back-btn" onclick="page('dashboard')" style="background:#e2e8f0; color:#0f172a; border:none; padding:5px 10px; width:fit-content; margin-bottom:5px;">← رجوع</button>
     <div style="text-align:center; margin-bottom:10px;">
@@ -1058,7 +1054,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
     </div>
   </div>
 
-  <!-- تصميم نماذج الطباعة -->
   <div id="invoiceSettingsPage" class="hidden">
     <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
     <h3 style="color:#10b981;">🖨️ تصميم نماذج الطباعة</h3>
@@ -1097,7 +1092,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
     </div>
   </div>
 
-  <!-- إعداد الباركود -->
   <div id="barcodeSettingsPage" class="hidden">
     <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
     <h3>🏷️ إعداد الباركود وملصقات المنتجات</h3>
@@ -1161,7 +1155,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
     </div>
   </div>
 
-  <!-- شاشة المبيعات (مع دمج كافة الخانات مع الخانات العليا وترتيب زر البيع تحت إضافة) -->
   <div id="salesPage" class="">
     <div class="sahal-top-bar">
       <div>نظام المبيعات السريع - <span id="sahalShopTitle">متجري</span></div>
@@ -1188,10 +1181,8 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
         </div>
       </div>
       <div class="sahal-left-sidebar">
-        <!-- صندوق الإجمالي المطلوب -->
         <div class="sahal-total-box"><span>الإجمالي المطلوب</span><h2 id="cartTotalDisplay">0.00</h2></div>
         
-        <!-- دمج كافة الخانات لتصبح مع الخانات العليا بشكل متناسق ومدمج تماماً -->
         <div class="sahal-controls-grid">
           <div><label>خصم %</label><input id="saleDiscountPct" type="number" min="0" max="100" value="0" oninput="renderCart()"></div>
           <div><label>إضافة</label><input id="saleAddition" type="number" min="0" value="0" oninput="renderCart()"></div>
@@ -1201,7 +1192,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
           <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1" style="margin:0;"></div>
         </div>
 
-        <!-- زرار الإضافة وتحته مباشرة زرار البيع -->
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:2px;">
            <button class="green" style="padding:6px; font-size:13px;" onclick="addToCart()">➕ إضافة</button>
            <div class="inquiry-box">
@@ -1232,7 +1222,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
   <div id="expensesPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>المصروفات</h3><div class="card"><input id="expenseName" placeholder="البيان"><input id="expenseAmount" type="number" placeholder="المبلغ"><button onclick="addExpense()" class="green big">حفظ</button></div><div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div></div>
   <div id="reportsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>التقارير</h3><div class="grid"><div class="stat">المبيعات<strong id="reportRevenue">0 ج</strong></div><div class="stat">المصروفات<strong id="reportExpenses">0 ج</strong></div><div class="stat">الربح<strong id="reportNet">0 ج</strong></div></div></div>
   
-  <!-- صفحة الإعدادات المحدثة في سيستم المبيعات -->
   <div id="settingsPage" class="hidden">
     <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
     <h3>الإعدادات</h3>
@@ -1253,27 +1242,17 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
 
 <div id="printArea" class="hidden"></div>
 
-<!-- حقوق الملكية بالصيغة المطلوبة -->
 <footer style="text-align:center; padding:6px; border-top:1px solid var(--border-color); margin-top:auto; font-size:11px; color:var(--text-muted); letter-spacing:0.3px; flex-shrink: 0;">
   جميع الحقوق محفوظة © 2026 | تصميم وتطوير <strong style="color:var(--primary);">محمد الصلاحي</strong>
 </footer>
 </div>
 
 <script>
+  // تم تصحيح طريقة Service Worker لتجنب استخدام أخطاء الـ Blob URLs اللي كانت بتوقف الشاشة
   if ('serviceWorker' in navigator) {
-    const swCode = `
-      const CACHE_NAME = 'nexpos-cache-v6';
-      const urlsToCache = ['/', '/manifest.json'];
-      self.addEventListener('install', event => { self.skipWaiting(); event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))); });
-      self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(cacheNames => Promise.all(cacheNames.map(cacheName => { if (cacheName !== CACHE_NAME) return caches.delete(cacheName); })))); self.clients.claim(); });
-      self.addEventListener('fetch', event => {
-        if (event.request.url.includes('firebase') || event.request.url.includes('googleapis') || event.request.method !== 'GET') return;
-        event.respondWith(fetch(event.request).then(response => { if (response && response.status === 200) { const responseClone = response.clone(); caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone)); } return response; }).catch(() => caches.match(event.request)));
-      });
-    `;
-    const swBlob = new Blob([swCode], {type: 'application/javascript'});
-    const swURL = URL.createObjectURL(swBlob);
-    window.addEventListener('load', () => { navigator.serviceWorker.register(swURL).catch(error => console.log('SW failed:', error)); });
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(error => console.log('SW registration skipped:', error));
+    });
   }
 </script>
 
@@ -1575,7 +1554,6 @@ onAuthStateChanged(auth, async user => {
       $("settingsEmail").value = profile.email || user.email || "";
       checkCustomerSubscription(info);
       await loadBusiness();
-      // البدء بصفحة المبيعات مباشرة دون عرض شاشة dashboard البيضاء
       page('sales');
     }
   } catch(e) {

@@ -1161,7 +1161,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
     </div>
   </div>
 
-  <!-- شاشة المبيعات (مع دمج الخانات جنباً إلى جنب وتنزيل الإجمالي) -->
+  <!-- شاشة المبيعات (مع دمج كافة الخانات مع الخانات العليا وترتيب زر البيع تحت إضافة) -->
   <div id="salesPage" class="">
     <div class="sahal-top-bar">
       <div>نظام المبيعات السريع - <span id="sahalShopTitle">متجري</span></div>
@@ -1188,10 +1188,10 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
         </div>
       </div>
       <div class="sahal-left-sidebar">
-        <!-- تم تنزيل صندوق الإجمالي المطلوب قليلاً -->
+        <!-- صندوق الإجمالي المطلوب -->
         <div class="sahal-total-box"><span>الإجمالي المطلوب</span><h2 id="cartTotalDisplay">0.00</h2></div>
         
-        <!-- تم ضم كافة الخانات لتصبح كل خانتين جنباً إلى جنب بشكل متناسق تماماً -->
+        <!-- دمج كافة الخانات لتصبح مع الخانات العليا بشكل متناسق ومدمج تماماً -->
         <div class="sahal-controls-grid">
           <div><label>خصم %</label><input id="saleDiscountPct" type="number" min="0" max="100" value="0" oninput="renderCart()"></div>
           <div><label>إضافة</label><input id="saleAddition" type="number" min="0" value="0" oninput="renderCart()"></div>
@@ -1201,6 +1201,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
           <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1" style="margin:0;"></div>
         </div>
 
+        <!-- زرار الإضافة وتحته مباشرة زرار البيع -->
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:2px;">
            <button class="green" style="padding:6px; font-size:13px;" onclick="addToCart()">➕ إضافة</button>
            <div class="inquiry-box">
@@ -1209,8 +1210,9 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
               </div>
             </div>
         </div>
+
         <div class="sahal-left-actions">
-          <div class="sahal-action-btn action-sell" onclick="completeSale()"><i>💵</i> <span>حفظ وبيع</span></div>
+          <div class="sahal-action-btn action-sell" onclick="completeSale()"><i>💵</i> <span>بيع</span></div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
             <div class="sahal-action-btn action-pay" onclick="showPaymentModal()" style="padding:6px; font-size:11px;"><i>💳</i> <span>سداد</span></div>
             <div class="sahal-action-btn action-hold" onclick="saveHold()" style="padding:6px; font-size:11px;"><i>⏸️</i> <span>تعليق</span></div>
@@ -1260,7 +1262,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'nexpos-cache-v5';
+      const CACHE_NAME = 'nexpos-cache-v6';
       const urlsToCache = ['/', '/manifest.json'];
       self.addEventListener('install', event => { self.skipWaiting(); event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))); });
       self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(cacheNames => Promise.all(cacheNames.map(cacheName => { if (cacheName !== CACHE_NAME) return caches.delete(cacheName); })))); self.clients.claim(); });

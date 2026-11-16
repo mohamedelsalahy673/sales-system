@@ -968,7 +968,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     <div style="text-align:center; margin-bottom:10px;">
       <h3 style="color:#059669; margin:0; font-size:16px;">شكراً لثقتكم في NexPOS PRO</h3>
       <p style="font-size:10px; color:#475569; background:#dcfce7; padding:6px; border-radius:5px; border:1px solid #86efac; line-height:1.4; margin-top:5px;">
-        عميلنا العزيز، لمحمي هذا الاشتراك في NexPOS PRO، رجاء التأكد من دقة بيانات الاشتراك ومدته وتكلفته.
+        عميلنا العزيز، لمحمي هذا الاشتراك في NexPOS PRO، رجاء التأكد من دقة بيانات الاشتراك ومدته وتكلفتـه.
       </p>
     </div>
     <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:5px; margin-bottom:10px; text-align:center;">
@@ -1147,7 +1147,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
       <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:20px;">🛒</span><span>شاشة المبيعات الذكية</span></div>
       <div style="display:flex; align-items:center; gap:10px;">
         <span class="tag" style="background:rgba(255,255,255,0.2); color:white;">F1: بحث | F2: بيع | F4: سداد | F9: تعليق</span>
-        <span id="sahalShopTitle" style="font-size:14px;">اسم المتجر</span>
       </div>
     </div>
     <div class="sahal-layout-main">
@@ -1551,7 +1550,6 @@ onAuthStateChanged(auth, async user => {
     } else {
       $("customerPanel").classList.remove("hidden");
       $("shopTitle").textContent = profile.shopName || "نظام المبيعات";
-      $("sahalShopTitle").textContent = profile.shopName || "متجري";
       $("settingsShopName").value = profile.shopName || "";
       $("settingsEmail").value = profile.email || user.email || "";
       checkCustomerSubscription(info);
@@ -2272,7 +2270,7 @@ window.restoreHold = async (id) => {
 };
 window.deleteHold = async (id) => { if (await customConfirm("حذف الفاتورة المعلقة؟")) { await deleteDoc(docRef("holds", id)); Swal.close(); openHeldList(); } };
 
-window.updateShopNameSetting = async () => {const n=$("settingsShopName").value.trim();if(!n)return;await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;$("shopTitle").textContent=n;$("sahalShopTitle").textContent=n;showAlert("تم.","success");};
+window.updateShopNameSetting = async () => {const n=$("settingsShopName").value.trim();if(!n)return;await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;$("shopTitle").textContent=n;showAlert("تم.","success");};
 window.updateCustomerEmailSetting = async () => {const n=$("settingsEmail").value.trim();if(!n)return;await updateEmail(auth.currentUser,n);await updateDoc(doc(db,"users",currentUser.uid),{email:n});showAlert("تم.","success");};
 
 async function loadBusiness(){await Promise.all([loadProducts(),loadSales(),loadExpenses(),loadTreasury()]);renderStats();}
@@ -2461,7 +2459,7 @@ window.printProductBarcode = (id) => {
 
 window.addTreasuryTransaction = async () => {const type=$("tType").value,amount=Number($("tAmount").value)||0,note=$("tNote").value.trim();if(amount<=0)return;await setDoc(doc(col("treasury")),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});$("tAmount").value="";$("tNote").value="";await loadTreasury();renderStats();};
 function renderTreasury(){let tIn=0,tOut=0;$("treasuryTable").innerHTML=treasury.map(t=>{if(t.type==="in")tIn+=Number(t.amount)||0;else tOut+=Number(t.amount)||0;return `<tr><td><span class="tag ${t.type==="in"?"good":""}">${t.type==="in"?"وارد":"صادر"}</span></td><td>${money(t.amount)} ج</td><td>${escapeHTML(t.note||"")}</td><td>${t.date||""}</td></tr>`;}).join("")||"<tr><td colspan='4'>لا حركات</td></tr>";$("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" ج";}
-window.addExpense = async () => {const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value)||0;if(!name||amount<=0)return;const date=new Date().toLocaleString("ar-EG");await setDoc(doc(col("expenses")),{name,amount,date});await setDoc(doc(col("treasury")),{type:"out",amount,note:"مصروف: "+name,date});$("expenseName").value="";$("expenseAmount").value="";await loadBusiness();};
+window.addExpense = async () => {const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value)||0;if(!name||amount<=0)return;const date=new Date().toLocaleString("ar-EG");await setDoc(doc(col("expenses")),{name,amount,date});await setDoc(doc(col("treasury")),{type:"out",amount,note:"مصروف: "+name,date});await loadBusiness();};
 function renderExpenses(){$("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا مصروفات</td></tr>";}
 function renderSales(){$("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printSavedInvoice('${s.id}')">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا فواتير</td></tr>";}
 window.printSavedInvoice = id => {const inv=sales.find(s=>s.id===id);if(inv)printInvoiceDirectly(inv);};

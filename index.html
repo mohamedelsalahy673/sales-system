@@ -113,6 +113,47 @@ th { background: rgba(15,23,42,0.5); color: var(--text-muted); font-weight: 700;
 hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
 .result{display:block;width:100%;text-align:right;margin:0;border-radius:0; border: none; border-bottom: 1px solid var(--border-color); font-size:12px; padding:9px 10px;}
 
+/* ============ زرار استعلام سعر الشراء (تصميم احترافي) ============ */
+.inquiry-box { position: relative; display: inline-block; width: 100%; }
+.inquiry-btn {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  color: #38bdf8;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  user-select: none;
+}
+.inquiry-btn:hover { background: #1e293b; border-color: #38bdf8; }
+.inquiry-tooltip {
+  visibility: hidden;
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0284c7;
+  color: white;
+  text-align: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  font-weight: bold;
+}
+.inquiry-btn:hover .inquiry-tooltip, .inquiry-btn:active .inquiry-tooltip { visibility: visible; opacity: 1; }
+.inquiry-tooltip .cost-val { color: #fef08a; margin-right: 4px; }
+
 /* ============ شاشة البلايستيشن ============ */
 #playstationPanel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
 #playstationPanel .ps-top-card { flex-shrink: 0; margin: 0 0 6px !important; padding: 8px 10px !important; }
@@ -301,6 +342,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
   border-radius: 8px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(16,185,129,0.3);
+  margin-top: 6px;
 }
 .sahal-total-box span { font-size: 13px; display: block; margin-bottom: 3px;}
 .sahal-total-box h2 { margin: 0; font-size: 30px; color: white; direction: ltr; }
@@ -308,7 +350,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
 .sahal-controls-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  gap: 5px;
 }
 .sahal-controls-grid label { font-size: 10px; margin-bottom: 0; color: var(--text-main);}
 .sahal-controls-grid input { padding: 5px; font-size: 13px; text-align: center; font-weight: bold; margin: 0;}
@@ -1119,9 +1161,15 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
     </div>
   </div>
 
-  <!-- شاشة المبيعات (مرفوعة لأعلى تماماً بدون أي شريط علوي قديم) -->
+  <!-- شاشة المبيعات (مع دمج الخانات جنباً إلى جنب وتنزيل الإجمالي) -->
   <div id="salesPage" class="">
-    <div class="sahal-layout-main" style="height: 100vh;">
+    <div class="sahal-top-bar">
+      <div>نظام المبيعات السريع - <span id="sahalShopTitle">متجري</span></div>
+      <div>
+        <button onclick="page('dashboard')" style="background:rgba(255,255,255,0.2); color:white; padding:4px 10px; font-size:11px; border:1px solid rgba(255,255,255,0.3);">🏠 الرئيسية</button>
+      </div>
+    </div>
+    <div class="sahal-layout-main" style="height: calc(100vh - 35px);">
       <div class="sahal-center-main">
         <div class="sahal-search-area">
           <div class="search-container">
@@ -1140,18 +1188,20 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
         </div>
       </div>
       <div class="sahal-left-sidebar">
+        <!-- تم تنزيل صندوق الإجمالي المطلوب قليلاً -->
         <div class="sahal-total-box"><span>الإجمالي المطلوب</span><h2 id="cartTotalDisplay">0.00</h2></div>
+        
+        <!-- تم ضم كافة الخانات لتصبح كل خانتين جنباً إلى جنب بشكل متناسق تماماً -->
         <div class="sahal-controls-grid">
-          <div><label>إضافة</label><input id="saleAddition" type="number" min="0" value="0" oninput="renderCart()"></div>
           <div><label>خصم %</label><input id="saleDiscountPct" type="number" min="0" max="100" value="0" oninput="renderCart()"></div>
-          <div><label>خصم الفكة</label><input id="saleDiscount" type="number" min="0" value="0" oninput="renderCart()"></div>
+          <div><label>إضافة</label><input id="saleAddition" type="number" min="0" value="0" oninput="renderCart()"></div>
           <div><label>ملاحظات</label><input type="text" id="saleNotes" placeholder="..." style="text-align:right;"></div>
+          <div><label>خصم الفكة</label><input id="saleDiscount" type="number" min="0" value="0" oninput="renderCart()"></div>
+          <div><label>السعر</label><input id="salePrice" type="number" min="0" placeholder="0.00" style="margin:0;"></div>
+          <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1" style="margin:0;"></div>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:3px;">
-           <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1" style="margin:0;"></div>
-           <div><label>السعر</label><input id="salePrice" type="number" min="0" placeholder="0.00" style="margin:0;"></div>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:2px;">
            <button class="green" style="padding:6px; font-size:13px;" onclick="addToCart()">➕ إضافة</button>
            <div class="inquiry-box">
               <div class="inquiry-btn" id="inquiryBtn" style="height:32px; font-size:11px;">🔍 استعلام
@@ -1523,6 +1573,8 @@ onAuthStateChanged(auth, async user => {
       $("settingsEmail").value = profile.email || user.email || "";
       checkCustomerSubscription(info);
       await loadBusiness();
+      // البدء بصفحة المبيعات مباشرة دون عرض شاشة dashboard البيضاء
+      page('sales');
     }
   } catch(e) {
     console.error(e);
@@ -1884,8 +1936,10 @@ function checkCustomerSubscription(info){
     }
   }
   const tiles = $("mainTilesContainer");
-  if (!subscriptionActive(info)) { tiles.style.pointerEvents = "none"; tiles.style.opacity = "0.4"; }
-  else { tiles.style.pointerEvents = "auto"; tiles.style.opacity = "1"; }
+  if (tiles) {
+    if (!subscriptionActive(info)) { tiles.style.pointerEvents = "none"; tiles.style.opacity = "0.4"; }
+    else { tiles.style.pointerEvents = "auto"; tiles.style.opacity = "1"; }
+  }
 }
 
 window.removeDevice = async (deviceId) => {
@@ -2278,10 +2332,14 @@ window.closePsShift = async () => {
 };
 
 window.page = name => {
-  ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription","barcodeSettings","invoiceSettings"].forEach(p => $(p+"Page").classList.add("hidden"));
-  $(name+"Page").classList.remove("hidden");
+  ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription","barcodeSettings","invoiceSettings"].forEach(p => {
+    const el = $(p+"Page");
+    if(el) el.classList.add("hidden");
+  });
+  const target = $(name+"Page");
+  if(target) target.classList.remove("hidden");
   const wrapEl = document.querySelector('.wrap');
-  wrapEl.style.overflowY = name === "sales" ? 'hidden' : 'auto';
+  if(wrapEl) wrapEl.style.overflowY = name === "sales" ? 'hidden' : 'auto';
   if(name === "dashboard" || name === "reports") renderStats();
   if(name === "sales"){ renderCart(); window.updateInquiryTooltip(); }
   if(name === "barcodeSettings") loadBarcodeSettings();
@@ -2358,15 +2416,16 @@ window.addToCart = () => {
 };
 function renderCart(){
  const tbody = $("cartTable");
+ if(!tbody) return {subtotal:0, discount:0, addition:0, total:0};
  tbody.innerHTML = cart.length === 0 ? '<tr><td colspan="8" class="empty-cart-msg">🛒 ابدأ بالبحث عن صنف</td></tr>' : cart.map((x,i)=>{
    const lineTotal = x.qty * x.price, lineDiscount = Math.max(0, Math.min(Number(x.lineDiscount)||0, lineTotal)), lineFinal = lineTotal - lineDiscount;
    return `<tr><td>${i+1}</td><td>${escapeHTML(x.name)}</td><td>${x.qty}</td><td>${money(x.price)}</td><td>${money(lineTotal)}</td><td><input type="number" min="0" step="0.01" value="${lineDiscount.toFixed(2)}" style="width:70px;margin:0;padding:4px;text-align:center;" onchange="updateLineDiscount(${i}, this.value)"></td><td><b>${money(lineFinal)} ج</b></td><td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td></tr>`;
  }).join("");
  const subtotal = cart.reduce((s,x)=>s+x.qty*x.price,0), lineDiscounts = cart.reduce((s,x)=>s+(Number(x.lineDiscount)||0),0);
- const discountPct = Math.max(0, Math.min(100, Number($("saleDiscountPct").value)||0)), discountCash = Math.max(0,Number($("saleDiscount").value)||0), addition = Math.max(0,Number($("saleAddition").value)||0);
+ const discountPct = Math.max(0, Math.min(100, Number($("saleDiscountPct")?.value)||0)), discountCash = Math.max(0,Number($("saleDiscount")?.value)||0), addition = Math.max(0,Number($("saleAddition")?.value)||0);
  const totalDiscount = lineDiscounts + Number((subtotal * discountPct / 100).toFixed(2)) + discountCash;
  const total = Math.max(0, subtotal - totalDiscount + addition);
- $("cartTotalDisplay").textContent = money(total); window.updateInquiryTooltip();
+ if($("cartTotalDisplay")) $("cartTotalDisplay").textContent = money(total); window.updateInquiryTooltip();
  return {subtotal, discount: totalDiscount, addition, total};
 }
 window.updateLineDiscount = (index, value) => { if(cart[index]) { cart[index].lineDiscount = Math.max(0, Number(value)||0); renderCart(); } };
@@ -2385,7 +2444,7 @@ window.completeSale = async () => {
  for(const item of cart){ const p = products.find(x=>x.id===item.productId); await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)}); }
  await setDoc(doc(col("sales")), inv);
  await setDoc(doc(col("treasury")), { type: "in", amount: total, note: `فاتورة #${inv.number}`, date: inv.date, createdAt: Date.now() });
- printInvoiceDirectly(inv); cart = []; $("saleDiscount").value = "0"; $("saleDiscountPct").value = "0"; $("saleAddition").value = "0"; renderCart(); loadBusiness(); showAlert("تم البيع. "+money(total)+" ج","success");
+ printInvoiceDirectly(inv); cart = []; if($("saleDiscount")) $("saleDiscount").value = "0"; if($("saleDiscountPct")) $("saleDiscountPct").value = "0"; if($("saleAddition")) $("saleAddition").value = "0"; renderCart(); loadBusiness(); showAlert("تم البيع. "+money(total)+" ج","success");
 };
 
 window.printInvoiceDirectly = inv => {
@@ -2406,13 +2465,13 @@ window.printProductBarcode = (id) => {
 };
 
 window.addTreasuryTransaction = async () => {const type=$("tType").value,amount=Number($("tAmount").value)||0,note=$("tNote").value.trim();if(amount<=0)return;await setDoc(doc(col("treasury")),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});$("tAmount").value="";$("tNote").value="";await loadTreasury();renderStats();};
-function renderTreasury(){let tIn=0,tOut=0;$("treasuryTable").innerHTML=treasury.map(t=>{if(t.type==="in")tIn+=Number(t.amount)||0;else tOut+=Number(t.amount)||0;return `<tr><td><span class="tag ${t.type==="in"?"good":""}">${t.type==="in"?"وارد":"صادر"}</span></td><td>${money(t.amount)} ج</td><td>${escapeHTML(t.note||"")}</td><td>${t.date||""}</td></tr>`;}).join("")||"<tr><td colspan='4'>لا حركات</td></tr>";$("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" ج";}
+function renderTreasury(){let tIn=0,tOut=0;if($("treasuryTable"))$("treasuryTable").innerHTML=treasury.map(t=>{if(t.type==="in")tIn+=Number(t.amount)||0;else tOut+=Number(t.amount)||0;return `<tr><td><span class="tag ${t.type==="in"?"good":""}">${t.type==="in"?"وارد":"صادر"}</span></td><td>${money(t.amount)} ج</td><td>${escapeHTML(t.note||"")}</td><td>${t.date||""}</td></tr>`;}).join("")||"<tr><td colspan='4'>لا حركات</td></tr>";if($("treasuryBalanceDisplay"))$("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" ج";}
 window.addExpense = async () => {const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value)||0;if(!name||amount<=0)return;const date=new Date().toLocaleString("ar-EG");await setDoc(doc(col("expenses")),{name,amount,date});await setDoc(doc(col("treasury")),{type:"out",amount,note:"مصروف: "+name,date});$("expenseName").value="";$("expenseAmount").value="";await loadBusiness();};
-function renderExpenses(){$("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا مصروفات</td></tr>";}
-function renderSales(){$("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printSavedInvoice('${s.id}')">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا فواتير</td></tr>";}
+function renderExpenses(){if($("expensesTable"))$("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا مصروفات</td></tr>";}
+function renderSales(){if($("salesTable"))$("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printSavedInvoice('${s.id}')">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا فواتير</td></tr>";}
 window.printSavedInvoice = id => {const inv=sales.find(s=>s.id===id);if(inv)printInvoiceDirectly(inv);};
 
-function renderStats(){$("statProducts").textContent=products.length;$("statSales").textContent=sales.length;const today=new Date().toLocaleDateString("ar-EG");const todayRev=sales.filter(s=>(s.date||"").startsWith(today)).reduce((sum,s)=>sum+Number(s.total||0),0);$("statRevenue").textContent=money(todayRev)+" ج";let tIn=0,tOut=0;treasury.forEach(t=>{if(t.type==="in")tIn+=Number(t.amount)||0;else tOut+=Number(t.amount)||0;});$("statTreasuryBalance").textContent=money(tIn-tOut)+" ج";const tr=sales.reduce((s,x)=>s+Number(x.total||0),0),te=expenses.reduce((s,x)=>s+Number(x.amount||0),0);if($("reportRevenue"))$("reportRevenue").textContent=money(tr)+" ج";if($("reportExpenses"))$("reportExpenses").textContent=money(te)+" ج";if($("reportNet"))$("reportNet").textContent=money(tr-te)+" ج";}
+function renderStats(){if($("statProducts"))$("statProducts").textContent=products.length;if($("statSales"))$("statSales").textContent=sales.length;const today=new Date().toLocaleDateString("ar-EG");const todayRev=sales.filter(s=>(s.date||"").startsWith(today)).reduce((sum,s)=>sum+Number(s.total||0),0);if($("statRevenue"))$("statRevenue").textContent=money(todayRev)+" ج";let tIn=0,tOut=0;treasury.forEach(t=>{if(t.type==="in")tIn+=Number(t.amount)||0;else tOut+=Number(t.amount)||0;});if($("statTreasuryBalance"))$("statTreasuryBalance").textContent=money(tIn-tOut)+" ج";const tr=sales.reduce((s,x)=>s+Number(x.total||0),0),te=expenses.reduce((s,x)=>s+Number(x.amount||0),0);if($("reportRevenue"))$("reportRevenue").textContent=money(tr)+" ج";if($("reportExpenses"))$("reportExpenses").textContent=money(te)+" ج";if($("reportNet"))$("reportNet").textContent=money(tr-te)+" ج";}
 window.renderStats = renderStats;
 window.exportDataToExcel = () => {const wb=XLSX.utils.book_new();if(products.length)XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(products),"المنتجات");if(sales.length)XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(sales),"المبيعات");XLSX.writeFile(wb,"NexPOS.xlsx");};
 
@@ -2420,7 +2479,7 @@ window.addReservation = async () => {const deviceId=$("resDeviceId").value,custo
 function renderPsReservations(){const sel=$("resDeviceId");if(sel)sel.innerHTML=psDevices.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("");const tbody=$("psReservationsTable");if(tbody)tbody.innerHTML=psReservations.map(r=>`<tr><td>${escapeHTML(r.customerName)}</td><td>${escapeHTML(r.phone||"—")}</td><td>${escapeHTML(r.deviceName)}</td><td>${new Date(r.time).toLocaleTimeString("ar-EG",{hour:'2-digit',minute:'2-digit'})}</td><td>قادم</td><td><button class="rowbtn red" onclick="deleteReservation('${r.id}')">إلغاء</button></td></tr>`).join("")||'<tr><td colspan="6">لا حجوزات</td></tr>';}
 window.deleteReservation = async id => {await deleteDoc(docRef("psReservations",id));await loadPlaystationData();renderPsReservations();};
 function renderPsCustomers(){const tbody=$("psCustomersTable");if(!tbody)return;const c={};psSessions.filter(s=>s.finalized).forEach(s=>{const n=(s.customerName||"").trim();if(!n)return;if(!c[n])c[n]={count:0,total:0};c[n].count++;c[n].total+=Number(s.total||0);});tbody.innerHTML=Object.keys(c).map((k,i)=>`<tr><td>${i+1}</td><td>${escapeHTML(k)}</td><td>${c[k].count}</td><td>${money(c[k].total)} ج</td><td>—</td></tr>`).join("")||'<tr><td colspan="5">لا بيانات</td></tr>';}
-function renderPsReports(){const all=psSessions.filter(s=>s.finalized);$("psTotalRevenueAll").textContent=money(all.reduce((s,x)=>s+Number(x.total||0),0))+" ج";$("psTotalSessionsAll").textContent=all.length;}
+function renderPsReports(){const all=psSessions.filter(s=>s.finalized);if($("psTotalRevenueAll"))$("psTotalRevenueAll").textContent=money(all.reduce((s,x)=>s+Number(x.total||0),0))+" ج";if($("psTotalSessionsAll"))$("psTotalSessionsAll").textContent=all.length;}
 
 window.goPsHome();
 </script>

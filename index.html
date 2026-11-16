@@ -199,13 +199,13 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
 
 /* ============ شاشة المبيعات (مرفوعة لأعلى تماماً) ============ */
 #salesPage {
-  height: calc(100vh - 10px);
+  height: 100vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background: var(--bg-body);
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border-radius: 0;
+  border: none;
   margin-top: 0 !important;
 }
 
@@ -218,7 +218,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
   padding: 6px 12px;
   font-size: 15px;
   font-weight: bold;
-  border-radius: 8px 8px 0 0;
+  border-radius: 0;
   flex-shrink: 0;
 }
 
@@ -476,7 +476,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
 
 <!-- ================= باقي السيستم ================= -->
 <div class="wrap hidden" id="appWrap">
-<header class="top" style="padding: 1px 0; margin-bottom: 0; flex-shrink: 0;">
+<header class="top" style="padding: 1px 0; margin-bottom: 0; flex-shrink: 0; display: none;">
  <div></div>
  <div>
    <span id="networkStatus" class="tag good" style="padding:2px 8px; font-size:10px;">متصل بالخادم</span>
@@ -913,7 +913,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
 
 <!-- ================= سيستم المبيعات ================= -->
 <section id="customerPanel" class="hidden">
- <div class="card" style="margin-top:0;">
+ <div class="card" style="margin-top:0; display:none;">
   <div class="top"><div><h2 id="shopTitle">نظام المبيعات</h2><span class="muted">لوحة الإدارة</span></div></div>
   <div id="dashboardPage">
    <div class="grid">
@@ -938,7 +938,8 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
     </div>
    </div>
   </div>
-  
+ </div>
+
   <!-- شاشة اشتراكي -->
   <div id="subscriptionPage" class="hidden" style="background:#f1f5f9; border-radius:10px; padding:10px; color:#1e293b; direction:rtl; font-family:'Cairo', sans-serif; margin-top:5px; font-size:12px; height: calc(100vh - 100px); display:flex; flex-direction:column; overflow:hidden;">
     <button class="back-btn" onclick="page('dashboard')" style="background:#e2e8f0; color:#0f172a; border:none; padding:5px 10px; width:fit-content; margin-bottom:5px;">← رجوع</button>
@@ -1118,13 +1119,9 @@ hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
     </div>
   </div>
 
-  <!-- شاشة المبيعات (بدون ELTOKHY ومرفوعة للأعلى تماماً) -->
-  <div id="salesPage" class="hidden">
-    <div class="sahal-top-bar">
-      <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:18px;">🛒</span><span>شاشة المبيعات</span></div>
-      <div style="display:flex; align-items:center; gap:10px;"><span class="brand-mini" style="background:rgba(255,255,255,0.2);">NexPOS PRO — V32</span><span id="sahalShopTitle" style="font-size:13px;">اسم المتجر</span></div>
-    </div>
-    <div class="sahal-layout-main">
+  <!-- شاشة المبيعات (مرفوعة لأعلى تماماً بدون أي شريط علوي قديم) -->
+  <div id="salesPage" class="">
+    <div class="sahal-layout-main" style="height: 100vh;">
       <div class="sahal-center-main">
         <div class="sahal-search-area">
           <div class="search-container">

@@ -197,7 +197,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
-/* ============ شاشة المبيعات ============ */
+/* ============ شاشة المبيعات (المحدثة والمحسنة) ============ */
 #salesPage {
   height: calc(100vh - 70px);
   display: flex;
@@ -301,21 +301,21 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   text-align: center;
   box-shadow: 0 4px 10px rgba(16,185,129,0.3);
 }
-.sahal-total-box span { font-size: 14px; display: block; margin-bottom: 5px;}
-.sahal-total-box h2 { margin: 0; font-size: 36px; color: white; direction: ltr; }
+.sahal-total-box span { font-size: 14px; display: block; margin-bottom: 2px;}
+.sahal-total-box h2 { margin: 0; font-size: 34px; color: white; direction: ltr; }
 
 .sahal-controls-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 6px;
 }
 .sahal-controls-grid label { font-size: 11px; margin-bottom: 0; color: var(--text-main);}
-.sahal-controls-grid input { padding: 6px; font-size: 14px; text-align: center; font-weight: bold; margin: 0;}
+.sahal-controls-grid input { padding: 5px; font-size: 13px; text-align: center; font-weight: bold; margin: 0;}
 
 .sahal-left-actions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   margin-top: auto;
 }
 
@@ -323,29 +323,53 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 12px;
+  gap: 8px;
+  padding: 10px;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
   cursor: pointer;
   color: white;
   transition: 0.2s;
 }
 .sahal-action-btn:hover { transform: translateY(-2px); opacity: 0.9; }
-.sahal-action-btn i { font-size: 22px; font-style: normal; }
+.sahal-action-btn i { font-size: 20px; font-style: normal; }
 
 .action-sell { background: #10b981; }
 .action-pay { background: #f59e0b; }
 .action-hold { background: #d97706; }
 .action-home { background: #334155; }
 
+/* تحسينات إضافية لواجهة المبيعات */
+.inquiry-box { position: relative; display: inline-block; width: 100%; }
+.inquiry-btn {
+  background: #334155; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-weight: bold; border: 1px solid var(--border-color); user-select: none; transition: 0.2s;
+}
+.inquiry-btn:hover { background: #475569; }
+.inquiry-tooltip {
+  visibility: hidden; width: 140px; background-color: #0f172a; color: #fff; text-align: center; border-radius: 6px;
+  padding: 6px; position: absolute; z-index: 100; bottom: 125%; left: 50%; transform: translateX(-50%);
+  opacity: 0; transition: opacity 0.2s; border: 1px solid var(--border-color); font-size: 11px; font-weight: normal;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+.inquiry-box:hover .inquiry-tooltip { visibility: visible; opacity: 1; }
+.inquiry-tooltip .cost-val { display: block; color: #34d399; font-weight: bold; font-size: 13px; margin-top: 2px; }
+
+.qty-control-group { display: flex; align-items: center; justify-content: center; gap: 4px; }
+.qty-btn { background: #334155; color: white; border: none; width: 22px; height: 22px; border-radius: 4px; font-weight: bold; cursor: pointer; display: grid; place-items: center; font-size: 12px; }
+.qty-btn:hover { background: var(--primary); }
+
 @media (max-height: 800px) {
   .sahal-top-bar { padding: 5px 10px; font-size: 14px; }
-  .sahal-total-box h2 { font-size: 28px; }
-  .sahal-action-btn { padding: 8px; font-size: 14px; }
-  .sahal-action-btn i { font-size: 18px; }
-  .sahal-left-sidebar { width: 280px; padding: 5px; gap: 5px; }
+  .sahal-total-box h2 { font-size: 26px; }
+  .sahal-action-btn { padding: 7px; font-size: 13px; }
+  .sahal-left-sidebar { width: 280px; padding: 6px; gap: 5px; }
+}
+@media (max-width: 900px) {
+  .sahal-layout-main { flex-direction: column !important; overflow-y: auto !important; }
+  .sahal-left-sidebar { width: 100% !important; border-right: none !important; border-top: 1px solid var(--border-color); }
+  #salesPage { height: auto !important; overflow-y: auto !important; }
 }
 
 .back-btn{ background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); padding: 7px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: none; margin-bottom: 8px;}
@@ -1117,17 +1141,20 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <!-- شاشة المبيعات -->
+  <!-- شاشة المبيعات (المحدثة والمحسنة) -->
   <div id="salesPage" class="hidden">
     <div class="sahal-top-bar">
-      <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:20px;">🛒</span><span>شاشة المبيعات</span></div>
-      <div style="display:flex; align-items:center; gap:10px;"><span class="brand-mini" style="background:rgba(255,255,255,0.2);">NexPOS PRO — V32</span><span id="sahalShopTitle" style="font-size:14px;">اسم المتجر</span></div>
+      <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:20px;">🛒</span><span>شاشة المبيعات الذكية</span></div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="tag" style="background:rgba(255,255,255,0.2); color:white;">F1: بحث | F2: بيع | F4: سداد | F9: تعليق</span>
+        <span id="sahalShopTitle" style="font-size:14px;">اسم المتجر</span>
+      </div>
     </div>
     <div class="sahal-layout-main">
       <div class="sahal-center-main">
         <div class="sahal-search-area">
           <div class="search-container">
-            <label>ابحث عن الصنف (بالاسم أو الباركود)</label>
+            <label>ابحث عن الصنف بالاسم أو امسح الباركود (F1)</label>
             <input id="saleSearch" oninput="searchProducts(event)" onkeypress="handleBarcodeScan(event)" placeholder="اكتب اسم الصنف أو امسح الباركود..." autocomplete="off">
             <div id="searchResults"></div>
           </div>
@@ -1135,41 +1162,45 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
         <div class="sahal-table-wrap">
           <table class="sahal-table">
             <thead>
-              <tr><th style="width:30px;">#</th><th>اسم الصنف</th><th style="width:60px;">الكمية</th><th style="width:80px;">السعر</th><th style="width:80px;">الإجمالي</th><th style="width:80px;">خصم</th><th style="width:80px;">النهائي</th><th style="width:40px;">حذف</th></tr>
+              <tr><th style="width:30px;">#</th><th>اسم الصنف</th><th style="width:110px; text-align:center;">الكمية</th><th style="width:85px;">السعر</th><th style="width:80px;">الإجمالي</th><th style="width:80px;">خصم</th><th style="width:85px;">النهائي</th><th style="width:40px;">حذف</th></tr>
             </thead>
-            <tbody id="cartTable"><tr><td colspan="8" class="empty-cart-msg" style="font-size:16px; padding:20px;">🛒 السلة فارغة</td></tr></tbody>
+            <tbody id="cartTable"><tr><td colspan="8" class="empty-cart-msg" style="font-size:16px; padding:20px; text-align:center;">🛒 السلة فارغة - ابدأ بإضافة أصناف</td></tr></tbody>
           </table>
         </div>
       </div>
       <div class="sahal-left-sidebar">
-        <div class="sahal-total-box"><span>الإجمالي المطلوب</span><h2 id="cartTotalDisplay">0.00</h2></div>
+        <div class="sahal-total-box">
+          <span>الإجمالي المطلوب</span>
+          <h2 id="cartTotalDisplay">0.00</h2>
+          <div id="cartItemsSummary" style="font-size:11px; opacity:0.9; margin-top:2px;">الأصناف: 0 | القطع: 0</div>
+        </div>
         <div class="sahal-controls-grid">
-          <div><label>إضافة</label><input id="saleAddition" type="number" min="0" value="0" oninput="renderCart()"></div>
-          <div><label>خصم %</label><input id="saleDiscountPct" type="number" min="0" max="100" value="0" oninput="renderCart()"></div>
-          <div><label>خصم الفكة</label><input id="saleDiscount" type="number" min="0" value="0" oninput="renderCart()"></div>
-          <div><label>ملاحظات</label><input type="text" id="saleNotes" placeholder="..." style="text-align:right;"></div>
+          <div><label>إضافة مبلغ</label><input id="saleAddition" type="number" min="0" value="0" oninput="renderCart()"></div>
+          <div><label>خصم % عام</label><input id="saleDiscountPct" type="number" min="0" max="100" value="0" oninput="renderCart()"></div>
+          <div><label>خصم فكة</label><input id="saleDiscount" type="number" min="0" value="0" oninput="renderCart()"></div>
+          <div><label>ملاحظات</label><input type="text" id="saleNotes" placeholder="ملاحظات..." style="text-align:right;"></div>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:5px;">
-           <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1" style="margin:0;"></div>
-           <div><label>السعر</label><input id="salePrice" type="number" min="0" placeholder="0.00" style="margin:0;"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:2px;">
+           <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1" style="margin:0; text-align:center;"></div>
+           <div><label>السعر</label><input id="salePrice" type="number" min="0" placeholder="0.00" style="margin:0; text-align:center;"></div>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
-           <button class="green" style="padding:8px; font-size:14px;" onclick="addToCart()">➕ إضافة</button>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:2px;">
+           <button class="green" style="padding:7px; font-size:13px;" onclick="addToCart()">➕ إضافة (Enter)</button>
            <div class="inquiry-box">
-              <div class="inquiry-btn" id="inquiryBtn" style="height:36px; font-size:12px;">🔍 استعلام
+              <div class="inquiry-btn" id="inquiryBtn" style="height:34px; font-size:12px;">🔍 استعلام
                 <div class="inquiry-tooltip" id="inquiryTooltip">سعر الشراء<span class="cost-val">—</span></div>
               </div>
             </div>
         </div>
         <div class="sahal-left-actions">
-          <div class="sahal-action-btn action-sell" onclick="completeSale()"><i>💵</i> <span>حفظ وبيع</span></div>
+          <div class="sahal-action-btn action-sell" onclick="completeSale()"><i>💵</i> <span>حفظ وبيع (F2)</span></div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
-            <div class="sahal-action-btn action-pay" onclick="showPaymentModal()" style="padding:8px; font-size:12px;"><i>💳</i> <span>سداد</span></div>
-            <div class="sahal-action-btn action-hold" onclick="saveHold()" style="padding:8px; font-size:12px;"><i>⏸️</i> <span>تعليق</span></div>
+            <div class="sahal-action-btn action-pay" onclick="showPaymentModal()" style="padding:7px; font-size:11px;"><i>💳</i> <span>سداد (F4)</span></div>
+            <div class="sahal-action-btn action-hold" onclick="saveHold()" style="padding:7px; font-size:11px;"><i>⏸️</i> <span>تعليق (F9)</span></div>
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
-            <div class="sahal-action-btn action-home" onclick="openHeldList()" style="padding:8px; font-size:12px; background:#d97706;"><i>📂</i> <span>المعلقة</span></div>
-            <div class="sahal-action-btn action-home" onclick="page('dashboard')" style="padding:8px; font-size:12px;"><i>🏠</i> <span>الرئيسية</span></div>
+            <div class="sahal-action-btn action-home" onclick="openHeldList()" style="padding:7px; font-size:11px; background:#d97706;"><i>📂</i> <span>المعلقة</span></div>
+            <div class="sahal-action-btn action-home" onclick="page('dashboard')" style="padding:7px; font-size:11px;"><i>🏠</i> <span>الرئيسية</span></div>
           </div>
         </div>
       </div>
@@ -1212,7 +1243,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'nexpos-cache-v5';
+      const CACHE_NAME = 'nexpos-cache-v6';
       const urlsToCache = ['/', '/manifest.json'];
       self.addEventListener('install', event => { self.skipWaiting(); event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))); });
       self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(cacheNames => Promise.all(cacheNames.map(cacheName => { if (cacheName !== CACHE_NAME) return caches.delete(cacheName); })))); self.clients.claim(); });
@@ -1532,7 +1563,6 @@ onAuthStateChanged(auth, async user => {
   }
 });
 
-// ============ دالة تغيير كلمة المرور الخاصة لكل سيستم ============
 window.changeOwnPassword = async (sysPrefix) => {
   const currentInput = $(sysPrefix === 'ps' ? 'psCurrentPassword' : 'salesCurrentPassword');
   const newInput = $(sysPrefix === 'ps' ? 'psNewPassword' : 'salesNewPassword');
@@ -1563,7 +1593,6 @@ window.changeOwnPassword = async (sysPrefix) => {
   }
 };
 
-// ============ دوال لوحة تحكم المالك المركزية ============
 window.ownerSection=which=>{$("ownerSalesSection").classList.toggle("hidden",which!=="sales");$("ownerPsSection").classList.toggle("hidden",which!=="playstation");$("ownerSalesTab").classList.toggle("active",which==="sales");$("ownerPsTab").classList.toggle("active",which==="playstation");};
 
 function planControls(u,system){
@@ -1572,7 +1601,7 @@ function planControls(u,system){
  return `
    <select id="plan_${system}_${u.id}" style="width:85px;font-size:11px;padding:4px;margin:0;"><option value="30" ${rd===30?"selected":""}>شهري</option><option value="90" ${rd===90?"selected":""}>3 شهور</option><option value="365" ${rd===365?"selected":""}>سنوي</option><option value="36500" ${rd===36500?"selected":""}>دائم</option></select>
    <button class="rowbtn green" onclick="activateUserWithPlan('${u.id}','${system}')">تفعيل</button>
-   <button class="rowbtn purple" onclick="openEditUserModal('${u.id}', '${escapeHTML(u.shopName||"")}', '${escapeHTML(u.customerName||"")}', '${escapeHTML(u.email||"")}')">✏️ تعديل البيانات</button>
+   <button class="rowbtn purple" onclick="openEditUserModal('${u.id}', '${escapeHTML(u.shopName||"")}', '${escapeHTML(u.customerName||"")}', '${escapeHTML(u.email||"")}')">✏️ تعديل</button>
    <button class="rowbtn red" onclick="deactivateSystem('${u.id}','${system}')">إيقاف</button>
    <button class="rowbtn dark" onclick="deleteUser('${u.id}')">حذف</button>
  `;
@@ -1585,7 +1614,6 @@ window.loadUsers=async()=>{
   const salesList=list.filter(u=>systemInfo(u,"sales").status!=="not_registered");
   const psList=list.filter(u=>systemInfo(u,"playstation").status!=="not_registered");
   
-  // حساب الإجمالي الفعلي للحسابات المسجلة في النظامين فقط (يحل مشكلة ظهور 6 بدلاً من 2)
   const validUsers = list.filter(u => systemInfo(u,"sales").status!=="not_registered" || systemInfo(u,"playstation").status!=="not_registered");
   $("totalUsers").textContent = validUsers.length;
   $("salesUsersCount").textContent = salesList.length;
@@ -1630,7 +1658,6 @@ window.loadUsers=async()=>{
  }catch(e){showAlert("خطأ: "+e.message,"error");}
 };
 
-// دوال نافذة تعديل بيانات العميل من لوحة المالك
 window.openEditUserModal = (id, shop, name, email) => {
   $("editUserId").value = id;
   $("editUserShop").value = shop;
@@ -1639,66 +1666,32 @@ window.openEditUserModal = (id, shop, name, email) => {
   $("sendPasswordResetCheck").checked = false;
   $("editUserModal").classList.remove("hidden");
 };
-
-window.closeEditUserModal = () => {
-  $("editUserModal").classList.add("hidden");
-};
-
+window.closeEditUserModal = () => $("editUserModal").classList.add("hidden");
 window.saveUserEdits = async () => {
-  const id = $("editUserId").value;
-  const newShop = $("editUserShop").value.trim();
-  const newName = $("editUserName").value.trim();
-  const newEmail = $("editUserEmail").value.trim();
-  const sendReset = $("sendPasswordResetCheck").checked;
-
+  const id = $("editUserId").value, newShop = $("editUserShop").value.trim(), newName = $("editUserName").value.trim(), newEmail = $("editUserEmail").value.trim(), sendReset = $("sendPasswordResetCheck").checked;
   if (!newShop || !newName || !newEmail) return showAlert("يرجى ملء جميع الحقول الأساسية.", "warning");
-
   try {
-    await updateDoc(doc(db, "users", id), {
-      shopName: newShop,
-      customerName: newName,
-      email: newEmail
-    });
-
-    if (sendReset) {
-      await sendPasswordResetEmail(auth, newEmail);
-      showAlert("تم تحديث بيانات العميل بنجاح، وإرسال رابط تعيين كلمة مرور جديدة إلى بريده الإلكتروني!", "success");
-    } else {
-      showAlert("تم تحديث اسم المستخدم وبيانات العميل بنجاح!", "success");
-    }
-
-    closeEditUserModal();
-    await loadUsers();
-  } catch (e) {
-    showAlert("خطأ أثناء التعديل: " + e.message, "error");
-  }
+    await updateDoc(doc(db, "users", id), { shopName: newShop, customerName: newName, email: newEmail });
+    if (sendReset) { await sendPasswordResetEmail(auth, newEmail); showAlert("تم تحديث البيانات وإرسال رابط كلمة المرور للبريد!", "success"); }
+    else { showAlert("تم تحديث بيانات العميل بنجاح!", "success"); }
+    closeEditUserModal(); await loadUsers();
+  } catch (e) { showAlert("خطأ: " + e.message, "error"); }
 };
 
 window.updateUserMaxDevices = async (userId) => {
-  const input = $(`maxDev_${userId}`);
-  const val = Number(input?.value);
-  if (!Number.isInteger(val) || val < 1) return showAlert("أدخل رقم صحيح (1 فأكثر).", "warning");
-  try {
-    await updateDoc(doc(db, "users", userId), { maxDevices: val });
-    showAlert(`تم تحديث الحد الأقصى للأجهزة إلى (${val}) جهاز.`, "success");
-    await loadUsers();
-  } catch (e) { showAlert("خطأ: " + e.message, "error"); }
+  const input = $(`maxDev_${userId}`), val = Number(input?.value);
+  if (!Number.isInteger(val) || val < 1) return showAlert("أدخل رقم صحيح.", "warning");
+  try { await updateDoc(doc(db, "users", userId), { maxDevices: val }); showAlert("تم التحديث.", "success"); await loadUsers(); } catch (e) { showAlert("خطأ: " + e.message, "error"); }
 };
-
 window.resetUserDevices = async (userId) => {
-  if (!await window.customConfirm("فك ارتباط جميع الأجهزة؟", "سيتم مسح الجهاز المتصل حالياً ليتمكن العميل من تسجيل الدخول من جهاز جديد.")) return;
-  try {
-    await updateDoc(doc(db, "users", userId), { devices: [] });
-    showAlert("تم فك ارتباط الأجهزة بنجاح! يمكن للعميل الآن الدخول من جهاز جديد.", "success");
-    await loadUsers();
-  } catch (e) { showAlert("خطأ: " + e.message, "error"); }
+  if (!await window.customConfirm("فك ارتباط جميع الأجهزة؟")) return;
+  try { await updateDoc(doc(db, "users", userId), { devices: [] }); showAlert("تم فك الارتباط.", "success"); await loadUsers(); } catch (e) { showAlert("خطأ: " + e.message, "error"); }
 };
 
 window.activateUserWithPlan=async(id,system)=>{const sel=$(`plan_${system}_${id}`);if(!sel)return;const days=Number(sel.value),plan=PLANS[days];if(!plan)return;const exp=new Date();exp.setDate(exp.getDate()+days);try{await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"active",[`systems.${system}.plan`]:plan.name,[`systems.${system}.expiryDate`]:exp});showAlert("تم التفعيل.","success");await loadUsers();}catch(e){showAlert(e.message,"error");}};
 window.deactivateSystem=async(id,system)=>{if(!await window.customConfirm("إيقاف؟"))return;try{await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"pending"});await loadUsers();showAlert("تم الإيقاف.","success");}catch(e){showAlert(e.message,"error");}};
 window.deleteUser=async id=>{if(!await window.customConfirm("حذف الحساب نهائياً؟"))return;try{await deleteDoc(doc(db,"users",id));await loadUsers();showAlert("تم الحذف.","success");}catch(e){showAlert(e.message,"error");}};
 
-// ============ دوال تخصيص الخانات الأربع الأولى وحفظها ============
 function getTileNames() {
   const saved = profile?.customTiles || {};
   return {
@@ -1724,80 +1717,47 @@ function applySavedTileNames() {
 
 window.openCustomizeTilesModal = () => {
   const names = getTileNames();
-  $("customTile1").value = names[1];
-  $("customTile2").value = names[2];
-  $("customTile3").value = names[3];
-  $("customTile4").value = names[4];
+  $("customTile1").value = names[1]; $("customTile2").value = names[2]; $("customTile3").value = names[3]; $("customTile4").value = names[4];
   $("customizeTilesModal").classList.remove("hidden");
 };
-
-window.closeCustomizeTilesModal = () => {
-  $("customizeTilesModal").classList.add("hidden");
-};
-
+window.closeCustomizeTilesModal = () => $("customizeTilesModal").classList.add("hidden");
 window.saveCustomTiles = async () => {
-  const t1 = $("customTile1").value.trim() || "أجهزة الرومات";
-  const t2 = $("customTile2").value.trim() || "صالة VIP";
-  const t3 = $("customTile3").value.trim() || "القاعدة العربي";
-  const t4 = $("customTile4").value.trim() || "البلياردو";
-
-  localStorage.setItem("ps_tile_1", t1);
-  localStorage.setItem("ps_tile_2", t2);
-  localStorage.setItem("ps_tile_3", t3);
-  localStorage.setItem("ps_tile_4", t4);
-
+  const t1 = $("customTile1").value.trim() || "أجهزة الرومات", t2 = $("customTile2").value.trim() || "صالة VIP", t3 = $("customTile3").value.trim() || "القاعدة العربي", t4 = $("customTile4").value.trim() || "البلياردو";
+  localStorage.setItem("ps_tile_1", t1); localStorage.setItem("ps_tile_2", t2); localStorage.setItem("ps_tile_3", t3); localStorage.setItem("ps_tile_4", t4);
   const customTiles = { tile1: t1, tile2: t2, tile3: t3, tile4: t4 };
   if (profile) profile.customTiles = customTiles;
   localStorage.setItem('nexpos_profile', JSON.stringify(profile));
-
-  applySavedTileNames();
-  closeCustomizeTilesModal();
-
-  if (currentUser && navigator.onLine) {
-    try {
-      await setDoc(doc(db, "users", currentUser.uid), { customTiles }, { merge: true });
-    } catch (e) { console.warn(e); }
-  }
-  showAlert("تم تحديث أسماء الخانات وحفظها بنجاح!", "success");
+  applySavedTileNames(); closeCustomizeTilesModal();
+  if (currentUser && navigator.onLine) { setDoc(doc(db, "users", currentUser.uid), { customTiles }, { merge: true }).catch(()=>{}); }
+  showAlert("تم الحفظ!", "success");
 };
 
 window.quickEditTile = async (tileNum) => {
-  const names = getTileNames();
-  const newName = await customPrompt(`تعديل اسم الخانة رقم ${tileNum}:`, 'text', names[tileNum]);
+  const names = getTileNames(), newName = await customPrompt(`تعديل اسم الخانة رقم ${tileNum}:`, 'text', names[tileNum]);
   if (newName !== null && newName.trim() !== "") {
     const clean = newName.trim();
     localStorage.setItem(`ps_tile_${tileNum}`, clean);
-    const customTiles = {
-      tile1: tileNum === 1 ? clean : names[1],
-      tile2: tileNum === 2 ? clean : names[2],
-      tile3: tileNum === 3 ? clean : names[3],
-      tile4: tileNum === 4 ? clean : names[4]
-    };
+    const customTiles = { tile1: tileNum === 1 ? clean : names[1], tile2: tileNum === 2 ? clean : names[2], tile3: tileNum === 3 ? clean : names[3], tile4: tileNum === 4 ? clean : names[4] };
     if (profile) profile.customTiles = customTiles;
     localStorage.setItem('nexpos_profile', JSON.stringify(profile));
     applySavedTileNames();
-    if (currentUser && navigator.onLine) {
-      setDoc(doc(db, "users", currentUser.uid), { customTiles }, { merge: true }).catch(()=>{});
-    }
+    if (currentUser && navigator.onLine) { setDoc(doc(db, "users", currentUser.uid), { customTiles }, { merge: true }).catch(()=>{}); }
     showAlert("تم التحديث!", "success");
   }
 };
 
-// ============ باقي دوال النظام ============
 window.checkPsSubscriptionStatus = () => {
-    const info = systemInfo(profile, "playstation");
-    const maxDev = Number(profile.maxDevices) || 1;
-    const devs = (profile.devices || []).join(" ، ") || "لا يوجد";
+    const info = systemInfo(profile, "playstation"), maxDev = Number(profile.maxDevices) || 1, devs = (profile.devices || []).join(" ، ") || "لا يوجد";
     let content = `<p>حالة الاشتراك: <b style="color:${info.status === 'active' ? '#10b981' : '#ef4444'}">${info.status === "active" ? "نشط" : "غير نشط"}</b></p>`;
     if(info.expiryDate) {
         const exp = info.expiryDate.toDate ? info.expiryDate.toDate() : new Date(info.expiryDate);
         content += `<p>تاريخ الانتهاء: <b>${exp.toLocaleDateString('ar-EG')}</b></p>`;
     }
-    content += `<p style="font-size:11px; color:#94a3b8;">الأجهزة المسموحة: <b>${maxDev}</b> | المتصل: <span dir="ltr">${escapeHTML(devs)}</span></p>`;
+    content += `<p style="font-size:11px; color:#94a3b8;">الأجهزة: <b>${maxDev}</b> | المتصل: <span dir="ltr">${escapeHTML(devs)}</span></p>`;
     if($("psSubModalContent")) $("psSubModalContent").innerHTML = content;
 };
 window.openPsSubscriptionModal = () => { checkPsSubscriptionStatus(); $("psSubModal").classList.remove("hidden"); };
-window.closePsSubscriptionModal = () => { $("psSubModal").classList.add("hidden"); };
+window.closePsSubscriptionModal = () => $("psSubModal").classList.add("hidden");
 
 window.updateBarcodePreview = () => {
   const type = $("bcType").value, barcodeValue = "123456789012";
@@ -1813,7 +1773,7 @@ window.updateBarcodePreview = () => {
 };
 window.saveBarcodeSettings = async () => {
   const settings = { printer: $("bcPrinter").value, type: $("bcType").value, marginTop: Number($("bcMarginTop").value), marginLeft: Number($("bcMarginLeft").value), width: Number($("bcWidth").value), height: Number($("bcHeight").value), fontSizeName: Number($("bcFontSizeName").value), fontSizePrice: Number($("bcFontSizePrice").value), fontSizeCode: Number($("bcFontSizeCode").value), showName: $("bcShowName").checked, showPrice: $("bcShowPrice").checked, showCode: $("bcShowCode").checked };
-  try { await setDoc(doc(db, "users", currentUser.uid), { barcodeSettings: settings }, { merge: true }); profile.barcodeSettings = settings; localStorage.setItem('nexpos_profile', JSON.stringify(profile)); showAlert("تم حفظ إعدادات الباركود بنجاح!", "success"); } catch (e) { showAlert("خطأ في الحفظ: " + e.message, "error"); }
+  try { await setDoc(doc(db, "users", currentUser.uid), { barcodeSettings: settings }, { merge: true }); profile.barcodeSettings = settings; localStorage.setItem('nexpos_profile', JSON.stringify(profile)); showAlert("تم حفظ الإعدادات بنجاح!", "success"); } catch (e) { showAlert("خطأ: " + e.message, "error"); }
 };
 window.loadBarcodeSettings = () => {
   const s = profile?.barcodeSettings;
@@ -1843,7 +1803,7 @@ window.updateInvoicePreview = () => {
 };
 window.saveInvoiceSettings = async () => {
   const settings = { shopName: $("invShopName").value, taxNumber: $("invTaxNumber").value, address: $("invAddress").value, paperSize: $("invPaperSize").value };
-  try { await setDoc(doc(db, "users", currentUser.uid), { invoiceSettings: settings }, { merge: true }); profile.invoiceSettings = settings; localStorage.setItem('nexpos_profile', JSON.stringify(profile)); showAlert("تم حفظ إعدادات الفاتورة بنجاح!", "success"); } catch (e) { showAlert("خطأ في الحفظ: " + e.message, "error"); }
+  try { await setDoc(doc(db, "users", currentUser.uid), { invoiceSettings: settings }, { merge: true }); profile.invoiceSettings = settings; localStorage.setItem('nexpos_profile', JSON.stringify(profile)); showAlert("تم الحفظ!", "success"); } catch (e) { showAlert("خطأ: " + e.message, "error"); }
 };
 window.loadInvoiceSettings = () => {
   const s = profile?.invoiceSettings;
@@ -1897,33 +1857,33 @@ function checkCustomerSubscription(info){
 }
 
 window.removeDevice = async (deviceId) => {
-  if (!await window.customConfirm("إلغاء ترخيص هذا الجهاز؟", "سيتم تسجيل الخروج من هذا الجهاز.")) return;
+  if (!await window.customConfirm("إلغاء ترخيص هذا الجهاز؟")) return;
   try {
     const newDevices = (profile.devices || []).filter(d => d !== deviceId);
     await updateDoc(doc(db, "users", currentUser.uid), { devices: newDevices });
     profile.devices = newDevices;
     localStorage.setItem('nexpos_profile', JSON.stringify(profile));
-    showAlert("تم إلغاء ترخيص الجهاز بنجاح.", "success");
+    showAlert("تم إلغاء الترخيص.", "success");
     if (deviceId === getDeviceId()) setTimeout(() => logout(), 1500);
     else checkCustomerSubscription(systemInfo(profile, selectedSystem));
   } catch (e) { showAlert("خطأ: " + e.message, "error"); }
 };
 
 window.cancelDeviceLicense = async () => {
-  if (!await window.customConfirm("هل أنت متأكد من إلغاء ترخيص هذا الجهاز؟")) return;
+  if (!await window.customConfirm("إلغاء ترخيص هذا الجهاز؟")) return;
   try {
     const currentDeviceId = getDeviceId();
     const newDevices = (profile.devices || []).filter(d => d !== currentDeviceId);
     await updateDoc(doc(db, "users", currentUser.uid), { devices: newDevices });
-    showAlert("تم إلغاء ترخيص هذا الجهاز. سيتم تسجيل الخروج.", "success");
+    showAlert("تم إلغاء الترخيص وجاري الخروج.", "success");
     setTimeout(() => logout(), 1500);
   } catch (e) { showAlert("خطأ: " + e.message, "error"); }
 };
 
 window.confirmSubscriptionStatus = async () => {
   const info = systemInfo(profile, activeSystem);
-  if (subscriptionActive(info)) showAlert("✅ تم التفعيل! اشتراكك نشط حالياً.", "success");
-  else showAlert("❌ لم يتم التفعيل بواسطة المالك. يرجى التواصل مع الدعم الفني.", "error");
+  if (subscriptionActive(info)) showAlert("✅ اشتراكك نشط حالياً.", "success");
+  else showAlert("❌ اشتراكك غير نشط.", "error");
 };
 
 window.requestRenewal = () => {
@@ -1932,7 +1892,6 @@ window.requestRenewal = () => {
   window.open(`https://wa.me/201062883414?text=${msg}`, "_blank");
 };
 
-// ============ دوال البلايستيشن المحدثة ============
 window.goPsHome=()=>{
  ["psHomeScreen","psDevicesSection","psVipSection","psBaseArabiSection","psBilliardSection","psRunningSection","psDrinksSection","psSandwichesSection","psSessionsSection","psReservationsSection","psCustomersSection","psReportsSection"].forEach(id=>$(id)?.classList.add("hidden"));
  $("psHomeScreen").classList.remove("hidden"); currentPsSection="home"; renderPsHomeBadges();
@@ -2002,12 +1961,10 @@ window.openAddDeviceModal = (type) => {
  $("newDeviceGameBox").classList.toggle("hidden", type !== "billiard"); 
  $("addDeviceModal").classList.remove("hidden");
 };
-
 window.onDeviceTypeChange = (val) => {
  addDeviceType = val;
  $("newDeviceGameBox").classList.toggle("hidden", val !== "billiard");
 };
-
 window.closeAddDeviceModal = () => $("addDeviceModal").classList.add("hidden");
 window.submitAddDevice = async () => {
  const name = $("newDeviceName").value.trim(), rate = Number($("newDeviceRate").value);
@@ -2032,8 +1989,7 @@ function refreshDeviceDetail(){
 }
 
 function buildDeviceDetailContent(d){
- const running = d.status === "running", dType = window.getDeviceType(d);
- const names = getTileNames();
+ const running = d.status === "running", dType = window.getDeviceType(d), names = getTileNames();
  const isVip = dType==="vip", isBase = dType==="base_arabi", isBill = dType==="billiard";
  const icon = isVip?"⭐":isBase?"🏛":isBill?"🎱":"🎮", typeLabel = isVip?names[2]:isBase?names[3]:isBill?names[4]:names[1];
  const orders = d.currentOrders || psSessions.find(s=>s.id===d.sessionId)?.orders || [];
@@ -2316,17 +2272,6 @@ window.restoreHold = async (id) => {
 };
 window.deleteHold = async (id) => { if (await customConfirm("حذف الفاتورة المعلقة؟")) { await deleteDoc(docRef("holds", id)); Swal.close(); openHeldList(); } };
 
-window.showPaymentModal = async () => {
-  if(!cart.length) return showAlert("السلة فارغة.","warning");
-  const {total} = renderCart();
-  const result = await Swal.fire({
-    title: '💳 سداد سريع',
-    html: `<div style="font-size:28px;color:#34d399;font-weight:bold;margin:8px 0;">${money(total)} ج</div><input id="swalPaid" type="number" value="${total}" style="width:100%;padding:9px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#f8fafc;text-align:center;font-size:16px;">`,
-    showCancelButton: true, confirmButtonText: '💾 تأكيد وبيع', cancelButtonText: 'إلغاء', confirmButtonColor: '#10b981', background: '#1e293b', color: '#f8fafc'
-  });
-  if(result.isConfirmed) await completeSale();
-};
-
 window.updateShopNameSetting = async () => {const n=$("settingsShopName").value.trim();if(!n)return;await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;$("shopTitle").textContent=n;$("sahalShopTitle").textContent=n;showAlert("تم.","success");};
 window.updateCustomerEmailSetting = async () => {const n=$("settingsEmail").value.trim();if(!n)return;await updateEmail(auth.currentUser,n);await updateDoc(doc(db,"users",currentUser.uid),{email:n});showAlert("تم.","success");};
 
@@ -2365,17 +2310,79 @@ window.addToCart = () => {
  if(old){old.qty+=qty;old.price=price;}else cart.push({productId:p.id,name:p.name,qty,price,cost:p.cost||0,lineDiscount:0});
  selectedProduct=null;$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";renderCart();$("saleSearch").focus();
 };
+
+// ============ اختصارات لوحة المفاتيح وأزرار الكميات المحسنة ============
+window.addEventListener('keydown', (e) => {
+  if (document.getElementById('salesPage').classList.contains('hidden')) return;
+  if (e.key === 'F1') { e.preventDefault(); document.getElementById('saleSearch')?.focus(); }
+  else if (e.key === 'F2') { e.preventDefault(); completeSale(); }
+  else if (e.key === 'F4') { e.preventDefault(); showPaymentModal(); }
+  else if (e.key === 'F9') { e.preventDefault(); saveHold(); }
+  else if (e.key === 'Enter' && document.activeElement.id === 'saleSearch') {
+    const firstRes = document.querySelector('#searchResults .result');
+    if (firstRes) firstRes.click();
+  }
+});
+
+window.changeCartQty = (index, delta) => {
+  if (!cart[index]) return;
+  const item = cart[index], p = products.find(x => x.id === item.productId), newQty = item.qty + delta;
+  if (newQty <= 0) { cart.splice(index, 1); }
+  else {
+    if (p && newQty > Number(p.qty)) { showAlert("الكمية المطلوبة أكبر من المخزون المتاح!", "warning"); return; }
+    item.qty = newQty;
+  }
+  renderCart();
+};
+
+window.updateCartQtyInput = (index, val) => {
+  const q = Number(val);
+  if (!cart[index]) return;
+  const p = products.find(x => x.id === cart[index].productId);
+  if (q <= 0) { cart.splice(index, 1); }
+  else if (p && q > Number(p.qty)) { showAlert("الكمية المطلوبة أكبر من المخزون المتاح!", "warning"); cart[index].qty = Number(p.qty); }
+  else { cart[index].qty = q; }
+  renderCart();
+};
+
+window.updateCartPriceInput = (index, val) => {
+  if (cart[index]) { cart[index].price = Math.max(0, Number(val) || 0); renderCart(); }
+};
+
 function renderCart(){
- const tbody = $("cartTable");
- tbody.innerHTML = cart.length === 0 ? '<tr><td colspan="8" class="empty-cart-msg">🛒 ابدأ بالبحث عن صنف</td></tr>' : cart.map((x,i)=>{
+ const tbody = document.getElementById("cartTable");
+ if (!tbody) return;
+ tbody.innerHTML = cart.length === 0 ? '<tr><td colspan="8" class="empty-cart-msg" style="text-align:center; padding:20px; color:var(--text-muted);">🛒 السلة فارغة - ابدأ بإضافة أصناف</td></tr>' : cart.map((x,i)=>{
    const lineTotal = x.qty * x.price, lineDiscount = Math.max(0, Math.min(Number(x.lineDiscount)||0, lineTotal)), lineFinal = lineTotal - lineDiscount;
-   return `<tr><td>${i+1}</td><td>${escapeHTML(x.name)}</td><td>${x.qty}</td><td>${money(x.price)}</td><td>${money(lineTotal)}</td><td><input type="number" min="0" step="0.01" value="${lineDiscount.toFixed(2)}" style="width:70px;margin:0;padding:4px;text-align:center;" onchange="updateLineDiscount(${i}, this.value)"></td><td><b>${money(lineFinal)} ج</b></td><td><button class="rowbtn red" onclick="removeCartItem(${i})">حذف</button></td></tr>`;
+   return `<tr>
+     <td>${i+1}</td>
+     <td><b>${escapeHTML(x.name)}</b></td>
+     <td style="text-align:center;">
+       <div class="qty-control-group">
+         <button class="qty-btn" onclick="changeCartQty(${i}, -1)">-</button>
+         <input type="number" min="1" value="${x.qty}" style="width:40px; margin:0; padding:2px; text-align:center; font-size:12px;" onchange="updateCartQtyInput(${i}, this.value)">
+         <button class="qty-btn" onclick="changeCartQty(${i}, 1)">+</button>
+       </div>
+     </td>
+     <td><input type="number" min="0" step="0.01" value="${x.price}" style="width:75px; margin:0; padding:3px; text-align:center; font-size:12px; font-weight:bold;" onchange="updateCartPriceInput(${i}, this.value)"></td>
+     <td>${money(lineTotal)}</td>
+     <td><input type="number" min="0" step="0.01" value="${lineDiscount.toFixed(2)}" style="width:65px; margin:0; padding:3px; text-align:center; font-size:12px;" onchange="updateLineDiscount(${i}, this.value)"></td>
+     <td><b style="color:var(--success);">${money(lineFinal)} ج</b></td>
+     <td><button class="rowbtn red" onclick="removeCartItem(${i})" style="padding:3px 6px;">✕</button></td>
+   </tr>`;
  }).join("");
  const subtotal = cart.reduce((s,x)=>s+x.qty*x.price,0), lineDiscounts = cart.reduce((s,x)=>s+(Number(x.lineDiscount)||0),0);
  const discountPct = Math.max(0, Math.min(100, Number($("saleDiscountPct").value)||0)), discountCash = Math.max(0,Number($("saleDiscount").value)||0), addition = Math.max(0,Number($("saleAddition").value)||0);
  const totalDiscount = lineDiscounts + Number((subtotal * discountPct / 100).toFixed(2)) + discountCash;
  const total = Math.max(0, subtotal - totalDiscount + addition);
- $("cartTotalDisplay").textContent = money(total); window.updateInquiryTooltip();
+ $("cartTotalDisplay").textContent = money(total);
+ 
+ const totalItemsCount = cart.length;
+ const totalPiecesCount = cart.reduce((sum, x) => sum + x.qty, 0);
+ const summaryEl = document.getElementById("cartItemsSummary");
+ if (summaryEl) summaryEl.textContent = `الأصناف: ${totalItemsCount} | القطع: ${totalPiecesCount}`;
+
+ window.updateInquiryTooltip();
  return {subtotal, discount: totalDiscount, addition, total};
 }
 window.updateLineDiscount = (index, value) => { if(cart[index]) { cart[index].lineDiscount = Math.max(0, Number(value)||0); renderCart(); } };
@@ -2394,7 +2401,45 @@ window.completeSale = async () => {
  for(const item of cart){ const p = products.find(x=>x.id===item.productId); await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)}); }
  await setDoc(doc(col("sales")), inv);
  await setDoc(doc(col("treasury")), { type: "in", amount: total, note: `فاتورة #${inv.number}`, date: inv.date, createdAt: Date.now() });
- printInvoiceDirectly(inv); cart = []; $("saleDiscount").value = "0"; $("saleDiscountPct").value = "0"; $("saleAddition").value = "0"; renderCart(); loadBusiness(); showAlert("تم البيع. "+money(total)+" ج","success");
+ printInvoiceDirectly(inv); cart = []; $("saleDiscount").value = "0"; $("saleDiscountPct").value = "0"; $("saleAddition").value = "0"; renderCart(); loadBusiness(); showAlert("تم البيع بنجاح. "+money(total)+" ج","success");
+};
+
+// نافذة السداد الذكي مع حساب الباقي
+window.showPaymentModal = async () => {
+  if(!cart.length) return showAlert("السلة فارغة.","warning");
+  const {total} = renderCart();
+  const {value: paidAmount} = await Swal.fire({
+    title: '💳 نافذة السداد الذكي',
+    html: `
+      <div style="font-size:14px; color:var(--text-muted); margin-bottom:4px;">المطلوب سداده</div>
+      <div style="font-size:32px; color:#34d399; font-weight:bold; margin-bottom:12px;">${money(total)} ج</div>
+      <label style="text-align:right; display:block; margin-bottom:4px;">المبلغ المدفوع من العميل:</label>
+      <input id="swalPaidInput" type="number" value="${total}" min="${total}" step="0.5" style="width:100%; padding:10px; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; text-align:center; font-size:20px; font-weight:bold;" oninput="calcRemainingChange(${total})">
+      <div id="swalChangeDisplay" style="margin-top:10px; font-size:16px; font-weight:bold; color:#60a5fa; background:rgba(59,130,246,0.1); padding:8px; border-radius:6px;">الباقي للعميل: 0.00 جنيه</div>
+      <div style="display:flex; gap:5px; justify-content:center; margin-top:10px;">
+        <button type="button" onclick="document.getElementById('swalPaidInput').value=${Math.ceil(total/50)*50}; calcRemainingChange(${total});" style="background:#334155; padding:5px 10px; font-size:11px;">مبلغ مساوي</button>
+        <button type="button" onclick="document.getElementById('swalPaidInput').value=50; calcRemainingChange(${total});" style="background:#334155; padding:5px 10px; font-size:11px;">50 ج</button>
+        <button type="button" onclick="document.getElementById('swalPaidInput').value=100; calcRemainingChange(${total});" style="background:#334155; padding:5px 10px; font-size:11px;">100 ج</button>
+        <button type="button" onclick="document.getElementById('swalPaidInput').value=200; calcRemainingChange(${total});" style="background:#334155; padding:5px 10px; font-size:11px;">200 ج</button>
+        <button type="button" onclick="document.getElementById('swalPaidInput').value=500; calcRemainingChange(${total});" style="background:#334155; padding:5px 10px; font-size:11px;">500 ج</button>
+      </div>
+    `,
+    showCancelButton: true, confirmButtonText: '✔ تأكيد وبيعت', cancelButtonText: 'إلغاء', confirmButtonColor: '#10b981', background: '#1e293b', color: '#f8fafc',
+    preConfirm: () => {
+      const paid = Number(document.getElementById('swalPaidInput').value);
+      if (isNaN(paid) || paid < total) { Swal.showValidationMessage('المبلغ المدفوع أقل من إجمالي الفاتورة!'); return false; }
+      return paid;
+    }
+  });
+  if(paidAmount !== undefined) await completeSale();
+};
+
+window.calcRemainingChange = (total) => {
+  const paid = Number(document.getElementById('swalPaidInput')?.value) || 0, change = paid - total, changeEl = document.getElementById('swalChangeDisplay');
+  if (changeEl) {
+    if (change >= 0) { changeEl.style.color = '#34d399'; changeEl.style.background = 'rgba(16,185,129,0.1)'; changeEl.textContent = `الباقي للعميل: ${money(change)} جنيه`; }
+    else { changeEl.style.color = '#f87171'; changeEl.style.background = 'rgba(239,68,68,0.1)'; changeEl.textContent = `المبلغ غير كافٍ (عجز: ${money(Math.abs(change))} جنيه)`; }
+  }
 };
 
 window.printInvoiceDirectly = inv => {

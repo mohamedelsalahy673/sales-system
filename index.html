@@ -76,7 +76,7 @@ label{font-size:12px;font-weight:600;color:var(--text-muted); display:block; mar
 h2,h3,h4{margin-top:0; font-weight: 700;}
 h2{font-size:20px;} h3{font-size:16px;} h4{font-size:14px;}
 
-.wrap{max-width:100%; margin:auto; padding:5px 10px; width:100%; height: 100vh; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column;}
+.wrap{max-width:100%; margin:auto; padding:0 10px; width:100%; height: 100vh; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column;}
 .wrap::-webkit-scrollbar { width: 8px; }
 .wrap::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
@@ -85,7 +85,7 @@ h2{font-size:20px;} h3{font-size:16px;} h4{font-size:14px;}
 .system-desc{font-size:11px;font-weight:600;color:var(--text-muted);line-height:1.2;}
 .version{display:block;color:#fff;background:var(--primary);border-radius:5px;padding:2px 6px;font-size:9px;width:max-content; font-weight: bold;}
 .muted{font-size:12px;color:var(--text-muted)}
-.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap; padding: 4px 0; margin-bottom: 5px;}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap; padding: 2px 0; margin-bottom: 2px;}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
 .stat{background:var(--bg-card);padding:8px 10px;border-radius:8px; border: 1px solid var(--border-color); border-left: 3px solid var(--primary); display: flex; flex-direction: column; justify-content: center; align-items: flex-start;}
@@ -110,14 +110,14 @@ th { background: rgba(15,23,42,0.5); color: var(--text-muted); font-weight: 700;
 .tag.pink{background:rgba(219,39,119,0.15);color:#f472b6; border-color: rgba(219,39,119,0.3);}
 .rowbtn{padding:5px 9px;margin:2px;font-size:11px; border-radius: 5px;}
 .msg{padding:9px;border-radius:8px;background:rgba(239,68,68,0.1);color:#f87171;margin-top:8px;font-size:12px;border:1px solid rgba(239,68,68,0.3); font-weight: bold;}
-hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
+hr{border:0;border-top:1px solid var(--border-color);margin:8px 0}
 .result{display:block;width:100%;text-align:right;margin:0;border-radius:0; border: none; border-bottom: 1px solid var(--border-color); font-size:12px; padding:9px 10px;}
 
 /* ============ شاشة البلايستيشن ============ */
 #playstationPanel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
-#playstationPanel .ps-top-card { flex-shrink: 0; margin: 0 0 8px !important; padding: 10px 12px !important; }
+#playstationPanel .ps-top-card { flex-shrink: 0; margin: 0 0 6px !important; padding: 8px 10px !important; }
 #psHomeScreen { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow-y: auto; }
-.tiles-grid{ display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:auto; gap:8px; flex: 1; min-height: 0; margin-top:8px; }
+.tiles-grid{ display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:auto; gap:8px; flex: 1; min-height: 0; margin-top:4px; }
 
 .tile{ 
   padding:8px 10px; border-radius:12px; color:white; cursor:pointer; 
@@ -145,7 +145,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 
 /* ============ صفحة أجهزة ============ */
 .devices-page { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
-.devices-page-header { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.devices-page-header { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
 .devices-page-title { font-size: 17px; font-weight: 700; margin: 0; }
 .devices-mini-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; overflow-y: auto; padding-left: 4px; }
 .devices-mini-grid::-webkit-scrollbar { width: 6px; }
@@ -197,15 +197,16 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
-/* ============ شاشة المبيعات ============ */
+/* ============ شاشة المبيعات (مرفوعة لأعلى تماماً) ============ */
 #salesPage {
-  height: calc(100vh - 70px);
+  height: calc(100vh - 10px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background: var(--bg-body);
   border-radius: 8px;
   border: 1px solid var(--border-color);
+  margin-top: 0 !important;
 }
 
 .sahal-top-bar {
@@ -214,8 +215,8 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 15px;
-  font-size: 16px;
+  padding: 6px 12px;
+  font-size: 15px;
   font-weight: bold;
   border-radius: 8px 8px 0 0;
   flex-shrink: 0;
@@ -235,19 +236,19 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   min-width: 0;
   min-height: 0;
   background: var(--bg-body);
-  padding: 5px 10px;
+  padding: 4px 8px;
 }
 
 .sahal-search-area {
-  padding: 5px 0;
+  padding: 2px 0;
   background: var(--bg-body);
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 3px;
   flex-shrink: 0;
 }
-.sahal-search-area label { font-size: 12px; font-weight: bold; margin-bottom: 2px; }
-.sahal-search-area input { margin: 0; padding: 8px 12px; font-size: 14px; font-weight: bold; border-radius: 8px; }
+.sahal-search-area label { font-size: 11px; font-weight: bold; margin-bottom: 1px; }
+.sahal-search-area input { margin: 0; padding: 6px 10px; font-size: 13px; font-weight: bold; border-radius: 8px; }
 
 .search-container { position: relative; }
 .search-container #searchResults {
@@ -271,51 +272,51 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   overflow-x: hidden;
   min-height: 0;
   border-radius: 8px;
-  margin: 5px 0;
+  margin: 4px 0;
 }
 .sahal-center-main .sahal-table-wrap table { min-width: 100%; }
 .sahal-center-main .sahal-table-wrap th {
   background: #059669; color: white; position: sticky; top: 0;
-  padding: 8px; font-size: 12px; z-index: 3;
+  padding: 6px; font-size: 11px; z-index: 3;
 }
-.sahal-center-main .sahal-table-wrap td { padding: 6px 8px; font-size: 13px; font-weight: bold; }
-.sahal-center-main .sahal-table-wrap input { font-size: 12px; padding: 4px; height: auto; text-align: center; margin: 0;}
+.sahal-center-main .sahal-table-wrap td { padding: 5px 6px; font-size: 12px; font-weight: bold; }
+.sahal-center-main .sahal-table-wrap input { font-size: 11px; padding: 3px; height: auto; text-align: center; margin: 0;}
 
 .sahal-left-sidebar {
-  width: 320px;
+  width: 300px;
   background: var(--bg-card);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 8px;
   flex-shrink: 0;
-  gap: 8px;
+  gap: 6px;
   overflow-y: auto;
 }
 
 .sahal-total-box {
   background: #059669;
   color: white;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 8px;
+  border-radius: 8px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(16,185,129,0.3);
 }
-.sahal-total-box span { font-size: 14px; display: block; margin-bottom: 5px;}
-.sahal-total-box h2 { margin: 0; font-size: 36px; color: white; direction: ltr; }
+.sahal-total-box span { font-size: 13px; display: block; margin-bottom: 3px;}
+.sahal-total-box h2 { margin: 0; font-size: 30px; color: white; direction: ltr; }
 
 .sahal-controls-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 6px;
 }
-.sahal-controls-grid label { font-size: 11px; margin-bottom: 0; color: var(--text-main);}
-.sahal-controls-grid input { padding: 6px; font-size: 14px; text-align: center; font-weight: bold; margin: 0;}
+.sahal-controls-grid label { font-size: 10px; margin-bottom: 0; color: var(--text-main);}
+.sahal-controls-grid input { padding: 5px; font-size: 13px; text-align: center; font-weight: bold; margin: 0;}
 
 .sahal-left-actions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   margin-top: auto;
 }
 
@@ -323,17 +324,17 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 12px;
+  gap: 8px;
+  padding: 10px;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
   cursor: pointer;
   color: white;
   transition: 0.2s;
 }
 .sahal-action-btn:hover { transform: translateY(-2px); opacity: 0.9; }
-.sahal-action-btn i { font-size: 22px; font-style: normal; }
+.sahal-action-btn i { font-size: 20px; font-style: normal; }
 
 .action-sell { background: #10b981; }
 .action-pay { background: #f59e0b; }
@@ -341,14 +342,14 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .action-home { background: #334155; }
 
 @media (max-height: 800px) {
-  .sahal-top-bar { padding: 5px 10px; font-size: 14px; }
-  .sahal-total-box h2 { font-size: 28px; }
-  .sahal-action-btn { padding: 8px; font-size: 14px; }
-  .sahal-action-btn i { font-size: 18px; }
-  .sahal-left-sidebar { width: 280px; padding: 5px; gap: 5px; }
+  .sahal-top-bar { padding: 4px 10px; font-size: 13px; }
+  .sahal-total-box h2 { font-size: 26px; }
+  .sahal-action-btn { padding: 6px; font-size: 13px; }
+  .sahal-action-btn i { font-size: 16px; }
+  .sahal-left-sidebar { width: 260px; padding: 4px; gap: 4px; }
 }
 
-.back-btn{ background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); padding: 7px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: none; margin-bottom: 8px;}
+.back-btn{ background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); padding: 5px 10px; font-size: 11px; display: inline-flex; align-items: center; gap: 5px; box-shadow: none; margin-bottom: 4px;}
 .modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter: blur(4px); display:flex; align-items:center; justify-content:center; z-index:1000; padding: 16px; overflow-y: auto;}
 .modal-box{background:var(--bg-card); padding:20px; border-radius:12px; max-width:440px; width:100%; max-height: 90vh; overflow-y: auto; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid var(--border-color); position: relative; margin: auto;}
 .modal-close{position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; padding: 0; border-radius: 50%; background: var(--bg-input); color: var(--text-muted); font-size: 16px; display: grid; place-items: center; border: 1px solid var(--border-color);}
@@ -475,7 +476,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 
 <!-- ================= باقي السيستم ================= -->
 <div class="wrap hidden" id="appWrap">
-<header class="top" style="padding: 2px 0; margin-bottom: 0; flex-shrink: 0;">
+<header class="top" style="padding: 1px 0; margin-bottom: 0; flex-shrink: 0;">
  <div></div>
  <div>
    <span id="networkStatus" class="tag good" style="padding:2px 8px; font-size:10px;">متصل بالخادم</span>
@@ -650,7 +651,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  </div>
 
  <div id="psHomeScreen">
-   <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-top:8px; margin-bottom:8px;">
+   <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-top:4px; margin-bottom:6px;">
      <button class="dark" onclick="showPsSection('customers')">🏆 العملاء</button>
      <button class="orange" onclick="openPsShiftModal()">💵 الوردية</button>
      <button class="purple" onclick="openPsSubscriptionModal()">⭐ اشتراكي</button>
@@ -709,13 +710,13 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  </div>
 
  <div id="psRunningSection" class="hidden" style="height:100%;overflow-y:auto;">
-   <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+   <button class="back-btn" onclick="goPsHome()" style="margin-bottom:6px;">← رجوع</button>
    <div class="card">
      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
        <h3 style="margin:0;">🟢 الأجهزة التي تعمل الآن</h3>
        <button class="secondary" onclick="renderPsRunning()">تحديث</button>
      </div>
-     <div class="tablewrap" style="margin-top:8px;">
+     <div class="tablewrap" style="margin-top:6px;">
        <table>
          <thead><tr><th>الجهاز</th><th>القسم</th><th>العميل</th><th>بدأ في</th><th>المدة</th><th>الوقت المتبقي</th><th>الإجمالي الحالي</th><th>إجراء</th></tr></thead>
          <tbody id="psRunningTable"></tbody>
@@ -725,27 +726,27 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  </div>
 
  <div id="psDrinksSection" class="hidden" style="height:100%;overflow-y:auto;">
-   <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+   <button class="back-btn" onclick="goPsHome()" style="margin-bottom:6px;">← رجوع</button>
    <div class="card"><h3>إضافة مشروب</h3><div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;"><div><label>اسم</label><input id="psDrinkName" placeholder="بيبسي"></div><div><label>السعر</label><input id="psDrinkPrice" type="number" min="0" step=".01"></div><div><label>الكمية</label><input id="psDrinkQty" type="number" min="0" value="1"></div><button class="green" onclick="addPsItem('drink')">إضافة</button></div></div>
    <div class="tablewrap"><table><thead><tr><th>المشروب</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psDrinksTable"></tbody></table></div>
  </div>
 
  <div id="psSandwichesSection" class="hidden" style="height:100%;overflow-y:auto;">
-   <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+   <button class="back-btn" onclick="goPsHome()" style="margin-bottom:6px;">← رجوع</button>
    <div class="card"><h3>إضافة سندوتش</h3><div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;"><div><label>اسم</label><input id="psSandwichName" placeholder="بطاطس"></div><div><label>السعر</label><input id="psSandwichPrice" type="number" min="0" step=".01"></div><div><label>الكمية</label><input id="psSandwichQty" type="number" min="0" value="1"></div><button class="green" onclick="addPsItem('sandwich')">إضافة</button></div></div>
    <div class="tablewrap"><table><thead><tr><th>السندوتش</th><th>السعر</th><th>الكمية</th><th>الإدارة</th></tr></thead><tbody id="psSandwichesTable"></tbody></table></div>
  </div>
 
  <div id="psSessionsSection" class="hidden" style="height:100%;overflow-y:auto;">
-    <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+    <button class="back-btn" onclick="goPsHome()" style="margin-bottom:6px;">← رجوع</button>
     <div class="card">
       <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;">
         <h3 style="margin:0;">سجل الجلسات</h3>
         <button class="secondary" onclick="loadPlaystationData()">تحديث</button>
       </div>
-      <div style="display:flex;gap:8px;align-items:center;margin:10px 0;background:rgba(15,23,42,0.4);padding:8px;border-radius:8px;flex-wrap:wrap;border:1px solid var(--border-color);">
+      <div style="display:flex;gap:8px;align-items:center;margin:8px 0;background:rgba(15,23,42,0.4);padding:6px;border-radius:8px;flex-wrap:wrap;border:1px solid var(--border-color);">
         <label style="margin:0;font-size:12px;">عرض يوم:</label>
-        <input type="date" id="psSessionDateFilter" style="width:auto;margin:0;padding:6px;font-size:12px;" onchange="renderPsSessions()">
+        <input type="date" id="psSessionDateFilter" style="width:auto;margin:0;padding:5px;font-size:12px;" onchange="renderPsSessions()">
         <button class="secondary" onclick="document.getElementById('psSessionDateFilter').value='';renderPsSessions();">الكل</button>
         <button class="secondary" onclick="document.getElementById('psSessionDateFilter').value=new Date().toISOString().slice(0,10);renderPsSessions();">اليوم</button>
       </div>
@@ -755,7 +756,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  </div>
 
  <div id="psReservationsSection" class="hidden" style="height:100%;overflow-y:auto;">
-    <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+    <button class="back-btn" onclick="goPsHome()" style="margin-bottom:6px;">← رجوع</button>
     <div class="card">
       <h3>📅 إضافة حجز</h3>
       <div class="grid">
@@ -771,19 +772,19 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
  </div>
 
  <div id="psCustomersSection" class="hidden" style="height:100%;overflow-y:auto;">
-    <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+    <button class="back-btn" onclick="goPsHome()" style="margin-bottom:6px;">← رجوع</button>
     <div class="card"><h3>🏆 سجل العملاء</h3><div class="tablewrap"><table><thead><tr><th>#</th><th>اسم العميل</th><th>عدد الزيارات</th><th>إجمالي المدفوع</th><th>آخر زيارة</th></tr></thead><tbody id="psCustomersTable"></tbody></table></div></div>
  </div>
 
  <div id="psReportsSection" class="hidden" style="height:100%;overflow-y:auto;">
-    <button class="back-btn" onclick="goPsHome()" style="margin-bottom:8px;">← رجوع</button>
+    <button class="back-btn" onclick="goPsHome()" style="margin-bottom:6px;">← رجوع</button>
     <div class="card">
       <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;"><h3 style="margin:0;">📊 التقارير</h3><button class="secondary" onclick="loadPlaystationData()">تحديث</button></div>
-      <div class="grid" style="margin:10px 0;"><div class="stat">إجمالي إيرادات<strong id="psTotalRevenueAll">0 ج</strong></div><div class="stat">إجمالي جلسات<strong id="psTotalSessionsAll">0</strong></div></div>
+      <div class="grid" style="margin:8px 0;"><div class="stat">إجمالي إيرادات<strong id="psTotalRevenueAll">0 ج</strong></div><div class="stat">إجمالي جلسات<strong id="psTotalSessionsAll">0</strong></div></div>
       <h4>إيرادات آخر 7 أيام</h4>
-      <div style="background:var(--bg-card);padding:12px;border-radius:10px;margin-bottom:12px;border:1px solid var(--border-color);height:240px;"><canvas id="revenueChart"></canvas></div>
+      <div style="background:var(--bg-card);padding:10px;border-radius:10px;margin-bottom:10px;border:1px solid var(--border-color);height:220px;"><canvas id="revenueChart"></canvas></div>
       <h4>توزيع الإيرادات</h4>
-      <div style="background:var(--bg-card);padding:12px;border-radius:10px;width:100%;max-width:420px;margin:auto;border:1px solid var(--border-color);height:280px;"><canvas id="typeChart"></canvas></div>
+      <div style="background:var(--bg-card);padding:10px;border-radius:10px;width:100%;max-width:400px;margin:auto;border:1px solid var(--border-color);height:260px;"><canvas id="typeChart"></canvas></div>
     </div>
  </div>
 </section>
@@ -921,7 +922,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
      <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>مبيعات اليوم<br><strong id="statRevenue">0 ج</strong></div><span style="font-size:24px; opacity:0.5;">💰</span></div>
      <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>رصيد الخزينة<br><strong id="statTreasuryBalance">0 ج</strong></div><span style="font-size:24px; opacity:0.5;">🏦</span></div>
    </div>
-   <div style="margin-top:8px;">
+   <div style="margin-top:6px;">
     <div class="tiles-grid" id="mainTilesContainer">
       <div class="tile t-blue" onclick="page('sales')"><div class="tile-icon">🛒</div><div class="tile-title">شاشة المبيعات</div></div>
       <div class="tile t-green" onclick="page('products')"><div class="tile-icon">📦</div><div class="tile-title">المنتجات</div></div>
@@ -944,7 +945,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     <div style="text-align:center; margin-bottom:10px;">
       <h3 style="color:#059669; margin:0; font-size:16px;">شكراً لثقتكم في NexPOS PRO</h3>
       <p style="font-size:10px; color:#475569; background:#dcfce7; padding:6px; border-radius:5px; border:1px solid #86efac; line-height:1.4; margin-top:5px;">
-        عميلنا العزيز، لمحمي هذا الاشتراك في NexPOS PRO، رجاء التأكد من دقة بيانات الاشتراك ومدته وتكلفته.
+        عميلنا العزيز، لمحمي هذا الاشتراك في NexPOS PRO، رجاء التأكد من دقة بيانات الاشتراك ومدته وتكلفتها.
       </p>
     </div>
     <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:5px; margin-bottom:10px; text-align:center;">
@@ -1117,11 +1118,11 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <!-- شاشة المبيعات -->
+  <!-- شاشة المبيعات (بدون ELTOKHY ومرفوعة للأعلى تماماً) -->
   <div id="salesPage" class="hidden">
     <div class="sahal-top-bar">
-      <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:20px;">🛒</span><span>شاشة المبيعات</span></div>
-      <div style="display:flex; align-items:center; gap:10px;"><span class="brand-mini" style="background:rgba(255,255,255,0.2);">NexPOS PRO — V32</span><span id="sahalShopTitle" style="font-size:14px;">اسم المتجر</span></div>
+      <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:18px;">🛒</span><span>شاشة المبيعات</span></div>
+      <div style="display:flex; align-items:center; gap:10px;"><span class="brand-mini" style="background:rgba(255,255,255,0.2);">NexPOS PRO — V32</span><span id="sahalShopTitle" style="font-size:13px;">اسم المتجر</span></div>
     </div>
     <div class="sahal-layout-main">
       <div class="sahal-center-main">
@@ -1149,14 +1150,14 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
           <div><label>خصم الفكة</label><input id="saleDiscount" type="number" min="0" value="0" oninput="renderCart()"></div>
           <div><label>ملاحظات</label><input type="text" id="saleNotes" placeholder="..." style="text-align:right;"></div>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:5px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:3px;">
            <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1" style="margin:0;"></div>
            <div><label>السعر</label><input id="salePrice" type="number" min="0" placeholder="0.00" style="margin:0;"></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
-           <button class="green" style="padding:8px; font-size:14px;" onclick="addToCart()">➕ إضافة</button>
+           <button class="green" style="padding:6px; font-size:13px;" onclick="addToCart()">➕ إضافة</button>
            <div class="inquiry-box">
-              <div class="inquiry-btn" id="inquiryBtn" style="height:36px; font-size:12px;">🔍 استعلام
+              <div class="inquiry-btn" id="inquiryBtn" style="height:32px; font-size:11px;">🔍 استعلام
                 <div class="inquiry-tooltip" id="inquiryTooltip">سعر الشراء<span class="cost-val">—</span></div>
               </div>
             </div>
@@ -1164,12 +1165,12 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
         <div class="sahal-left-actions">
           <div class="sahal-action-btn action-sell" onclick="completeSale()"><i>💵</i> <span>حفظ وبيع</span></div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
-            <div class="sahal-action-btn action-pay" onclick="showPaymentModal()" style="padding:8px; font-size:12px;"><i>💳</i> <span>سداد</span></div>
-            <div class="sahal-action-btn action-hold" onclick="saveHold()" style="padding:8px; font-size:12px;"><i>⏸️</i> <span>تعليق</span></div>
+            <div class="sahal-action-btn action-pay" onclick="showPaymentModal()" style="padding:6px; font-size:11px;"><i>💳</i> <span>سداد</span></div>
+            <div class="sahal-action-btn action-hold" onclick="saveHold()" style="padding:6px; font-size:11px;"><i>⏸️</i> <span>تعليق</span></div>
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
-            <div class="sahal-action-btn action-home" onclick="openHeldList()" style="padding:8px; font-size:12px; background:#d97706;"><i>📂</i> <span>المعلقة</span></div>
-            <div class="sahal-action-btn action-home" onclick="page('dashboard')" style="padding:8px; font-size:12px;"><i>🏠</i> <span>الرئيسية</span></div>
+            <div class="sahal-action-btn action-home" onclick="openHeldList()" style="padding:6px; font-size:11px; background:#d97706;"><i>📂</i> <span>المعلقة</span></div>
+            <div class="sahal-action-btn action-home" onclick="page('dashboard')" style="padding:6px; font-size:11px;"><i>🏠</i> <span>الرئيسية</span></div>
           </div>
         </div>
       </div>
@@ -1204,7 +1205,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <div id="printArea" class="hidden"></div>
 
 <!-- حقوق الملكية بالصيغة المطلوبة -->
-<footer style="text-align:center; padding:8px; border-top:1px solid var(--border-color); margin-top:auto; font-size:12px; color:var(--text-muted); letter-spacing:0.3px; flex-shrink: 0;">
+<footer style="text-align:center; padding:6px; border-top:1px solid var(--border-color); margin-top:auto; font-size:11px; color:var(--text-muted); letter-spacing:0.3px; flex-shrink: 0;">
   جميع الحقوق محفوظة © 2026 | تصميم وتطوير <strong style="color:var(--primary);">محمد الصلاحي</strong>
 </footer>
 </div>
@@ -1532,7 +1533,6 @@ onAuthStateChanged(auth, async user => {
   }
 });
 
-// ============ دالة تغيير كلمة المرور الخاصة لكل سيستم ============
 window.changeOwnPassword = async (sysPrefix) => {
   const currentInput = $(sysPrefix === 'ps' ? 'psCurrentPassword' : 'salesCurrentPassword');
   const newInput = $(sysPrefix === 'ps' ? 'psNewPassword' : 'salesNewPassword');
@@ -1563,7 +1563,6 @@ window.changeOwnPassword = async (sysPrefix) => {
   }
 };
 
-// ============ دوال لوحة تحكم المالك المركزية ============
 window.ownerSection=which=>{$("ownerSalesSection").classList.toggle("hidden",which!=="sales");$("ownerPsSection").classList.toggle("hidden",which!=="playstation");$("ownerSalesTab").classList.toggle("active",which==="sales");$("ownerPsTab").classList.toggle("active",which==="playstation");};
 
 function planControls(u,system){
@@ -1585,7 +1584,6 @@ window.loadUsers=async()=>{
   const salesList=list.filter(u=>systemInfo(u,"sales").status!=="not_registered");
   const psList=list.filter(u=>systemInfo(u,"playstation").status!=="not_registered");
   
-  // حساب الإجمالي الفعلي للحسابات المسجلة في النظامين فقط (يحل مشكلة ظهور 6 بدلاً من 2)
   const validUsers = list.filter(u => systemInfo(u,"sales").status!=="not_registered" || systemInfo(u,"playstation").status!=="not_registered");
   $("totalUsers").textContent = validUsers.length;
   $("salesUsersCount").textContent = salesList.length;
@@ -1630,7 +1628,6 @@ window.loadUsers=async()=>{
  }catch(e){showAlert("خطأ: "+e.message,"error");}
 };
 
-// دوال نافذة تعديل بيانات العميل من لوحة المالك
 window.openEditUserModal = (id, shop, name, email) => {
   $("editUserId").value = id;
   $("editUserShop").value = shop;
@@ -1698,7 +1695,6 @@ window.activateUserWithPlan=async(id,system)=>{const sel=$(`plan_${system}_${id}
 window.deactivateSystem=async(id,system)=>{if(!await window.customConfirm("إيقاف؟"))return;try{await updateDoc(doc(db,"users",id),{[`systems.${system}.status`]:"pending"});await loadUsers();showAlert("تم الإيقاف.","success");}catch(e){showAlert(e.message,"error");}};
 window.deleteUser=async id=>{if(!await window.customConfirm("حذف الحساب نهائياً؟"))return;try{await deleteDoc(doc(db,"users",id));await loadUsers();showAlert("تم الحذف.","success");}catch(e){showAlert(e.message,"error");}};
 
-// ============ دوال تخصيص الخانات الأربع الأولى وحفظها ============
 function getTileNames() {
   const saved = profile?.customTiles || {};
   return {
@@ -1783,7 +1779,6 @@ window.quickEditTile = async (tileNum) => {
   }
 };
 
-// ============ باقي دوال النظام ============
 window.checkPsSubscriptionStatus = () => {
     const info = systemInfo(profile, "playstation");
     const maxDev = Number(profile.maxDevices) || 1;
@@ -1932,7 +1927,6 @@ window.requestRenewal = () => {
   window.open(`https://wa.me/201062883414?text=${msg}`, "_blank");
 };
 
-// ============ دوال البلايستيشن المحدثة ============
 window.goPsHome=()=>{
  ["psHomeScreen","psDevicesSection","psVipSection","psBaseArabiSection","psBilliardSection","psRunningSection","psDrinksSection","psSandwichesSection","psSessionsSection","psReservationsSection","psCustomersSection","psReportsSection"].forEach(id=>$(id)?.classList.add("hidden"));
  $("psHomeScreen").classList.remove("hidden"); currentPsSection="home"; renderPsHomeBadges();

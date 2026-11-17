@@ -197,15 +197,22 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
-/* ============ شاشة المبيعات (المحدثة والمحسنة) ============ */
+/* ============ شاشة المبيعات (المرفوعة والمحسنة) ============ */
+#customerPanel.sales-active > .card {
+  padding: 4px 6px !important;
+  margin: 0 !important;
+  border-radius: 10px;
+}
+
 #salesPage {
-  height: calc(100vh - 70px);
+  height: calc(100vh - 46px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background: var(--bg-body);
   border-radius: 8px;
   border: 1px solid var(--border-color);
+  margin-top: 0;
 }
 
 .sahal-top-bar {
@@ -214,10 +221,10 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 15px;
-  font-size: 16px;
+  padding: 6px 14px;
+  font-size: 15px;
   font-weight: bold;
-  border-radius: 8px 8px 0 0;
+  border-radius: 7px 7px 0 0;
   flex-shrink: 0;
 }
 
@@ -235,19 +242,20 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   min-width: 0;
   min-height: 0;
   background: var(--bg-body);
-  padding: 5px 10px;
+  padding: 6px 10px;
 }
 
 .sahal-search-area {
-  padding: 5px 0;
+  padding: 2px 0 4px 0;
   background: var(--bg-body);
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   flex-shrink: 0;
 }
-.sahal-search-area label { font-size: 12px; font-weight: bold; margin-bottom: 2px; }
-.sahal-search-area input { margin: 0; padding: 8px 12px; font-size: 14px; font-weight: bold; border-radius: 8px; }
+.sahal-search-area label { font-size: 12px; font-weight: bold; margin-bottom: 2px; color: #cbd5e1; }
+.sahal-search-area input { margin: 0; padding: 8px 12px; font-size: 14px; font-weight: bold; border-radius: 8px; border: 1px solid #475569; }
+.sahal-search-area input:focus { border-color: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,0.2); }
 
 .search-container { position: relative; }
 .search-container #searchResults {
@@ -271,51 +279,52 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   overflow-x: hidden;
   min-height: 0;
   border-radius: 8px;
-  margin: 5px 0;
+  border: 1px solid var(--border-color);
+  margin: 4px 0 0 0;
 }
 .sahal-center-main .sahal-table-wrap table { min-width: 100%; }
 .sahal-center-main .sahal-table-wrap th {
   background: #059669; color: white; position: sticky; top: 0;
-  padding: 8px; font-size: 12px; z-index: 3;
+  padding: 7px 8px; font-size: 12px; z-index: 3;
 }
-.sahal-center-main .sahal-table-wrap td { padding: 6px 8px; font-size: 13px; font-weight: bold; }
+.sahal-center-main .sahal-table-wrap td { padding: 5px 8px; font-size: 13px; font-weight: bold; }
 .sahal-center-main .sahal-table-wrap input { font-size: 12px; padding: 4px; height: auto; text-align: center; margin: 0;}
 
 .sahal-left-sidebar {
-  width: 320px;
+  width: 315px;
   background: var(--bg-card);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 8px;
   flex-shrink: 0;
-  gap: 8px;
+  gap: 6px;
   overflow-y: auto;
 }
 
 .sahal-total-box {
-  background: #059669;
+  background: linear-gradient(135deg, #059669, #047857);
   color: white;
-  padding: 10px;
+  padding: 8px 10px;
   border-radius: 10px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(16,185,129,0.3);
+  box-shadow: 0 4px 10px rgba(16,185,129,0.25);
 }
-.sahal-total-box span { font-size: 14px; display: block; margin-bottom: 2px;}
-.sahal-total-box h2 { margin: 0; font-size: 34px; color: white; direction: ltr; }
+.sahal-total-box span { font-size: 13px; display: block; margin-bottom: 1px;}
+.sahal-total-box h2 { margin: 0; font-size: 32px; color: white; direction: ltr; line-height: 1.1; }
 
 .sahal-controls-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  gap: 5px;
 }
-.sahal-controls-grid label { font-size: 11px; margin-bottom: 0; color: var(--text-main);}
+.sahal-controls-grid label { font-size: 11px; margin-bottom: 1px; color: var(--text-main);}
 .sahal-controls-grid input { padding: 5px; font-size: 13px; text-align: center; font-weight: bold; margin: 0;}
 
 .sahal-left-actions {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   margin-top: auto;
 }
 
@@ -324,18 +333,18 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px;
+  padding: 9px;
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
   cursor: pointer;
   color: white;
   transition: 0.2s;
 }
-.sahal-action-btn:hover { transform: translateY(-2px); opacity: 0.9; }
-.sahal-action-btn i { font-size: 20px; font-style: normal; }
+.sahal-action-btn:hover { transform: translateY(-1px); opacity: 0.92; }
+.sahal-action-btn i { font-size: 18px; font-style: normal; }
 
-.action-sell { background: #10b981; }
+.action-sell { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 3px 8px rgba(16,185,129,0.3); }
 .action-pay { background: #f59e0b; }
 .action-hold { background: #d97706; }
 .action-home { background: #334155; }
@@ -357,14 +366,14 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .inquiry-tooltip .cost-val { display: block; color: #34d399; font-weight: bold; font-size: 13px; margin-top: 2px; }
 
 .qty-control-group { display: flex; align-items: center; justify-content: center; gap: 4px; }
-.qty-btn { background: #334155; color: white; border: none; width: 22px; height: 22px; border-radius: 4px; font-weight: bold; cursor: pointer; display: grid; place-items: center; font-size: 12px; }
+.qty-btn { background: #334155; color: white; border: none; width: 22px; height: 22px; border-radius: 4px; font-weight: bold; cursor: pointer; display: grid; place-items: center; font-size: 12px; padding: 0; }
 .qty-btn:hover { background: var(--primary); }
 
 @media (max-height: 800px) {
-  .sahal-top-bar { padding: 5px 10px; font-size: 14px; }
-  .sahal-total-box h2 { font-size: 26px; }
-  .sahal-action-btn { padding: 7px; font-size: 13px; }
-  .sahal-left-sidebar { width: 280px; padding: 6px; gap: 5px; }
+  .sahal-top-bar { padding: 4px 10px; font-size: 14px; }
+  .sahal-total-box h2 { font-size: 25px; }
+  .sahal-action-btn { padding: 6px; font-size: 13px; }
+  .sahal-left-sidebar { width: 280px; padding: 6px; gap: 4px; }
 }
 @media (max-width: 900px) {
   .sahal-layout-main { flex-direction: column !important; overflow-y: auto !important; }
@@ -499,10 +508,10 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 
 <!-- ================= باقي السيستم ================= -->
 <div class="wrap hidden" id="appWrap">
-<header class="top" style="padding: 2px 0; margin-bottom: 0; flex-shrink: 0;">
+<header class="top" id="mainAppHeader" style="padding: 1px 0; margin-bottom: 0; flex-shrink: 0;">
  <div></div>
  <div>
-   <span id="networkStatus" class="tag good" style="padding:2px 8px; font-size:10px;">متصل بالخادم</span>
+   <span id="networkStatus" class="tag good" style="padding:1px 8px; font-size:10px;">متصل بالخادم</span>
  </div>
 </header>
 
@@ -937,7 +946,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <!-- ================= سيستم المبيعات ================= -->
 <section id="customerPanel" class="hidden">
  <div class="card" style="margin-top:0;">
-  <div class="top"><div><h2 id="shopTitle">نظام المبيعات</h2><span class="muted">لوحة الإدارة</span></div></div>
+  <div class="top" id="customerTopBar"><div><h2 id="shopTitle">نظام المبيعات</h2><span class="muted">لوحة الإدارة</span></div></div>
   <div id="dashboardPage">
    <div class="grid">
      <div class="stat" style="display:flex; justify-content:space-between; align-items:center;"><div>المنتجات<br><strong id="statProducts">0</strong></div><span style="font-size:24px; opacity:0.5;">📦</span></div>
@@ -1141,12 +1150,16 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <!-- شاشة المبيعات (المحدثة والمحسنة) -->
+  <!-- شاشة المبيعات (المرفوعة والمحسنة) -->
   <div id="salesPage" class="hidden">
     <div class="sahal-top-bar">
-      <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:20px;">🛒</span><span>شاشة المبيعات الذكية</span></div>
-      <div style="display:flex; align-items:center; gap:10px;">
-        <span class="tag" style="background:rgba(255,255,255,0.2); color:white;">F1: بحث | F2: بيع | F4: سداد | F9: تعليق</span>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:18px;">🛒</span>
+        <span>شاشة المبيعات الذكية</span>
+        <span id="salesShopBadge" style="font-size:11px; background:rgba(0,0,0,0.25); padding:2px 8px; border-radius:12px; font-weight:normal;"></span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="tag" style="background:rgba(255,255,255,0.2); color:white; border:none;">F1: بحث | F2: بيع | F4: سداد | F9: تعليق</span>
       </div>
     </div>
     <div class="sahal-layout-main">
@@ -1234,7 +1247,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <div id="printArea" class="hidden"></div>
 
 <!-- حقوق الملكية بالصيغة المطلوبة -->
-<footer style="text-align:center; padding:8px; border-top:1px solid var(--border-color); margin-top:auto; font-size:12px; color:var(--text-muted); letter-spacing:0.3px; flex-shrink: 0;">
+<footer id="mainAppFooter" style="text-align:center; padding:8px; border-top:1px solid var(--border-color); margin-top:auto; font-size:12px; color:var(--text-muted); letter-spacing:0.3px; flex-shrink: 0;">
   جميع الحقوق محفوظة © 2026 | تصميم وتطوير <strong style="color:var(--primary);">محمد الصلاحي</strong>
 </footer>
 </div>
@@ -1550,6 +1563,7 @@ onAuthStateChanged(auth, async user => {
     } else {
       $("customerPanel").classList.remove("hidden");
       $("shopTitle").textContent = profile.shopName || "نظام المبيعات";
+      if($("salesShopBadge")) $("salesShopBadge").textContent = profile.shopName || "";
       $("settingsShopName").value = profile.shopName || "";
       $("settingsEmail").value = profile.email || user.email || "";
       checkCustomerSubscription(info);
@@ -2243,10 +2257,22 @@ window.closePsShift = async () => {
 window.page = name => {
   ["dashboard","sales","products","treasury","history","expenses","reports","settings","subscription","barcodeSettings","invoiceSettings"].forEach(p => $(p+"Page").classList.add("hidden"));
   $(name+"Page").classList.remove("hidden");
+  
+  const isSales = name === "sales";
   const wrapEl = document.querySelector('.wrap');
-  wrapEl.style.overflowY = name === "sales" ? 'hidden' : 'auto';
+  wrapEl.style.overflowY = isSales ? 'hidden' : 'auto';
+  
+  // رفع شاشة المبيعات الذكية لأعلى الشاشة بتقليل الهوامش العلوية عند فتحها فقط
+  if ($("customerTopBar")) $("customerTopBar").classList.toggle("hidden", isSales);
+  if ($("mainAppHeader")) $("mainAppHeader").classList.toggle("hidden", isSales);
+  if ($("customerPanel")) $("customerPanel").classList.toggle("sales-active", isSales);
+
   if(name === "dashboard" || name === "reports") renderStats();
-  if(name === "sales"){ renderCart(); window.updateInquiryTooltip(); }
+  if(isSales){ 
+    renderCart(); 
+    window.updateInquiryTooltip(); 
+    setTimeout(() => $("saleSearch")?.focus(), 50);
+  }
   if(name === "barcodeSettings") loadBarcodeSettings();
   if(name === "invoiceSettings") loadInvoiceSettings();
 };
@@ -2270,7 +2296,7 @@ window.restoreHold = async (id) => {
 };
 window.deleteHold = async (id) => { if (await customConfirm("حذف الفاتورة المعلقة؟")) { await deleteDoc(docRef("holds", id)); Swal.close(); openHeldList(); } };
 
-window.updateShopNameSetting = async () => {const n=$("settingsShopName").value.trim();if(!n)return;await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;$("shopTitle").textContent=n;showAlert("تم.","success");};
+window.updateShopNameSetting = async () => {const n=$("settingsShopName").value.trim();if(!n)return;await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;$("shopTitle").textContent=n;if($("salesShopBadge"))$("salesShopBadge").textContent=n;showAlert("تم.","success");};
 window.updateCustomerEmailSetting = async () => {const n=$("settingsEmail").value.trim();if(!n)return;await updateEmail(auth.currentUser,n);await updateDoc(doc(db,"users",currentUser.uid),{email:n});showAlert("تم.","success");};
 
 async function loadBusiness(){await Promise.all([loadProducts(),loadSales(),loadExpenses(),loadTreasury()]);renderStats();}

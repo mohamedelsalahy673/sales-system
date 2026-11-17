@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- ============ كود تحسين محركات البحث (SEO) ============ -->
 <title>NexPOS PRO | أفضل سيستم كاشير وإدارة مبيعات وبلايستيشن في مصر</title>
 <meta name="description" content="NexPOS PRO هو النظام المتكامل لإدارة محلك. سيستم كاشير سريع، إدارة مخازن، تقارير أرباح، ونظام بلايستيشن لإدارة الرومات والـ VIP والبلياردو. اطلب نسختك الآن!">
 <meta name="keywords" content="سيستم, كاشير, سيستم مبيعات, برنامج مبيعات, سيستم بلايستيشن, برنامج بلايستيشن, إدارة مخازن, نقاط بيع, NexPOS">
@@ -197,7 +196,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .auth-card button{margin-top:5px; font-size:12px; padding:7px 12px;}
 @media(max-width:800px){.auth-grid{grid-template-columns:1fr}}
 
-/* ============ شاشة المبيعات (المرفوعة والمحسنة) ============ */
+/* ============ شاشة المبيعات ============ */
 #customerPanel.sales-active > .card {
   padding: 4px 6px !important;
   margin: 0 !important;
@@ -349,7 +348,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .action-hold { background: #d97706; }
 .action-home { background: #334155; }
 
-/* تحسينات إضافية لواجهة المبيعات */
 .inquiry-box { position: relative; display: inline-block; width: 100%; }
 .inquiry-btn {
   background: #334155; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center;
@@ -391,7 +389,34 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 .social-links a{padding:6px 10px;border-radius:6px;color:white;text-decoration:none;font-size:12px;font-weight:bold;}
 .btn-whatsapp{background:#25D366}.btn-facebook{background:#1877F2}.btn-insta{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
 
-@media print{body *{visibility:hidden!important}#printArea,#printArea *{visibility:visible!important}#printArea{display:block!important;position:absolute;inset:0;background:white;padding:12px;width:100%;color:#111}}
+/* ============ تنسيق الطباعة الحرارية والباركود ============ */
+@media print {
+  body * { visibility: hidden !important; }
+  #printArea, #printArea * { visibility: visible !important; }
+  #printArea {
+    display: block !important;
+    position: absolute;
+    left: 0; top: 0; right: 0;
+    background: white;
+    color: #000;
+    margin: 0; padding: 0;
+  }
+  .barcode-print-sheet {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2mm;
+    justify-content: flex-start;
+  }
+  .barcode-sticker-item {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-sizing: border-box;
+    text-align: center;
+    background: #fff;
+    color: #000;
+    overflow: hidden;
+  }
+}
 
 .swal2-popup { font-family: 'Cairo', Arial, sans-serif !important; border-radius: 12px !important; direction: rtl; background: var(--bg-card) !important; color: var(--text-main) !important; border: 1px solid var(--border-color);}
 .swal2-title { font-size: 18px !important; color: var(--text-main) !important; }
@@ -439,9 +464,89 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     overflow: hidden;
     min-height: 0;
 }
-#dashboardPage, #settingsPage { overflow-y: auto !important; height: 100%; padding-bottom: 20px; }
+#dashboardPage, #settingsPage, #barcodeSettingsPage { overflow-y: auto !important; height: 100%; padding-bottom: 20px; }
 #psHomeScreen { overflow-y: auto !important; height: 100%; padding-bottom: 20px; }
 #customerPanel > .card, #playstationPanel > .card { overflow-y: auto !important; }
+
+/* ============ تنسيق صفحة إعدادات الباركود الاحترافية ============ */
+.bc-pro-layout {
+  display: grid;
+  grid-template-columns: 1.25fr 0.85fr;
+  gap: 16px;
+  margin-top: 8px;
+  align-items: start;
+}
+@media (max-width: 950px) {
+  .bc-pro-layout { grid-template-columns: 1fr; }
+}
+.bc-section-box {
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+.bc-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #38bdf8;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.7);
+  padding-bottom: 6px;
+}
+.bc-toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.bc-toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 7px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-main);
+  margin: 0;
+  transition: 0.15s;
+}
+.bc-toggle-item:hover { border-color: var(--primary); }
+.bc-toggle-item input[type="checkbox"] { width: 16px; height: 16px; margin: 0; accent-color: var(--success); }
+
+.bc-preview-stage {
+  background-color: #0b1120;
+  background-image: radial-gradient(#334155 1px, transparent 1px);
+  background-size: 16px 16px;
+  border: 2px dashed #475569;
+  border-radius: 12px;
+  padding: 25px 15px;
+  width: 100%;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.bc-ruler-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: monospace;
+  direction: ltr;
+}
 
 @media (max-height: 800px) {
   .tile-title { font-size: 16px !important; }
@@ -822,25 +927,15 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 </section>
 
 <!-- النوافذ المنبثقة -->
-<!-- نافذة تخصيص أسماء الخانات الأربع -->
 <div id="customizeTilesModal" class="modal-overlay hidden" onclick="if(event.target===this) closeCustomizeTilesModal();">
   <div class="modal-box" style="max-width:380px;">
     <button class="modal-close" onclick="closeCustomizeTilesModal()">✕</button>
     <h3 style="margin-bottom:6px;">⚙️ تخصيص أسماء الخانات الأربع</h3>
     <p class="muted" style="font-size:11px; margin-bottom:10px;">عدّل أسماء الأقسام الرئيسية بما يناسب نشاطك (وسيتم حفظها تلقائياً):</p>
-    
-    <label>الخانة الأولى (الزرقاء):</label>
-    <input id="customTile1" placeholder="مثال: أجهزة الرومات">
-    
-    <label>الخانة الثانية (البنفسجية):</label>
-    <input id="customTile2" placeholder="مثال: صالة VIP">
-    
-    <label>الخانة الثالثة (البرتقالية):</label>
-    <input id="customTile3" placeholder="مثال: القاعدة العربي">
-    
-    <label>الخانة الرابعة (الوردية):</label>
-    <input id="customTile4" placeholder="مثال: البلياردو">
-    
+    <label>الخانة الأولى (الزرقاء):</label><input id="customTile1" placeholder="مثال: أجهزة الرومات">
+    <label>الخانة الثانية (البنفسجية):</label><input id="customTile2" placeholder="مثال: صالة VIP">
+    <label>الخانة الثالثة (البرتقالية):</label><input id="customTile3" placeholder="مثال: القاعدة العربي">
+    <label>الخانة الرابعة (الوردية):</label><input id="customTile4" placeholder="مثال: البلياردو">
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
       <button class="green" onclick="saveCustomTiles()">💾 حفظ التعديلات</button>
       <button class="secondary" onclick="closeCustomizeTilesModal()">إلغاء</button>
@@ -848,12 +943,10 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   </div>
 </div>
 
-<!-- نافذة إضافة جهاز أو طاولة مع اختيار النوع -->
 <div id="addDeviceModal" class="modal-overlay hidden" onclick="if(event.target===this) closeAddDeviceModal();">
   <div class="modal-box" style="max-width:420px;">
     <button class="modal-close" onclick="closeAddDeviceModal()">✕</button>
     <h3 id="addDeviceTitle" style="margin-bottom:10px;">➕ إضافة جهاز / طاولة</h3>
-    
     <label>اختر القسم (بلايستيشن أو بلياردو)</label>
     <select id="newDeviceTypeSelect" onchange="onDeviceTypeChange(this.value)">
       <option value="room">🎮 بلايستيشن (القسم الأول)</option>
@@ -861,7 +954,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
       <option value="base_arabi">🏛 بلايستيشن (القسم الثالث)</option>
       <option value="billiard">🎱 بلياردو (طاولة)</option>
     </select>
-
     <label>اسم الجهاز / الطاولة</label><input id="newDeviceName" placeholder="مثال: روم 1 أو طاولة 1">
     <label>سعر الساعة بالجنيه</label><input id="newDeviceRate" type="number" min=".01" step=".01" placeholder="40">
     <div id="newDeviceGameBox" class="hidden">
@@ -891,20 +983,17 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
   </div>
 </div>
 
-<!-- نافذة اشتراكي وتغيير كلمة المرور في سيستم البلايستيشن -->
 <div id="psSubModal" class="modal-overlay hidden" onclick="if(event.target===this) closePsSubscriptionModal();">
   <div class="modal-box">
     <button class="modal-close" onclick="closePsSubscriptionModal()">✕</button>
     <h3>تفاصيل اشتراكي والإعدادات</h3>
     <div id="psSubModalContent" style="line-height:2;margin:10px 0;text-align:center;font-size:13px;">جاري التحميل...</div>
-    
     <div style="background:rgba(15,23,42,0.5); padding:10px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:10px;">
       <h4 style="margin-bottom:6px; color:#a78bfa;">🔑 تغيير كلمة المرور</h4>
       <input id="psCurrentPassword" type="password" placeholder="كلمة المرور الحالية" style="margin-bottom:6px;">
       <input id="psNewPassword" type="password" placeholder="كلمة المرور الجديدة (6 أحرف فأكثر)" style="margin-bottom:6px;">
       <button class="big purple" onclick="changeOwnPassword('ps')">تحديث كلمة المرور</button>
     </div>
-
     <button class="big green" onclick="requestRenewal()">طلب تجديد</button>
     <button class="big red" onclick="logout()" style="margin-top:8px;">تسجيل الخروج</button>
     <hr>
@@ -1086,71 +1175,166 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <!-- إعداد الباركود -->
+  <!-- ================= إعداد الباركود الاحترافي الشامل ================= -->
   <div id="barcodeSettingsPage" class="hidden">
-    <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
-    <h3>🏷️ إعداد الباركود وملصقات المنتجات</h3>
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:10px;">
-      <div class="card" style="margin:0;">
-        <h4>إعدادات الملصق</h4>
-        <div class="grid" style="grid-template-columns:1fr 1fr;">
-          <div>
-            <label>الطابعة المستخدمة</label>
-            <select id="bcPrinter">
-              <option value="Xprinter XP-Q371U">Xprinter XP-Q371U</option>
-              <option value="Xprinter XP-365B">Xprinter XP-365B</option>
-              <option value="Generic Thermal 80mm">Generic Thermal 80mm</option>
-            </select>
-          </div>
-          <div>
-            <label>نوع الباركود</label>
-            <select id="bcType" onchange="updateBarcodePreview()">
-              <option value="CODE128">CODE128</option>
-              <option value="EAN13">EAN13</option>
-              <option value="EAN8">EAN8</option>
-              <option value="UPC">UPC</option>
-              <option value="ITF14">ITF14</option>
-            </select>
-          </div>
-        </div>
-        <hr>
-        <h4>المقاسات (مم)</h4>
-        <div class="grid" style="grid-template-columns:1fr 1fr;">
-          <div><label>الهامش العلوي</label><input id="bcMarginTop" type="number" value="3" oninput="updateBarcodePreview()"></div>
-          <div><label>الهامش الأيسر</label><input id="bcMarginLeft" type="number" value="3" oninput="updateBarcodePreview()"></div>
-          <div><label>عرض الملصق</label><input id="bcWidth" type="number" value="32" oninput="updateBarcodePreview()"></div>
-          <div><label>طول الباركود</label><input id="bcHeight" type="number" value="6" oninput="updateBarcodePreview()"></div>
-        </div>
-        <hr>
-        <h4>حجم الخطوط</h4>
-        <div class="grid" style="grid-template-columns:1fr 1fr 1fr;">
-          <div><label>حجم اسم المنتج</label><input id="bcFontSizeName" type="number" value="8" oninput="updateBarcodePreview()"></div>
-          <div><label>حجم السعر</label><input id="bcFontSizePrice" type="number" value="8" oninput="updateBarcodePreview()"></div>
-          <div><label>حجم الكود</label><input id="bcFontSizeCode" type="number" value="7" oninput="updateBarcodePreview()"></div>
-        </div>
-        <hr>
-        <h4>خيارات الطباعة</h4>
-        <div style="display:flex; flex-direction:column; gap:8px; margin-top:5px;">
-          <label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="checkbox" id="bcShowName" checked onchange="updateBarcodePreview()" style="width:auto; margin:0;"> طباعة اسم الصنف</label>
-          <label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="checkbox" id="bcShowPrice" checked onchange="updateBarcodePreview()" style="width:auto; margin:0;"> طباعة السعر</label>
-          <label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="checkbox" id="bcShowCode" checked onchange="updateBarcodePreview()" style="width:auto; margin:0;"> طباعة الكود (أرقام)</label>
-        </div>
-        <button class="big green" onclick="saveBarcodeSettings()" style="margin-top:15px;">💾 حفظ الإعدادات</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <button class="back-btn" onclick="page('dashboard')" style="margin:0;">← رجوع</button>
+        <h3 style="margin:0; color:#38bdf8;">🏷️ المركز الاحترافي لإعدادات وطباعة الباركود</h3>
       </div>
-      <div class="card" style="margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-        <h4 style="margin-bottom:15px;">👁️ معاينة حية للملصق</h4>
-        <div id="barcodePreviewContainer" style="background:white; color:black; padding:10px; border-radius:5px; box-shadow:0 0 10px rgba(0,0,0,0.5); text-align:center; display:inline-block; width: 250px;">
-          <div id="previewShopName" style="font-weight:bold; font-size:14px; margin-bottom:5px; border-bottom:1px solid #ccc; padding-bottom:3px;">اسم النشاط</div>
-          <div style="display:flex; justify-content:center; width:100%; overflow:hidden;"><svg id="barcodeSvg" style="max-width:100%;"></svg></div>
-          <div id="previewName" style="font-weight:bold; font-size:10px; margin-top:5px;">اسم المنتج</div>
-          <div id="previewPrice" style="font-weight:bold; font-size:10px; margin-top:2px;">100.00 EGP</div>
-          <div id="previewCode" style="font-size:9px; margin-top:2px; color:#555;">123456789012</div>
+      <div style="display:flex; gap:8px;">
+        <button class="purple" onclick="openBatchBarcodeModal()">🖨️ طباعة ملصقات بالجملة</button>
+        <button class="secondary" onclick="resetBarcodeDefaults()">🔄 استعادة الافتراضي</button>
+      </div>
+    </div>
+
+    <div class="bc-pro-layout">
+      <!-- العمود الأيمن: لوحة التحكم الكاملة -->
+      <div class="card" style="margin:0; padding:12px;">
+        
+        <!-- 1. الطابعة ونوع الترميز -->
+        <div class="bc-section-box">
+          <div class="bc-section-title">🖨️ 1. إعدادات الطابعة ونوع الباركود</div>
+          <div class="grid" style="grid-template-columns:1fr 1fr 1fr;">
+            <div>
+              <label>موديل الطابعة</label>
+              <select id="bcPrinter">
+                <option value="Xprinter XP-365B">Xprinter XP-365B (حراري باركود)</option>
+                <option value="Xprinter XP-370B">Xprinter XP-370B</option>
+                <option value="Xprinter XP-Q371U">Xprinter XP-Q371U</option>
+                <option value="Zebra GK420d">Zebra GK420d / ZD220</option>
+                <option value="Rongta RP410">Rongta RP410</option>
+                <option value="Generic Thermal 80mm">Generic Thermal 80mm</option>
+              </select>
+            </div>
+            <div>
+              <label>نظام التشفير (Symbology)</label>
+              <select id="bcType" onchange="updateBarcodePreview()">
+                <option value="CODE128">CODE128 (الأفضل والأسرع)</option>
+                <option value="CODE39">CODE39 (حروف وأرقام)</option>
+                <option value="EAN13">EAN13 (13 رقم عالمي)</option>
+                <option value="EAN8">EAN8 (8 أرقام)</option>
+                <option value="UPC">UPC (12 رقم)</option>
+                <option value="ITF14">ITF14 (كراتين)</option>
+              </select>
+            </div>
+            <div>
+              <label>قالب مقاس جاهز (Preset)</label>
+              <select id="bcPresetSize" onchange="applyBarcodePreset(this.value)">
+                <option value="38x25">38 × 25 مم (قياسي)</option>
+                <option value="40x20">40 × 20 مم (صغير)</option>
+                <option value="50x25" selected>50 × 25 مم (الأكثر شيوعاً)</option>
+                <option value="50x30">50 × 30 مم (متوسط)</option>
+                <option value="58x40">58 × 40 مم (كبير)</option>
+                <option value="custom">مقاس مخصص...</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. المقاسات والأبعاد بالمليمتر -->
+        <div class="bc-section-box">
+          <div class="bc-section-title">📐 2. المقاسات والأبعاد والهوامش (بالمليمتر mm)</div>
+          <div class="grid" style="grid-template-columns:repeat(3, 1fr);">
+            <div><label>عرض الملصق (مم)</label><input id="bcWidth" type="number" min="20" max="120" value="50" oninput="onCustomSizeInput()"></div>
+            <div><label>ارتفاع الملصق (مم)</label><input id="bcHeightLabel" type="number" min="15" max="100" value="25" oninput="onCustomSizeInput()"></div>
+            <div><label>ارتفاع خطوط الباركود (مم)</label><input id="bcHeight" type="number" min="4" max="40" value="10" oninput="updateBarcodePreview()"></div>
+            <div><label>سُمك خطوط الباركود</label><input id="bcBarWidth" type="number" min="1" max="3" step="0.1" value="1.6" oninput="updateBarcodePreview()"></div>
+            <div><label>الهامش العلوي (مم)</label><input id="bcMarginTop" type="number" min="0" max="20" step="0.5" value="1.5" oninput="updateBarcodePreview()"></div>
+            <div><label>الهامش الجانبي (مم)</label><input id="bcMarginLeft" type="number" min="0" max="20" step="0.5" value="2" oninput="updateBarcodePreview()"></div>
+          </div>
+        </div>
+
+        <!-- 3. أحجام الخطوط والعملة والتنسيق -->
+        <div class="bc-section-box">
+          <div class="bc-section-title">🔤 3. أحجام الخطوط والعملة والتنسيق</div>
+          <div class="grid" style="grid-template-columns:repeat(4, 1fr);">
+            <div><label>خط اسم المحل (px)</label><input id="bcFontSizeShop" type="number" min="6" max="22" value="10" oninput="updateBarcodePreview()"></div>
+            <div><label>خط اسم الصنف (px)</label><input id="bcFontSizeName" type="number" min="6" max="22" value="10" oninput="updateBarcodePreview()"></div>
+            <div><label>خط السعر (px)</label><input id="bcFontSizePrice" type="number" min="7" max="24" value="11" oninput="updateBarcodePreview()"></div>
+            <div><label>خط رقم الكود (px)</label><input id="bcFontSizeCode" type="number" min="6" max="18" value="9" oninput="updateBarcodePreview()"></div>
+          </div>
+          <div class="grid" style="grid-template-columns:1fr 1fr 1fr; margin-top:4px;">
+            <div>
+              <label>العملة المعروضة</label>
+              <select id="bcCurrency" onchange="updateBarcodePreview()">
+                <option value="جنيه">جنيه (مثال: 150 جنيه)</option>
+                <option value="ج.م">ج.م (مثال: 150 ج.م)</option>
+                <option value="EGP">EGP (مثال: 150.00 EGP)</option>
+                <option value="ر.س">ر.س (ريال)</option>
+                <option value="$">$ (دولار)</option>
+                <option value="">بدون عملة</option>
+              </select>
+            </div>
+            <div>
+              <label>موضع السعر</label>
+              <select id="bcPricePosition" onchange="updateBarcodePreview()">
+                <option value="bottom">أسفل الباركود</option>
+                <option value="inline">بجانب اسم المنتج</option>
+              </select>
+            </div>
+            <div>
+              <label>إطار حول الملصق</label>
+              <select id="bcShowBorder" onchange="updateBarcodePreview()">
+                <option value="false">بدون إطار (للطباعة الحرارية)</option>
+                <option value="true">إطار رفيع (للقص اليدوي A4)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. عناصر الطباعة -->
+        <div class="bc-section-box" style="margin-bottom:0;">
+          <div class="bc-section-title">☑️ 4. العناصر الظاهرة على الملصق</div>
+          <div class="bc-toggle-grid">
+            <label class="bc-toggle-item"><input type="checkbox" id="bcShowShop" checked onchange="updateBarcodePreview()"> طباعة اسم المحل / النشاط</label>
+            <label class="bc-toggle-item"><input type="checkbox" id="bcShowName" checked onchange="updateBarcodePreview()"> طباعة اسم الصنف</label>
+            <label class="bc-toggle-item"><input type="checkbox" id="bcShowPrice" checked onchange="updateBarcodePreview()"> طباعة سعر البيع</label>
+            <label class="bc-toggle-item"><input type="checkbox" id="bcShowCode" checked onchange="updateBarcodePreview()"> طباعة رقم الكود أسفل الخطوط</label>
+            <label class="bc-toggle-item"><input type="checkbox" id="bcShowDate" onchange="updateBarcodePreview()"> طباعة تاريخ الطباعة</label>
+            <label class="bc-toggle-item"><input type="checkbox" id="bcBoldText" checked onchange="updateBarcodePreview()"> خط عريض (Bold) لوضوح الحبر</label>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px; margin-top:12px;">
+          <button class="big green" onclick="saveBarcodeSettings()">💾 حفظ إعدادات الباركود</button>
+          <button class="big dark" onclick="printTestBarcode()">🖨️ طباعة تجربة</button>
+        </div>
+      </div>
+
+      <!-- العمود الأيسر: المعاينة الحية والاختبار -->
+      <div class="card" style="margin:0; padding:14px; display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h4 style="margin:0; color:#34d399;">👁️ معاينة حية للملصق (1:1)</h4>
+          <span class="tag good" style="font-size:10px;">تحديث فوري</span>
+        </div>
+
+        <!-- اختيار منتج حقيقي للمعاينة -->
+        <div style="background:rgba(15,23,42,0.5); padding:8px; border-radius:8px; border:1px solid var(--border-color);">
+          <label style="font-size:11px; margin-bottom:4px;">اختر صنف من منتجاتك لتجربة شكله الفعلي:</label>
+          <select id="bcPreviewProductSelect" onchange="updateBarcodePreview()" style="margin:0; padding:6px; font-size:12px;">
+            <option value="">-- منتج تجريبي (قميص قطن فاخر - 250) --</option>
+          </select>
+        </div>
+
+        <!-- منصة المعاينة -->
+        <div class="bc-preview-stage">
+          <span class="bc-ruler-badge" id="bcRulerLabel">50mm × 25mm</span>
+          <div id="barcodePreviewContainer" style="background:white; color:black; border-radius:3px; box-shadow:0 8px 20px rgba(0,0,0,0.6); text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center; overflow:hidden; transition: all 0.2s ease;">
+            <!-- يتم بناؤه ديناميكياً بواسطة renderStickerHTML -->
+          </div>
+        </div>
+
+        <div style="background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.25); padding:10px; border-radius:8px; font-size:11px; color:#cbd5e1; line-height:1.6;">
+          <b style="color:#60a5fa;">💡 نصيحة احترافية للطباعة الحرارية:</b><br>
+          • تأكد من ضبط مقاس الورق داخل إعدادات الطابعة في الويندوز ليطابق <b>العرض والارتفاع</b> المختارين هنا.<br>
+          • عند الطباعة من المتصفح، اجعل الهوامش (Margins) على وضع <b>None</b> وألغِ تفعيل <b>Headers and footers</b>.
         </div>
       </div>
     </div>
   </div>
 
-  <!-- شاشة المبيعات (المرفوعة والمحسنة) -->
+  <!-- شاشة المبيعات -->
   <div id="salesPage" class="hidden">
     <div class="sahal-top-bar">
       <div style="display:flex; align-items:center; gap:8px;">
@@ -1219,13 +1403,39 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
     </div>
   </div>
 
-  <div id="productsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>المنتجات</h3><div class="card"><input id="pName" placeholder="اسم"><input id="pBarcode" placeholder="باركود"><div class="grid"><div><label>شراء</label><input id="pCost" type="number" value="0"></div><div><label>بيع</label><input id="pPrice" type="number" value="0"></div><div><label>كمية</label><input id="pQty" type="number" value="10"></div></div><button onclick="saveProduct()" class="green big">حفظ</button></div><div class="tablewrap"><table><thead><tr><th>المنتج</th><th>باركود</th><th>شراء</th><th>بيع</th><th>كمية</th><th>إجراء</th></tr></thead><tbody id="productsTable"></tbody></table></div></div>
+  <!-- صفحة المنتجات المحدثة بتوليد باركود تلقائي -->
+  <div id="productsPage" class="hidden" style="overflow-y:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+      <button class="back-btn" onclick="page('dashboard')" style="margin:0;">← رجوع</button>
+      <h3 style="margin:0;">📦 إدارة المنتجات والباركود</h3>
+      <button class="purple" onclick="openBatchBarcodeModal()" style="padding:6px 12px; font-size:12px;">🖨️ طباعة ملصقات متعددة</button>
+    </div>
+    <div class="card">
+      <div class="grid" style="grid-template-columns: 2fr 1.5fr auto; align-items:end; gap:8px;">
+        <div><label>اسم المنتج</label><input id="pName" placeholder="مثال: تيشيرت قطن"></div>
+        <div><label>رقم الباركود</label><input id="pBarcode" placeholder="امسح الباركود أو اضغط توليد"></div>
+        <button type="button" class="secondary" onclick="generateRandomBarcode()" style="margin-bottom:9px; height:38px; border-color:var(--primary); color:#60a5fa;">🎲 توليد تلقائي</button>
+      </div>
+      <div class="grid">
+        <div><label>سعر الشراء</label><input id="pCost" type="number" value="0"></div>
+        <div><label>سعر البيع</label><input id="pPrice" type="number" value="0"></div>
+        <div><label>الكمية المتاحة</label><input id="pQty" type="number" value="10"></div>
+      </div>
+      <button onclick="saveProduct()" class="green big">💾 حفظ المنتج</button>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>المنتج</th><th>باركود</th><th>شراء</th><th>بيع</th><th>كمية</th><th>إجراء</th></tr></thead>
+        <tbody id="productsTable"></tbody>
+      </table>
+    </div>
+  </div>
+
   <div id="treasuryPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الخزينة</h3><div class="grid"><div class="stat">رصيد<strong id="treasuryBalanceDisplay">0 ج</strong></div></div><div class="card"><h3>حركة</h3><select id="tType"><option value="in">وارد</option><option value="out">صادر</option></select><input id="tAmount" type="number" placeholder="المبلغ"><input id="tNote" placeholder="البيان"><button class="big green" onclick="addTreasuryTransaction()">تسجيل</button></div><button class="red big" onclick="clearTreasuryData()">مسح الحركات</button><div class="tablewrap"><table><thead><tr><th>النوع</th><th>المبلغ</th><th>البيان</th><th>التاريخ</th></tr></thead><tbody id="treasuryTable"></tbody></table></div></div>
   <div id="historyPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>الفواتير</h3><div class="tablewrap"><table><thead><tr><th>رقم</th><th>التاريخ</th><th>الإجمالي</th><th>إجراء</th></tr></thead><tbody id="salesTable"></tbody></table></div></div>
   <div id="expensesPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>المصروفات</h3><div class="card"><input id="expenseName" placeholder="البيان"><input id="expenseAmount" type="number" placeholder="المبلغ"><button onclick="addExpense()" class="green big">حفظ</button></div><div class="tablewrap"><table><thead><tr><th>البيان</th><th>المبلغ</th><th>التاريخ</th></tr></thead><tbody id="expensesTable"></tbody></table></div></div>
   <div id="reportsPage" class="hidden"><button class="back-btn" onclick="page('dashboard')">← رجوع</button><h3>التقارير</h3><div class="grid"><div class="stat">المبيعات<strong id="reportRevenue">0 ج</strong></div><div class="stat">المصروفات<strong id="reportExpenses">0 ج</strong></div><div class="stat">الربح<strong id="reportNet">0 ج</strong></div></div></div>
   
-  <!-- صفحة الإعدادات المحدثة في سيستم المبيعات -->
   <div id="settingsPage" class="hidden">
     <button class="back-btn" onclick="page('dashboard')">← رجوع</button>
     <h3>الإعدادات</h3>
@@ -1246,7 +1456,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 
 <div id="printArea" class="hidden"></div>
 
-<!-- حقوق الملكية بالصيغة المطلوبة -->
 <footer id="mainAppFooter" style="text-align:center; padding:8px; border-top:1px solid var(--border-color); margin-top:auto; font-size:12px; color:var(--text-muted); letter-spacing:0.3px; flex-shrink: 0;">
   جميع الحقوق محفوظة © 2026 | تصميم وتطوير <strong style="color:var(--primary);">محمد الصلاحي</strong>
 </footer>
@@ -1255,7 +1464,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'nexpos-cache-v6';
+      const CACHE_NAME = 'nexpos-cache-v7';
       const urlsToCache = ['/', '/manifest.json'];
       self.addEventListener('install', event => { self.skipWaiting(); event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))); });
       self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(cacheNames => Promise.all(cacheNames.map(cacheName => { if (cacheName !== CACHE_NAME) return caches.delete(cacheName); })))); self.clients.claim(); });
@@ -1771,29 +1980,378 @@ window.checkPsSubscriptionStatus = () => {
 window.openPsSubscriptionModal = () => { checkPsSubscriptionStatus(); $("psSubModal").classList.remove("hidden"); };
 window.closePsSubscriptionModal = () => $("psSubModal").classList.add("hidden");
 
+/* =========================================================================
+   ================= نظام الباركود الاحترافي الشامل (Pro Barcode Engine) =================
+   ========================================================================= */
+const DEFAULT_BARCODE_SETTINGS = {
+  printer: "Xprinter XP-365B",
+  type: "CODE128",
+  presetSize: "50x25",
+  width: 50,
+  heightLabel: 25,
+  height: 10,
+  barWidth: 1.6,
+  marginTop: 1.5,
+  marginLeft: 2,
+  fontSizeShop: 10,
+  fontSizeName: 10,
+  fontSizePrice: 11,
+  fontSizeCode: 9,
+  currency: "جنيه",
+  pricePosition: "bottom",
+  showBorder: "false",
+  showShop: true,
+  showName: true,
+  showPrice: true,
+  showCode: true,
+  showDate: false,
+  boldText: true
+};
+
+function getCurrentBarcodeSettings() {
+  const s = profile?.barcodeSettings || {};
+  return {
+    printer: $("bcPrinter")?.value || s.printer || DEFAULT_BARCODE_SETTINGS.printer,
+    type: $("bcType")?.value || s.type || DEFAULT_BARCODE_SETTINGS.type,
+    presetSize: $("bcPresetSize")?.value || s.presetSize || DEFAULT_BARCODE_SETTINGS.presetSize,
+    width: Number($("bcWidth")?.value ?? s.width ?? DEFAULT_BARCODE_SETTINGS.width),
+    heightLabel: Number($("bcHeightLabel")?.value ?? s.heightLabel ?? DEFAULT_BARCODE_SETTINGS.heightLabel),
+    height: Number($("bcHeight")?.value ?? s.height ?? DEFAULT_BARCODE_SETTINGS.height),
+    barWidth: Number($("bcBarWidth")?.value ?? s.barWidth ?? DEFAULT_BARCODE_SETTINGS.barWidth),
+    marginTop: Number($("bcMarginTop")?.value ?? s.marginTop ?? DEFAULT_BARCODE_SETTINGS.marginTop),
+    marginLeft: Number($("bcMarginLeft")?.value ?? s.marginLeft ?? DEFAULT_BARCODE_SETTINGS.marginLeft),
+    fontSizeShop: Number($("bcFontSizeShop")?.value ?? s.fontSizeShop ?? DEFAULT_BARCODE_SETTINGS.fontSizeShop),
+    fontSizeName: Number($("bcFontSizeName")?.value ?? s.fontSizeName ?? DEFAULT_BARCODE_SETTINGS.fontSizeName),
+    fontSizePrice: Number($("bcFontSizePrice")?.value ?? s.fontSizePrice ?? DEFAULT_BARCODE_SETTINGS.fontSizePrice),
+    fontSizeCode: Number($("bcFontSizeCode")?.value ?? s.fontSizeCode ?? DEFAULT_BARCODE_SETTINGS.fontSizeCode),
+    currency: $("bcCurrency") ? $("bcCurrency").value : (s.currency ?? DEFAULT_BARCODE_SETTINGS.currency),
+    pricePosition: $("bcPricePosition")?.value || s.pricePosition || DEFAULT_BARCODE_SETTINGS.pricePosition,
+    showBorder: $("bcShowBorder")?.value || s.showBorder || DEFAULT_BARCODE_SETTINGS.showBorder,
+    showShop: $("bcShowShop") ? $("bcShowShop").checked : (s.showShop ?? DEFAULT_BARCODE_SETTINGS.showShop),
+    showName: $("bcShowName") ? $("bcShowName").checked : (s.showName ?? DEFAULT_BARCODE_SETTINGS.showName),
+    showPrice: $("bcShowPrice") ? $("bcShowPrice").checked : (s.showPrice ?? DEFAULT_BARCODE_SETTINGS.showPrice),
+    showCode: $("bcShowCode") ? $("bcShowCode").checked : (s.showCode ?? DEFAULT_BARCODE_SETTINGS.showCode),
+    showDate: $("bcShowDate") ? $("bcShowDate").checked : (s.showDate ?? DEFAULT_BARCODE_SETTINGS.showDate),
+    boldText: $("bcBoldText") ? $("bcBoldText").checked : (s.boldText ?? DEFAULT_BARCODE_SETTINGS.boldText)
+  };
+}
+
+function buildSingleStickerHTML(itemData, s, svgUniqueId) {
+  const shopName = profile?.shopName || profile?.invoiceSettings?.shopName || "NexPOS Store";
+  const fw = s.boldText ? "800" : "600";
+  const borderStyle = s.showBorder === "true" ? "1px solid #000" : "none";
+  const priceText = s.currency === "EGP" || s.currency === "$"
+    ? `${Number(itemData.price).toFixed(2)} ${s.currency}`
+    : `${Number(itemData.price)} ${s.currency}`.trim();
+
+  let topShopHTML = s.showShop
+    ? `<div style="font-size:${s.fontSizeShop}px; font-weight:${fw}; line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; border-bottom:0.5px solid #cbd5e1; padding-bottom:1px; margin-bottom:2px;">${escapeHTML(shopName)}</div>`
+    : "";
+
+  let nameAndInlinePriceHTML = "";
+  if (s.showName || (s.showPrice && s.pricePosition === "inline")) {
+    if (s.pricePosition === "inline" && s.showName && s.showPrice) {
+      nameAndInlinePriceHTML = `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; gap:4px; margin-bottom:1px;">
+        <span style="font-size:${s.fontSizeName}px; font-weight:${fw}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHTML(itemData.name)}</span>
+        <span style="font-size:${s.fontSizePrice}px; font-weight:800; white-space:nowrap;">${escapeHTML(priceText)}</span>
+      </div>`;
+    } else if (s.showName) {
+      nameAndInlinePriceHTML = `<div style="font-size:${s.fontSizeName}px; font-weight:${fw}; line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; margin-bottom:1px;">${escapeHTML(itemData.name)}</div>`;
+    } else if (s.showPrice && s.pricePosition === "inline") {
+      nameAndInlinePriceHTML = `<div style="font-size:${s.fontSizePrice}px; font-weight:800; line-height:1.15; margin-bottom:1px;">${escapeHTML(priceText)}</div>`;
+    }
+  }
+
+  let codeHTML = s.showCode
+    ? `<div style="font-size:${s.fontSizeCode}px; font-family:monospace; letter-spacing:1px; font-weight:${fw}; line-height:1; margin-top:1px; direction:ltr;">${escapeHTML(itemData.barcode)}</div>`
+    : "";
+
+  let bottomPriceHTML = (s.showPrice && s.pricePosition === "bottom")
+    ? `<div style="font-size:${s.fontSizePrice}px; font-weight:800; line-height:1.15; margin-top:2px;">${escapeHTML(priceText)}</div>`
+    : "";
+
+  let dateHTML = s.showDate
+    ? `<div style="font-size:7px; color:#333; line-height:1; margin-top:1px;">${new Date().toLocaleDateString('ar-EG')}</div>`
+    : "";
+
+  return `
+    <div class="barcode-sticker-item" style="
+      width:${s.width}mm;
+      height:${s.heightLabel}mm;
+      padding:${s.marginTop}mm ${s.marginLeft}mm;
+      border:${borderStyle};
+      background:#ffffff;
+      color:#000000;
+      font-family:'Cairo', Arial, sans-serif;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      box-sizing:border-box;
+      overflow:hidden;
+    ">
+      ${topShopHTML}
+      ${nameAndInlinePriceHTML}
+      <div style="display:flex; justify-content:center; align-items:center; width:100%; overflow:hidden;">
+        <svg id="${svgUniqueId}" style="max-width:100%; display:block;"></svg>
+      </div>
+      ${codeHTML}
+      ${bottomPriceHTML}
+      ${dateHTML}
+    </div>
+  `;
+}
+
+function renderJsBarcodeSafe(selector, codeValue, s) {
+  let validCode = String(codeValue || "123456789012").trim();
+  let format = s.type;
+
+  // ضمان توافق طول الأرقام مع EAN13 / EAN8 / UPC لتجنب خطأ المكتبة
+  if (format === "EAN13") {
+    validCode = validCode.replace(/\D/g, "").padEnd(12, "0").slice(0, 12);
+  } else if (format === "EAN8") {
+    validCode = validCode.replace(/\D/g, "").padEnd(7, "0").slice(0, 7);
+  } else if (format === "UPC") {
+    validCode = validCode.replace(/\D/g, "").padEnd(11, "0").slice(0, 11);
+  } else if (format === "ITF14") {
+    validCode = validCode.replace(/\D/g, "").padEnd(13, "0").slice(0, 13);
+  }
+
+  try {
+    JsBarcode(selector, validCode, {
+      format: format,
+      lineColor: "#000000",
+      background: "#ffffff",
+      width: s.barWidth,
+      height: s.height * 3.78,
+      margin: 0,
+      displayValue: false
+    });
+  } catch (e) {
+    // في حالة إدخال حروف مع نظام رقمي، نرجع لـ CODE128 تلقائياً
+    JsBarcode(selector, String(codeValue || "123456789012"), {
+      format: "CODE128",
+      lineColor: "#000000",
+      background: "#ffffff",
+      width: s.barWidth,
+      height: s.height * 3.78,
+      margin: 0,
+      displayValue: false
+    });
+  }
+}
+
+window.applyBarcodePreset = (preset) => {
+  const presets = {
+    "38x25": { width: 38, heightLabel: 25, height: 9, barWidth: 1.3 },
+    "40x20": { width: 40, heightLabel: 20, height: 7, barWidth: 1.3 },
+    "50x25": { width: 50, heightLabel: 25, height: 10, barWidth: 1.6 },
+    "50x30": { width: 50, heightLabel: 30, height: 13, barWidth: 1.7 },
+    "58x40": { width: 58, heightLabel: 40, height: 18, barWidth: 1.9 }
+  };
+  if (presets[preset]) {
+    $("bcWidth").value = presets[preset].width;
+    $("bcHeightLabel").value = presets[preset].heightLabel;
+    $("bcHeight").value = presets[preset].height;
+    $("bcBarWidth").value = presets[preset].barWidth;
+    updateBarcodePreview();
+  }
+};
+
+window.onCustomSizeInput = () => {
+  if ($("bcPresetSize")) $("bcPresetSize").value = "custom";
+  updateBarcodePreview();
+};
+
 window.updateBarcodePreview = () => {
-  const type = $("bcType").value, barcodeValue = "123456789012";
-  const showName = $("bcShowName").checked, showPrice = $("bcShowPrice").checked, showCode = $("bcShowCode").checked;
-  const nameEl = $("previewName"), priceEl = $("previewPrice"), codeEl = $("previewCode");
-  nameEl.style.display = showName ? "block" : "none"; priceEl.style.display = showPrice ? "block" : "none"; codeEl.style.display = showCode ? "block" : "none";
-  nameEl.style.fontSize = $("bcFontSizeName").value + "px"; priceEl.style.fontSize = $("bcFontSizePrice").value + "px"; codeEl.style.fontSize = $("bcFontSizeCode").value + "px";
-  const shopName = profile?.shopName || profile?.invoiceSettings?.shopName || "اسم النشاط";
-  if ($("previewShopName")) $("previewShopName").textContent = shopName;
-  const container = $("barcodePreviewContainer"), widthMm = Number($("bcWidth").value);
-  container.style.width = (widthMm * 3.78) + "px"; container.style.paddingTop = $("bcMarginTop").value + "px"; container.style.paddingLeft = $("bcMarginLeft").value + "px";
-  try { JsBarcode("#barcodeSvg", barcodeValue, { format: type, lineColor: "#000", width: 1.5, height: Number($("bcHeight").value) * 3.78, displayValue: false }); } catch (e) {}
+  const s = getCurrentBarcodeSettings();
+  if ($("bcRulerLabel")) $("bcRulerLabel").textContent = `${s.width}mm × ${s.heightLabel}mm`;
+
+  const selectedProdId = $("bcPreviewProductSelect")?.value;
+  const prod = products.find(x => x.id === selectedProdId);
+  const sampleItem = prod
+    ? { name: prod.name, price: prod.price, barcode: prod.barcode || prod.id.slice(0, 12) }
+    : { name: "قميص قطن فاخر", price: 250, barcode: "622100045892" };
+
+  const container = $("barcodePreviewContainer");
+  if (!container) return;
+  container.innerHTML = buildSingleStickerHTML(sampleItem, s, "barcodeSvgLive");
+  renderJsBarcodeSafe("#barcodeSvgLive", sampleItem.barcode, s);
 };
+
 window.saveBarcodeSettings = async () => {
-  const settings = { printer: $("bcPrinter").value, type: $("bcType").value, marginTop: Number($("bcMarginTop").value), marginLeft: Number($("bcMarginLeft").value), width: Number($("bcWidth").value), height: Number($("bcHeight").value), fontSizeName: Number($("bcFontSizeName").value), fontSizePrice: Number($("bcFontSizePrice").value), fontSizeCode: Number($("bcFontSizeCode").value), showName: $("bcShowName").checked, showPrice: $("bcShowPrice").checked, showCode: $("bcShowCode").checked };
-  try { await setDoc(doc(db, "users", currentUser.uid), { barcodeSettings: settings }, { merge: true }); profile.barcodeSettings = settings; localStorage.setItem('nexpos_profile', JSON.stringify(profile)); showAlert("تم حفظ الإعدادات بنجاح!", "success"); } catch (e) { showAlert("خطأ: " + e.message, "error"); }
+  const settings = getCurrentBarcodeSettings();
+  try {
+    await setDoc(doc(db, "users", currentUser.uid), { barcodeSettings: settings }, { merge: true });
+    profile.barcodeSettings = settings;
+    localStorage.setItem('nexpos_profile', JSON.stringify(profile));
+    showAlert("تم حفظ إعدادات الباركود بنجاح! سيتم تطبيقها تلقائياً عند طباعة أي منتج.", "success");
+  } catch (e) {
+    showAlert("خطأ أثناء الحفظ: " + e.message, "error");
+  }
 };
+
+window.resetBarcodeDefaults = async () => {
+  if (!await customConfirm("استعادة الإعدادات الافتراضية للباركود؟")) return;
+  applySettingsToBarcodeInputs(DEFAULT_BARCODE_SETTINGS);
+  updateBarcodePreview();
+};
+
+function applySettingsToBarcodeInputs(s) {
+  if (!$("bcPrinter")) return;
+  $("bcPrinter").value = s.printer || DEFAULT_BARCODE_SETTINGS.printer;
+  $("bcType").value = s.type || DEFAULT_BARCODE_SETTINGS.type;
+  $("bcPresetSize").value = s.presetSize || DEFAULT_BARCODE_SETTINGS.presetSize;
+  $("bcWidth").value = s.width ?? DEFAULT_BARCODE_SETTINGS.width;
+  $("bcHeightLabel").value = s.heightLabel ?? DEFAULT_BARCODE_SETTINGS.heightLabel;
+  $("bcHeight").value = s.height ?? DEFAULT_BARCODE_SETTINGS.height;
+  $("bcBarWidth").value = s.barWidth ?? DEFAULT_BARCODE_SETTINGS.barWidth;
+  $("bcMarginTop").value = s.marginTop ?? DEFAULT_BARCODE_SETTINGS.marginTop;
+  $("bcMarginLeft").value = s.marginLeft ?? DEFAULT_BARCODE_SETTINGS.marginLeft;
+  $("bcFontSizeShop").value = s.fontSizeShop ?? DEFAULT_BARCODE_SETTINGS.fontSizeShop;
+  $("bcFontSizeName").value = s.fontSizeName ?? DEFAULT_BARCODE_SETTINGS.fontSizeName;
+  $("bcFontSizePrice").value = s.fontSizePrice ?? DEFAULT_BARCODE_SETTINGS.fontSizePrice;
+  $("bcFontSizeCode").value = s.fontSizeCode ?? DEFAULT_BARCODE_SETTINGS.fontSizeCode;
+  $("bcCurrency").value = s.currency ?? DEFAULT_BARCODE_SETTINGS.currency;
+  $("bcPricePosition").value = s.pricePosition ?? DEFAULT_BARCODE_SETTINGS.pricePosition;
+  $("bcShowBorder").value = String(s.showBorder ?? DEFAULT_BARCODE_SETTINGS.showBorder);
+  $("bcShowShop").checked = s.showShop ?? DEFAULT_BARCODE_SETTINGS.showShop;
+  $("bcShowName").checked = s.showName ?? DEFAULT_BARCODE_SETTINGS.showName;
+  $("bcShowPrice").checked = s.showPrice ?? DEFAULT_BARCODE_SETTINGS.showPrice;
+  $("bcShowCode").checked = s.showCode ?? DEFAULT_BARCODE_SETTINGS.showCode;
+  $("bcShowDate").checked = s.showDate ?? DEFAULT_BARCODE_SETTINGS.showDate;
+  $("bcBoldText").checked = s.boldText ?? DEFAULT_BARCODE_SETTINGS.boldText;
+}
+
 window.loadBarcodeSettings = () => {
-  const s = profile?.barcodeSettings;
-  if (s) {
-    $("bcPrinter").value = s.printer || "Xprinter XP-Q371U"; $("bcType").value = s.type || "CODE128"; $("bcMarginTop").value = s.marginTop ?? 3; $("bcMarginLeft").value = s.marginLeft ?? 3; $("bcWidth").value = s.width ?? 32; $("bcHeight").value = s.height ?? 6; $("bcFontSizeName").value = s.fontSizeName ?? 8; $("bcFontSizePrice").value = s.fontSizePrice ?? 8; $("bcFontSizeCode").value = s.fontSizeCode ?? 7; $("bcShowName").checked = s.showName ?? true; $("bcShowPrice").checked = s.showPrice ?? true; $("bcShowCode").checked = s.showCode ?? true;
+  const s = { ...DEFAULT_BARCODE_SETTINGS, ...(profile?.barcodeSettings || {}) };
+  applySettingsToBarcodeInputs(s);
+
+  // تعبئة قائمة المنتجات في المعاينة الحية
+  const sel = $("bcPreviewProductSelect");
+  if (sel) {
+    sel.innerHTML = `<option value="">-- منتج تجريبي (قميص قطن فاخر - 250) --</option>` +
+      products.map(p => `<option value="${p.id}">${escapeHTML(p.name)} (${money(p.price)})</option>`).join("");
   }
   updateBarcodePreview();
 };
+
+// توليد باركود رقمي فريد 12 خانة في صفحة المنتجات
+window.generateRandomBarcode = () => {
+  const prefix = "622"; // كود مصر الدولي
+  const randomDigits = Math.floor(100000000 + Math.random() * 900000000).toString();
+  const code = prefix + randomDigits;
+  if ($("pBarcode")) $("pBarcode").value = code;
+};
+
+// طباعة ملصق تجريبي من صفحة الإعدادات
+window.printTestBarcode = () => {
+  const s = getCurrentBarcodeSettings();
+  const selectedProdId = $("bcPreviewProductSelect")?.value;
+  const prod = products.find(x => x.id === selectedProdId);
+  const itemData = prod
+    ? { name: prod.name, price: prod.price, barcode: prod.barcode || prod.id.slice(0, 12) }
+    : { name: "قميص قطن فاخر", price: 250, barcode: "622100045892" };
+
+  executePrintStickers([ { item: itemData, copies: 1 } ], s);
+};
+
+// طباعة باركود منتج واحد من جدول المنتجات (مع سؤال عن عدد النسخ)
+window.printProductBarcode = async (id) => {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const copiesStr = await customPrompt(`كم عدد الملصقات المطلوب طباعتها للصنف (${p.name})؟`, 'number', '1');
+  if (copiesStr === null) return;
+  const copies = Math.max(1, Math.min(500, Number(copiesStr) || 1));
+
+  const s = { ...DEFAULT_BARCODE_SETTINGS, ...(profile?.barcodeSettings || {}) };
+  const itemData = {
+    name: p.name,
+    price: p.price,
+    barcode: p.barcode || p.id.slice(0, 12)
+  };
+  executePrintStickers([ { item: itemData, copies } ], s);
+};
+
+// نافذة الطباعة بالجملة (Batch Print)
+window.openBatchBarcodeModal = async () => {
+  if (!products.length) return showAlert("لا توجد منتجات مسجلة حالياً لطباعة باركود لها.", "warning");
+  const optionsHTML = products.map(p => `<option value="${p.id}">${escapeHTML(p.name)} — ${money(p.price)} (المخزون: ${p.qty})</option>`).join("");
+  const { value: formValues } = await Swal.fire({
+    title: '🖨️ طباعة ملصقات باركود بالجملة',
+    html: `
+      <div style="text-align:right; font-size:13px;">
+        <label style="margin-bottom:4px; display:block;">اختر الصنف:</label>
+        <select id="batchProdId" style="width:100%; padding:8px; border-radius:6px; background:#0f172a; color:white; border:1px solid #334155; margin-bottom:10px;">
+          ${optionsHTML}
+        </select>
+        <label style="margin-bottom:4px; display:block;">عدد الملصقات المطلوب طباعتها:</label>
+        <input id="batchCopies" type="number" min="1" max="500" value="10" style="width:100%; padding:8px; border-radius:6px; background:#0f172a; color:white; border:1px solid #334155; text-align:center; font-size:16px; font-weight:bold;">
+        <div style="margin-top:8px; display:flex; gap:6px; justify-content:center;">
+          <button type="button" onclick="document.getElementById('batchCopies').value=10" style="background:#334155; padding:4px 10px; font-size:11px;">10 ملصقات</button>
+          <button type="button" onclick="document.getElementById('batchCopies').value=25" style="background:#334155; padding:4px 10px; font-size:11px;">25 ملصق</button>
+          <button type="button" onclick="document.getElementById('batchCopies').value=50" style="background:#334155; padding:4px 10px; font-size:11px;">50 ملصق</button>
+          <button type="button" onclick="document.getElementById('batchCopies').value=100" style="background:#334155; padding:4px 10px; font-size:11px;">100 ملصق</button>
+        </div>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: '🖨️ طباعة الآن',
+    cancelButtonText: 'إلغاء',
+    confirmButtonColor: '#10b981',
+    background: '#1e293b',
+    color: '#f8fafc',
+    preConfirm: () => {
+      const pid = document.getElementById('batchProdId').value;
+      const copies = Math.max(1, Math.min(500, Number(document.getElementById('batchCopies').value) || 1));
+      return { pid, copies };
+    }
+  });
+
+  if (formValues) {
+    const p = products.find(x => x.id === formValues.pid);
+    if (!p) return;
+    const s = getCurrentBarcodeSettings();
+    executePrintStickers([
+      { item: { name: p.name, price: p.price, barcode: p.barcode || p.id.slice(0, 12) }, copies: formValues.copies }
+    ], s);
+  }
+};
+
+// محرك الطباعة الفعلي للملصقات
+function executePrintStickers(batchList, s) {
+  const printArea = $("printArea");
+  printArea.classList.remove("hidden");
+
+  let stickersHTML = `<div class="barcode-print-sheet">`;
+  let counter = 0;
+  const renderQueue = [];
+
+  for (const entry of batchList) {
+    for (let i = 0; i < entry.copies; i++) {
+      const svgId = `print_bc_svg_${counter++}`;
+      stickersHTML += buildSingleStickerHTML(entry.item, s, svgId);
+      renderQueue.push({ selector: `#${svgId}`, code: entry.item.barcode });
+    }
+  }
+  stickersHTML += `</div>`;
+  printArea.innerHTML = stickersHTML;
+
+  for (const q of renderQueue) {
+    renderJsBarcodeSafe(q.selector, q.code, s);
+  }
+
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      printArea.classList.add("hidden");
+      printArea.innerHTML = "";
+    }, 1000);
+  }, 150);
+}
+
+/* ========================================================================= */
 
 window.currentDocType = 'sales';
 window.selectDocType = (type, element) => { window.currentDocType = type; document.querySelectorAll('.doc-type-btn').forEach(el => el.classList.remove('active')); element.classList.add('active'); updateInvoicePreview(); };
@@ -2307,7 +2865,7 @@ async function loadTreasury(){const s=await safeGetDocs(col("treasury"));treasur
 window.clearTreasuryData = async () => {if(!await window.customConfirm("مسح؟"))return;const snap=await safeGetDocs(col("treasury"));for(const d of snap.docs)await deleteDoc(docRef("treasury",d.id));await loadTreasury();renderStats();};
 window.saveProduct = async () => {const name=$("pName").value.trim(),barcode=$("pBarcode").value.trim(),cost=Number($("pCost").value)||0,price=Number($("pPrice").value)||0,qty=Number($("pQty").value)||0;if(!name||price<=0)return showAlert("اسم وسعر.","warning");await setDoc(doc(col("products")),{name,barcode,cost,price,qty,createdAt:serverTimestamp()});$("pName").value="";$("pBarcode").value="";$("pCost").value="";$("pPrice").value="";$("pQty").value=10;await loadProducts();renderStats();showAlert("تم.","success");};
 window.deleteProduct = async id => {if(!await window.customConfirm("حذف؟"))return;await deleteDoc(docRef("products",id));await loadProducts();renderStats();};
-function renderProducts(){$("productsTable").innerHTML = products.map(p => `<tr><td>${escapeHTML(p.name)}</td><td>${escapeHTML(p.barcode||"")}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td>${p.qty}</td><td><button class="rowbtn secondary" onclick="printProductBarcode('${p.id}')" style="background:#8b5cf6; color:white;">🏷️ باركود</button><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("") || "<tr><td colspan='6'>لا منتجات</td></tr>";}
+function renderProducts(){$("productsTable").innerHTML = products.map(p => `<tr><td>${escapeHTML(p.name)}</td><td style="font-family:monospace;">${escapeHTML(p.barcode||"—")}</td><td>${money(p.cost)} ج</td><td>${money(p.price)} ج</td><td>${p.qty}</td><td><button class="rowbtn secondary" onclick="printProductBarcode('${p.id}')" style="background:#8b5cf6; color:white;">🏷️ باركود</button><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("") || "<tr><td colspan='6'>لا منتجات</td></tr>";}
 
 window.handleBarcodeScan = (e) => {
   if (e.key === 'Enter') {
@@ -2428,129 +2986,101 @@ function renderCart(){
  const total = Math.max(0, subtotal - totalDiscount + addition);
 
  $("cartTotalDisplay").textContent = money(total);
- 
- const totalItemsCount = cart.length;
- const totalPiecesCount = cart.reduce((sum, x) => sum + x.qty, 0);
- const summaryEl = document.getElementById("cartItemsSummary");
- if (summaryEl) summaryEl.textContent = `الأصناف: ${totalItemsCount} | القطع: ${totalPiecesCount}`;
-
- window.updateInquiryTooltip();
- return {subtotal, discount: totalDiscount, addition, total};
+ const totalQty = cart.reduce((s, x) => s + Number(x.qty || 0), 0);
+ if ($("cartItemsSummary")) $("cartItemsSummary").textContent = `الأصناف: ${cart.length} | القطع: ${totalQty}`;
+ return {subtotal, lineDiscounts, discountPct, pctDiscountVal, discountCash, discount: totalDiscount, addition, total};
 }
 
-window.updateLineDiscount = (index, value) => {
+window.updateLineDiscount = (index, val) => {
   if (!cart[index]) return;
-  const maxAllowed = cart[index].qty * cart[index].price;
-  let val = Math.max(0, Number(value) || 0);
-  if (val > maxAllowed) val = maxAllowed;
-  cart[index].lineDiscount = val;
-  
-  const row = document.getElementById("cartTable").rows[index];
-  if (row) {
-    row.cells[6].innerHTML = `<b style="color:var(--success);">${money(maxAllowed - val)} ج</b>`;
-  }
-  
+  const maxVal = cart[index].qty * cart[index].price;
+  cart[index].lineDiscount = Math.max(0, Math.min(Number(val) || 0, maxVal));
   const subtotal = cart.reduce((s,x)=>s+x.qty*x.price,0);
-  const lineDiscounts = cart.reduce((s,x)=>s+(Number(x.lineDiscount)||0),0);
+  const lineDiscounts = cart.reduce((s,x)=>s+Math.min(Number(x.lineDiscount)||0, x.qty*x.price),0);
   const discountPct = Math.max(0, Math.min(100, Number($("saleDiscountPct").value)||0));
   const discountCash = Math.max(0,Number($("saleDiscount").value)||0);
   const addition = Math.max(0,Number($("saleAddition").value)||0);
-  const totalDiscount = lineDiscounts + Number(((subtotal - lineDiscounts) * discountPct / 100).toFixed(2)) + discountCash;
-  $("cartTotalDisplay").textContent = money(Math.max(0, subtotal - totalDiscount + addition));
+  const afterLineDiscounts = subtotal - lineDiscounts;
+  const pctDiscountVal = Number((afterLineDiscounts * discountPct / 100).toFixed(2));
+  const totalDiscount = lineDiscounts + pctDiscountVal + discountCash;
+  const total = Math.max(0, subtotal - totalDiscount + addition);
+  $("cartTotalDisplay").textContent = money(total);
 };
 
-window.renderCart = renderCart; 
-window.removeCartItem = i => {cart.splice(i,1);renderCart();};
+window.removeCartItem = i => { cart.splice(i,1); renderCart(); };
 
 window.updateInquiryTooltip = () => {
-  const tip = $("inquiryTooltip");
-  if (!tip) return;
-  const p = selectedProduct || (cart.length ? products.find(x => x.id === cart[cart.length - 1].productId) : null);
-  tip.innerHTML = p ? `سعر الشراء<span class="cost-val">${money(p.cost)} ج</span>` : `سعر الشراء<span class="cost-val">—</span>`;
-};
-
-window.completeSale = async () => {
- if(!cart.length) return showAlert("السلة فارغة.","warning");
- const {subtotal, discount, addition, total} = renderCart();
- const inv = { number: "INV-"+Date.now().toString().slice(-6), subtotal, discount, addition, total, items: cart.map(x=>({...x})), date: new Date().toLocaleString("ar-EG"), createdAt: Date.now() };
- for(const item of cart){ const p = products.find(x=>x.id===item.productId); await updateDoc(docRef("products",item.productId),{qty:Number(p.qty)-Number(item.qty)}); }
- await setDoc(doc(col("sales")), inv);
- await setDoc(doc(col("treasury")), { type: "in", amount: total, note: `فاتورة #${inv.number}`, date: inv.date, createdAt: Date.now() });
- printInvoiceDirectly(inv); cart = []; $("saleDiscount").value = "0"; $("saleDiscountPct").value = "0"; $("saleAddition").value = "0"; renderCart(); loadBusiness(); showAlert("تم البيع بنجاح. "+money(total)+" ج","success");
+  const tooltip = $("inquiryTooltip");
+  if (!tooltip) return;
+  let item = selectedProduct;
+  if (!item && cart.length > 0) item = cart[cart.length - 1];
+  const costVal = tooltip.querySelector('.cost-val');
+  if (item && costVal) { costVal.textContent = money(item.cost || 0) + " ج"; }
+  else if (costVal) { costVal.textContent = "—"; }
 };
 
 window.showPaymentModal = async () => {
-  if(!cart.length) return showAlert("السلة فارغة.","warning");
+  if (!cart.length) return showAlert("السلة فارغة.", "warning");
   const {total} = renderCart();
-  const {value: paidAmount} = await Swal.fire({
-    title: '💳 نافذة السداد الذكي',
-    html: `
-      <div style="font-size:14px; color:var(--text-muted); margin-bottom:4px;">المطلوب سداده</div>
-      <div style="font-size:32px; color:#34d399; font-weight:bold; margin-bottom:12px;">${money(total)} ج</div>
-      <label style="text-align:right; display:block; margin-bottom:4px;">المبلغ المدفوع من العميل:</label>
-      <input id="swalPaidInput" type="number" value="${total}" min="${total}" step="0.5" style="width:100%; padding:10px; border-radius:8px; border:1px solid #334155; background:#0f172a; color:#fff; text-align:center; font-size:20px; font-weight:bold;" oninput="calcRemainingChange(${total})">
-      <div id="swalChangeDisplay" style="margin-top:10px; font-size:16px; font-weight:bold; color:#60a5fa; background:rgba(59,130,246,0.1); padding:8px; border-radius:6px;">الباقي للعميل: 0.00 جنيه</div>
-      <div style="display:flex; gap:5px; justify-content:center; margin-top:10px;">
-        <button type="button" onclick="document.getElementById('swalPaidInput').value=${Math.ceil(total/50)*50}; calcRemainingChange(${total});" style="background:#334155; padding:5px 10px; font-size:11px;">مبلغ مساوي</button>
-        <button type="button" onclick="document.getElementById('swalPaidInput').value=50; calcRemainingChange(${total});" style="background:#334155; padding:5px 10px; font-size:11px;">50 ج</button>
-        <button type="button" onclick="document.getElementById('swalPaidInput').value=100; calcRemainingChange(${total});" style="background:#334155; padding:5px 10px; font-size:11px;">100 ج</button>
-        <button type="button" onclick="document.getElementById('swalPaidInput').value=200; calcRemainingChange(${total});" style="background:#334155; padding:5px 10px; font-size:11px;">200 ج</button>
-        <button type="button" onclick="document.getElementById('swalPaidInput').value=500; calcRemainingChange(${total});" style="background:#334155; padding:5px 10px; font-size:11px;">500 ج</button>
-      </div>
-    `,
-    showCancelButton: true, confirmButtonText: '✔ تأكيد وبيعت', cancelButtonText: 'إلغاء', confirmButtonColor: '#10b981', background: '#1e293b', color: '#f8fafc',
-    preConfirm: () => {
-      const paid = Number(document.getElementById('swalPaidInput').value);
-      if (isNaN(paid) || paid < total) { Swal.showValidationMessage('المبلغ المدفوع أقل من إجمالي الفاتورة!'); return false; }
-      return paid;
-    }
+  const { value: paid } = await Swal.fire({
+    title: '💳 حساب المتبقي والباقي للعميل',
+    html: `<div style="margin-bottom:10px; font-size:16px;">الإجمالي المطلوب: <b style="color:#10b981;">${money(total)} ج</b></div>
+           <label style="display:block; text-align:right;">المبلغ المدفوع من العميل:</label>
+           <input id="swalPaidInput" type="number" min="0" step="0.01" class="swal2-input" style="background:#0f172a; color:white; text-align:center;" oninput="document.getElementById('swalRestDisplay').textContent = (Number(this.value) - ${total}).toFixed(2) + ' ج'">
+           <div style="margin-top:10px; font-size:15px;">الباقي للعميل: <b id="swalRestDisplay" style="color:#f59e0b;">0.00 ج</b></div>`,
+    showCancelButton: true,
+    confirmButtonText: '💵 حفظ وطباعة الفاتورة',
+    cancelButtonText: 'إغلاق',
+    background: '#1e293b',
+    color: '#f8fafc',
+    preConfirm: () => Number(document.getElementById('swalPaidInput').value) || 0
   });
-  if(paidAmount !== undefined) await completeSale();
-};
-
-window.calcRemainingChange = (total) => {
-  const paid = Number(document.getElementById('swalPaidInput')?.value) || 0, change = paid - total, changeEl = document.getElementById('swalChangeDisplay');
-  if (changeEl) {
-    if (change >= 0) { changeEl.style.color = '#34d399'; changeEl.style.background = 'rgba(16,185,129,0.1)'; changeEl.textContent = `الباقي للعميل: ${money(change)} جنيه`; }
-    else { changeEl.style.color = '#f87171'; changeEl.style.background = 'rgba(239,68,68,0.1)'; changeEl.textContent = `المبلغ غير كافٍ (عجز: ${money(Math.abs(change))} جنيه)`; }
+  if (paid !== undefined) {
+    if (paid < total) return showAlert("المبلغ المدفوع أقل من إجمالي الفاتورة!", "warning");
+    await completeSale();
   }
 };
 
-window.printInvoiceDirectly = inv => {
-  const s = profile?.invoiceSettings || { shopName: profile?.shopName || "متجري", taxNumber: "XXX", address: "", paperSize: "80mm" };
-  $("printArea").classList.remove("hidden");
-  $("printArea").innerHTML = `<div style="width:${s.paperSize==='A4'?'100%':'80mm'}; font-family:Cairo,Arial; direction:rtl; padding:5px; color:#000;"><h3 style="text-align:center;">${escapeHTML(s.shopName)}</h3><p style="text-align:center;font-size:11px;">فاتورة: ${inv.number} | ${inv.date}</p><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr><th style="border-bottom:1px solid #000;text-align:right;">الصنف</th><th style="border-bottom:1px solid #000;">كمية</th><th style="border-bottom:1px solid #000;">الإجمالي</th></tr></thead><tbody>${inv.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:left;">${money(i.qty*i.price)}</td></tr>`).join('')}</tbody></table><h3 style="text-align:center;border-top:1px solid #000;padding-top:5px;">الإجمالي: ${money(inv.total)} ج</h3></div>`;
-  window.print(); setTimeout(() => { $("printArea").classList.add("hidden"); }, 1000);
+window.completeSale = async () => {
+ if(!cart.length)return showAlert("السلة فارغة.","warning");
+ const {subtotal, discount, addition, total} = renderCart(), invoiceNumber = "INV-"+Date.now().toString().slice(-6);
+ const saleObj = { invoiceNumber, items: cart.map(x=>({...x})), subtotal, discount, addition, total, notes: $("saleNotes")?.value || "", date: new Date().toLocaleString("ar-EG"), createdAt: Date.now() };
+ const newSaleRef = doc(col("sales")), newTreasuryRef = doc(col("treasury"));
+ setDoc(newSaleRef, saleObj).catch(e=>console.warn(e));
+ setDoc(newTreasuryRef, { type: "in", amount: total, note: `فاتورة مبيعات - ${invoiceNumber}`, invoiceNumber, date: saleObj.date, createdAt: Date.now() }).catch(e=>console.warn(e));
+ for(const item of cart){
+   const p = products.find(x=>x.id===item.productId);
+   if(p){ const nq = Math.max(0,Number(p.qty)-item.qty); p.qty = nq; updateDoc(docRef("products",p.id),{qty:nq}).catch(e=>console.warn(e)); }
+ }
+ sales.unshift({id: newSaleRef.id, ...saleObj}); treasury.unshift({id: newTreasuryRef.id, type: "in", amount: total, note: `فاتورة مبيعات - ${invoiceNumber}`, date: saleObj.date, createdAt: Date.now()});
+ cart=[]; $("saleDiscountPct").value=0; $("saleDiscount").value=0; $("saleAddition").value=0; if($("saleNotes"))$("saleNotes").value="";
+ renderProducts(); renderSales(); renderTreasury(); renderStats(); renderCart();
+ printInvoice(saleObj);
 };
 
-window.printProductBarcode = (id) => {
-  const p = products.find(x => x.id === id); if (!p) return;
-  const tempDiv = document.createElement('div'); document.body.appendChild(tempDiv);
-  JsBarcode(tempDiv, p.barcode || p.id, { format: "CODE128", lineColor: "#000", width: 1.5, height: 30, displayValue: false });
-  const svg = tempDiv.innerHTML; document.body.removeChild(tempDiv);
-  $("printArea").classList.remove("hidden");
-  $("printArea").innerHTML = `<div style="text-align:center; font-family:Arial;"><b>${escapeHTML(profile?.shopName||"")}</b><br>${svg}<br>${escapeHTML(p.name)} - ${p.price} EGP</div>`;
-  window.print(); setTimeout(() => { $("printArea").classList.add("hidden"); }, 1000);
+function renderSales(){$("salesTable").innerHTML=sales.map(s=>`<tr><td>${escapeHTML(s.invoiceNumber)}</td><td>${escapeHTML(s.date)}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick='printInvoiceById("${s.id}")'>طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا فواتير</td></tr>";}
+window.printInvoiceById = id => {const s=sales.find(x=>x.id===id);if(s)printInvoice(s);};
+function printInvoice(sale){$("printArea").innerHTML=`<div style="font-family:Arial;text-align:center;padding:12px"><h2>${escapeHTML(profile?.shopName||"نظام")}</h2><p>فاتورة: ${escapeHTML(sale.invoiceNumber)}</p><hr><table style="width:100%"><thead><tr><th>الصنف</th><th>الكمية</th><th>الإجمالي</th></tr></thead><tbody>${sale.items.map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.qty*i.price - (i.lineDiscount||0))}</td></tr>`).join("")}</tbody></table><hr><h2>الإجمالي: ${money(sale.total)} ج</h2></div>`;window.print();}
+
+window.addExpense = async () => {const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value)||0;if(!name||amount<=0)return showAlert("أدخل بيان ومبلغ.","warning");await setDoc(doc(col("expenses")),{name,amount,date:new Date().toLocaleString("ar-EG"),createdAt:serverTimestamp()});$("expenseName").value="";$("expenseAmount").value="";await loadExpenses();renderStats();};
+function renderExpenses(){$("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${escapeHTML(e.date)}</td></tr>`).join("")||"<tr><td colspan='3'>لا مصروفات</td></tr>";}
+
+window.addTreasuryTransaction = async () => {const type=$("tType").value,amount=Number($("tAmount").value)||0,note=$("tNote").value.trim();if(amount<=0||!note)return showAlert("أدخل مبلغ وبيان.","warning");await setDoc(doc(col("treasury")),{type,amount,note,date:new Date().toLocaleString("ar-EG"),createdAt:Date.now()});$("tAmount").value="";$("tNote").value="";await loadTreasury();renderStats();};
+function renderTreasury(){let b=0;treasury.forEach(t=>{if(t.type==='in')b+=Number(t.amount)||0;else b-=Number(t.amount)||0;});$("treasuryBalanceDisplay").textContent=money(b)+" ج";if($("statTreasuryBalance"))$("statTreasuryBalance").textContent=money(b)+" ج";$("treasuryTable").innerHTML=treasury.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).map(t=>`<tr><td>${t.type==='in'?'وارد':'صادر'}</td><td>${money(t.amount)} ج</td><td>${escapeHTML(t.note)}</td><td>${escapeHTML(t.date)}</td></tr>`).join("")||"<tr><td colspan='4'>لا حركات</td></tr>";}
+function renderStats(){const rev=sales.reduce((s,x)=>s+(Number(x.total)||0),0),exp=expenses.reduce((s,x)=>s+(Number(x.amount)||0),0);$("statProducts").textContent=products.length;$("statSales").textContent=sales.length;$("statRevenue").textContent=money(rev)+" ج";$("reportRevenue").textContent=money(rev)+" ج";$("reportExpenses").textContent=money(exp)+" ج";$("reportNet").textContent=money(rev-exp)+" ج";let b=0;treasury.forEach(t=>{if(t.type==='in')b+=Number(t.amount)||0;else b-=Number(t.amount)||0;});if($("statTreasuryBalance"))$("statTreasuryBalance").textContent=money(b)+" ج";}
+
+window.exportDataToExcel = () => {const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(products.map(p=>({"المنتج":p.name,"السعر":p.price,"الكمية":p.qty}))),"المنتجات");XLSX.writeFile(wb,"NexPOS_Backup.xlsx");};
+window.renderPsReservations = () => {const sel=$("resDeviceId");if(sel)sel.innerHTML=psDevices.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("");$("psReservationsTable").innerHTML=psReservations.map(r=>`<tr><td>${escapeHTML(r.customerName)}</td><td>${escapeHTML(r.customerPhone||"—")}</td><td>${escapeHTML(r.deviceName)}</td><td>${escapeHTML(r.time)}</td><td>${escapeHTML(r.status)}</td><td><button class="rowbtn red" onclick="deleteReservation('${r.id}')">حذف</button></td></tr>`).join("")||'<tr><td colspan="6">لا حجوزات</td></tr>';};
+window.addReservation = async () => {const dId=$("resDeviceId").value,name=$("resCustomerName").value.trim(),time=$("resTime").value;if(!dId||!name||!time)return showAlert("أكمل.","warning");const d=psDevices.find(x=>x.id===dId);await setDoc(doc(col("psReservations")),{deviceId:dId,deviceName:d?d.name:"جهاز",customerName:name,customerPhone:$("resCustomerPhone").value.trim(),time,status:"pending",createdAt:Date.now()});$("resCustomerName").value="";await loadPlaystationData();};
+window.deleteReservation = async id => {await deleteDoc(docRef("psReservations",id));await loadPlaystationData();};
+
+window.renderPsCustomers = () => {const map={};psSessions.forEach(s=>{const n=s.customerName?.trim();if(!n)return;if(!map[n])map[n]={name:n,visits:0,spent:0,last:0};map[n].visits++;map[n].spent+=Number(s.total)||0;if((s.endedAt||0)>map[n].last)map[n].last=s.endedAt||0;});const arr=Object.values(map).sort((a,b)=>b.spent-a.spent);$("psCustomersTable").innerHTML=arr.map((c,i)=>`<tr><td>${i+1}</td><td>${escapeHTML(c.name)}</td><td>${c.visits}</td><td>${money(c.spent)} ج</td><td>${c.last?new Date(c.last).toLocaleDateString("ar-EG"):"—"}</td></tr>`).join("")||'<tr><td colspan="5">لا عملاء</td></tr>';};
+
+window.renderPsReports = () => {
+ const fin = psSessions.filter(s=>s.finalized||s.endedAt);
+ $("psTotalRevenueAll").textContent = money(fin.reduce((s,x)=>s+(Number(x.total)||0),0))+" ج";
+ $("psTotalSessionsAll").textContent = fin.length;
 };
-
-window.addTreasuryTransaction = async () => {const type=$("tType").value,amount=Number($("tAmount").value)||0,note=$("tNote").value.trim();if(amount<=0)return;await setDoc(doc(col("treasury")),{type,amount,note:note||"حركة يدوية",date:new Date().toLocaleString("ar-EG")});$("tAmount").value="";$("tNote").value="";await loadTreasury();renderStats();};
-function renderTreasury(){let tIn=0,tOut=0;$("treasuryTable").innerHTML=treasury.map(t=>{if(t.type==="in")tIn+=Number(t.amount)||0;else tOut+=Number(t.amount)||0;return `<tr><td><span class="tag ${t.type==="in"?"good":""}">${t.type==="in"?"وارد":"صادر"}</span></td><td>${money(t.amount)} ج</td><td>${escapeHTML(t.note||"")}</td><td>${t.date||""}</td></tr>`;}).join("")||"<tr><td colspan='4'>لا حركات</td></tr>";$("treasuryBalanceDisplay").textContent=money(tIn-tOut)+" ج";}
-window.addExpense = async () => {const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value)||0;if(!name||amount<=0)return;const date=new Date().toLocaleString("ar-EG");await setDoc(doc(col("expenses")),{name,amount,date});await setDoc(doc(col("treasury")),{type:"out",amount,note:"مصروف: "+name,date});await loadBusiness();};
-function renderExpenses(){$("expensesTable").innerHTML=expenses.map(e=>`<tr><td>${escapeHTML(e.name)}</td><td>${money(e.amount)} ج</td><td>${e.date}</td></tr>`).join("")||"<tr><td colspan='3'>لا مصروفات</td></tr>";}
-function renderSales(){$("salesTable").innerHTML=sales.map(s=>`<tr><td>${s.number}</td><td>${s.date}</td><td>${money(s.total)} ج</td><td><button class="rowbtn secondary" onclick="printSavedInvoice('${s.id}')">طباعة</button></td></tr>`).join("")||"<tr><td colspan='4'>لا فواتير</td></tr>";}
-window.printSavedInvoice = id => {const inv=sales.find(s=>s.id===id);if(inv)printInvoiceDirectly(inv);};
-
-function renderStats(){$("statProducts").textContent=products.length;$("statSales").textContent=sales.length;const today=new Date().toLocaleDateString("ar-EG");const todayRev=sales.filter(s=>(s.date||"").startsWith(today)).reduce((sum,s)=>sum+Number(s.total||0),0);$("statRevenue").textContent=money(todayRev)+" ج";let tIn=0,tOut=0;treasury.forEach(t=>{if(t.type==="in")tIn+=Number(t.amount)||0;else tOut+=Number(t.amount)||0;});$("statTreasuryBalance").textContent=money(tIn-tOut)+" ج";const tr=sales.reduce((s,x)=>s+Number(x.total||0),0),te=expenses.reduce((s,x)=>s+Number(x.amount||0),0);if($("reportRevenue"))$("reportRevenue").textContent=money(tr)+" ج";if($("reportExpenses"))$("reportExpenses").textContent=money(te)+" ج";if($("reportNet"))$("reportNet").textContent=money(tr-te)+" ج";}
-window.renderStats = renderStats;
-window.exportDataToExcel = () => {const wb=XLSX.utils.book_new();if(products.length)XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(products),"المنتجات");if(sales.length)XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(sales),"المبيعات");XLSX.writeFile(wb,"NexPOS.xlsx");};
-
-window.addReservation = async () => {const deviceId=$("resDeviceId").value,customerName=$("resCustomerName").value.trim(),phone=$("resCustomerPhone").value.trim(),time=$("resTime").value;if(!deviceId||!customerName||!time)return;const d=psDevices.find(x=>x.id===deviceId),now=new Date(),[h,m]=time.split(':'),rd=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m);await setDoc(doc(col("psReservations")),{deviceId,deviceName:d?d.name:"جهاز",customerName,phone,time:rd.getTime(),status:"pending"});await loadPlaystationData();renderPsReservations();};
-function renderPsReservations(){const sel=$("resDeviceId");if(sel)sel.innerHTML=psDevices.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("");const tbody=$("psReservationsTable");if(tbody)tbody.innerHTML=psReservations.map(r=>`<tr><td>${escapeHTML(r.customerName)}</td><td>${escapeHTML(r.phone||"—")}</td><td>${escapeHTML(r.deviceName)}</td><td>${new Date(r.time).toLocaleTimeString("ar-EG",{hour:'2-digit',minute:'2-digit'})}</td><td>قادم</td><td><button class="rowbtn red" onclick="deleteReservation('${r.id}')">إلغاء</button></td></tr>`).join("")||'<tr><td colspan="6">لا حجوزات</td></tr>';}
-window.deleteReservation = async id => {await deleteDoc(docRef("psReservations",id));await loadPlaystationData();renderPsReservations();};
-function renderPsCustomers(){const tbody=$("psCustomersTable");if(!tbody)return;const c={};psSessions.filter(s=>s.finalized).forEach(s=>{const n=(s.customerName||"").trim();if(!n)return;if(!c[n])c[n]={count:0,total:0};c[n].count++;c[n].total+=Number(s.total||0);});tbody.innerHTML=Object.keys(c).map((k,i)=>`<tr><td>${i+1}</td><td>${escapeHTML(k)}</td><td>${c[k].count}</td><td>${money(c[k].total)} ج</td><td>—</td></tr>`).join("")||'<tr><td colspan="5">لا بيانات</td></tr>';}
-function renderPsReports(){const all=psSessions.filter(s=>s.finalized);$("psTotalRevenueAll").textContent=money(all.reduce((s,x)=>s+Number(x.total||0),0))+" ج";$("psTotalSessionsAll").textContent=all.length;}
-
-window.goPsHome();
 </script>
 </body>
 </html>

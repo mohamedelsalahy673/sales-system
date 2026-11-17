@@ -1174,7 +1174,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
         <div class="sahal-table-wrap">
           <table class="sahal-table">
             <thead>
-              <tr><th style="width:30px;">#</th><th>اسم الصنف</th><th style="width:110px; text-align:center;">الكمية</th><th style="width:85px;">السعر</th><th style="width:80px;">الإجمالي</th><th style="width:80px;">خصم</th><th style="width:85px;">النهائي</th><th style="width:40px;">حذف</th></tr>
+              <tr><th style="width:30px;">#</th><th>اسم الصنف</th><th style="width:110px; text-align:center;">الكمية</th><th style="width:85px;">السعر</th><th style="width:80px;">الإجمالي</th><th style="width:80px;">خصم</th><th style="width:85px;">النهائي</th><th style="width:55px; white-space:nowrap; text-align:center;">حذف</th></tr>
             </thead>
             <tbody id="cartTable"><tr><td colspan="8" class="empty-cart-msg" style="font-size:16px; padding:20px; text-align:center;">🛒 السلة فارغة - ابدأ بإضافة أصناف</td></tr></tbody>
           </table>
@@ -2392,7 +2392,7 @@ function renderCart(){
      <td>${money(lineTotal)}</td>
      <td><input type="number" min="0" step="0.01" value="${lineDiscount.toFixed(2)}" style="width:65px; margin:0; padding:3px; text-align:center; font-size:12px;" onchange="updateLineDiscount(${i}, this.value)"></td>
      <td><b style="color:var(--success);">${money(lineFinal)} ج</b></td>
-     <td><button class="rowbtn red" onclick="removeCartItem(${i})" style="padding:3px 6px;">✕</button></td>
+     <td style="text-align:center;"><button class="rowbtn red" onclick="removeCartItem(${i})" style="padding:3px 6px;">✕</button></td>
    </tr>`;
  }).join("");
  const subtotal = cart.reduce((s,x)=>s+x.qty*x.price,0), lineDiscounts = cart.reduce((s,x)=>s+(Number(x.lineDiscount)||0),0);

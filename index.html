@@ -1194,7 +1194,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:12px 0}
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:2px;">
            <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1" style="margin:0; text-align:center;"></div>
-           <div><label>السعر</label><input id="salePrice" type="number" min="0" placeholder="0.00" style="margin:0; text-align:center;"></div>
+           <div><label>السعر (ثابت)</label><input id="salePrice" type="number" readonly placeholder="0.00" style="margin:0; text-align:center; background:#1e293b; color:#94a3b8; cursor:not-allowed; border-color:#334155;"></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:2px;">
            <button class="green" style="padding:7px; font-size:13px;" onclick="addToCart()">➕ إضافة (Enter)</button>
@@ -2262,7 +2262,6 @@ window.page = name => {
   const wrapEl = document.querySelector('.wrap');
   wrapEl.style.overflowY = isSales ? 'hidden' : 'auto';
   
-  // رفع شاشة المبيعات الذكية لأعلى الشاشة بتقليل الهوامش العلوية عند فتحها فقط
   if ($("customerTopBar")) $("customerTopBar").classList.toggle("hidden", isSales);
   if ($("mainAppHeader")) $("mainAppHeader").classList.toggle("hidden", isSales);
   if ($("customerPanel")) $("customerPanel").classList.toggle("sales-active", isSales);
@@ -2326,16 +2325,39 @@ window.searchProducts = () => {
   if (m.length === 1) { selectedProduct = m[0]; window.updateInquiryTooltip(); }
 };
 window.selectSaleProduct = id => { selectedProduct = products.find(p=>p.id===id); if(!selectedProduct) return; $("saleSearch").value = selectedProduct.name; $("salePrice").value = selectedProduct.price; $("searchResults").innerHTML = ""; addToCart(); };
+
 window.addToCart = () => {
- const qty=Number($("saleQty").value)||1, priceInput=$("salePrice").value, price=priceInput===""?Number(selectedProduct?.price||0):Number(priceInput), p=selectedProduct;
- if(!p || qty<=0) return showAlert("اختر منتج وكمية.","warning");
- const old=cart.find(x=>x.productId===p.id), already=old?old.qty:0;
- if(qty+already>Number(p.qty)) return showAlert("الكمية أكبر من المخزون.","warning");
- if(old){old.qty+=qty;old.price=price;}else cart.push({productId:p.id,name:p.name,qty,price,cost:p.cost||0,lineDiscount:0});
- selectedProduct=null;$("saleSearch").value="";$("saleQty").value="1";$("salePrice").value="";$("searchResults").innerHTML="";renderCart();$("saleSearch").focus();
+ const qty = Number($("saleQty").value) || 1;
+ const p = selectedProduct;
+ if (!p || qty <= 0) return showAlert("اختر منتج وكمية.", "warning");
+ 
+ const fixedPrice = Number(p.price || 0);
+ const old = cart.find(x => x.productId === p.id), already = old ? old.qty : 0;
+ if (qty + already > Number(p.qty)) return showAlert("الكمية أكبر من المخزون.", "warning");
+ 
+ if (old) {
+   old.qty += qty;
+   old.price = fixedPrice;
+ } else {
+   cart.push({
+     productId: p.id,
+     name: p.name,
+     qty,
+     price: fixedPrice,
+     cost: p.cost || 0,
+     lineDiscount: 0
+   });
+ }
+ 
+ selectedProduct = null;
+ $("saleSearch").value = "";
+ $("saleQty").value = "1";
+ $("salePrice").value = "";
+ $("searchResults").innerHTML = "";
+ renderCart();
+ $("saleSearch").focus();
 };
 
-// ============ اختصارات لوحة المفاتيح وأزرار الكميات المحسنة ============
 window.addEventListener('keydown', (e) => {
   if (document.getElementById('salesPage').classList.contains('hidden')) return;
   if (e.key === 'F1') { e.preventDefault(); document.getElementById('saleSearch')?.focus(); }
@@ -2369,15 +2391,13 @@ window.updateCartQtyInput = (index, val) => {
   renderCart();
 };
 
-window.updateCartPriceInput = (index, val) => {
-  if (cart[index]) { cart[index].price = Math.max(0, Number(val) || 0); renderCart(); }
-};
-
 function renderCart(){
  const tbody = document.getElementById("cartTable");
  if (!tbody) return;
  tbody.innerHTML = cart.length === 0 ? '<tr><td colspan="8" class="empty-cart-msg" style="text-align:center; padding:20px; color:var(--text-muted);">🛒 السلة فارغة - ابدأ بإضافة أصناف</td></tr>' : cart.map((x,i)=>{
-   const lineTotal = x.qty * x.price, lineDiscount = Math.max(0, Math.min(Number(x.lineDiscount)||0, lineTotal)), lineFinal = lineTotal - lineDiscount;
+   const lineTotal = x.qty * x.price;
+   const lineDiscount = Math.max(0, Math.min(Number(x.lineDiscount)||0, lineTotal));
+   const lineFinal = lineTotal - lineDiscount;
    return `<tr>
      <td>${i+1}</td>
      <td><b>${escapeHTML(x.name)}</b></td>
@@ -2388,17 +2408,25 @@ function renderCart(){
          <button class="qty-btn" onclick="changeCartQty(${i}, 1)">+</button>
        </div>
      </td>
-     <td><input type="number" min="0" step="0.01" value="${x.price}" style="width:75px; margin:0; padding:3px; text-align:center; font-size:12px; font-weight:bold;" onchange="updateCartPriceInput(${i}, this.value)"></td>
+     <td style="color:var(--text-muted);">${money(x.price)}</td>
      <td>${money(lineTotal)}</td>
-     <td><input type="number" min="0" step="0.01" value="${lineDiscount.toFixed(2)}" style="width:65px; margin:0; padding:3px; text-align:center; font-size:12px;" onchange="updateLineDiscount(${i}, this.value)"></td>
+     <td><input type="number" min="0" max="${lineTotal}" step="0.01" value="${lineDiscount > 0 ? lineDiscount : ''}" placeholder="0.00" style="width:65px; margin:0; padding:3px; text-align:center; font-size:12px;" oninput="updateLineDiscount(${i}, this.value)"></td>
      <td><b style="color:var(--success);">${money(lineFinal)} ج</b></td>
      <td style="text-align:center;"><button class="rowbtn red" onclick="removeCartItem(${i})" style="padding:3px 6px;">✕</button></td>
    </tr>`;
  }).join("");
- const subtotal = cart.reduce((s,x)=>s+x.qty*x.price,0), lineDiscounts = cart.reduce((s,x)=>s+(Number(x.lineDiscount)||0),0);
- const discountPct = Math.max(0, Math.min(100, Number($("saleDiscountPct").value)||0)), discountCash = Math.max(0,Number($("saleDiscount").value)||0), addition = Math.max(0,Number($("saleAddition").value)||0);
- const totalDiscount = lineDiscounts + Number((subtotal * discountPct / 100).toFixed(2)) + discountCash;
+
+ const subtotal = cart.reduce((s,x)=>s+x.qty*x.price,0);
+ const lineDiscounts = cart.reduce((s,x)=>s+Math.min(Number(x.lineDiscount)||0, x.qty*x.price),0);
+ const discountPct = Math.max(0, Math.min(100, Number($("saleDiscountPct").value)||0));
+ const discountCash = Math.max(0,Number($("saleDiscount").value)||0);
+ const addition = Math.max(0,Number($("saleAddition").value)||0);
+
+ const afterLineDiscounts = subtotal - lineDiscounts;
+ const pctDiscountVal = Number((afterLineDiscounts * discountPct / 100).toFixed(2));
+ const totalDiscount = lineDiscounts + pctDiscountVal + discountCash;
  const total = Math.max(0, subtotal - totalDiscount + addition);
+
  $("cartTotalDisplay").textContent = money(total);
  
  const totalItemsCount = cart.length;
@@ -2409,8 +2437,31 @@ function renderCart(){
  window.updateInquiryTooltip();
  return {subtotal, discount: totalDiscount, addition, total};
 }
-window.updateLineDiscount = (index, value) => { if(cart[index]) { cart[index].lineDiscount = Math.max(0, Number(value)||0); renderCart(); } };
-window.renderCart = renderCart; window.removeCartItem = i => {cart.splice(i,1);renderCart();};
+
+window.updateLineDiscount = (index, value) => {
+  if (!cart[index]) return;
+  const maxAllowed = cart[index].qty * cart[index].price;
+  let val = Math.max(0, Number(value) || 0);
+  if (val > maxAllowed) val = maxAllowed;
+  cart[index].lineDiscount = val;
+  
+  const row = document.getElementById("cartTable").rows[index];
+  if (row) {
+    row.cells[6].innerHTML = `<b style="color:var(--success);">${money(maxAllowed - val)} ج</b>`;
+  }
+  
+  const subtotal = cart.reduce((s,x)=>s+x.qty*x.price,0);
+  const lineDiscounts = cart.reduce((s,x)=>s+(Number(x.lineDiscount)||0),0);
+  const discountPct = Math.max(0, Math.min(100, Number($("saleDiscountPct").value)||0));
+  const discountCash = Math.max(0,Number($("saleDiscount").value)||0);
+  const addition = Math.max(0,Number($("saleAddition").value)||0);
+  const totalDiscount = lineDiscounts + Number(((subtotal - lineDiscounts) * discountPct / 100).toFixed(2)) + discountCash;
+  $("cartTotalDisplay").textContent = money(Math.max(0, subtotal - totalDiscount + addition));
+};
+
+window.renderCart = renderCart; 
+window.removeCartItem = i => {cart.splice(i,1);renderCart();};
+
 window.updateInquiryTooltip = () => {
   const tip = $("inquiryTooltip");
   if (!tip) return;
@@ -2428,7 +2479,6 @@ window.completeSale = async () => {
  printInvoiceDirectly(inv); cart = []; $("saleDiscount").value = "0"; $("saleDiscountPct").value = "0"; $("saleAddition").value = "0"; renderCart(); loadBusiness(); showAlert("تم البيع بنجاح. "+money(total)+" ج","success");
 };
 
-// نافذة السداد الذكي مع حساب الباقي
 window.showPaymentModal = async () => {
   if(!cart.length) return showAlert("السلة فارغة.","warning");
   const {total} = renderCart();

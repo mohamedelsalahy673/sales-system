@@ -112,173 +112,6 @@ th { background: #1e293b; color: var(--text-muted); font-weight: 700; position: 
 hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
 .result{display:block;width:100%;text-align:right;margin:0;border-radius:0; border: none; border-bottom: 1px solid var(--border-color); font-size:12px; padding:9px 10px;}
 
-/* ============ شريط التبويبات المتعددة (Browser-Style Tabs) ============ */
-.pos-tabbar {
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  background: #0b1120;
-  border-bottom: 2px solid var(--primary);
-  padding: 4px 6px 0;
-  margin-bottom: 4px;
-  border-radius: 8px 8px 0 0;
-  flex-shrink: 0;
-  user-select: none;
-  position: relative;
-}
-.pos-tabs-scroll {
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  overflow-x: auto;
-  flex: 1;
-  scrollbar-width: none;
-}
-.pos-tabs-scroll::-webkit-scrollbar { display: none; }
-
-.pos-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #1e293b;
-  color: #94a3b8;
-  border: 1px solid #334155;
-  border-bottom: none;
-  border-radius: 8px 8px 0 0;
-  padding: 5px 12px;
-  font-size: 12.5px;
-  font-weight: 700;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s ease;
-}
-.pos-tab:hover {
-  background: #273549;
-  color: #f8fafc;
-}
-.pos-tab.active {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: #ffffff;
-  border-color: #3b82f6;
-  box-shadow: 0 -2px 8px rgba(37, 99, 235, 0.35);
-}
-.pos-tab-close {
-  background: rgba(255, 255, 255, 0.12);
-  color: inherit;
-  border: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  padding: 0;
-  font-size: 11px;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: none;
-  cursor: pointer;
-}
-.pos-tab-close:hover {
-  background: #ef4444;
-  color: #ffffff;
-  transform: none;
-}
-.pos-tab-add {
-  background: #10b981;
-  color: #ffffff;
-  border: none;
-  width: 28px;
-  height: 27px;
-  border-radius: 6px;
-  padding: 0;
-  font-size: 18px;
-  font-weight: 800;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 3px;
-  flex-shrink: 0;
-  cursor: pointer;
-}
-.pos-tab-add:hover {
-  background: #059669;
-}
-.pos-quick-links {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 3px;
-  flex-shrink: 0;
-}
-.pos-quick-link {
-  background: rgba(51, 65, 85, 0.7);
-  color: #cbd5e1;
-  border: 1px solid #475569;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  box-shadow: none;
-}
-.pos-quick-link:hover {
-  background: var(--primary);
-  color: #ffffff;
-  border-color: var(--primary);
-}
-.pos-tab-menu {
-  position: absolute;
-  top: 36px;
-  left: 8px;
-  background: #1e293b;
-  border: 1px solid #475569;
-  border-radius: 10px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65);
-  padding: 6px;
-  z-index: 200;
-  display: none;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px;
-  min-width: 290px;
-}
-.pos-tab-menu.open {
-  display: grid;
-}
-.pos-tab-menu button {
-  background: #0f172a;
-  color: #f8fafc;
-  border: 1px solid #334155;
-  text-align: right;
-  padding: 7px 10px;
-  border-radius: 7px;
-  font-size: 12px;
-  box-shadow: none;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.pos-tab-menu button:hover {
-  background: var(--primary);
-  border-color: var(--primary);
-}
-#posWorkspace {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
-}
-.pos-tab-pane {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
-}
-.pos-tab-pane.hidden {
-  display: none !important;
-}
-
 /* ============ شاشة البلايستيشن ============ */
 #playstationPanel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
 #playstationPanel .ps-top-card { flex-shrink: 0; margin: 0 0 8px !important; padding: 10px 12px !important; }
@@ -428,7 +261,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
 }
 
 /* ============ شاشة مبيعات احترافية في واجهة واحدة بدون سكرول ============ */
-.sales-pos-box.sys-page-box {
+#salesPage.sys-page-box {
   height: 100%;
   max-height: 100%;
   display: flex;
@@ -436,13 +269,13 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
   overflow: hidden;
 }
 
-.sales-pos-box .sys-top-bar {
+#salesPage .sys-top-bar {
   padding: 5px 12px;
   font-size: 14px;
   gap: 8px;
 }
 
-.sales-pos-box .sahal-layout-main {
+#salesPage .sahal-layout-main {
   flex: 1;
   min-height: 0;
   display: grid;
@@ -452,14 +285,14 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
   overflow: hidden;
 }
 
-.sales-pos-box .sahal-center-main {
+#salesPage .sahal-center-main {
   padding: 0;
   gap: 6px;
   min-height: 0;
   overflow: hidden;
 }
 
-.sales-pos-box .sahal-search-area {
+#salesPage .sahal-search-area {
   padding: 6px 8px;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -467,19 +300,19 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
   gap: 0;
 }
 
-.sales-pos-box .sahal-search-area label {
+#salesPage .sahal-search-area label {
   font-size: 11.5px;
   margin-bottom: 4px;
   color: #93c5fd;
 }
 
-.sales-pos-box .sahal-search-area input {
+#salesPage .sahal-search-area input {
   padding: 7px 11px;
   font-size: 13.5px;
   border-radius: 8px;
 }
 
-.sales-pos-box .sahal-table-wrap {
+#salesPage .sahal-table-wrap {
   flex: 1;
   min-height: 0;
   margin: 0;
@@ -490,7 +323,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
   overflow-x: auto;
 }
 
-.sales-pos-box .sahal-table-wrap th {
+#salesPage .sahal-table-wrap th {
   background: #047857;
   color: #ffffff;
   padding: 6px 8px;
@@ -500,13 +333,13 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
   z-index: 3;
 }
 
-.sales-pos-box .sahal-table-wrap td {
+#salesPage .sahal-table-wrap td {
   padding: 5px 8px;
   font-size: 12.5px;
   vertical-align: middle;
 }
 
-.sales-pos-box .sahal-left-sidebar {
+#salesPage .sahal-left-sidebar {
   width: 100%;
   height: 100%;
   min-height: 0;
@@ -519,47 +352,47 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
   overflow-x: hidden;
 }
 
-.sales-pos-box .sahal-total-box {
+#salesPage .sahal-total-box {
   padding: 7px 10px;
   border-radius: 9px;
   flex-shrink: 0;
 }
 
-.sales-pos-box .sahal-total-box h2 {
+#salesPage .sahal-total-box h2 {
   font-size: 26px;
   line-height: 1.05;
   margin: 2px 0;
 }
 
-.sales-pos-box .sahal-controls-grid {
+#salesPage .sahal-controls-grid {
   gap: 5px;
   flex-shrink: 0;
 }
 
-.sales-pos-box .sahal-controls-grid label,
-.sales-pos-box .sahal-left-sidebar > div label {
+#salesPage .sahal-controls-grid label,
+#salesPage .sahal-left-sidebar > div label {
   font-size: 10.5px;
   margin-bottom: 1px;
   color: var(--text-muted);
 }
 
-.sales-pos-box .sahal-controls-grid input,
-.sales-pos-box .sahal-left-sidebar input,
-.sales-pos-box .sahal-left-sidebar select {
+#salesPage .sahal-controls-grid input,
+#salesPage .sahal-left-sidebar input,
+#salesPage .sahal-left-sidebar select {
   padding: 4px 7px;
   font-size: 12px;
   margin: 0;
   height: 29px;
 }
 
-.sales-pos-box .sahal-left-actions {
+#salesPage .sahal-left-actions {
   margin-top: auto;
   gap: 5px;
   flex-shrink: 0;
   padding-top: 2px;
 }
 
-.sales-pos-box .sahal-action-btn {
+#salesPage .sahal-action-btn {
   padding: 7px 8px;
   font-size: 12.5px;
   border-radius: 8px;
@@ -567,20 +400,20 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
 }
 
 @media (max-width: 900px) {
-  .sales-pos-box.sys-page-box {
+  #salesPage.sys-page-box {
     height: auto;
     max-height: none;
     overflow: visible;
   }
-  .sales-pos-box .sahal-layout-main {
+  #salesPage .sahal-layout-main {
     display: flex;
     flex-direction: column;
     overflow: visible;
   }
-  .sales-pos-box .sahal-table-wrap {
+  #salesPage .sahal-table-wrap {
     max-height: 240px;
   }
-  .sales-pos-box .sahal-left-sidebar {
+  #salesPage .sahal-left-sidebar {
     height: auto;
     overflow: visible;
   }
@@ -616,7 +449,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
 .sahal-search-area input:focus { border-color: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,0.2); }
 
 .search-container { position: relative; }
-.search-container .pos-search-results {
+.search-container #searchResults {
   position: absolute;
   top: 100%;
   left: 0;
@@ -740,7 +573,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
   .sahal-layout-main { flex-direction: column !important; overflow-y: auto !important; }
   .sahal-left-sidebar { width: 100% !important; border-right: none !important; border-top: 1px solid var(--border-color); }
   .sys-page-box { overflow-y: auto !important; }
-  .pos-quick-links { display: none; }
 }
 
 .back-btn{ background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); padding: 7px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: none; margin-bottom: 8px;}
@@ -1500,39 +1332,9 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
   </div>
 </div>
 
-<!-- ================= سيستم المبيعات بنظام التبويبات المتعددة (Tabs +) ================= -->
+<!-- ================= سيستم المبيعات بالكامل في واجهة واحدة مرفوعة للأعلى ================= -->
 <section id="customerPanel" class="hidden">
  <div class="card">
-
-  <!-- شريط التبويبات العلوي الشبيه بالمتصفح -->
-  <div class="pos-tabbar">
-    <div class="pos-tabs-scroll" id="posTabsList"></div>
-    <button type="button" class="pos-tab-add" id="posAddTabBtn" title="فتح تبويب جديد دون فقدان البيانات">+</button>
-    <div class="pos-quick-links">
-      <button type="button" class="pos-quick-link" onclick="openPosTab('sales')">🛒 بيع جديد</button>
-      <button type="button" class="pos-quick-link" onclick="openPosTab('products')">📦 المخزون</button>
-      <button type="button" class="pos-quick-link" onclick="openPosTab('treasury')">💰 الخزينة</button>
-      <button type="button" class="pos-quick-link" onclick="openPosTab('history')">🧾 الفواتير</button>
-      <button type="button" class="pos-quick-link" onclick="openPosTab('reports')">📊 تقارير</button>
-    </div>
-    <div class="pos-tab-menu" id="posNewTabMenu">
-      <button type="button" onclick="openPosTab('sales')">🛒 تبويب بيع جديد</button>
-      <button type="button" onclick="openPosTab('products')">📦 المخزون والمنتجات</button>
-      <button type="button" onclick="openPosTab('purchases')">📥 المشتريات</button>
-      <button type="button" onclick="openPosTab('returns')">↩️ مرتجع المبيعات</button>
-      <button type="button" onclick="openPosTab('treasury')">💰 الخزينة</button>
-      <button type="button" onclick="openPosTab('history')">🧾 سجل الفواتير</button>
-      <button type="button" onclick="openPosTab('expenses')">📝 المصروفات</button>
-      <button type="button" onclick="openPosTab('reports')">📊 التقارير والأرباح</button>
-      <button type="button" onclick="openPosTab('barcodeSettings')">🏷️ إعداد الباركود</button>
-      <button type="button" onclick="openPosTab('invoiceSettings')">🖨️ تصميم الفاتورة</button>
-      <button type="button" onclick="openPosTab('settings')">⚙️ الإعدادات</button>
-      <button type="button" onclick="openPosTab('subscription')">⭐ اشتراكي</button>
-    </div>
-  </div>
-
-  <!-- حاوية صفحات التبويبات المفتوحة -->
-  <div id="posWorkspace">
 
   <!-- 1. لوحة الإدارة الرئيسية (Dashboard) -->
   <div id="dashboardPage" class="sys-page-box">
@@ -1866,18 +1668,16 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
     </div>
   </div>
 
-  <!-- 5. قالب شاشة المبيعات الذكية (Sales POS Template - تُنشأ منه تبويبات متعددة مستقلة) -->
-  <template id="salesTabTemplate">
-  <div class="sys-page-box sales-pos-box">
+  <!-- 5. شاشة المبيعات الذكية (Sales POS) -->
+  <div id="salesPage" class="sys-page-box hidden">
     <div class="sys-top-bar bar-green">
       <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
         <span style="font-size:16px;">🛒</span>
-        <span class="pos-sales-tab-heading">شاشة المبيعات الذكية</span>
-        <span class="pos-sales-shop-badge" style="font-size:11px; background:rgba(0,0,0,0.25); padding:2px 8px; border-radius:12px; font-weight:normal;"></span>
+        <span>شاشة المبيعات الذكية</span>
+        <span id="salesShopBadge" style="font-size:11px; background:rgba(0,0,0,0.25); padding:2px 8px; border-radius:12px; font-weight:normal;"></span>
       </div>
       <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
         <span class="tag" style="background:rgba(255,255,255,0.18); color:white; border:none; font-size:10.5px;">F1 بحث • F2 بيع • F4 سداد • F9 تعليق</span>
-        <button type="button" onclick="openPosTab('sales')" style="background:#10b981; color:white; padding:3px 10px; font-size:11.5px; box-shadow:none; border:1px solid rgba(255,255,255,0.25);">+ فاتورة جديدة</button>
         <button type="button" onclick="page('dashboard')" style="background:#0f172a; color:white; padding:3px 10px; font-size:11.5px; box-shadow:none; border:1px solid rgba(255,255,255,0.2);">🏠 الرئيسية</button>
       </div>
     </div>
@@ -1886,8 +1686,8 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
         <div class="sahal-search-area">
           <div class="search-container">
             <label>بحث سريع بالاسم أو مسح الباركود (F1 — اضغط Enter للإضافة المباشرة)</label>
-            <input data-field="saleSearch" oninput="searchProducts(event)" onkeypress="handleBarcodeScan(event)" placeholder="اكتب اسم الصنف أو امسح الباركود..." autocomplete="off">
-            <div data-field="searchResults" class="pos-search-results"></div>
+            <input id="saleSearch" oninput="searchProducts(event)" onkeypress="handleBarcodeScan(event)" placeholder="اكتب اسم الصنف أو امسح الباركود..." autocomplete="off">
+            <div id="searchResults"></div>
           </div>
         </div>
         <div class="sahal-table-wrap">
@@ -1904,7 +1704,7 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
                 <th style="width:48px; text-align:center;">حذف</th>
               </tr>
             </thead>
-            <tbody data-field="cartTable">
+            <tbody id="cartTable">
               <tr><td colspan="8" class="empty-cart-msg" style="font-size:14px; padding:24px; text-align:center;">🛒 السلة فارغة - ابدأ بإضافة أصناف</td></tr>
             </tbody>
           </table>
@@ -1913,35 +1713,35 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
       <div class="sahal-left-sidebar">
         <div class="sahal-total-box">
           <span>الإجمالي المطلوب</span>
-          <h2 data-field="cartTotalDisplay">0.00</h2>
-          <div data-field="cartItemsSummary" style="font-size:10.5px; opacity:0.92;">الأصناف: 0 | القطع: 0</div>
+          <h2 id="cartTotalDisplay">0.00</h2>
+          <div id="cartItemsSummary" style="font-size:10.5px; opacity:0.92;">الأصناف: 0 | القطع: 0</div>
         </div>
         <div class="sahal-controls-grid">
-          <div><label>إضافة مبلغ</label><input data-field="saleAddition" type="number" min="0" value="0" oninput="renderCart()"></div>
-          <div><label>خصم % عام</label><input data-field="saleDiscountPct" type="number" min="0" max="100" value="0" oninput="renderCart()"></div>
-          <div><label>خصم فكة</label><input data-field="saleDiscount" type="number" min="0" value="0" oninput="renderCart()"></div>
-          <div><label>ملاحظات</label><input type="text" data-field="saleNotes" placeholder="ملاحظات الفاتورة..." style="text-align:right;"></div>
+          <div><label>إضافة مبلغ</label><input id="saleAddition" type="number" min="0" value="0" oninput="renderCart()"></div>
+          <div><label>خصم % عام</label><input id="saleDiscountPct" type="number" min="0" max="100" value="0" oninput="renderCart()"></div>
+          <div><label>خصم فكة</label><input id="saleDiscount" type="number" min="0" value="0" oninput="renderCart()"></div>
+          <div><label>ملاحظات</label><input type="text" id="saleNotes" placeholder="ملاحظات الفاتورة..." style="text-align:right;"></div>
         </div>
         <div>
           <label>نوع الدفع</label>
-          <select data-field="salePaymentType" onchange="toggleCreditCustomerBox()">
+          <select id="salePaymentType" onchange="toggleCreditCustomerBox()">
             <option value="cash">💵 نقدي (خزينة)</option>
             <option value="credit">💳 آجل (ترحيل للمستحقات)</option>
           </select>
         </div>
-        <div data-field="creditCustomerBox" class="hidden" style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
-          <div><label>اسم العميل</label><input data-field="creditCustomerName" placeholder="اسم العميل"></div>
-          <div><label>هاتف العميل</label><input data-field="creditCustomerPhone" placeholder="01xxxxxxxxx"></div>
+        <div id="creditCustomerBox" class="hidden" style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
+          <div><label>اسم العميل</label><input id="creditCustomerName" placeholder="اسم العميل"></div>
+          <div><label>هاتف العميل</label><input id="creditCustomerPhone" placeholder="01xxxxxxxxx"></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
-          <div><label>الكمية</label><input data-field="saleQty" type="number" min="1" value="1" style="text-align:center;"></div>
-          <div><label>السعر</label><input data-field="salePrice" type="number" readonly placeholder="0.00" style="text-align:center; background:#1e293b; color:#94a3b8; cursor:not-allowed; border-color:#334155;"></div>
+          <div><label>الكمية</label><input id="saleQty" type="number" min="1" value="1" style="text-align:center;"></div>
+          <div><label>السعر</label><input id="salePrice" type="number" readonly placeholder="0.00" style="text-align:center; background:#1e293b; color:#94a3b8; cursor:not-allowed; border-color:#334155;"></div>
         </div>
         <div style="display:grid; grid-template-columns:1.3fr 0.7fr; gap:5px;">
           <button type="button" class="green" style="padding:6px 8px; font-size:12px; height:30px;" onclick="addToCart()">➕ إضافة (Enter)</button>
           <div class="inquiry-box">
-            <div class="inquiry-btn" style="height:30px; font-size:11.5px;">🔍 استعلام
-              <div class="inquiry-tooltip" data-field="inquiryTooltip">سعر الشراء<span class="cost-val">—</span></div>
+            <div class="inquiry-btn" id="inquiryBtn" style="height:30px; font-size:11.5px;">🔍 استعلام
+              <div class="inquiry-tooltip" id="inquiryTooltip">سعر الشراء<span class="cost-val">—</span></div>
             </div>
           </div>
         </div>
@@ -1953,14 +1753,13 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
             <div class="sahal-action-btn action-hold" onclick="saveHold()"><i>⏸️</i> <span>تعليق (F9)</span></div>
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
-            <div class="sahal-action-btn" onclick="openHeldList()" style="background:#b45309;"><i>📂</i> <span class="held-count-label">المعلقة</span></div>
+            <div class="sahal-action-btn" onclick="openHeldList()" style="background:#b45309;"><i>📂</i> <span id="heldCountLabel">المعلقة</span></div>
             <div class="sahal-action-btn action-home" onclick="page('dashboard')"><i>🏠</i> <span>الرئيسية</span></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  </template>
 
   <!-- 6. إدارة المنتجات والمخازن -->
   <div id="productsPage" class="sys-page-box hidden">
@@ -2219,7 +2018,6 @@ hr{border:0;border-top:1px solid var(--border-color);margin:10px 0}
     </div>
   </div>
 
-  </div><!-- نهاية posWorkspace -->
  </div>
 </section>
 
@@ -2405,7 +2203,7 @@ function updateNetworkStatus(){
 window.addEventListener('online',updateNetworkStatus);window.addEventListener('offline',updateNetworkStatus);updateNetworkStatus();
 
 let currentUser=null,profile=null,selectedSystem=localStorage.getItem('nexpos_selected_system')||"sales",activeSystem="sales",registeringNow=false;
-let products=[],sales=[],expenses=[],treasury=[],purchases=[],returnsList=[],lastRegisteredUser=null;
+let products=[],sales=[],expenses=[],treasury=[],purchases=[],returnsList=[],cart=[],selectedProduct=null,lastRegisteredUser=null;
 let receivables=[];
 let psDevices=[],psItems=[],psSessions=[],psReservations=[],psTimer=null,psEndingDevices=new Set();
 let currentShiftCloseTime=0,currentPsSection="home";
@@ -2417,231 +2215,6 @@ const shopRef=()=>`shops/${currentUser.uid}`;
 const col=name=>collection(db,shopRef(),name);
 const docRef=(name,id)=>doc(db,shopRef(),name,id);
 const PLANS={30:{name:"شهري",price:100},90:{name:"3 شهور",price:250},365:{name:"سنوي",price:900},36500:{name:"دائم",price:3000}};
-
-/* =========================================================================
-   ================= مدير التبويبات المتعددة (Multi-Tab Manager) =================
-   ========================================================================= */
-const POS_PAGE_META = {
-  dashboard: { title: "🏠 الرئيسية", singleton: true },
-  sales: { title: "🛒 بيع", singleton: false },
-  products: { title: "📦 المخزون", singleton: true },
-  purchases: { title: "📥 المشتريات", singleton: true },
-  returns: { title: "↩️ المرتجعات", singleton: true },
-  treasury: { title: "💰 الخزينة", singleton: true },
-  history: { title: "🧾 الفواتير", singleton: true },
-  expenses: { title: "📝 المصروفات", singleton: true },
-  reports: { title: "📊 التقارير", singleton: true },
-  barcodeSettings: { title: "🏷️ الباركود", singleton: true },
-  invoiceSettings: { title: "🖨️ الفاتورة", singleton: true },
-  settings: { title: "⚙️ الإعدادات", singleton: true },
-  subscription: { title: "⭐ اشتراكي", singleton: true }
-};
-
-let posTabs = [];
-let activePosTabId = null;
-let salesTabSequence = 0;
-
-function getActivePosTab() {
-  return posTabs.find(t => t.id === activePosTabId) || null;
-}
-
-function getActiveSalesTab() {
-  const cur = getActivePosTab();
-  if (cur && cur.type === "sales") return cur;
-  return posTabs.find(t => t.type === "sales") || null;
-}
-
-function salesField(tab, fieldName) {
-  return tab?.paneEl?.querySelector(`[data-field="${fieldName}"]`) || null;
-}
-
-function initPosTabs() {
-  const workspace = $("posWorkspace");
-  if (!workspace) return;
-  workspace.querySelectorAll(".pos-dynamic-pane").forEach(el => el.remove());
-
-  posTabs = [
-    {
-      id: "tab-dashboard",
-      type: "dashboard",
-      title: "🏠 الرئيسية",
-      closable: false,
-      paneEl: $("dashboardPage")
-    }
-  ];
-  salesTabSequence = 0;
-  activePosTabId = "tab-dashboard";
-  activatePosTab("tab-dashboard");
-}
-
-function renderPosTabsBar() {
-  const listEl = $("posTabsList");
-  if (!listEl) return;
-  listEl.innerHTML = "";
-
-  posTabs.forEach(tab => {
-    const btn = document.createElement("div");
-    btn.className = "pos-tab" + (tab.id === activePosTabId ? " active" : "");
-    btn.onclick = () => activatePosTab(tab.id);
-
-    const span = document.createElement("span");
-    span.textContent = tab.title;
-    btn.appendChild(span);
-
-    if (tab.closable) {
-      const closeBtn = document.createElement("button");
-      closeBtn.type = "button";
-      closeBtn.className = "pos-tab-close";
-      closeBtn.title = "إغلاق التبويب";
-      closeBtn.textContent = "✕";
-      closeBtn.onclick = (e) => {
-        e.stopPropagation();
-        closePosTab(tab.id);
-      };
-      btn.appendChild(closeBtn);
-    }
-
-    listEl.appendChild(btn);
-  });
-}
-
-function createSalesTabInstance() {
-  salesTabSequence += 1;
-  const tabId = "tab-sales-" + Date.now() + "-" + salesTabSequence;
-  const title = `🛒 بيع | ${salesTabSequence}`;
-  const tpl = $("salesTabTemplate");
-  const wrapper = document.createElement("div");
-  wrapper.className = "pos-tab-pane pos-dynamic-pane hidden";
-  wrapper.id = tabId;
-  wrapper.appendChild(tpl.content.cloneNode(true));
-
-  const headingEl = wrapper.querySelector(".pos-sales-tab-heading");
-  if (headingEl) headingEl.textContent = `شاشة المبيعات الذكية (${salesTabSequence})`;
-  const shopBadgeEl = wrapper.querySelector(".pos-sales-shop-badge");
-  if (shopBadgeEl) shopBadgeEl.textContent = profile?.shopName || "";
-
-  $("posWorkspace").appendChild(wrapper);
-
-  return {
-    id: tabId,
-    type: "sales",
-    title,
-    closable: true,
-    paneEl: wrapper,
-    state: {
-      cart: [],
-      selectedProduct: null
-    }
-  };
-}
-
-function activatePosTab(tabId) {
-  const target = posTabs.find(t => t.id === tabId);
-  if (!target) return;
-  activePosTabId = tabId;
-
-  const singletonIds = [
-    "dashboardPage", "productsPage", "purchasesPage", "returnsPage",
-    "treasuryPage", "historyPage", "expensesPage", "reportsPage",
-    "settingsPage", "subscriptionPage", "invoiceSettingsPage", "barcodeSettingsPage"
-  ];
-  singletonIds.forEach(id => $(id)?.classList.add("hidden"));
-  posTabs.forEach(t => {
-    if (t.type === "sales" && t.paneEl) t.paneEl.classList.add("hidden");
-  });
-
-  if (target.paneEl) target.paneEl.classList.remove("hidden");
-  renderPosTabsBar();
-
-  const p = target.type;
-  if (p === "dashboard") renderDashboard();
-  if (p === "sales") {
-    updateHeldBadge();
-    toggleCreditCustomerBox();
-    renderCart();
-    setTimeout(() => salesField(target, "saleSearch")?.focus(), 40);
-  }
-  if (p === "products") renderProducts();
-  if (p === "purchases") renderPurchasesPage();
-  if (p === "returns") renderReturnsPage();
-  if (p === "treasury") renderTreasury();
-  if (p === "history") renderSales();
-  if (p === "expenses") renderExpenses();
-  if (p === "reports") renderReports();
-  if (p === "subscription") checkCustomerSubscription(systemInfo(profile, activeSystem));
-  if (p === "invoiceSettings") loadInvoiceSettings();
-  if (p === "barcodeSettings") loadBarcodeSettings();
-}
-
-window.openPosTab = (type, forceNew = false) => {
-  $("posNewTabMenu")?.classList.remove("open");
-  const meta = POS_PAGE_META[type];
-  if (!meta) return;
-
-  if (meta.singleton || (!forceNew && type !== "sales")) {
-    const existing = posTabs.find(t => t.type === type);
-    if (existing) {
-      activatePosTab(existing.id);
-      return;
-    }
-  }
-
-  if (type === "sales") {
-    const newSalesTab = createSalesTabInstance();
-    posTabs.push(newSalesTab);
-    activatePosTab(newSalesTab.id);
-    return;
-  }
-
-  const paneEl = $(type + "Page");
-  if (!paneEl) return;
-  const newTab = {
-    id: "tab-" + type,
-    type,
-    title: meta.title,
-    closable: true,
-    paneEl
-  };
-  posTabs.push(newTab);
-  activatePosTab(newTab.id);
-};
-
-window.closePosTab = async (tabId) => {
-  const idx = posTabs.findIndex(t => t.id === tabId);
-  if (idx === -1 || !posTabs[idx].closable) return;
-  const tab = posTabs[idx];
-
-  if (tab.type === "sales" && tab.state?.cart?.length > 0) {
-    const ok = await customConfirm("هذا التبويب يحتوي على أصناف في السلة، هل تريد إغلاقه؟");
-    if (!ok) return;
-  }
-
-  if (tab.type === "sales" && tab.paneEl) {
-    tab.paneEl.remove();
-  }
-  posTabs.splice(idx, 1);
-
-  if (activePosTabId === tabId) {
-    const fallback = posTabs[idx] || posTabs[idx - 1] || posTabs[0];
-    if (fallback) activatePosTab(fallback.id);
-  } else {
-    renderPosTabsBar();
-  }
-};
-
-document.addEventListener("click", (e) => {
-  const menu = $("posNewTabMenu");
-  const addBtn = $("posAddTabBtn");
-  if (!menu || !addBtn) return;
-  if (addBtn.contains(e.target)) {
-    e.stopPropagation();
-    menu.classList.toggle("open");
-  } else if (!menu.contains(e.target)) {
-    menu.classList.remove("open");
-  }
-});
-
-/* ========================================================================= */
 
 async function safeGetDocs(r){try{return await getDocsFromServer(r);}catch(e){return await getDocsFromCache(r);}}
 async function safeGetDoc(r){try{return await getDocFromServer(r);}catch(e){return await getDocFromCache(r);}}
@@ -2838,10 +2411,10 @@ onAuthStateChanged(auth, async user => {
       if($("mainAppHeader")) $("mainAppHeader").classList.add("hidden");
       $("customerPanel").classList.remove("hidden");
       $("shopTitle").textContent = profile.shopName || "نظام المبيعات";
+      if($("salesShopBadge")) $("salesShopBadge").textContent = profile.shopName || "";
       if($("bcShopBadge")) $("bcShopBadge").textContent = profile.shopName || "";
       $("settingsShopName").value = profile.shopName || "";
       $("settingsEmail").value = profile.email || user.email || "";
-      initPosTabs();
       checkCustomerSubscription(info);
       await loadBusiness();
       page("dashboard");
@@ -3731,1742 +3304,999 @@ function executePrintStickers(batchList, s) {
 
   setTimeout(() => {
     window.print();
-    printArea.classList.add("hidden");
+    setTimeout(() => {
+      printArea.classList.add("hidden");
+      printArea.innerHTML = "";
+    }, 1000);
   }, 150);
 }
 
-/* ================= إدارة البلايستيشن ================= */
-window.goPsHome = () => {
-    ["psDevicesSection","psVipSection","psBaseArabiSection","psBilliardSection","psRunningSection","psDrinksSection","psSandwichesSection","psSessionsSection","psReservationsSection","psCustomersSection","psReportsSection"].forEach(s => $(s)?.classList.add("hidden"));
-    $("psHomeScreen").classList.remove("hidden"); currentPsSection = "home";
-};
-window.showPsSection = (sec) => {
-    $("psHomeScreen").classList.add("hidden");
-    const map = { devices:"psDevicesSection", vip:"psVipSection", base_arabi:"psBaseArabiSection", billiard:"psBilliardSection", running:"psRunningSection", drinks:"psDrinksSection", sandwiches:"psSandwichesSection", sessions:"psSessionsSection", reservations:"psReservationsSection", customers:"psCustomersSection", reports:"psReportsSection" };
-    Object.values(map).forEach(s => $(s)?.classList.add("hidden"));
-    if(map[sec]) { $(map[sec]).classList.remove("hidden"); currentPsSection = sec; }
-    if(sec==="devices") renderPsDevices();
-    if(sec==="vip") renderPsVipDevices();
-    if(sec==="base_arabi") renderPsBaseArabiDevices();
-    if(sec==="billiard") renderPsBilliardDevices();
-    if(sec==="running") renderPsRunning();
-    if(sec==="drinks"||sec==="sandwiches") renderPsItems();
-    if(sec==="sessions") renderPsSessions();
-    if(sec==="reservations") renderPsReservations();
-    if(sec==="customers") renderPsCustomers();
-    if(sec==="reports") renderPsReports();
-};
+/* ========================================================================= */
 
-function startPsTimer(){ if(psTimer) clearInterval(psTimer); psTimer = setInterval(updatePsLiveTimers, 1000); }
-function formatDuration(ms){ const s=Math.max(0,Math.floor(ms/1000)),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60; return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`; }
-
-function getBilliardCurrentCost(d){
-  if(!d?.isRunning) return 0;
-  if(d.billiardMode==="games"){ const games=Math.max(1,Number(d.gamesCount)||1); return Number((games*(Number(d.gamePrice)||20)).toFixed(2)); }
-  const mins=Math.max(0,(Date.now()-Number(d.startedAt))/60000);
-  return Number(((mins/60)*(Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE)).toFixed(2));
-}
-
-function getLivePlayCost(d){
-  if(!d?.isRunning) return 0;
-  if(getDeviceType(d)==="billiard") return getBilliardCurrentCost(d);
-  const mins=Math.max(0,(Date.now()-Number(d.startedAt))/60000);
-  if(d.playType==="timed"&&Number(d.plannedMinutes)>0) return Number(((Number(d.plannedMinutes)/60)*(Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE)).toFixed(2));
-  return Number(((mins/60)*(Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE)).toFixed(2));
-}
-
-function getOrderTotal(orders){ return (orders||[]).reduce((sum,o)=>sum+((Number(o.price)||0)*(Number(o.qty)||0)),0); }
-
-function getDeviceSectionLabel(t){
-  const names = getTileNames();
-  if(t==="vip") return names[2];
-  if(t==="base_arabi") return names[3];
-  if(t==="billiard") return names[4];
-  return names[1];
-}
-
-function updatePsLiveTimers(){
-  psDevices.forEach(d => {
-    const miniTimeEl = document.getElementById(`mini_time_${d.id}`);
-    if(miniTimeEl) {
-      if(d.isRunning) {
-        const dt = getDeviceType(d);
-        if(dt === "billiard" && d.billiardMode === "games") {
-          miniTimeEl.textContent = `${Number(d.gamesCount)||1} جيم (${money(getLivePlayCost(d))} ج)`;
-        } else {
-          miniTimeEl.textContent = formatDuration(Date.now() - Number(d.startedAt));
-        }
-      } else {
-        miniTimeEl.textContent = "00:00:00";
-      }
-    }
-
-    if(currentDetailDeviceId === d.id) {
-      const detailTimeEl = document.getElementById(`detail_time_${d.id}`);
-      const detailLiveEl = document.getElementById(`detail_live_${d.id}`);
-      if(detailTimeEl) detailTimeEl.textContent = d.isRunning ? formatDuration(Date.now() - Number(d.startedAt)) : "00:00:00";
-      if(detailLiveEl) detailLiveEl.textContent = money(getLivePlayCost(d) + getOrderTotal(d.orders)) + " ج";
-    }
-
-    if(d.isRunning && getDeviceType(d) !== "billiard" && d.playType === "timed" && Number(d.plannedMinutes) > 0){
-      const rem = (Number(d.startedAt) + Number(d.plannedMinutes)*60000) - Date.now();
-      const remEl = document.getElementById(`run_rem_${d.id}`);
-      if(remEl) remEl.textContent = formatDuration(Math.max(0, rem));
-      if(rem <= 0 && !psEndingDevices.has(d.id)){
-        psEndingDevices.add(d.id);
-        endPsSession(d.id, true);
-      }
-    }
-  });
-}
-
-window.loadPlaystationData=async()=>{
- if(!currentUser)return;
- const [devSnap,itemSnap,sesSnap,resSnap]=await Promise.all([safeGetDocs(col("ps_devices")),safeGetDocs(col("ps_items")),safeGetDocs(col("ps_sessions")),safeGetDocs(col("ps_reservations"))]);
- psDevices=devSnap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.name||"").localeCompare(b.name||"","ar"));
- psItems=itemSnap.docs.map(d=>({id:d.id,...d.data()}));
- psSessions=sesSnap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>Number(b.endedAt||0)-Number(a.endedAt||0));
- psReservations=resSnap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
- renderPlaystation();
-};
-
-function renderPlaystation(){
- const roomCount=psDevices.filter(d=>getDeviceType(d)==="room").length;
- const vipCount=psDevices.filter(d=>getDeviceType(d)==="vip").length;
- const baseCount=psDevices.filter(d=>getDeviceType(d)==="base_arabi").length;
- const billiardCount=psDevices.filter(d=>getDeviceType(d)==="billiard").length;
- const runningCount=psDevices.filter(d=>d.isRunning).length;
- const drinksCount=psItems.filter(i=>i.category==="drink").length;
- const sandCount=psItems.filter(i=>i.category==="sandwich").length;
-
- $("psTotalDevices").textContent=psDevices.length;
- $("psRoomDevices").textContent=roomCount;
- $("psVipDevices").textContent=vipCount;
- $("psBaseDevices").textContent=baseCount;
- $("psBilliardDevices").textContent=billiardCount;
- $("psRunningDevices").textContent=runningCount;
- $("psDrinksCount").textContent=drinksCount;
- $("psSandwichesCount").textContent=sandCount;
-
- if($("psHomeRoomCount")) $("psHomeRoomCount").textContent=roomCount;
- if($("psHomeVipCount")) $("psHomeVipCount").textContent=vipCount;
- if($("psHomeBaseCount")) $("psHomeBaseCount").textContent=baseCount;
- if($("psHomeBilliardCount")) $("psHomeBilliardCount").textContent=billiardCount;
- if($("psHomeRunningCount")) $("psHomeRunningCount").textContent=runningCount;
- if($("psHomeDrinksCount")) $("psHomeDrinksCount").textContent=drinksCount;
- if($("psHomeSandCount")) $("psHomeSandCount").textContent=sandCount;
-
- const resSel=$("resDeviceId");
- if(resSel) resSel.innerHTML=psDevices.map(d=>`<option value="${d.id}">${escapeHTML(d.name)} (${escapeHTML(getDeviceSectionLabel(getDeviceType(d)))})</option>`).join("")||`<option value="">لا توجد أجهزة</option>`;
-
- renderPsDevices();
- renderPsVipDevices();
- renderPsBaseArabiDevices();
- renderPsBilliardDevices();
- renderPsRunning();
- renderPsItems();
- renderPsSessions();
- renderPsReservations();
- renderPsCustomers();
- if(currentDetailDeviceId) renderDeviceDetailModal(currentDetailDeviceId);
- updatePsLiveTimers();
-}
-
-function renderMiniDeviceGrid(containerId, list, emptyMsg){
-  const el = $(containerId);
-  if(!el) return;
-  if(!list.length){
-    el.innerHTML = `<div class="devices-empty" style="grid-column:1/-1;">${emptyMsg}</div>`;
-    return;
+window.currentDocType = 'sales';
+window.selectDocType = (type, element) => { window.currentDocType = type; document.querySelectorAll('.doc-type-btn').forEach(el => el.classList.remove('active')); element.classList.add('active'); updateInvoicePreview(); };
+window.updateInvoicePreview = () => {
+  const shopName = $("invShopName").value || "اسم المشروع", taxNumber = $("invTaxNumber").value || "XXX-XXX-XXX", address = $("invAddress").value || "عنوان المحل هنا", paperSize = $("invPaperSize").value, previewContainer = $("invoicePreviewContainer");
+  previewContainer.style.width = paperSize === "80mm" ? "80mm" : paperSize === "57mm" ? "57mm" : "210mm";
+  let headerTitle = "", tableHeaders = "", dummyItems = "", totalsHTML = "";
+  if (window.currentDocType === 'sales' || window.currentDocType === 'purchases') {
+    headerTitle = window.currentDocType === 'sales' ? "فاتورة مبيعات" : "فاتورة مشتريات";
+    tableHeaders = `<tr><th>الصنف</th><th>كمية</th><th>سعر</th><th>إجمالي</th></tr>`;
+    dummyItems = `<tr><td>منتج 1</td><td>1</td><td>115</td><td>115</td></tr><tr><td>منتج 2</td><td>1</td><td>230</td><td>230</td></tr>`;
+    totalsHTML = `<div style="display:flex; justify-content:space-between; font-weight:bold;"><span>المطلوب</span><span>345</span></div>`;
+  } else if (window.currentDocType === 'receipt' || window.currentDocType === 'payment') {
+    headerTitle = window.currentDocType === 'receipt' ? "سند قبض" : "سند صرف"; tableHeaders = `<tr><th>البيان</th><th>المبلغ</th></tr>`; dummyItems = `<tr><td>دفعة مقدمة</td><td>500</td></tr>`; totalsHTML = `<div style="display:flex; justify-content:space-between; font-weight:bold;"><span>الإجمالي</span><span>500</span></div>`;
+  } else if (window.currentDocType === 'sales_return') {
+    headerTitle = "مرتجع مبيعات"; tableHeaders = `<tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>`; dummyItems = `<tr><td>منتج مرتجع</td><td>1</td><td>115</td><td>115</td></tr>`; totalsHTML = `<div style="display:flex; justify-content:space-between; font-weight:bold;"><span>المطلوب ردّه</span><span>115</span></div>`;
   }
-  el.innerHTML = list.map(d => {
-    const dt = getDeviceType(d);
-    const typeClass = dt === "billiard" ? "billiard-mini" : (dt === "vip" ? "vip-mini" : (dt === "base_arabi" ? "base-mini" : ""));
-    const runClass = d.isRunning ? "running" : "";
-    const statusText = d.isRunning ? (dt === "billiard" && d.billiardMode === "games" ? "بالجيم" : "يعمل الآن") : "متاح";
-    const timeText = d.isRunning
-      ? (dt === "billiard" && d.billiardMode === "games" ? `${Number(d.gamesCount)||1} جيم (${money(getLivePlayCost(d))} ج)` : formatDuration(Date.now() - Number(d.startedAt)))
-      : "00:00:00";
-    const custHtml = d.isRunning && d.customerName ? `<div class="dev-customer">👤 ${escapeHTML(d.customerName)}</div>` : "";
-    return `
-      <div class="dev-mini ${typeClass} ${runClass}" onclick="openDeviceDetail('${d.id}')">
-        <div>
-          <div class="dev-name">${escapeHTML(d.name)}</div>
-          <div class="dev-status">${statusText}</div>
-        </div>
-        <div>
-          <div class="dev-time" id="mini_time_${d.id}">${timeText}</div>
-          ${custHtml}
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-function renderPsDevices(){ renderMiniDeviceGrid("psDevicesList", psDevices.filter(d=>getDeviceType(d)==="room"), "لا توجد أجهزة مضافة في هذا القسم بعد — اضغط (+ إضافة جهاز)"); }
-function renderPsVipDevices(){ renderMiniDeviceGrid("psVipDevicesList", psDevices.filter(d=>getDeviceType(d)==="vip"), "لا توجد أجهزة في صالة VIP بعد — اضغط (+ إضافة جهاز)"); }
-function renderPsBaseArabiDevices(){ renderMiniDeviceGrid("psBaseArabiDevicesList", psDevices.filter(d=>getDeviceType(d)==="base_arabi"), "لا توجد أجهزة في القاعدة العربي بعد — اضغط (+ إضافة جهاز)"); }
-function renderPsBilliardDevices(){ renderMiniDeviceGrid("psBilliardDevicesList", psDevices.filter(d=>getDeviceType(d)==="billiard"), "لا توجد طاولات بلياردو بعد — اضغط (+ إضافة طاولة)"); }
-
-window.openAddDeviceModal = (type) => {
-  addDeviceType = type;
-  $("newDeviceTypeSelect").value = type;
-  $("newDeviceName").value = "";
-  $("newDeviceRate").value = "";
-  $("newDeviceGamePrice").value = "20";
-  onDeviceTypeChange(type);
-  $("addDeviceModal").classList.remove("hidden");
+  previewContainer.innerHTML = `<div style="text-align:center; font-size:14px;"><div style="font-weight:bold; font-size:18px; margin-bottom:5px;">${escapeHTML(shopName)}</div><div style="font-size:10px;">رقم ضريبي: ${escapeHTML(taxNumber)}</div><div style="background:#e2e8f0; padding:5px; font-weight:bold; margin:10px 0; border:1px solid #000;">${headerTitle}</div><div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:5px;"><span>رقم: 262</span><span>التاريخ: ${new Date().toLocaleDateString('ar-EG')}</span></div><table class="receipt-item-table"><thead>${tableHeaders}</thead><tbody>${dummyItems}</tbody></table><div class="receipt-totals">${totalsHTML}</div><div style="margin-top:15px; font-size:11px;">${escapeHTML(address)}</div><div style="margin-top:10px; font-size:10px; color:#555;">شكراً لزيارتكم</div></div>`;
 };
-window.closeAddDeviceModal = () => $("addDeviceModal").classList.add("hidden");
-
-window.onDeviceTypeChange = (type) => {
-  addDeviceType = type;
-  $("newDeviceGameBox").classList.toggle("hidden", type !== "billiard");
-  $("addDeviceTitle").textContent = type === "billiard" ? "➕ إضافة طاولة بلياردو" : "➕ إضافة جهاز بلايستيشن";
+window.saveInvoiceSettings = async () => {
+  const settings = { shopName: $("invShopName").value, taxNumber: $("invTaxNumber").value, address: $("invAddress").value, paperSize: $("invPaperSize").value };
+  try { await setDoc(doc(db, "users", currentUser.uid), { invoiceSettings: settings }, { merge: true }); profile.invoiceSettings = settings; localStorage.setItem('nexpos_profile', JSON.stringify(profile)); showAlert("تم الحفظ!", "success"); } catch (e) { showAlert("خطأ: " + e.message, "error"); }
 };
-
-window.submitAddDevice = async () => {
-  const type = $("newDeviceTypeSelect").value;
-  const name = $("newDeviceName").value.trim();
-  const rate = Number($("newDeviceRate").value);
-  const gamePrice = Number($("newDeviceGamePrice").value) || 20;
-
-  if(!name || !Number.isFinite(rate) || rate <= 0) return showAlert("أدخل اسم الجهاز وسعر الساعة الصحيح.", "warning");
-  if(type === "billiard" && (!Number.isFinite(gamePrice) || gamePrice <= 0)) return showAlert("أدخل سعر الجيم الصحيح للبلياردو.", "warning");
-
-  const payload = {
-    name,
-    deviceType: type,
-    hourlyRate: rate,
-    isRunning: false,
-    startedAt: 0,
-    playType: "open",
-    plannedMinutes: 0,
-    customerName: "",
-    orders: []
-  };
-  if(type === "billiard") {
-    payload.gamePrice = gamePrice;
-    payload.billiardMode = "time";
-    payload.gamesCount = 1;
-  }
-
-  await setDoc(doc(col("ps_devices")), payload);
-  closeAddDeviceModal();
-  await loadPlaystationData();
-  showAlert("تمت الإضافة بنجاح!", "success");
-};
-
-window.openDeviceDetail = (id) => {
-  currentDetailDeviceId = id;
-  renderDeviceDetailModal(id);
-  $("deviceDetailModal").classList.remove("hidden");
-};
-window.closeDeviceDetail = () => {
-  currentDetailDeviceId = null;
-  $("deviceDetailModal").classList.add("hidden");
-};
-
-function renderDeviceDetailModal(id){
-  const d = psDevices.find(x => x.id === id);
-  if(!d) return closeDeviceDetail();
-
-  const dt = getDeviceType(d);
-  const isBilliard = dt === "billiard";
-  const box = $("deviceDetailBox");
-  box.className = "device-modal-box" + (d.isRunning ? " running-modal" : "") + (dt==="vip" ? " vip-modal" : dt==="base_arabi" ? " base-modal" : isBilliard ? " billiard-modal" : "");
-
-  const itemsOptions = psItems.map(i=>`<option value="${i.id}">${escapeHTML(i.name)} (${money(i.price)} ج - متاح: ${Number(i.qty)||0})</option>`).join("") || `<option value="">لا توجد إضافات</option>`;
-  const ordersHTML = (d.orders||[]).length
-    ? (d.orders||[]).map((o,i)=>`<div class="order-line"><span>${escapeHTML(o.name)} × ${o.qty} = <b>${money((Number(o.price)||0)*(Number(o.qty)||0))} ج</b></span><button class="rowbtn red" onclick="removeOrderFromDevice('${d.id}',${i})">حذف</button></div>`).join("")
-    : `<div class="muted" style="text-align:center; padding:6px;">لا توجد إضافات حالياً</div>`;
-
-  let controlsHTML = "";
-  if(!d.isRunning) {
-    if(isBilliard) {
-      controlsHTML = `
-        <label>اسم العميل (اختياري):</label>
-        <input id="modalCustName_${d.id}" placeholder="اسم العميل">
-        <label>نظام الحساب:</label>
-        <select id="modalBilliardMode_${d.id}">
-          <option value="time">⏱ بالوقت (${money(d.hourlyRate)} ج / ساعة)</option>
-          <option value="games">🎱 بالجيم (${money(d.gamePrice||20)} ج / جيم)</option>
-        </select>
-        <button class="big green" style="margin-top:8px;" onclick="startPsDeviceFromModal('${d.id}')">▶ بدء اللعب</button>
-      `;
-    } else {
-      controlsHTML = `
-        <label>اسم العميل (اختياري):</label>
-        <input id="modalCustName_${d.id}" placeholder="اسم العميل">
-        <div class="grid" style="grid-template-columns:1fr 1fr;">
-          <div>
-            <label>نوع الجلسة:</label>
-            <select id="modalPlayType_${d.id}" onchange="document.getElementById('modalMinsBox_${d.id}').classList.toggle('hidden', this.value!=='timed')">
-              <option value="open">وقت مفتوح</option>
-              <option value="timed">وقت محدد</option>
-            </select>
-          </div>
-          <div id="modalMinsBox_${d.id}" class="hidden">
-            <label>المدة بالدقائق:</label>
-            <input id="modalPlannedMins_${d.id}" type="number" min="1" value="60">
-          </div>
-        </div>
-        <button class="big green" style="margin-top:8px;" onclick="startPsDeviceFromModal('${d.id}')">▶ بدء الوقت</button>
-      `;
-    }
-  } else {
-    const gamesBox = (isBilliard && d.billiardMode === "games") ? `
-      <div class="billiard-games-box">
-        <div>
-          <div style="font-size:11px; color:#f472b6;">عدد الأجيام الحالية</div>
-          <div class="games-num">${Number(d.gamesCount)||1} جيم</div>
-        </div>
-        <div style="display:flex; gap:6px;">
-          <button class="pink" onclick="changeBilliardGames('${d.id}', 1)">+ جيم</button>
-          <button class="secondary" onclick="changeBilliardGames('${d.id}', -1)">- جيم</button>
-        </div>
-      </div>
-    ` : "";
-
-    controlsHTML = `
-      <div class="mode-note">
-        ${d.customerName ? `👤 العميل: <b>${escapeHTML(d.customerName)}</b> | ` : ""}
-        النظام: <b>${isBilliard ? (d.billiardMode==="games" ? "بالجيم" : "بالوقت") : (d.playType==="timed" ? `وقت محدد (${d.plannedMinutes} د)` : "وقت مفتوح")}</b>
-      </div>
-      ${gamesBox}
-      <div class="order-list">
-        <div style="font-size:12px; font-weight:bold; margin-bottom:4px; color:#60a5fa;">🥤 إضافة مشروبات / سندوتشات:</div>
-        <div style="display:grid; grid-template-columns:2fr 75px auto; gap:6px; align-items:center;">
-          <select id="modalItemSelect_${d.id}" style="margin:0;">${itemsOptions}</select>
-          <input id="modalItemQty_${d.id}" type="number" min="1" value="1" style="margin:0; text-align:center;">
-          <button class="green" onclick="addOrderToDevice('${d.id}')">إضافة</button>
-        </div>
-        <div style="margin-top:8px;">${ordersHTML}</div>
-      </div>
-      <div class="device-modal-actions">
-        <button class="red" onclick="endPsSession('${d.id}', false)">⏹ إنهاء وحساب الجلسة</button>
-        <button class="secondary" onclick="transferDevice('${d.id}')">🔄 نقل لجهاز آخر</button>
-      </div>
-    `;
-  }
-
-  $("deviceDetailContent").innerHTML = `
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding-left:32px;">
-      <div>
-        <h3 style="margin:0;">${escapeHTML(d.name)}</h3>
-        <span class="muted">${escapeHTML(getDeviceSectionLabel(dt))} — ${money(d.hourlyRate)} ج/ساعة ${isBilliard ? `| ${money(d.gamePrice||20)} ج/جيم` : ""}</span>
-      </div>
-      <span class="tag ${d.isRunning ? "good" : ""}">${d.isRunning ? "يعمل الآن" : "متاح"}</span>
-    </div>
-
-    <div class="detail-device-time ${d.isRunning ? "" : "idle"}" id="detail_time_${d.id}">
-      ${d.isRunning ? formatDuration(Date.now() - Number(d.startedAt)) : "00:00:00"}
-    </div>
-
-    ${d.isRunning ? `<div style="text-align:center; font-size:15px; margin-bottom:6px;">الإجمالي الحالي: <strong id="detail_live_${d.id}" style="color:var(--warning);">${money(getLivePlayCost(d) + getOrderTotal(d.orders))} ج</strong></div>` : ""}
-
-    ${controlsHTML}
-
-    <hr>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-      <button class="secondary" onclick="editDeviceRate('${d.id}')">✏️ تعديل السعر</button>
-      <button class="red" onclick="deletePsDevice('${d.id}')">🗑 حذف الجهاز</button>
-    </div>
-  `;
-}
-
-window.startPsDeviceFromModal = async (id) => {
-  const d = psDevices.find(x => x.id === id);
-  if(!d) return;
-  const custName = $(`modalCustName_${id}`)?.value.trim() || "";
-  const dt = getDeviceType(d);
-  const updates = {
-    isRunning: true,
-    startedAt: Date.now(),
-    customerName: custName,
-    orders: []
-  };
-
-  if(dt === "billiard") {
-    updates.billiardMode = $(`modalBilliardMode_${id}`)?.value || "time";
-    updates.gamesCount = 1;
-    updates.playType = "open";
-    updates.plannedMinutes = 0;
-  } else {
-    const playType = $(`modalPlayType_${id}`)?.value || "open";
-    const mins = Number($(`modalPlannedMins_${id}`)?.value) || 60;
-    updates.playType = playType;
-    updates.plannedMinutes = playType === "timed" ? mins : 0;
-  }
-
-  await updateDoc(docRef("ps_devices", id), updates);
-  await loadPlaystationData();
-};
-
-window.changeBilliardGames = async (id, delta) => {
-  const d = psDevices.find(x => x.id === id);
-  if(!d) return;
-  const next = Math.max(1, (Number(d.gamesCount)||1) + delta);
-  await updateDoc(docRef("ps_devices", id), { gamesCount: next });
-  await loadPlaystationData();
-};
-
-window.addOrderToDevice = async (id) => {
-  const d = psDevices.find(x => x.id === id);
-  const itemId = $(`modalItemSelect_${id}`)?.value;
-  const qty = Math.max(1, Number($(`modalItemQty_${id}`)?.value) || 1);
-  const item = psItems.find(x => x.id === itemId);
-  if(!d || !item) return showAlert("اختر صنفاً صحيحاً.", "warning");
-  if((Number(item.qty)||0) < qty) return showAlert("الكمية المتاحة في المخزن غير كافية.", "warning");
-
-  const orders = Array.isArray(d.orders) ? [...d.orders] : [];
-  const existingIdx = orders.findIndex(o => o.itemId === item.id);
-  if(existingIdx >= 0) orders[existingIdx].qty += qty;
-  else orders.push({ itemId: item.id, name: item.name, price: Number(item.price)||0, qty });
-
-  await updateDoc(docRef("ps_devices", id), { orders });
-  await updateDoc(docRef("ps_items", item.id), { qty: Math.max(0, (Number(item.qty)||0) - qty) });
-  await loadPlaystationData();
-};
-
-window.removeOrderFromDevice = async (id, orderIdx) => {
-  const d = psDevices.find(x => x.id === id);
-  if(!d || !Array.isArray(d.orders)) return;
-  const removed = d.orders[orderIdx];
-  const orders = d.orders.filter((_, idx) => idx !== orderIdx);
-  await updateDoc(docRef("ps_devices", id), { orders });
-  if(removed?.itemId) {
-    const item = psItems.find(x => x.id === removed.itemId);
-    if(item) await updateDoc(docRef("ps_items", item.id), { qty: (Number(item.qty)||0) + (Number(removed.qty)||0) });
-  }
-  await loadPlaystationData();
-};
-
-window.editDeviceRate = async (id) => {
-  const d = psDevices.find(x => x.id === id);
-  if(!d) return;
-  const newRate = await customPrompt(`سعر الساعة الجديد لـ (${d.name}):`, 'number', d.hourlyRate);
-  if(newRate === null) return;
-  const val = Number(newRate);
-  if(!Number.isFinite(val) || val <= 0) return showAlert("أدخل سعراً صحيحاً.", "warning");
-  const updates = { hourlyRate: val };
-  if(getDeviceType(d) === "billiard") {
-    const newGame = await customPrompt(`سعر الجيم الجديد لـ (${d.name}):`, 'number', d.gamePrice || 20);
-    if(newGame !== null && Number(newGame) > 0) updates.gamePrice = Number(newGame);
-  }
-  await updateDoc(docRef("ps_devices", id), updates);
-  await loadPlaystationData();
-  showAlert("تم تحديث السعر.", "success");
-};
-
-window.deletePsDevice = async (id) => {
-  if(!await customConfirm("حذف هذا الجهاز نهائياً؟")) return;
-  await deleteDoc(docRef("ps_devices", id));
-  closeDeviceDetail();
-  await loadPlaystationData();
-  showAlert("تم الحذف.", "success");
-};
-
-window.transferDevice = async (fromId) => {
-  const fromDev = psDevices.find(x => x.id === fromId);
-  const available = psDevices.filter(x => !x.isRunning && x.id !== fromId);
-  if(!fromDev || !available.length) return showAlert("لا توجد أجهزة متاحة حالياً للنقل إليها.", "warning");
-
-  const inputOptions = {};
-  available.forEach(a => { inputOptions[a.id] = `${a.name} (${getDeviceSectionLabel(getDeviceType(a))})`; });
-
-  const { value: toId } = await Swal.fire({
-    title: `نقل جلسة (${fromDev.name}) إلى:`,
-    input: 'select',
-    inputOptions,
-    showCancelButton: true,
-    confirmButtonText: 'نقل الآن',
-    cancelButtonText: 'إلغاء',
-    background: '#1e293b',
-    color: '#f8fafc'
-  });
-
-  if(!toId) return;
-  await updateDoc(docRef("ps_devices", toId), {
-    isRunning: true,
-    startedAt: fromDev.startedAt,
-    playType: fromDev.playType || "open",
-    plannedMinutes: fromDev.plannedMinutes || 0,
-    customerName: fromDev.customerName || "",
-    orders: fromDev.orders || [],
-    billiardMode: fromDev.billiardMode || "time",
-    gamesCount: fromDev.gamesCount || 1
-  });
-  await updateDoc(docRef("ps_devices", fromId), {
-    isRunning: false,
-    startedAt: 0,
-    playType: "open",
-    plannedMinutes: 0,
-    customerName: "",
-    orders: [],
-    gamesCount: 1
-  });
-  closeDeviceDetail();
-  await loadPlaystationData();
-  showAlert("تم نقل الجلسة بنجاح!", "success");
-};
-
-let pendingPsInvoice = null;
-window.endPsSession = async (id, autoEnded = false) => {
-  const d = psDevices.find(x => x.id === id);
-  if(!d || !d.isRunning) { psEndingDevices.delete(id); return; }
-
-  const endedAt = Date.now();
-  const durationMs = Math.max(0, endedAt - Number(d.startedAt));
-  const playCost = getLivePlayCost(d);
-  const ordersCost = getOrderTotal(d.orders);
-  const subtotal = Number((playCost + ordersCost).toFixed(2));
-
-  pendingPsInvoice = {
-    device: d,
-    endedAt,
-    durationMs,
-    playCost,
-    ordersCost,
-    subtotal
-  };
-
-  $("psConfirmDiscountInput").value = "0";
-  $("psConfirmInvoiceContent").innerHTML = `
-    <div><b>الجهاز:</b> ${escapeHTML(d.name)}</div>
-    ${d.customerName ? `<div><b>العميل:</b> ${escapeHTML(d.customerName)}</div>` : ""}
-    <div><b>مدة اللعب:</b> ${formatDuration(durationMs)}</div>
-    <div><b>حساب اللعب:</b> ${money(playCost)} ج</div>
-    <div><b>حساب الإضافات:</b> ${money(ordersCost)} ج</div>
-    <hr>
-    <div style="font-size:16px; text-align:center;">الإجمالي قبل الخصم: <b>${money(subtotal)} ج</b></div>
-    <div style="font-size:18px; text-align:center; color:#10b981; margin-top:4px;">الصافي المطلوب: <b id="psConfirmFinalTotal">${money(subtotal)} ج</b></div>
-  `;
-  $("psConfirmInvoiceModal").classList.remove("hidden");
-};
-
-window.updateConfirmModalTotal = () => {
-  if(!pendingPsInvoice) return;
-  const disc = Math.max(0, Number($("psConfirmDiscountInput").value) || 0);
-  const finalTotal = Math.max(0, Number((pendingPsInvoice.subtotal - disc).toFixed(2)));
-  if($("psConfirmFinalTotal")) $("psConfirmFinalTotal").textContent = money(finalTotal) + " ج";
-};
-
-window.cancelPsInvoice = () => {
-  if(pendingPsInvoice?.device?.id) psEndingDevices.delete(pendingPsInvoice.device.id);
-  pendingPsInvoice = null;
-  $("psConfirmInvoiceModal").classList.add("hidden");
-};
-
-window.confirmAndPrintPsInvoice = async (shouldPrint) => {
-  if(!pendingPsInvoice) return;
-  const { device: d, endedAt, durationMs, playCost, ordersCost, subtotal } = pendingPsInvoice;
-  const discount = Math.max(0, Number($("psConfirmDiscountInput").value) || 0);
-  const total = Math.max(0, Number((subtotal - discount).toFixed(2)));
-  const invoiceNo = "PS-" + String(endedAt).slice(-6);
-
-  const sessionDoc = {
-    invoiceNo,
-    deviceId: d.id,
-    deviceName: d.name,
-    deviceType: getDeviceType(d),
-    customerName: d.customerName || "عميل نقدي",
-    startedAt: Number(d.startedAt),
-    endedAt,
-    durationText: formatDuration(durationMs),
-    playCost,
-    ordersCost,
-    discount,
-    total,
-    orders: d.orders || []
-  };
-
-  await setDoc(doc(col("ps_sessions")), sessionDoc);
-  await updateDoc(docRef("ps_devices", d.id), {
-    isRunning: false,
-    startedAt: 0,
-    playType: "open",
-    plannedMinutes: 0,
-    customerName: "",
-    orders: [],
-    gamesCount: 1
-  });
-
-  psEndingDevices.delete(d.id);
-  pendingPsInvoice = null;
-  $("psConfirmInvoiceModal").classList.add("hidden");
-  closeDeviceDetail();
-  await loadPlaystationData();
-
-  if(shouldPrint) printPsSessionReceipt(sessionDoc);
-  else showAlert(`تم إنهاء الجلسة بنجاح — الإجمالي: ${money(total)} ج`, "success");
-};
-
-window.printPsSessionReceipt = (s) => {
-  const shopName = profile?.shopName || "NexPOS PlayStation";
-  const printArea = $("printArea");
-  printArea.classList.remove("hidden");
-  const ordersRows = (s.orders||[]).map(o => `<tr><td>${escapeHTML(o.name)}</td><td>${o.qty}</td><td>${money((Number(o.price)||0)*(Number(o.qty)||0))}</td></tr>`).join("");
-  printArea.innerHTML = `
-    <div style="width:76mm; padding:6px; font-family:'Cairo',sans-serif; direction:rtl; color:#000; background:#fff;">
-      <div style="text-align:center; border-bottom:1px dashed #000; padding-bottom:6px; margin-bottom:6px;">
-        <h3 style="margin:0; font-size:16px;">${escapeHTML(shopName)}</h3>
-        <div style="font-size:11px;">فاتورة جلسة رقم: <b>${escapeHTML(s.invoiceNo || "")}</b></div>
-        <div style="font-size:10px;">${new Date(Number(s.endedAt)).toLocaleString('ar-EG')}</div>
-      </div>
-      <div style="font-size:12px; line-height:1.7;">
-        <div>الجهاز: <b>${escapeHTML(s.deviceName)}</b></div>
-        <div>العميل: <b>${escapeHTML(s.customerName || "عميل")}</b></div>
-        <div>المدة: <b>${escapeHTML(s.durationText)}</b></div>
-        <div>حساب اللعب: <b>${money(s.playCost)} ج</b></div>
-      </div>
-      ${ordersRows ? `<table class="receipt-item-table"><thead><tr><th>الصنف</th><th>الكمية</th><th>الإجمالي</th></tr></thead><tbody>${ordersRows}</tbody></table>` : ""}
-      <div class="receipt-totals" style="font-size:12px;">
-        <div>حساب الإضافات: <b>${money(s.ordersCost)} ج</b></div>
-        ${Number(s.discount)>0 ? `<div>الخصم: <b>-${money(s.discount)} ج</b></div>` : ""}
-        <div style="font-size:15px; margin-top:4px;">الإجمالي المطلوب: <b>${money(s.total)} ج</b></div>
-      </div>
-      <div style="text-align:center; font-size:11px; margin-top:8px;">شكراً لزيارتكم!</div>
-    </div>
-  `;
-  setTimeout(() => { window.print(); printArea.classList.add("hidden"); }, 120);
-};
-
-function renderPsRunning(){
-  const tbody = $("psRunningTable");
-  if(!tbody) return;
-  const running = psDevices.filter(d => d.isRunning);
-  tbody.innerHTML = running.map(d => {
-    const dt = getDeviceType(d);
-    const rem = (dt !== "billiard" && d.playType === "timed" && Number(d.plannedMinutes) > 0)
-      ? formatDuration(Math.max(0, (Number(d.startedAt) + Number(d.plannedMinutes)*60000) - Date.now()))
-      : "مفتوح";
-    return `
-      <tr>
-        <td><b>${escapeHTML(d.name)}</b></td>
-        <td>${escapeHTML(getDeviceSectionLabel(dt))}</td>
-        <td>${escapeHTML(d.customerName || "—")}</td>
-        <td>${new Date(Number(d.startedAt)).toLocaleTimeString('ar-EG')}</td>
-        <td style="font-family:monospace; direction:ltr;">${formatDuration(Date.now() - Number(d.startedAt))}</td>
-        <td id="run_rem_${d.id}" style="font-family:monospace; direction:ltr;">${rem}</td>
-        <td><b>${money(getLivePlayCost(d) + getOrderTotal(d.orders))} ج</b></td>
-        <td><button class="rowbtn" onclick="openDeviceDetail('${d.id}')">إدارة</button> <button class="rowbtn red" onclick="endPsSession('${d.id}', false)">إنهاء</button></td>
-      </tr>
-    `;
-  }).join("") || `<tr><td colspan="8" style="text-align:center; padding:16px;">لا توجد أجهزة تعمل حالياً</td></tr>`;
-}
-
-window.addPsItem = async (category) => {
-  const nameEl = $(category === "drink" ? "psDrinkName" : "psSandwichName");
-  const priceEl = $(category === "drink" ? "psDrinkPrice" : "psSandwichPrice");
-  const qtyEl = $(category === "drink" ? "psDrinkQty" : "psSandwichQty");
-  const name = nameEl?.value.trim();
-  const price = Number(priceEl?.value);
-  const qty = Math.max(0, Number(qtyEl?.value) || 0);
-  if(!name || !Number.isFinite(price) || price < 0) return showAlert("أدخل اسم الصنف وسعره.", "warning");
-  await setDoc(doc(col("ps_items")), { name, price, qty, category });
-  nameEl.value = ""; priceEl.value = ""; qtyEl.value = "1";
-  await loadPlaystationData();
-  showAlert("تمت الإضافة.", "success");
-};
-
-window.deletePsItem = async (id) => {
-  if(!await customConfirm("حذف الصنف؟")) return;
-  await deleteDoc(docRef("ps_items", id));
-  await loadPlaystationData();
-};
-
-function renderPsItems(){
-  const renderCat = (cat, tbodyId) => {
-    const tbody = $(tbodyId);
-    if(!tbody) return;
-    const list = psItems.filter(i => i.category === cat);
-    tbody.innerHTML = list.map(i => `<tr><td><b>${escapeHTML(i.name)}</b></td><td>${money(i.price)} ج</td><td>${Number(i.qty)||0}</td><td><button class="rowbtn red" onclick="deletePsItem('${i.id}')">حذف</button></td></tr>`).join("") || `<tr><td colspan="4" style="text-align:center;">لا توجد أصناف</td></tr>`;
-  };
-  renderCat("drink", "psDrinksTable");
-  renderCat("sandwich", "psSandwichesTable");
-}
-
-window.renderPsSessions = () => {
-  const dateFilter = $("psSessionDateFilter")?.value || "";
-  const list = dateFilter
-    ? psSessions.filter(s => new Date(Number(s.endedAt)).toISOString().slice(0,10) === dateFilter)
-    : psSessions;
-
-  const todayStr = new Date().toISOString().slice(0,10);
-  const todayRev = psSessions.filter(s => new Date(Number(s.endedAt)).toISOString().slice(0,10) === todayStr).reduce((sum, s) => sum + (Number(s.total)||0), 0);
-
-  if($("psSessionsTotal")) $("psSessionsTotal").textContent = list.length;
-  if($("psSessionsRevenue2")) $("psSessionsRevenue2").textContent = money(todayRev) + " ج";
-
-  const tbody = $("psSessionsTable");
-  if(!tbody) return;
-  tbody.innerHTML = list.map(s => `
-    <tr>
-      <td><b>${escapeHTML(s.invoiceNo || s.id.slice(0,6))}</b></td>
-      <td>${escapeHTML(s.customerName || "—")}</td>
-      <td>${escapeHTML(s.deviceName || "")}</td>
-      <td>${new Date(Number(s.startedAt)).toLocaleTimeString('ar-EG')}</td>
-      <td>${new Date(Number(s.endedAt)).toLocaleTimeString('ar-EG')}</td>
-      <td>${escapeHTML(s.durationText || "")}</td>
-      <td>${money(s.playCost)} ج</td>
-      <td>${money(s.ordersCost)} ج</td>
-      <td>${money(s.discount)} ج</td>
-      <td><b>${money(s.total)} ج</b></td>
-      <td><button class="rowbtn dark" onclick='printPsSessionReceipt(${JSON.stringify(s).replace(/'/g,"&#39;")})'>🖨️</button></td>
-    </tr>
-  `).join("") || `<tr><td colspan="11" style="text-align:center;">لا توجد جلسات</td></tr>`;
-};
-
-window.addReservation = async () => {
-  const deviceId = $("resDeviceId")?.value;
-  const customerName = $("resCustomerName")?.value.trim();
-  const phone = $("resCustomerPhone")?.value.trim();
-  const time = $("resTime")?.value;
-  const dev = psDevices.find(d => d.id === deviceId);
-  if(!dev || !customerName || !time) return showAlert("أكمل بيانات الحجز.", "warning");
-  await setDoc(doc(col("ps_reservations")), { deviceId, deviceName: dev.name, customerName, phone, time, status: "pending" });
-  $("resCustomerName").value = ""; $("resCustomerPhone").value = "";
-  await loadPlaystationData();
-  showAlert("تم تسجيل الحجز.", "success");
-};
-
-window.deleteReservation = async (id) => {
-  await deleteDoc(docRef("ps_reservations", id));
-  await loadPlaystationData();
-};
-
-function renderPsReservations(){
-  const tbody = $("psReservationsTable");
-  if(!tbody) return;
-  tbody.innerHTML = psReservations.map(r => `<tr><td><b>${escapeHTML(r.customerName)}</b></td><td>${escapeHTML(r.phone||"—")}</td><td>${escapeHTML(r.deviceName)}</td><td>${escapeHTML(r.time)}</td><td><span class="tag">محجوز</span></td><td><button class="rowbtn red" onclick="deleteReservation('${r.id}')">إلغاء</button></td></tr>`).join("") || `<tr><td colspan="6" style="text-align:center;">لا توجد حجوزات</td></tr>`;
-}
-
-function renderPsCustomers(){
-  const tbody = $("psCustomersTable");
-  if(!tbody) return;
-  const map = {};
-  psSessions.forEach(s => {
-    const name = (s.customerName || "").trim();
-    if(!name || name === "عميل نقدي") return;
-    if(!map[name]) map[name] = { name, visits: 0, total: 0, last: 0 };
-    map[name].visits += 1;
-    map[name].total += Number(s.total) || 0;
-    if(Number(s.endedAt) > map[name].last) map[name].last = Number(s.endedAt);
-  });
-  const list = Object.values(map).sort((a,b) => b.total - a.total);
-  tbody.innerHTML = list.map((c, idx) => `<tr><td>${idx+1}</td><td><b>${escapeHTML(c.name)}</b></td><td>${c.visits}</td><td><b>${money(c.total)} ج</b></td><td>${new Date(c.last).toLocaleDateString('ar-EG')}</td></tr>`).join("") || `<tr><td colspan="5" style="text-align:center;">لا توجد بيانات عملاء بعد</td></tr>`;
-}
-
-window.openPsShiftModal = () => {
-  const since = Number(localStorage.getItem("ps_shift_start") || 0);
-  const shiftSessions = psSessions.filter(s => Number(s.endedAt) >= since);
-  const total = shiftSessions.reduce((sum, s) => sum + (Number(s.total)||0), 0);
-  $("psShiftTotalDisplay").textContent = money(total) + " ج";
-  $("psShiftDateDisplay").textContent = `عدد الجلسات: ${shiftSessions.length}` + (since ? ` — منذ: ${new Date(since).toLocaleString('ar-EG')}` : "");
-  $("psShiftModal").classList.remove("hidden");
-};
-
-window.closePsShift = async () => {
-  if(!await customConfirm("تقفيل الوردية الحالية وتصفير عدادها؟")) return;
-  localStorage.setItem("ps_shift_start", String(Date.now()));
-  $("psShiftModal").classList.add("hidden");
-  showAlert("تم تقفيل الوردية وبدء وردية جديدة.", "success");
-};
-
-let revChartInstance = null, typeChartInstance = null;
-function renderPsReports(){
-  const totalRev = psSessions.reduce((s, x) => s + (Number(x.total)||0), 0);
-  if($("psTotalRevenueAll")) $("psTotalRevenueAll").textContent = money(totalRev) + " ج";
-  if($("psTotalSessionsAll")) $("psTotalSessionsAll").textContent = psSessions.length;
-
-  const days = [], dayTotals = [];
-  for(let i = 6; i >= 0; i--){
-    const d = new Date(); d.setDate(d.getDate() - i);
-    const key = d.toISOString().slice(0,10);
-    days.push(d.toLocaleDateString('ar-EG', { weekday: 'short', day: 'numeric' }));
-    dayTotals.push(psSessions.filter(s => new Date(Number(s.endedAt)).toISOString().slice(0,10) === key).reduce((sum, s) => sum + (Number(s.total)||0), 0));
-  }
-
-  const revCtx = $("revenueChart")?.getContext("2d");
-  if(revCtx && window.Chart){
-    if(revChartInstance) revChartInstance.destroy();
-    revChartInstance = new Chart(revCtx, {
-      type: 'bar',
-      data: { labels: days, datasets: [{ label: 'الإيرادات (ج)', data: dayTotals, backgroundColor: '#10b981', borderRadius: 6 }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-    });
-  }
-
-  const playSum = psSessions.reduce((s, x) => s + (Number(x.playCost)||0), 0);
-  const ordSum = psSessions.reduce((s, x) => s + (Number(x.ordersCost)||0), 0);
-  const typeCtx = $("typeChart")?.getContext("2d");
-  if(typeCtx && window.Chart){
-    if(typeChartInstance) typeChartInstance.destroy();
-    typeChartInstance = new Chart(typeCtx, {
-      type: 'doughnut',
-      data: { labels: ['اللعب', 'المشروبات والسندوتشات'], datasets: [{ data: [playSum, ordSum], backgroundColor: ['#3b82f6', '#f59e0b'] }] },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-  }
-}
-
-/* =========================================================================
-   ================= سيستم المبيعات والمخزون (Sales & Inventory) =================
-   ========================================================================= */
-window.page = p => {
-  openPosTab(p, false);
+window.loadInvoiceSettings = () => {
+  const s = profile?.invoiceSettings;
+  if (s) { $("invShopName").value = s.shopName || profile.shopName || ""; $("invTaxNumber").value = s.taxNumber || ""; $("invAddress").value = s.address || ""; $("invPaperSize").value = s.paperSize || "80mm"; }
+  else { $("invShopName").value = profile?.shopName || ""; }
+  updateInvoicePreview();
 };
 
 function checkCustomerSubscription(info){
-  if(!info) return;
-  const exp = info.expiryDate?.toDate ? info.expiryDate.toDate() : (info.expiryDate ? new Date(info.expiryDate) : null);
-  const daysLeft = exp ? Math.max(0, Math.ceil((exp - new Date()) / (1000 * 60 * 60 * 24))) : 0;
-  if($("subTypeDisplay")) $("subTypeDisplay").textContent = info.plan || "نشط";
-  if($("subExpiryDate")) $("subExpiryDate").textContent = exp ? exp.toLocaleDateString('ar-EG') : "مفتوح";
-  if($("subDevicesCount")) $("subDevicesCount").textContent = `${daysLeft} يوم`;
-  if($("subCost")) $("subCost").textContent = (info.requestedPrice ? info.requestedPrice + " جنيه" : "مدفوع");
-  if($("subIdDisplay")) $("subIdDisplay").textContent = currentUser?.uid?.slice(0, 8).toUpperCase() || "—";
-  if($("subShopNameDisplay")) $("subShopNameDisplay").textContent = profile?.shopName || "—";
-  if($("subOwnerNameDisplay")) $("subOwnerNameDisplay").textContent = profile?.customerName || "—";
-  if($("subPhoneDisplay")) $("subPhoneDisplay").textContent = profile?.phone || "—";
-  if($("subEmailDisplay")) $("subEmailDisplay").textContent = profile?.email || currentUser?.email || "—";
-  if($("maxDevicesDisplay")) $("maxDevicesDisplay").textContent = Number(profile?.maxDevices) || 1;
-  if($("deviceIdDisplay")) $("deviceIdDisplay").textContent = getDeviceId();
+  if ($("subShopNameDisplay")) {
+    $("subShopNameDisplay").textContent = profile.shopName || "—";
+    $("subOwnerNameDisplay").textContent = profile.customerName || "—";
+    $("subPhoneDisplay").textContent = profile.phone || "—";
+    $("subEmailDisplay").textContent = profile.email || currentUser.email || "—";
+    $("subIdDisplay").textContent = currentUser.uid.substring(0, 6).toUpperCase();
+    $("deviceIdDisplay").textContent = getDeviceId();
+    if($("maxDevicesDisplay")) $("maxDevicesDisplay").textContent = Number(profile.maxDevices) || 1;
+    
+    $("subTypeDisplay").textContent = info.plan || "اشتراك غير محدد";
+    const price = info.requestedPrice || (info.plan === "سنوي" ? 900 : info.plan === "شهري" ? 100 : 3000);
+    $("subCost").textContent = money(price) + " جنيه";
+    
+    if (info.expiryDate) {
+      const expDate = info.expiryDate.toDate ? info.expiryDate.toDate() : new Date(info.expiryDate);
+      $("subExpiryDate").textContent = expDate.toISOString().slice(0, 10);
+      const diffDays = Math.ceil((expDate - new Date()) / (1000 * 60 * 60 * 24));
+      const diffEl = $("subDevicesCount");
+      diffEl.textContent = diffDays > 0 ? `${diffDays} يوم` : "منتهي";
+      if(diffDays <= 5) diffEl.style.color = "#ef4444"; else diffEl.style.color = "#0f172a";
+    } else {
+      $("subExpiryDate").textContent = "—"; $("subDevicesCount").textContent = "—";
+    }
 
-  const devTable = $("devicesListTable");
-  if(devTable){
-    const devs = profile?.devices || [];
-    devTable.innerHTML = devs.map(d => `
-      <tr>
-        <td style="padding:3px; border:1px solid #94a3b8; direction:ltr;">${escapeHTML(d)}</td>
-        <td style="padding:3px; border:1px solid #94a3b8; color:#059669; font-weight:bold;">متصل</td>
-        <td style="padding:3px; border:1px solid #94a3b8;">${d === getDeviceId() ? "هذا الجهاز" : "نشط"}</td>
-      </tr>
-    `).join("") || `<tr><td colspan="3" style="padding:4px; border:1px solid #94a3b8;">لا توجد أجهزة</td></tr>`;
+    const currentDeviceId = getDeviceId();
+    const devices = profile.devices || [];
+    const devicesTable = $("devicesListTable");
+    if (devicesTable) {
+      devicesTable.innerHTML = devices.map(dev => {
+        const isCurrent = dev === currentDeviceId;
+        return `<tr>
+          <td style="padding:3px; border:1px solid #94a3b8; font-family:monospace; direction:ltr;">${escapeHTML(dev)}</td>
+          <td style="padding:3px; border:1px solid #94a3b8; color:${isCurrent ? '#16a34a' : '#475569'}; font-weight:${isCurrent ? 'bold' : 'normal'};">${isCurrent ? 'هذا الجهاز' : 'جهاز آخر'}</td>
+          <td style="padding:3px; border:1px solid #94a3b8;">${isCurrent ? '<span style="color:#16a34a;">✔ متصل</span>' : `<button onclick="removeDevice('${escapeHTML(dev)}')" style="background:#ef4444; color:white; border:none; padding:2px 5px; border-radius:3px; font-size:10px; cursor:pointer;">إلغاء</button>`}</td>
+        </tr>`;
+      }).join("");
+    }
   }
+  const tiles = $("mainTilesContainer");
+  if (!subscriptionActive(info)) { tiles.style.pointerEvents = "none"; tiles.style.opacity = "0.4"; }
+  else { tiles.style.pointerEvents = "auto"; tiles.style.opacity = "1"; }
 }
 
-window.confirmSubscriptionStatus = () => showAlert("اشتراكك نشط ومفعّل بالكامل على النظام.", "success");
-window.requestRenewal = () => {
-  const msg = encodeURIComponent(`طلب تجديد اشتراك NexPOS PRO\nالنشاط: ${profile?.shopName || ""}\nالبريد: ${profile?.email || ""}`);
-  window.open(`https://wa.me/${SUPPORT_PHONE}?text=${msg}`, "_blank");
+window.removeDevice = async (deviceId) => {
+  if (!await window.customConfirm("إلغاء ترخيص هذا الجهاز؟")) return;
+  try {
+    const newDevices = (profile.devices || []).filter(d => d !== deviceId);
+    await updateDoc(doc(db, "users", currentUser.uid), { devices: newDevices });
+    profile.devices = newDevices;
+    localStorage.setItem('nexpos_profile', JSON.stringify(profile));
+    showAlert("تم إلغاء الترخيص.", "success");
+    if (deviceId === getDeviceId()) setTimeout(() => logout(), 1500);
+    else checkCustomerSubscription(systemInfo(profile, selectedSystem));
+  } catch (e) { showAlert("خطأ: " + e.message, "error"); }
 };
+
 window.cancelDeviceLicense = async () => {
-  if(!await customConfirm("هل تريد إزالة هذا الجهاز من قائمة الأجهزة المرتبطة بالحساب؟")) return;
-  const curId = getDeviceId();
-  const next = (profile?.devices || []).filter(x => x !== curId);
-  await updateDoc(doc(db, "users", currentUser.uid), { devices: next });
-  logout();
+  if (!await window.customConfirm("إلغاء ترخيص هذا الجهاز؟")) return;
+  try {
+    const currentDeviceId = getDeviceId();
+    const newDevices = (profile.devices || []).filter(d => d !== currentDeviceId);
+    await updateDoc(doc(db, "users", currentUser.uid), { devices: newDevices });
+    showAlert("تم إلغاء الترخيص وجاري الخروج.", "success");
+    setTimeout(() => logout(), 1500);
+  } catch (e) { showAlert("خطأ: " + e.message, "error"); }
+};
+
+window.confirmSubscriptionStatus = async () => {
+  const info = systemInfo(profile, activeSystem);
+  if (subscriptionActive(info)) showAlert("✅ اشتراكك نشط حالياً.", "success");
+  else showAlert("❌ اشتراكك غير نشط.", "error");
+};
+
+window.requestRenewal = () => {
+  const sys = getSystemTitleAr(activeSystem);
+  const msg = encodeURIComponent(`مرحباً م. محمد الصلاحي، أريد تجديد اشتراكي في NexPOS PRO.\nالنشاط: ${profile?.shopName || ""}\nالنظام: ${sys}`);
+  window.open(`https://wa.me/201062883414?text=${msg}`, "_blank");
+};
+
+window.goPsHome=()=>{
+ ["psHomeScreen","psDevicesSection","psVipSection","psBaseArabiSection","psBilliardSection","psRunningSection","psDrinksSection","psSandwichesSection","psSessionsSection","psReservationsSection","psCustomersSection","psReportsSection"].forEach(id=>$(id)?.classList.add("hidden"));
+ $("psHomeScreen").classList.remove("hidden"); currentPsSection="home"; renderPsHomeBadges();
+};
+window.showPsSection=which=>{
+ ["psHomeScreen","psDevicesSection","psVipSection","psBaseArabiSection","psBilliardSection","psRunningSection","psDrinksSection","psSandwichesSection","psSessionsSection","psReservationsSection","psCustomersSection","psReportsSection"].forEach(id=>$(id)?.classList.add("hidden"));
+ currentPsSection=which;
+ const map={devices:"psDevicesSection",vip:"psVipSection",base_arabi:"psBaseArabiSection",billiard:"psBilliardSection",running:"psRunningSection",drinks:"psDrinksSection",sandwiches:"psSandwichesSection",sessions:"psSessionsSection",reservations:"psReservationsSection",customers:"psCustomersSection",reports:"psReportsSection"};
+ if(map[which])$(map[which]).classList.remove("hidden");
+ if(which==="running")renderPsRunning();
+ if(which==="sessions"){const d=$("psSessionDateFilter");if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);renderPsSessions();}
+ if(which==="reservations")renderPsReservations();
+ if(which==="customers")renderPsCustomers();
+ if(which==="reports")renderPsReports();
+};
+
+window.loadPlaystationData=async function(){
+ if(!currentUser)return;
+ try{
+  const [ds,is,ss,rs,sh]=await Promise.all([safeGetDocs(col("devices")),safeGetDocs(col("psItems")),safeGetDocs(col("psSessions")),safeGetDocs(col("psReservations")),safeGetDoc(doc(col("psShifts"),"current"))]);
+  psDevices=ds.docs.map(d=>({id:d.id,...d.data()})); psItems=is.docs.map(d=>({id:d.id,...d.data()})); psSessions=ss.docs.map(d=>({id:d.id,...d.data()})); psReservations=rs.docs.map(d=>({id:d.id,...d.data()}));
+  if(sh.exists()){const sd=sh.data();const sdate=new Date(sd.closedAt).toISOString().slice(0,10);const today=new Date().toISOString().slice(0,10);currentShiftCloseTime=sdate===today?sd.closedAt:0;} else currentShiftCloseTime=0;
+  renderPsMiniDevices();renderPsItems();renderPsStats();renderPsHomeBadges();
+  if(currentPsSection==="running")renderPsRunning(); if(currentPsSection==="sessions")renderPsSessions(); if(currentPsSection==="reservations")renderPsReservations(); if(currentPsSection==="customers")renderPsCustomers(); if(currentPsSection==="reports")renderPsReports(); if(currentDetailDeviceId)refreshDeviceDetail();
+ }catch(e){console.warn(e);}
+};
+
+function renderPsHomeBadges(){
+ $("psHomeRoomCount").textContent=psDevices.filter(d=>window.getDeviceType(d)==="room").length;
+ $("psHomeVipCount").textContent=psDevices.filter(d=>window.getDeviceType(d)==="vip").length;
+ $("psHomeBaseCount").textContent=psDevices.filter(d=>window.getDeviceType(d)==="base_arabi").length;
+ $("psHomeBilliardCount").textContent=psDevices.filter(d=>window.getDeviceType(d)==="billiard").length;
+ $("psHomeRunningCount").textContent=psDevices.filter(d=>d.status==="running").length;
+ $("psHomeDrinksCount").textContent=psItems.filter(x=>x.category==="drink").length;
+ $("psHomeSandCount").textContent=psItems.filter(x=>x.category==="sandwich").length;
+ applySavedTileNames();
+}
+
+function renderPsMiniDevices(){
+ const buildMiniCard = (d) => {
+   const isRunning = d.status === "running", type = window.getDeviceType(d);
+   const typeClass = type === "vip" ? "vip-mini" : type === "base_arabi" ? "base-mini" : type === "billiard" ? "billiard-mini" : "";
+   let timeStr = "", customerStr = "";
+   if(isRunning){
+     const now = Date.now();
+     if(d.sessionMode === "auto" || d.sessionMode === "billiard_games") timeStr = formatPsTime(now - Number(d.startedAt));
+     else { const rem = Number(d.endAt) - now; timeStr = rem > 0 ? formatPsTime(rem) : "00:00:00"; }
+     if(d.customerName) customerStr = d.customerName;
+   }
+   return `<div class="dev-mini ${isRunning?"running":""} ${typeClass}" onclick="openDeviceDetail('${d.id}')">
+     <div class="dev-name">${escapeHTML(d.name)}</div>
+     <div class="dev-status">${isRunning?"🟢 يعمل":"⚪ جاهز"}</div>
+     ${isRunning?`<div class="dev-time" id="miniClock_${d.id}">${timeStr}</div>`:""}
+     ${customerStr?`<div class="dev-customer">👤 ${escapeHTML(customerStr)}</div>`:""}
+   </div>`;
+ };
+ $("psDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="room").map(buildMiniCard).join("") || '<div class="devices-empty">لا توجد أجهزة.</div>';
+ $("psVipDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="vip").map(buildMiniCard).join("") || '<div class="devices-empty">لا توجد أجهزة.</div>';
+ $("psBaseArabiDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="base_arabi").map(buildMiniCard).join("") || '<div class="devices-empty">لا توجد أجهزة.</div>';
+ $("psBilliardDevicesList").innerHTML = psDevices.filter(d=>window.getDeviceType(d)==="billiard").map(buildMiniCard).join("") || '<div class="devices-empty">لا توجد طاولات.</div>';
+}
+
+window.openAddDeviceModal = (type) => {
+ addDeviceType = type;
+ $("newDeviceTypeSelect").value = type;
+ $("newDeviceName").value = ""; $("newDeviceRate").value = ""; $("newDeviceGamePrice").value = "";
+ $("newDeviceGameBox").classList.toggle("hidden", type !== "billiard"); 
+ $("addDeviceModal").classList.remove("hidden");
+};
+window.onDeviceTypeChange = (val) => {
+ addDeviceType = val;
+ $("newDeviceGameBox").classList.toggle("hidden", val !== "billiard");
+};
+window.closeAddDeviceModal = () => $("addDeviceModal").classList.add("hidden");
+window.submitAddDevice = async () => {
+ const name = $("newDeviceName").value.trim(), rate = Number($("newDeviceRate").value);
+ if(!name || !Number.isFinite(rate) || rate <= 0) return showAlert("أدخل اسم وسعر صحيح.","warning");
+ let gamePrice = 0;
+ if(addDeviceType === "billiard"){ gamePrice = Number($("newDeviceGamePrice").value); if(!Number.isFinite(gamePrice) || gamePrice <= 0) return showAlert("سعر جيم صحيح.","warning"); }
+ try{
+   const data = {name, deviceType: addDeviceType, status: "idle", startedAt: null, endAt: null, hourlyRate: rate, createdAt: Date.now()};
+   if(addDeviceType === "billiard"){ data.billiardGamePrice = gamePrice; data.billiardGames = 0; }
+   await setDoc(doc(col("devices")), data); closeAddDeviceModal(); await loadPlaystationData(); showAlert("تمت الإضافة بنجاح.","success");
+ }catch(e){showAlert("تعذر: "+e.message,"error");}
+};
+
+window.openDeviceDetail = (deviceId) => { currentDetailDeviceId = deviceId; refreshDeviceDetail(); $("deviceDetailModal").classList.remove("hidden"); };
+window.closeDeviceDetail = () => { $("deviceDetailModal").classList.add("hidden"); currentDetailDeviceId = null; };
+function refreshDeviceDetail(){
+ if(!currentDetailDeviceId) return;
+ const d = psDevices.find(x=>x.id===currentDetailDeviceId); if(!d){ closeDeviceDetail(); return; }
+ const box = $("deviceDetailBox");
+ box.className = "device-modal-box " + (d.status==="running"?"running-modal":window.getDeviceType(d)==="vip"?"vip-modal":window.getDeviceType(d)==="base_arabi"?"base-modal":window.getDeviceType(d)==="billiard"?"billiard-modal":"");
+ $("deviceDetailContent").innerHTML = buildDeviceDetailContent(d);
+}
+
+function buildDeviceDetailContent(d){
+ const running = d.status === "running", dType = window.getDeviceType(d), names = getTileNames();
+ const isVip = dType==="vip", isBase = dType==="base_arabi", isBill = dType==="billiard";
+ const icon = isVip?"⭐":isBase?"🏛":isBill?"🎱":"🎮", typeLabel = isBill?names[4]:isVip?names[2]:isBase?names[3]:names[1];
+ const rate = Number(d.hourlyRate) || PS_DEFAULT_HOURLY_RATE, gamePrice = Number(d.billiardGamePrice) || 20, games = Number(d.billiardGames) || 0;
+ const orders = Array.isArray(d.orders) ? d.orders : [], ordersTotal = orders.reduce((s,o)=>s+(Number(o.total)||0),0);
+ const itemOpts = psItems.filter(x=>Number(x.qty)>0).map(x=>`<option value="${x.id}">${escapeHTML(x.name)} - ${money(x.price)} ج (${x.qty})</option>`).join("") || '<option value="">لا يوجد</option>';
+ const orderRows = orders.length ? orders.map((o,i)=>`<div class="order-line"><span>${escapeHTML(o.name)} × ${o.qty}</span><div><b>${money(o.total)} ج</b> <button class="rowbtn red" onclick="removeDeviceOrder('${d.id}',${i})">✕</button></div></div>`).join("") : '<div class="muted" style="text-align:center;">لا توجد إضافات</div>';
+ let timeHTML = "", playCost = 0, modeBadge = "";
+
+ if(!running){
+   timeHTML = `<div class="detail-device-time idle">جاهز للتشغيل</div>`;
+ } else {
+   const now = Date.now(), st = Number(d.startedAt) || now;
+   if(isBill && d.sessionMode === "billiard_games"){
+     modeBadge = `<span class="tag pink" style="margin-right:6px;">بالجيم</span>`;
+     timeHTML = `<div class="detail-device-time" id="detailClock_${d.id}">${formatPsTime(now-st)}</div><div class="billiard-games-box"><div><div style="font-size:11px;color:#f472b6;">الألعاب</div><div class="games-num" id="billiardGamesCount_${d.id}">${games}</div></div><div style="display:flex;gap:6px;"><button class="pink" style="padding:8px 14px;font-size:16px;" onclick="changeBilliardGames('${d.id}',1)">+1</button><button class="dark" style="padding:8px 12px;font-size:16px;" onclick="changeBilliardGames('${d.id}',-1)">-1</button></div></div>`;
+     playCost = games * gamePrice;
+   } else if(d.sessionMode === "auto"){
+     modeBadge = `<span class="tag good" style="margin-right:6px;">مفتوح</span>`;
+     timeHTML = `<div class="detail-device-time" id="detailClock_${d.id}">${formatPsTime(now-st)}</div>`;
+     playCost = calcPsTimeCost(st, now, rate);
+   } else {
+     const end = Number(d.endAt) || (st+3600000), rem = Math.max(0, end-now);
+     modeBadge = `<span class="tag" style="margin-right:6px;">محدد</span>`;
+     timeHTML = `<div class="detail-device-time" id="detailClock_${d.id}">${formatPsTime(rem)}</div>`;
+     playCost = calcPsTimeCost(st, Math.min(now, end), rate);
+   }
+ }
+
+ const totalNow = playCost + ordersTotal;
+ const billNote = isBill ? `<div class="billiard-info">سعر الساعة: <b>${money(rate)} ج</b> | سعر الجيم: <b>${money(gamePrice)} ج</b></div>` : "";
+ const controlsHTML = !running
+   ? `<div class="grid"><div style="grid-column:1/-1;"><label>اسم العميل (اختياري)</label><input id="custName_${d.id}" placeholder="اسم العميل"></div><div><label>المدة بالساعة (محدد)</label><input id="hours_${d.id}" type="number" min=".25" step=".25" value="1"></div><div style="display:flex;align-items:end;"><button class="orange big" onclick="startDeviceTimed('${d.id}')">⏱ محدد</button></div><div style="grid-column:1/-1;"><button class="green big" onclick="startDeviceOpen('${d.id}')">▶ مفتوح</button></div>${isBill?`<div style="grid-column:1/-1;"><button class="pink big" onclick="startBilliardGames('${d.id}')">🎱 نظام الجيم</button></div>`:""}</div>`
+   : `<div class="device-modal-actions"><button class="orange" onclick="extendDeviceTime('${d.id}')">➕ تمديد</button><button class="red" onclick="finishDeviceSession('${d.id}')">⏹ إنهاء وحساب</button></div>`;
+
+ return `<div style="text-align:center;"><span class="tag ${running?"good":""}">${running?"يعمل":"متاح"}</span>${modeBadge}<h3 style="margin:6px 0 2px;">${icon} ${escapeHTML(d.name)}</h3><div class="muted">${typeLabel} — سعر الساعة: <b>${money(rate)} ج</b></div></div>${billNote}${d.customerName?`<div class="muted" style="text-align:center;color:#60a5fa;margin-top:4px;">👤 ${escapeHTML(d.customerName)}</div>`:""}${timeHTML}${running?`<div style="background:rgba(15,23,42,0.5);border-radius:8px;padding:10px;margin:8px 0;border:1px solid var(--border-color);"><div style="display:flex;justify-content:space-between;font-size:13px;"><span>اللعب: <b id="detailPlayCost_${d.id}">${money(playCost)} ج</b></span><span>إضافات: <b>${money(ordersTotal)} ج</b></span><span>الإجمالي: <b id="detailTotal_${d.id}" style="color:var(--success);font-size:15px;">${money(totalNow)} ج</b></span></div><div style="display:grid;grid-template-columns:2fr 1fr auto;gap:6px;margin-top:8px;"><select id="orderItem_${d.id}">${itemOpts}</select><input id="orderQty_${d.id}" type="number" min="1" value="1"><button class="green" onclick="addDeviceOrder('${d.id}')">إضافة</button></div><div class="order-list">${orderRows}</div></div>`:""}<div style="margin-top:10px;">${controlsHTML}</div><div style="display:flex;gap:8px;margin-top:12px;border-top:1px solid var(--border-color);padding-top:10px;"><button class="secondary" style="flex:1;padding:7px;" onclick="editDevicePrice('${d.id}')">تعديل السعر</button><button class="red" style="flex:1;padding:7px;" onclick="deleteDevice('${d.id}')">حذف</button></div>`;
+}
+
+function calcPsTimeCost(s,e,r){const m=Math.max(0,(e-s)/60000);return m<=0?0:(Math.max(PS_MIN_SESSION_MINUTES,m)/60)*(Number(r)||PS_DEFAULT_HOURLY_RATE);}
+function formatPsTime(ms){const s=Math.max(0,Math.floor(Number(ms||0)/1000)),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return [h,m,sc].map(v=>String(v).padStart(2,"0")).join(":");}
+
+window.startDeviceOpen = async (id) => {
+ const d = psDevices.find(x=>x.id===id); if(!d) return;
+ const cName = ($(`custName_${id}`)?.value || "").trim();
+ try{ await updateDoc(docRef("devices", id), {status:"running", sessionMode:"auto", startedAt:Date.now(), endAt:null, orders:[], customerName:cName, billiardGames:0}); await loadPlaystationData(); }catch(e){showAlert(e.message,"error");}
+};
+window.startDeviceTimed = async (id) => {
+ const d = psDevices.find(x=>x.id===id); if(!d) return;
+ const h = Number($(`hours_${id}`)?.value); if(!Number.isFinite(h) || h<=0) return showAlert("مدة صحيحة.","warning");
+ const cName = ($(`custName_${id}`)?.value || "").trim(), now = Date.now(), end = now + Math.round(h*3600000);
+ try{ await updateDoc(docRef("devices", id), {status:"running", sessionMode:"timed", startedAt:now, endAt:end, orders:[], customerName:cName, billiardGames:0}); psEndingDevices.delete(id); await loadPlaystationData(); }catch(e){showAlert(e.message,"error");}
+};
+window.startBilliardGames = async (id) => {
+ const d = psDevices.find(x=>x.id===id); if(!d) return;
+ const cName = ($(`custName_${id}`)?.value || "").trim();
+ try{ await updateDoc(docRef("devices", id), {status:"running", sessionMode:"billiard_games", startedAt:Date.now(), endAt:null, orders:[], customerName:cName, billiardGames:1}); await loadPlaystationData(); }catch(e){showAlert(e.message,"error");}
+};
+window.changeBilliardGames = async (id, delta) => {
+ const d = psDevices.find(x=>x.id===id); if(!d) return;
+ const next = Math.max(0, (Number(d.billiardGames)||0) + delta);
+ try{ await updateDoc(docRef("devices", id), {billiardGames:next}); await loadPlaystationData(); }catch(e){showAlert(e.message,"error");}
+};
+window.extendDeviceTime = async (id) => {
+ const d = psDevices.find(x=>x.id===id); if(!d || d.status!=="running") return;
+ const addStr = await customPrompt("إضافة مدة بالساعة:", 'number', '1');
+ if(addStr===null) return; const addH = Number(addStr); if(!Number.isFinite(addH) || addH<=0) return showAlert("مدة صحيحة.","warning");
+ const now = Date.now();
+ try{ await updateDoc(docRef("devices", id), {sessionMode:"timed", endAt:Math.max(Number(d.endAt)||now, now) + Math.round(addH*3600000)}); psEndingDevices.delete(id); await loadPlaystationData(); showAlert("تم التمديد.","success"); }catch(e){showAlert(e.message,"error");}
+};
+window.addDeviceOrder = async (deviceId) => {
+ const d = psDevices.find(x=>x.id===deviceId); if(!d || d.status!=="running") return;
+ const itemId = $(`orderItem_${deviceId}`)?.value, qty = Number($(`orderQty_${deviceId}`)?.value || 1);
+ if(!itemId || qty<=0) return showAlert("بيانات صحيحة.","warning");
+ const item = psItems.find(x=>x.id===itemId); if(!item || Number(item.qty)<qty) return showAlert("الكمية غير كافية.","warning");
+ const orders = Array.isArray(d.orders) ? [...d.orders] : [];
+ orders.push({itemId:item.id, name:item.name, qty, price:Number(item.price), total:qty*Number(item.price)});
+ try{ await updateDoc(docRef("devices", deviceId), {orders}); await updateDoc(docRef("psItems", item.id), {qty:Number(item.qty)-qty}); await loadPlaystationData(); }catch(e){showAlert(e.message,"error");}
+};
+window.removeDeviceOrder = async (deviceId, idx) => {
+ const d = psDevices.find(x=>x.id===deviceId); if(!d) return;
+ const orders = Array.isArray(d.orders) ? [...d.orders] : [], rem = orders[idx]; if(!rem) return;
+ orders.splice(idx, 1);
+ try{ await updateDoc(docRef("devices", deviceId), {orders}); const item = psItems.find(x=>x.id===rem.itemId); if(item) await updateDoc(docRef("psItems", item.id), {qty:Number(item.qty)+(Number(rem.qty)||0)}); await loadPlaystationData(); }catch(e){showAlert(e.message,"error");}
+};
+
+let pendingPsSessionInvoice = null;
+window.finishDeviceSession = (deviceId) => {
+ const d = psDevices.find(x=>x.id===deviceId); if(!d || d.status!=="running") return;
+ const now = Date.now(), st = Number(d.startedAt)||now, end = d.sessionMode==="timed" ? Math.min(now, Number(d.endAt)||now) : now;
+ const rate = Number(d.hourlyRate)||PS_DEFAULT_HOURLY_RATE, orders = Array.isArray(d.orders)?d.orders:[], ordersCost = orders.reduce((s,o)=>s+(Number(o.total)||0),0);
+ let playCost = 0, durationLabel = "";
+ if(d.sessionMode === "billiard_games"){ const g = Number(d.billiardGames)||0, gp = Number(d.billiardGamePrice)||20; playCost = g*gp; durationLabel = `${g} جيم`; }
+ else { playCost = calcPsTimeCost(st, end, rate); durationLabel = formatPsTime(end-st); }
+ const total = playCost + ordersCost, invoiceNumber = "PS-" + String(Date.now()).slice(-6);
+ pendingPsSessionInvoice = {invoiceNumber, deviceId:d.id, deviceName:d.name, customerName:d.customerName||"عميل عادي", startedAt:st, endedAt:now, duration:durationLabel, playCost, orders, ordersCost, discount:0, total, createdAt:now};
+ $("psConfirmInvoiceContent").innerHTML = `<div style="text-align:center;font-weight:bold;color:var(--primary);font-size:15px;margin-bottom:8px;">فاتورة ${escapeHTML(d.name)}</div><div><b>العميل:</b> ${escapeHTML(pendingPsSessionInvoice.customerName)}</div><div><b>المدة:</b> ${durationLabel}</div><hr><div><b>اللعب:</b> ${money(playCost)} ج</div><div><b>الإضافات:</b> ${money(ordersCost)} ج</div><div style="font-size:17px;color:var(--success);margin-top:6px;"><b>الإجمالي: <span id="psConfirmTotalSpan">${money(total)}</span> ج</b></div>`;
+ $("psConfirmDiscountInput").value = ""; $("psConfirmInvoiceModal").classList.remove("hidden");
+};
+window.updateConfirmModalTotal = () => {
+ if(!pendingPsSessionInvoice) return;
+ const disc = Number($("psConfirmDiscountInput").value) || 0, sub = pendingPsSessionInvoice.playCost + pendingPsSessionInvoice.ordersCost, net = Math.max(0, sub - disc);
+ $("psConfirmTotalSpan").textContent = money(net); pendingPsSessionInvoice.discount = disc; pendingPsSessionInvoice.total = net;
+};
+window.cancelPsInvoice = () => { pendingPsSessionInvoice = null; $("psConfirmInvoiceModal").classList.add("hidden"); };
+window.confirmAndPrintPsInvoice = async (shouldPrint) => {
+ if(!pendingPsSessionInvoice) return;
+ const inv = {...pendingPsSessionInvoice}; updateConfirmModalTotal(); inv.discount = pendingPsSessionInvoice.discount; inv.total = pendingPsSessionInvoice.total;
+ $("psConfirmInvoiceModal").classList.add("hidden"); pendingPsSessionInvoice = null;
+ try{
+   await setDoc(doc(col("psSessions")), inv);
+   const resetObj = {status:"idle", startedAt:null, endAt:null, orders:[], customerName:"", sessionMode:null};
+   if(window.getDeviceType(psDevices.find(x=>x.id===inv.deviceId))==="billiard") resetObj.billiardGames=0;
+   await updateDoc(docRef("devices", inv.deviceId), resetObj); psEndingDevices.delete(inv.deviceId);
+   if(shouldPrint) printPsInvoice(inv);
+   closeDeviceDetail(); await loadPlaystationData(); showAlert("تم الحفظ.", "success");
+ }catch(e){showAlert("خطأ: "+e.message,"error");}
+};
+
+window.printPsInvoice = (inv) => {
+ const pa = $("printArea"); pa.classList.remove("hidden");
+ const oRows = (inv.orders||[]).map(o=>`<div>${escapeHTML(o.name)} × ${o.qty} = ${money(o.total)} ج</div>`).join("") || "<div>لا يوجد</div>";
+ pa.innerHTML = `<div style="max-width:300px;margin:auto;font-family:'Cairo',sans-serif;direction:rtl;font-size:12px;"><h3 style="text-align:center;margin:0 0 6px;">${escapeHTML(profile?.shopName||"بلايستيشن")}</h3><div style="text-align:center;">فاتورة: <b>${escapeHTML(inv.invoiceNumber)}</b></div><hr><div><b>العميل:</b> ${escapeHTML(inv.customerName)}</div><div><b>الجهاز:</b> ${escapeHTML(inv.deviceName)}</div><div><b>المدة:</b> ${escapeHTML(inv.duration)}</div><hr><div><b>اللعب:</b> ${money(inv.playCost)} ج</div><div><b>إضافات:</b> ${oRows}</div>${inv.discount>0?`<div><b>خصم:</b> -${money(inv.discount)} ج</div>`:""}<hr><div style="font-size:15px;"><b>الإجمالي: ${money(inv.total)} ج</b></div><hr><div style="text-align:center;">شكراً</div></div>`;
+ setTimeout(() => { window.print(); setTimeout(() => { pa.classList.add("hidden"); pa.innerHTML = ""; }, 1000); }, 100);
+};
+window.reprintPsSession = (id) => { const s = psSessions.find(x=>x.id===id); if(s) printPsInvoice(s); };
+window.editDevicePrice = async (id) => {
+ const d = psDevices.find(x=>x.id===id); if(!d) return;
+ const rStr = await customPrompt("سعر الساعة الجديد:", 'number', d.hourlyRate||PS_DEFAULT_HOURLY_RATE); if(rStr===null) return;
+ const rate = Number(rStr); if(!Number.isFinite(rate) || rate<=0) return showAlert("سعر صحيح.","warning");
+ const up = {hourlyRate:rate};
+ if(window.getDeviceType(d)==="billiard"){ const gStr = await customPrompt("سعر الجيم:", 'number', d.billiardGamePrice||20); if(gStr!==null){ const gp = Number(gStr); if(Number.isFinite(gp) && gp>0) up.billiardGamePrice=gp; } }
+ try{ await updateDoc(docRef("devices", id), up); await loadPlaystationData(); showAlert("تم التحديث.","success"); }catch(e){showAlert(e.message,"error");}
+};
+window.deleteDevice = async (id) => {
+ if(!await window.customConfirm("حذف الجهاز نهائياً؟")) return;
+ try{ await deleteDoc(docRef("devices", id)); closeDeviceDetail(); await loadPlaystationData(); showAlert("تم الحذف.","success"); }catch(e){showAlert(e.message,"error");}
+};
+window.addPsItem = async (cat) => {
+ const isD = cat==="drink", name = ($(isD?"psDrinkName":"psSandwichName").value||"").trim(), price = Number($(isD?"psDrinkPrice":"psSandwichPrice").value), qty = Number($(isD?"psDrinkQty":"psSandwichQty").value);
+ if(!name || !Number.isFinite(price) || price<0 || !Number.isFinite(qty) || qty<0) return showAlert("بيانات صحيحة.","warning");
+ try{ await setDoc(doc(col("psItems")), {name, category:cat, price, qty, createdAt:Date.now()}); $(isD?"psDrinkName":"psSandwichName").value=""; $(isD?"psDrinkPrice":"psSandwichPrice").value=""; $(isD?"psDrinkQty":"psSandwichQty").value="1"; await loadPlaystationData(); showAlert("تمت الإضافة.","success"); }catch(e){showAlert(e.message,"error");}
+};
+window.restockPsItem = async (id) => { const item = psItems.find(x=>x.id===id); if(!item) return; const addStr = await customPrompt("كمية إضافية:", 'number', '5'); if(addStr===null) return; const add = Number(addStr); if(!Number.isFinite(add) || add<=0) return showAlert("كمية صحيحة.","warning"); try{ await updateDoc(docRef("psItems", id), {qty:(Number(item.qty)||0)+add}); await loadPlaystationData(); showAlert("تم التحديث.","success"); }catch(e){showAlert(e.message,"error");} };
+window.deletePsItem = async (id) => { if(!await window.customConfirm("حذف الصنف؟")) return; try{ await deleteDoc(docRef("psItems", id)); await loadPlaystationData(); showAlert("تم الحذف.","success"); }catch(e){showAlert(e.message,"error");} };
+
+function renderPsItems(){
+ const drinks = psItems.filter(x=>x.category==="drink"), sands = psItems.filter(x=>x.category==="sandwich");
+ $("psDrinksTable").innerHTML = drinks.map(x=>`<tr><td><b>${escapeHTML(x.name)}</b></td><td>${money(x.price)} ج</td><td>${x.qty}</td><td><button class="rowbtn green" onclick="restockPsItem('${x.id}')">+ كمية</button><button class="rowbtn red" onclick="deletePsItem('${x.id}')">حذف</button></td></tr>`).join("") || '<tr><td colspan="4">لا يوجد</td></tr>';
+ $("psSandwichesTable").innerHTML = sands.map(x=>`<tr><td><b>${escapeHTML(x.name)}</b></td><td>${money(x.price)} ج</td><td>${x.qty}</td><td><button class="rowbtn green" onclick="restockPsItem('${x.id}')">+ كمية</button><button class="rowbtn red" onclick="deletePsItem('${x.id}')">حذف</button></td></tr>`).join("") || '<tr><td colspan="4">لا يوجد</td></tr>';
+}
+function getShiftRevenue(){ return psSessions.filter(s=>Number(s.createdAt||0)>currentShiftCloseTime).reduce((sum,s)=>sum+(Number(s.total)||0),0); }
+window.openPsShiftModal = () => { const rev = getShiftRevenue(); $("psShiftTotalDisplay").textContent = money(rev)+" ج"; $("psShiftDateDisplay").textContent = "بتاريخ: "+new Date().toLocaleDateString('ar-EG'); $("psShiftModal").classList.remove("hidden"); };
+window.closePsShift = async () => {
+ const rev = getShiftRevenue(); if(rev<=0) return showAlert("لا توجد إيرادات لتقفيلها.", "info");
+ if(!await window.customConfirm("تقفيل الوردية وتسجيلها بالخزينة؟", `المبلغ: ${money(rev)} ج`)) return;
+ const now = Date.now();
+ try{ await setDoc(doc(col("psShifts"), "current"), {closedAt:now, lastShiftTotal:rev, date:new Date().toISOString().slice(0,10)}); await setDoc(doc(col("treasury")), {type:"in", amount:rev, note:"إيراد وردية بلايستيشن", createdAt:now}); currentShiftCloseTime=now; $("psShiftModal").classList.add("hidden"); await loadPlaystationData(); showAlert("تم التقفيل بنجاح.", "success"); }catch(e){showAlert(e.message,"error");}
+};
+
+function renderPsStats(){
+ const names = getTileNames();
+ if($("statLabel1")) $("statLabel1").innerHTML = `${escapeHTML(names[1])}<strong id="psRoomDevices">0</strong>`;
+ if($("statLabel2")) $("statLabel2").innerHTML = `${escapeHTML(names[2])}<strong id="psVipDevices">0</strong>`;
+ if($("statLabel3")) $("statLabel3").innerHTML = `${escapeHTML(names[3])}<strong id="psBaseDevices">0</strong>`;
+ if($("statLabel4")) $("statLabel4").innerHTML = `${escapeHTML(names[4])}<strong id="psBilliardDevices">0</strong>`;
+
+ $("psTotalDevices").textContent = psDevices.length; $("psRoomDevices").textContent = psDevices.filter(d=>window.getDeviceType(d)==="room").length;
+ $("psVipDevices").textContent = psDevices.filter(d=>window.getDeviceType(d)==="vip").length; $("psBaseDevices").textContent = psDevices.filter(d=>window.getDeviceType(d)==="base_arabi").length;
+ $("psBilliardDevices").textContent = psDevices.filter(d=>window.getDeviceType(d)==="billiard").length; $("psRunningDevices").textContent = psDevices.filter(d=>d.status==="running").length;
+ $("psDrinksCount").textContent = psItems.filter(x=>x.category==="drink").length; $("psSandwichesCount").textContent = psItems.filter(x=>x.category==="sandwich").length;
+}
+function renderPsRunning(){
+ const run = psDevices.filter(d=>d.status==="running"), now = Date.now(), names = getTileNames();
+ $("psRunningTable").innerHTML = run.map(d=>{
+  const dType = window.getDeviceType(d), isBill = dType==="billiard";
+  const pLabel = isBill?names[4]:dType==="vip"?names[2]:dType==="base_arabi"?names[3]:names[1];
+  const st = Number(d.startedAt)||now, dur = formatPsTime(now-st);
+  let rem = "مفتوح", pCost = 0;
+  if(isBill && d.sessionMode==="billiard_games"){ rem = `${d.billiardGames||0} جيم`; pCost = (Number(d.billiardGames)||0)*(Number(d.billiardGamePrice)||20); }
+  else if(d.sessionMode==="timed"){ const r = Math.max(0,(Number(d.endAt)||now)-now); rem = formatPsTime(r); pCost = calcPsTimeCost(st,Math.min(now,Number(d.endAt)||now),d.hourlyRate||PS_DEFAULT_HOURLY_RATE); }
+  else { pCost = calcPsTimeCost(st,now,d.hourlyRate||PS_DEFAULT_HOURLY_RATE); }
+  const oCost = (d.orders||[]).reduce((s,o)=>s+(Number(o.total)||0),0);
+  return `<tr><td><b>${escapeHTML(d.name)}</b></td><td>${pLabel}</td><td>${escapeHTML(d.customerName||"—")}</td><td>${new Date(st).toLocaleTimeString('ar-EG')}</td><td id="runDur_${d.id}">${dur}</td><td id="runRem_${d.id}">${rem}</td><td id="runTot_${d.id}"><b>${money(pCost+oCost)} ج</b></td><td><button class="rowbtn" onclick="openDeviceDetail('${d.id}')">فتح</button></td></tr>`;
+ }).join("") || '<tr><td colspan="8">لا توجد أجهزة تعمل</td></tr>';
+}
+function renderPsSessions(){
+ const df = $("psSessionDateFilter")?.value || "", list = [...psSessions].sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0));
+ const filtered = df ? list.filter(s=>{ const d = new Date(Number(s.createdAt)||0); const local = new Date(d.getTime() - d.getTimezoneOffset()*60000); return local.toISOString().slice(0,10) === df; }) : list;
+ const rev = filtered.reduce((s,x)=>s+(Number(x.total)||0),0);
+ $("psSessionsTotal").textContent = filtered.length; $("psSessionsRevenue2").textContent = money(rev)+" ج";
+ $("psSessionsTable").innerHTML = filtered.map(s=>`<tr><td><b>${escapeHTML(s.invoiceNumber||s.id.slice(0,6))}</b></td><td>${escapeHTML(s.customerName||"عميل عادي")}</td><td>${escapeHTML(s.deviceName||"")}</td><td>${s.startedAt?new Date(Number(s.startedAt)).toLocaleTimeString('ar-EG'):"—"}</td><td>${s.endedAt?new Date(Number(s.endedAt)).toLocaleTimeString('ar-EG'):"—"}</td><td>${escapeHTML(s.duration||"")}</td><td>${money(s.playCost)} ج</td><td>${money(s.ordersCost)} ج</td><td>${s.discount>0?`<span style="color:var(--danger);font-weight:bold;">-${money(s.discount)} ج</span>`:"0.00"}</td><td><b>${money(s.total)} ج</b></td><td><button class="rowbtn secondary" onclick="reprintPsSession('${s.id}')">🖨️</button></td></tr>`).join("") || '<tr><td colspan="11">لا توجد جلسات</td></tr>';
+}
+window.addReservation = async () => {
+ const devId = $("resDeviceId").value, name = $("resCustomerName").value.trim(), phone = $("resCustomerPhone").value.trim(), time = $("resTime").value;
+ if(!devId || !name || !time) return showAlert("أكمل البيانات.","warning");
+ const dev = psDevices.find(x=>x.id===devId);
+ try{ await setDoc(doc(col("psReservations")), {deviceId:devId, deviceName:dev?.name||"", customerName:name, phone, time, status:"pending", createdAt:Date.now()}); $("resCustomerName").value=""; $("resCustomerPhone").value=""; $("resTime").value=""; await loadPlaystationData(); showAlert("تم الحجز.","success"); }catch(e){showAlert(e.message,"error");}
+};
+function renderPsReservations(){
+ $("resDeviceId").innerHTML = psDevices.map(d=>`<option value="${d.id}">${escapeHTML(d.name)}</option>`).join("") || '<option value="">لا يوجد</option>';
+ $("psReservationsTable").innerHTML = psReservations.map(r=>`<tr><td><b>${escapeHTML(r.customerName)}</b></td><td>${escapeHTML(r.phone||"—")}</td><td>${escapeHTML(r.deviceName)}</td><td>${escapeHTML(r.time)}</td><td><span class="tag ${r.status==="completed"?"good":""}">${r.status==="completed"?"مكتمل":"قيد الانتظار"}</span></td><td>${r.status!=="completed"?`<button class="rowbtn green" onclick="completeReservation('${r.id}')">إتمام</button>`:""}<button class="rowbtn red" onclick="deleteReservation('${r.id}')">حذف</button></td></tr>`).join("") || '<tr><td colspan="6">لا توجد حجوزات</td></tr>';
+}
+window.completeReservation = async (id) => { try{ await updateDoc(docRef("psReservations", id), {status:"completed"}); await loadPlaystationData(); }catch(e){showAlert(e.message,"error");} };
+window.deleteReservation = async (id) => { if(!await window.customConfirm("حذف الحجز؟")) return; try{ await deleteDoc(docRef("psReservations", id)); await loadPlaystationData(); }catch(e){showAlert(e.message,"error");} };
+function renderPsCustomers(){
+ const map = new Map();
+ psSessions.forEach(s=>{ const n = (s.customerName||"").trim(); if(!n || n==="عميل عادي") return; const e = map.get(n)||{name:n, visits:0, total:0, lastVisit:0}; e.visits++; e.total += Number(s.total)||0; e.lastVisit = Math.max(e.lastVisit, Number(s.createdAt)||0); map.set(n,e); });
+ const arr = Array.from(map.values()).sort((a,b)=>b.total-a.total);
+ $("psCustomersTable").innerHTML = arr.map((c,i)=>`<tr><td>${i+1}</td><td><b>${escapeHTML(c.name)}</b></td><td>${c.visits}</td><td><b>${money(c.total)} ج</b></td><td>${c.lastVisit?new Date(c.lastVisit).toLocaleDateString('ar-EG'):"—"}</td></tr>`).join("") || '<tr><td colspan="5">لا يوجد عملاء</td></tr>';
+}
+
+let revChartInst=null, typeChartInst=null;
+function renderPsReports(){
+ const totalRev = psSessions.reduce((s,x)=>s+(Number(x.total)||0),0);
+ $("psTotalRevenueAll").textContent = money(totalRev)+" ج"; $("psTotalSessionsAll").textContent = psSessions.length;
+ const labels = [], data = [];
+ for(let i=6;i>=0;i--){ const d = new Date(); d.setDate(d.getDate()-i); const k = d.toISOString().slice(0,10); labels.push(k.slice(5)); data.push(psSessions.filter(s=>new Date(Number(s.createdAt)||0).toISOString().slice(0,10)===k).reduce((acc,x)=>acc+(Number(x.total)||0),0)); }
+ const rc = $("revenueChart")?.getContext("2d");
+ if(rc){ if(revChartInst)revChartInst.destroy(); revChartInst = new Chart(rc, {type:"bar", data:{labels, datasets:[{label:"الإيرادات (ج)", data, backgroundColor:"#3b82f6", borderRadius:6}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, grid:{color:'#334155'}, ticks:{color:'#94a3b8'}}, x:{grid:{display:false}, ticks:{color:'#94a3b8'}}}}}); }
+ const pSum = psSessions.reduce((s,x)=>s+(Number(x.playCost)||0),0), oSum = psSessions.reduce((s,x)=>s+(Number(x.ordersCost)||0),0), tc = $("typeChart")?.getContext("2d");
+ if(tc){ if(typeChartInst)typeChartInst.destroy(); typeChartInst = new Chart(tc, {type:"doughnut", data:{labels:["اللعب","المشروبات والإضافات"], datasets:[{data:[pSum,oSum], backgroundColor:["#10b981","#f59e0b"]}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color:'#f8fafc'}}}}}); }
+}
+
+function startPsTimer(){
+ if(psTimer) clearInterval(psTimer);
+ psTimer = setInterval(()=>{
+  if(activeSystem !== "playstation") return;
+  const now = Date.now();
+  psDevices.forEach(d=>{
+   if(d.status !== "running") return;
+   const st = Number(d.startedAt)||now, mc = $(`miniClock_${d.id}`);
+   if(mc){ if(d.sessionMode==="auto"||d.sessionMode==="billiard_games") mc.textContent=formatPsTime(now-st); else { const rem=Math.max(0,(Number(d.endAt)||now)-now); mc.textContent=formatPsTime(rem); if(rem<=0 && !psEndingDevices.has(d.id)){ psEndingDevices.add(d.id); showAlert(`انتهى الوقت على: ${d.name}`,"warning"); } } }
+   if(currentDetailDeviceId === d.id){ const dc = $(`detailClock_${d.id}`); if(dc) dc.textContent = (d.sessionMode==="auto"||d.sessionMode==="billiard_games") ? formatPsTime(now-st) : formatPsTime(Math.max(0,(Number(d.endAt)||now)-now)); const oCost = (d.orders||[]).reduce((s,o)=>s+(Number(o.total)||0),0); let pCost = d.sessionMode==="billiard_games" ? (Number(d.billiardGames)||0)*(Number(d.billiardGamePrice)||20) : calcPsTimeCost(st, d.sessionMode==="timed"?Math.min(now,Number(d.endAt)||now):now, d.hourlyRate||PS_DEFAULT_HOURLY_RATE); if($(`detailPlayCost_${d.id}`)) $(`detailPlayCost_${d.id}`).textContent = money(pCost)+" ج"; if($(`detailTotal_${d.id}`)) $(`detailTotal_${d.id}`).textContent = money(pCost+oCost)+" ج"; }
+   if(currentPsSection === "running"){ if($(`runDur_${d.id}`)) $(`runDur_${d.id}`).textContent=formatPsTime(now-st); if($(`runRem_${d.id}`) && d.sessionMode==="timed") $(`runRem_${d.id}`).textContent=formatPsTime(Math.max(0,(Number(d.endAt)||now)-now)); }
+  });
+ }, 1000);
+}
+
+/* =========================================================================
+   ================= نظام المبيعات والمخازن والمشتريات والمرتجعات =================
+   ========================================================================= */
+window.page=p=>{
+ ["dashboardPage","salesPage","productsPage","purchasesPage","returnsPage","treasuryPage","historyPage","expensesPage","reportsPage","settingsPage","subscriptionPage","invoiceSettingsPage","barcodeSettingsPage"].forEach(id=>$(id)?.classList.add("hidden"));
+ $(p+"Page")?.classList.remove("hidden");
+ if(p==="sales") {
+   $("saleSearch")?.focus();
+   updateHeldBadge();
+   toggleCreditCustomerBox();
+   renderCart();
+ }
+ if(p==="products") renderProducts();
+ if(p==="purchases") renderPurchasesPage();
+ if(p==="returns") renderReturnsPage();
+ if(p==="treasury") renderTreasury();
+ if(p==="history") renderSales();
+ if(p==="expenses") renderExpenses();
+ if(p==="reports") renderReports();
+ if(p==="subscription") checkCustomerSubscription(systemInfo(profile, activeSystem));
+ if(p==="invoiceSettings") loadInvoiceSettings();
+ if(p==="barcodeSettings") loadBarcodeSettings();
+};
+
+function updateHeldBadge() {
+  const heldList = JSON.parse(localStorage.getItem('nexpos_held_' + currentUser.uid) || '[]');
+  const el = $("heldCountLabel");
+  if (el) el.textContent = heldList.length > 0 ? `المعلقة (${heldList.length})` : `المعلقة`;
+}
+
+window.toggleCreditCustomerBox = () => {
+  const type = $("salePaymentType")?.value || "cash";
+  const box = $("creditCustomerBox");
+  if (!box) return;
+  if (type === "credit") {
+    box.classList.remove("hidden");
+  } else {
+    box.classList.add("hidden");
+  }
 };
 
 async function loadBusiness(){
-  if(!currentUser) return;
-  const [pSnap, sSnap, eSnap, tSnap, purSnap, retSnap] = await Promise.all([
-    safeGetDocs(col("products")),
-    safeGetDocs(col("sales")),
-    safeGetDocs(col("expenses")),
-    safeGetDocs(col("treasury")),
-    safeGetDocs(col("purchases")),
-    safeGetDocs(col("returns"))
-  ]);
-  products = pSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (a.name||"").localeCompare(b.name||"", "ar"));
-  sales = sSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => Number(b.createdAt||0) - Number(a.createdAt||0));
-  expenses = eSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => Number(b.createdAt||0) - Number(a.createdAt||0));
-  treasury = tSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => Number(b.createdAt||0) - Number(a.createdAt||0));
-  purchases = purSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => Number(b.createdAt||0) - Number(a.createdAt||0));
-  returnsList = retSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => Number(b.createdAt||0) - Number(a.createdAt||0));
-
-  renderDashboard();
-  renderProducts();
-  renderSales();
-  renderExpenses();
-  renderTreasury();
-  renderPurchasesPage();
-  renderReturnsPage();
-  renderReports();
-}
-
-function getTreasuryBalance(){
-  return treasury.reduce((sum, t) => sum + (t.type === "in" ? (Number(t.amount)||0) : -(Number(t.amount)||0)), 0);
+ if(!currentUser)return;
+ const [ps,ss,es,ts,purs,rets]=await Promise.all([
+   safeGetDocs(col("products")),
+   safeGetDocs(col("sales")),
+   safeGetDocs(col("expenses")),
+   safeGetDocs(col("treasury")),
+   safeGetDocs(col("purchases")).catch(()=>({docs:[]})),
+   safeGetDocs(col("returns")).catch(()=>({docs:[]}))
+ ]);
+ products=ps.docs.map(d=>({id:d.id,...d.data()}));
+ sales=ss.docs.map(d=>({id:d.id,...d.data()}));
+ expenses=es.docs.map(d=>({id:d.id,...d.data()}));
+ treasury=ts.docs.map(d=>({id:d.id,...d.data()}));
+ purchases=purs.docs.map(d=>({id:d.id,...d.data()}));
+ returnsList=rets.docs.map(d=>({id:d.id,...d.data()}));
+ renderDashboard();renderProducts();renderSales();renderExpenses();renderTreasury();updateHeldBadge();
 }
 
 function renderDashboard(){
-  const todayStr = new Date().toISOString().slice(0,10);
-  const todaySales = sales.filter(s => new Date(Number(s.createdAt)).toISOString().slice(0,10) === todayStr).reduce((sum, s) => sum + (Number(s.total)||0), 0);
-  const lowStock = products.filter(p => (Number(p.qty)||0) < 5).length;
-
-  if($("statProducts")) $("statProducts").textContent = products.length;
-  if($("statSales")) $("statSales").textContent = sales.length;
-  if($("statRevenue")) $("statRevenue").textContent = money(todaySales) + " ج";
-  if($("statTreasuryBalance")) $("statTreasuryBalance").textContent = money(getTreasuryBalance()) + " ج";
-  if($("statLowStock")) $("statLowStock").textContent = lowStock;
+ $("statProducts").textContent=products.length;
+ $("statSales").textContent=sales.length;
+ const today = new Date().toLocaleDateString('ar-EG');
+ const todayRev = sales.filter(s => new Date(Number(s.createdAt)||0).toLocaleDateString('ar-EG') === today).reduce((a,b)=>a+(Number(b.total)||0),0);
+ $("statRevenue").textContent=money(todayRev)+" ج";
+ const bal = treasury.reduce((a,b)=>a+(b.type==="in"?Number(b.amount)||0:-(Number(b.amount)||0)),0);
+ if($("statTreasuryBalance")) $("statTreasuryBalance").textContent = money(bal) + " ج";
+ const lowStockCount = products.filter(p => Number(p.qty) < 5).length;
+ if($("statLowStock")) $("statLowStock").textContent = lowStockCount;
 }
 
-/* ============ شاشة المبيعات الذكية (تعمل لكل تبويب مستقل) ============ */
-window.toggleCreditCustomerBox = () => {
-  const tab = getActiveSalesTab();
-  if(!tab) return;
-  const isCredit = salesField(tab, "salePaymentType")?.value === "credit";
-  salesField(tab, "creditCustomerBox")?.classList.toggle("hidden", !isCredit);
+window.saveProduct=async()=>{
+ const name=$("pName").value.trim(),barcode=$("pBarcode").value.trim(),cost=Number($("pCost").value),price=Number($("pPrice").value),qty=Number($("pQty").value);
+ if(!name||!Number.isFinite(price)||price<=0||!Number.isFinite(qty)||qty<0)return showAlert("أدخل بيانات صحيحة.","warning");
+ try{await setDoc(doc(col("products")),{name,barcode,cost:Number.isFinite(cost)&&cost>=0?cost:0,price,qty,createdAt:Date.now()});$("pName").value="";$("pBarcode").value="";$("pCost").value="0";$("pPrice").value="0";$("pQty").value="10";await loadBusiness();showAlert("تم الحفظ.","success");}catch(e){showAlert(e.message,"error");}
 };
+window.editProduct=async id=>{
+ const p=products.find(x=>x.id===id);if(!p)return;
+ const name=await customPrompt("الاسم:", 'text', p.name);if(name===null||!name.trim())return;
+ const priceStr=await customPrompt("سعر البيع:", 'number', p.price);if(priceStr===null)return;const price=Number(priceStr);
+ const costStr=await customPrompt("سعر الشراء:", 'number', p.cost||0);if(costStr===null)return;const cost=Number(costStr);
+ const qtyStr=await customPrompt("الكمية:", 'number', p.qty);if(qtyStr===null)return;const qty=Number(qtyStr);
+ try{await updateDoc(docRef("products",id),{name:name.trim(),price,cost,qty});await loadBusiness();showAlert("تم التحديث.","success");}catch(e){showAlert(e.message,"error");}
+};
+window.deleteProduct=async id=>{if(!await window.customConfirm("حذف المنتج؟"))return;try{await deleteDoc(docRef("products",id));await loadBusiness();showAlert("تم الحذف.","success");}catch(e){showAlert(e.message,"error");}};
+function renderProducts(){$("productsTable").innerHTML=products.map(p=>`<tr><td><b>${escapeHTML(p.name)}</b></td><td>${escapeHTML(p.barcode||"-")}</td><td>${money(p.cost)} ج</td><td><b>${money(p.price)} ج</b></td><td>${p.qty}</td><td><button class="rowbtn" onclick="editProduct('${p.id}')">تعديل</button><button class="rowbtn" style="background:#0284c7;" onclick="printProductBarcode('${p.id}')">🏷️ باركود</button><button class="rowbtn red" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join("")||'<tr><td colspan="6">لا يوجد</td></tr>';}
 
-window.searchProducts = (ev) => {
-  const tab = getActiveSalesTab();
-  if(!tab) return;
-  const searchInput = ev?.target || salesField(tab, "saleSearch");
-  const resEl = salesField(tab, "searchResults");
-  const q = (searchInput?.value || "").trim().toLowerCase();
-  if(!resEl) return;
-
-  if(!q){
-    resEl.innerHTML = "";
-    tab.state.selectedProduct = null;
-    const priceEl = salesField(tab, "salePrice");
-    if(priceEl) priceEl.value = "";
-    const tip = salesField(tab, "inquiryTooltip");
-    if(tip) tip.innerHTML = `سعر الشراء<span class="cost-val">—</span>`;
-    return;
+/* =========================================================================
+   ================= نظام المشتريات (Purchases) =================
+   ========================================================================= */
+window.renderPurchasesPage = () => {
+  const sel = $("purProductId");
+  if (sel) {
+    sel.innerHTML = `<option value="">-- اختر صنفاً --</option>` +
+      products.map(p => `<option value="${p.id}" data-cost="${p.cost || 0}">${escapeHTML(p.name)} (المخزون: ${p.qty} | شراء: ${money(p.cost)})</option>`).join("");
   }
-
-  const matches = products.filter(p =>
-    (p.name && p.name.toLowerCase().includes(q)) ||
-    (p.barcode && String(p.barcode).toLowerCase().includes(q))
-  ).slice(0, 12);
-
-  resEl.innerHTML = matches.map(p => `
-    <button type="button" class="result secondary" onclick="selectSaleProduct('${p.id}')">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span><b>${escapeHTML(p.name)}</b> <span class="muted">(${escapeHTML(p.barcode || "بدون باركود")})</span></span>
-        <span><b style="color:#10b981;">${money(p.price)} ج</b> | متاح: <b>${Number(p.qty)||0}</b></span>
-      </div>
-    </button>
-  `).join("") || `<div style="padding:10px; text-align:center; color:#94a3b8; font-size:12px;">لا توجد أصناف مطابقة</div>`;
+  onPurchaseProductChange();
+  renderPurchasesTable();
 };
 
-window.selectSaleProduct = (id) => {
-  const tab = getActiveSalesTab();
-  if(!tab) return;
-  const p = products.find(x => x.id === id);
-  if(!p) return;
-  tab.state.selectedProduct = p;
-  const searchEl = salesField(tab, "saleSearch");
-  const priceEl = salesField(tab, "salePrice");
-  const qtyEl = salesField(tab, "saleQty");
-  const resEl = salesField(tab, "searchResults");
-  const tipEl = salesField(tab, "inquiryTooltip");
-
-  if(searchEl) searchEl.value = p.name;
-  if(priceEl) priceEl.value = Number(p.price) || 0;
-  if(qtyEl) qtyEl.value = 1;
-  if(resEl) resEl.innerHTML = "";
-  if(tipEl) tipEl.innerHTML = `سعر الشراء<span class="cost-val">${money(p.cost)} ج</span>`;
-  qtyEl?.focus();
-};
-
-window.handleBarcodeScan = (e) => {
-  if(e.key !== "Enter") return;
-  e.preventDefault();
-  const tab = getActiveSalesTab();
-  if(!tab) return;
-  const q = (salesField(tab, "saleSearch")?.value || "").trim().toLowerCase();
-  if(!q) return;
-
-  const exact = products.find(p => String(p.barcode || "").toLowerCase() === q)
-    || (tab.state.selectedProduct && tab.state.selectedProduct.name.toLowerCase() === q ? tab.state.selectedProduct : null)
-    || products.find(p => (p.name || "").toLowerCase() === q);
-
-  if(exact){
-    tab.state.selectedProduct = exact;
-    const priceEl = salesField(tab, "salePrice");
-    if(priceEl) priceEl.value = Number(exact.price) || 0;
-    addToCart();
-  } else {
-    const firstMatch = products.find(p => (p.name||"").toLowerCase().includes(q) || String(p.barcode||"").toLowerCase().includes(q));
-    if(firstMatch){
-      selectSaleProduct(firstMatch.id);
-    } else {
-      showAlert("الصنف أو الباركود غير موجود في المخزن.", "warning");
-    }
+window.onPurchaseProductChange = () => {
+  const sel = $("purProductId");
+  const opt = sel?.options[sel.selectedIndex];
+  if (opt && opt.dataset.cost !== undefined && $("purUnitCost")) {
+    $("purUnitCost").value = Number(opt.dataset.cost) || 0;
   }
 };
 
-window.addToCart = () => {
-  const tab = getActiveSalesTab();
-  if(!tab) return;
-  const q = (salesField(tab, "saleSearch")?.value || "").trim().toLowerCase();
-  let prod = tab.state.selectedProduct || products.find(p => String(p.barcode||"").toLowerCase() === q || (p.name||"").toLowerCase() === q);
-  if(!prod) return showAlert("اختر صنفاً من القائمة أو امسح الباركود أولاً.", "warning");
+window.savePurchaseInvoice = async () => {
+  const prodId = $("purProductId")?.value;
+  const qty = Number($("purQty")?.value);
+  const unitCost = Number($("purUnitCost")?.value);
+  const supplier = ($("purSupplier")?.value || "").trim();
+  const payType = $("purPaymentType")?.value || "cash";
 
-  const qty = Math.max(1, Number(salesField(tab, "saleQty")?.value) || 1);
-  const avail = Number(prod.qty) || 0;
-  const cart = tab.state.cart;
-  const existing = cart.find(c => c.id === prod.id);
-  const currentInCart = existing ? existing.qty : 0;
+  if (!prodId) return showAlert("يرجى اختيار الصنف أولاً.", "warning");
+  if (!Number.isFinite(qty) || qty <= 0) return showAlert("أدخل كمية صحيحة أكبر من صفر.", "warning");
+  if (!Number.isFinite(unitCost) || unitCost < 0) return showAlert("أدخل سعر شراء صحيح.", "warning");
 
-  if(currentInCart + qty > avail){
-    return showAlert(`الكمية المتاحة في المخزن من (${prod.name}) هي ${avail} قطعة فقط.`, "warning");
-  }
+  const prod = products.find(p => p.id === prodId);
+  if (!prod) return showAlert("الصنف غير موجود.", "error");
 
-  if(existing){
-    existing.qty += qty;
-  } else {
-    cart.push({
-      id: prod.id,
-      name: prod.name,
-      barcode: prod.barcode || "",
-      cost: Number(prod.cost) || 0,
-      price: Number(prod.price) || 0,
-      qty,
-      discount: 0
-    });
-  }
-
-  tab.state.selectedProduct = null;
-  const searchEl = salesField(tab, "saleSearch");
-  const priceEl = salesField(tab, "salePrice");
-  const qtyEl = salesField(tab, "saleQty");
-  const resEl = salesField(tab, "searchResults");
-  const tipEl = salesField(tab, "inquiryTooltip");
-
-  if(searchEl) { searchEl.value = ""; searchEl.focus(); }
-  if(priceEl) priceEl.value = "";
-  if(qtyEl) qtyEl.value = 1;
-  if(resEl) resEl.innerHTML = "";
-  if(tipEl) tipEl.innerHTML = `سعر الشراء<span class="cost-val">—</span>`;
-  renderCart();
-};
-
-window.changeCartQty = (idx, delta) => {
-  const tab = getActiveSalesTab();
-  if(!tab) return;
-  const item = tab.state.cart[idx];
-  if(!item) return;
-  const prod = products.find(p => p.id === item.id);
-  const maxQty = prod ? (Number(prod.qty)||0) : 999999;
-  const next = item.qty + delta;
-  if(next <= 0){
-    tab.state.cart.splice(idx, 1);
-  } else if(next > maxQty){
-    return showAlert(`الحد الأقصى المتاح في المخزن: ${maxQty}`, "warning");
-  } else {
-    item.qty = next;
-  }
-  renderCart();
-};
-
-window.updateCartItemDiscount = (idx, val) => {
-  const tab = getActiveSalesTab();
-  if(!tab) return;
-  const item = tab.state.cart[idx];
-  if(!item) return;
-  item.discount = Math.max(0, Number(val) || 0);
-  renderCart();
-};
-
-window.removeCartItem = (idx) => {
-  const tab = getActiveSalesTab();
-  if(!tab) return;
-  tab.state.cart.splice(idx, 1);
-  renderCart();
-};
-
-function calcCartTotals(tab){
-  const targetTab = tab || getActiveSalesTab();
-  const cart = targetTab?.state?.cart || [];
-  let itemsSubtotal = 0;
-  let totalPieces = 0;
-  cart.forEach(item => {
-    const lineGross = (Number(item.price)||0) * (Number(item.qty)||0);
-    const lineNet = Math.max(0, lineGross - (Number(item.discount)||0));
-    itemsSubtotal += lineNet;
-    totalPieces += Number(item.qty) || 0;
-  });
-
-  const addition = Math.max(0, Number(salesField(targetTab, "saleAddition")?.value) || 0);
-  const discPct = Math.min(100, Math.max(0, Number(salesField(targetTab, "saleDiscountPct")?.value) || 0));
-  const flatDisc = Math.max(0, Number(salesField(targetTab, "saleDiscount")?.value) || 0);
-
-  const pctValue = (itemsSubtotal * discPct) / 100;
-  const finalTotal = Math.max(0, Number((itemsSubtotal + addition - pctValue - flatDisc).toFixed(2)));
-  return { itemsSubtotal, totalPieces, addition, discPct, pctValue, flatDisc, finalTotal };
-}
-
-window.renderCart = () => {
-  const tab = getActiveSalesTab();
-  if(!tab) return;
-  const tbody = salesField(tab, "cartTable");
-  if(!tbody) return;
-  const cart = tab.state.cart;
-
-  if(!cart.length){
-    tbody.innerHTML = `<tr><td colspan="8" class="empty-cart-msg" style="font-size:14px; padding:24px; text-align:center;">🛒 السلة فارغة - ابدأ بإضافة أصناف</td></tr>`;
-  } else {
-    tbody.innerHTML = cart.map((item, idx) => {
-      const lineGross = (Number(item.price)||0) * (Number(item.qty)||0);
-      const lineNet = Math.max(0, lineGross - (Number(item.discount)||0));
-      return `
-        <tr>
-          <td>${idx + 1}</td>
-          <td>${escapeHTML(item.name)}</td>
-          <td>
-            <div class="qty-control-group">
-              <button type="button" class="qty-btn" onclick="changeCartQty(${idx}, 1)">+</button>
-              <span style="min-width:22px; text-align:center;">${item.qty}</span>
-              <button type="button" class="qty-btn" onclick="changeCartQty(${idx}, -1)">-</button>
-            </div>
-          </td>
-          <td>${money(item.price)}</td>
-          <td>${money(lineGross)}</td>
-          <td><input type="number" min="0" value="${item.discount || 0}" onchange="updateCartItemDiscount(${idx}, this.value)" style="width:62px;"></td>
-          <td style="color:#34d399;">${money(lineNet)}</td>
-          <td style="text-align:center;"><button type="button" class="rowbtn red" onclick="removeCartItem(${idx})">✕</button></td>
-        </tr>
-      `;
-    }).join("");
-  }
-
-  const totals = calcCartTotals(tab);
-  const totalDisplay = salesField(tab, "cartTotalDisplay");
-  const summaryDisplay = salesField(tab, "cartItemsSummary");
-  if(totalDisplay) totalDisplay.textContent = totals.finalTotal.toFixed(2);
-  if(summaryDisplay) summaryDisplay.textContent = `الأصناف: ${cart.length} | القطع: ${totals.totalPieces}`;
-};
-
-window.showPaymentModal = () => {
-  const tab = getActiveSalesTab();
-  if(!tab || !tab.state.cart.length) return showAlert("السلة فارغة.", "warning");
-  const { finalTotal } = calcCartTotals(tab);
-  Swal.fire({
-    title: '💳 حاسبة السداد والباقي للعميل',
-    html: `
-      <div style="text-align:right; font-size:14px;">
-        <div style="background:#0f172a; padding:10px; border-radius:8px; text-align:center; margin-bottom:10px;">
-          المطلوب سداده: <b style="color:#10b981; font-size:22px;">${money(finalTotal)} ج</b>
-        </div>
-        <label>المبلغ المدفوع من العميل:</label>
-        <input id="swalPaidCash" type="number" min="0" step="any" value="${finalTotal}" oninput="document.getElementById('swalChangeCash').textContent = Math.max(0, (Number(this.value)||0) - ${finalTotal}).toFixed(2) + ' ج'" style="width:100%; padding:10px; font-size:20px; text-align:center; background:#0f172a; color:white; border:1px solid #334155; border-radius:8px;">
-        <div style="margin-top:10px; text-align:center; font-size:16px;">
-          الباقي للعميل: <b id="swalChangeCash" style="color:#f59e0b; font-size:20px;">0.00 ج</b>
-        </div>
-      </div>
-    `,
-    showCancelButton: true,
-    confirmButtonText: '💵 إتمام البيع',
-    cancelButtonText: 'إغلاق',
-    confirmButtonColor: '#10b981',
-    background: '#1e293b',
-    color: '#f8fafc'
-  }).then(r => { if(r.isConfirmed) completeSale(false); });
-};
-
-function getHeldInvoices(){
-  try { return JSON.parse(localStorage.getItem("nexpos_held_invoices") || "[]"); } catch(e){ return []; }
-}
-function updateHeldBadge(){
-  const count = getHeldInvoices().length;
-  document.querySelectorAll(".held-count-label").forEach(el => {
-    el.textContent = count > 0 ? `المعلقة (${count})` : "المعلقة";
-  });
-}
-
-window.saveHold = () => {
-  const tab = getActiveSalesTab();
-  if(!tab || !tab.state.cart.length) return showAlert("السلة فارغة ولا يوجد ما يتم تعليقه.", "warning");
-  const held = getHeldInvoices();
-  held.push({
-    id: Date.now(),
-    time: new Date().toLocaleTimeString('ar-EG'),
-    cart: [...tab.state.cart],
-    addition: Number(salesField(tab, "saleAddition")?.value) || 0,
-    discountPct: Number(salesField(tab, "saleDiscountPct")?.value) || 0,
-    discount: Number(salesField(tab, "saleDiscount")?.value) || 0,
-    notes: salesField(tab, "saleNotes")?.value || ""
-  });
-  localStorage.setItem("nexpos_held_invoices", JSON.stringify(held));
-  tab.state.cart = [];
-  if(salesField(tab, "saleAddition")) salesField(tab, "saleAddition").value = 0;
-  if(salesField(tab, "saleDiscountPct")) salesField(tab, "saleDiscountPct").value = 0;
-  if(salesField(tab, "saleDiscount")) salesField(tab, "saleDiscount").value = 0;
-  if(salesField(tab, "saleNotes")) salesField(tab, "saleNotes").value = "";
-  renderCart();
-  updateHeldBadge();
-  showAlert("تم تعليق الفاتورة بنجاح. يمكنك استرجاعها من زر (المعلقة).", "success");
-};
-
-window.openHeldList = () => {
-  const held = getHeldInvoices();
-  if(!held.length) return showAlert("لا توجد فواتير معلقة حالياً.", "info");
-  const html = held.map((h, i) => `
-    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #334155;">
-      <div style="text-align:right;">
-        <b>فاتورة معلقة #${i+1}</b> (${h.time})<br>
-        <span style="font-size:11px; color:#94a3b8;">الأصناف: ${h.cart.length} ${h.notes ? `| ${escapeHTML(h.notes)}` : ""}</span>
-      </div>
-      <div style="display:flex; gap:5px;">
-        <button class="rowbtn green" onclick="restoreHeld(${i}); Swal.close();">استرجاع</button>
-        <button class="rowbtn red" onclick="deleteHeld(${i}); Swal.close();">حذف</button>
-      </div>
-    </div>
-  `).join("");
-  Swal.fire({ title: "📂 الفواتير المعلقة", html, showConfirmButton: false, showCancelButton: true, cancelButtonText: "إغلاق", background: "#1e293b", color: "#f8fafc" });
-};
-
-window.restoreHeld = (idx) => {
-  const tab = getActiveSalesTab();
-  if(!tab) return;
-  const held = getHeldInvoices();
-  const h = held[idx];
-  if(!h) return;
-  tab.state.cart = h.cart || [];
-  if(salesField(tab, "saleAddition")) salesField(tab, "saleAddition").value = h.addition || 0;
-  if(salesField(tab, "saleDiscountPct")) salesField(tab, "saleDiscountPct").value = h.discountPct || 0;
-  if(salesField(tab, "saleDiscount")) salesField(tab, "saleDiscount").value = h.discount || 0;
-  if(salesField(tab, "saleNotes")) salesField(tab, "saleNotes").value = h.notes || "";
-  held.splice(idx, 1);
-  localStorage.setItem("nexpos_held_invoices", JSON.stringify(held));
-  updateHeldBadge();
-  renderCart();
-};
-
-window.deleteHeld = (idx) => {
-  const held = getHeldInvoices();
-  held.splice(idx, 1);
-  localStorage.setItem("nexpos_held_invoices", JSON.stringify(held));
-  updateHeldBadge();
-};
-
-window.completeSale = async (shouldPrint = false) => {
-  const tab = getActiveSalesTab();
-  if(!tab || !tab.state.cart.length) return showAlert("السلة فارغة.", "warning");
-  const cart = tab.state.cart;
-
-  const paymentType = salesField(tab, "salePaymentType")?.value || "cash";
-  const customerName = salesField(tab, "creditCustomerName")?.value.trim() || "";
-  const customerPhone = salesField(tab, "creditCustomerPhone")?.value.trim() || "";
-  const notes = salesField(tab, "saleNotes")?.value.trim() || "";
-
-  if(paymentType === "credit" && !customerName){
-    return showAlert("يرجى إدخال اسم العميل للبيع الآجل.", "warning");
-  }
-
-  const totals = calcCartTotals(tab);
+  const total = qty * unitCost;
   const now = Date.now();
-  const invoiceNo = "INV-" + String(now).slice(-6);
-  const totalCost = cart.reduce((s, item) => s + ((Number(item.cost)||0) * (Number(item.qty)||0)), 0);
-
-  const saleDoc = {
-    invoiceNo,
-    items: cart.map(c => ({ ...c })),
-    subtotal: totals.itemsSubtotal,
-    addition: totals.addition,
-    discount: Number((totals.pctValue + totals.flatDisc).toFixed(2)),
-    total: totals.finalTotal,
-    totalCost,
-    paymentType,
-    customerName: paymentType === "credit" ? customerName : (customerName || "عميل نقدي"),
-    customerPhone,
-    notes,
-    createdAt: now
-  };
+  const invNum = "PUR-" + String(now).slice(-6);
 
   try {
-    await setDoc(doc(col("sales")), saleDoc);
+    await runTransaction(db, async (tx) => {
+      const pRef = docRef("products", prodId);
+      const snap = await tx.get(pRef);
+      if (!snap.exists()) throw new Error("الصنف محذوف");
+      const currentQty = Number(snap.data().qty) || 0;
+      tx.update(pRef, { qty: currentQty + qty, cost: unitCost });
 
-    for(const item of cart){
-      const prod = products.find(p => p.id === item.id);
-      if(prod){
-        const nextQty = Math.max(0, (Number(prod.qty)||0) - (Number(item.qty)||0));
-        await updateDoc(docRef("products", prod.id), { qty: nextQty });
-      }
-    }
-
-    if(paymentType === "cash"){
-      await setDoc(doc(col("treasury")), {
-        type: "in",
-        amount: totals.finalTotal,
-        note: `مبيعات فاتورة رقم ${invoiceNo}`,
+      const purRef = doc(col("purchases"));
+      tx.set(purRef, {
+        invoiceNumber: invNum,
+        productId: prodId,
+        productName: prod.name,
+        qty,
+        unitCost,
+        total,
+        supplier: supplier || "مورد عام",
+        paymentType: payType,
         createdAt: now
       });
-    } else {
+
+      if (payType === "cash" && total > 0) {
+        const tRef = doc(col("treasury"));
+        tx.set(tRef, {
+          type: "out",
+          amount: total,
+          note: `فاتورة مشتريات ${invNum} - ${prod.name} (${qty})`,
+          createdAt: now
+        });
+      }
+    });
+
+    if (payType === "credit" && total > 0) {
       const dateStr = new Date(now).toLocaleString("ar-EG");
       await setDoc(doc(col("receivables")), {
-        name: customerName,
-        phone: customerPhone,
-        totalDebt: totals.finalTotal,
+        name: supplier ? `مورد: ${supplier}` : `مورد فاتورة ${invNum}`,
+        phone: "",
+        totalDebt: total,
         paidAmount: 0,
-        balance: totals.finalTotal,
-        note: `فاتورة مبيعات آجلة #${invoiceNo}` + (notes ? ` (${notes})` : ""),
+        balance: total,
+        note: `شراء آجل - فاتورة ${invNum} (${prod.name} × ${qty})`,
         updatedAt: dateStr,
         createdAt: now,
-        history: [{ type: "add", amount: totals.finalTotal, note: `فاتورة مبيعات آجلة #${invoiceNo}`, date: dateStr }]
+        history: [{ type: "add", amount: total, note: `فاتورة مشتريات آجلة ${invNum}`, date: dateStr }]
       });
     }
 
-    tab.state.cart = [];
-    if(salesField(tab, "saleAddition")) salesField(tab, "saleAddition").value = 0;
-    if(salesField(tab, "saleDiscountPct")) salesField(tab, "saleDiscountPct").value = 0;
-    if(salesField(tab, "saleDiscount")) salesField(tab, "saleDiscount").value = 0;
-    if(salesField(tab, "saleNotes")) salesField(tab, "saleNotes").value = "";
-    if(salesField(tab, "creditCustomerName")) salesField(tab, "creditCustomerName").value = "";
-    if(salesField(tab, "creditCustomerPhone")) salesField(tab, "creditCustomerPhone").value = "";
-    renderCart();
+    $("purQty").value = "1";
+    $("purSupplier").value = "";
     await loadBusiness();
-
-    if(shouldPrint) printSalesInvoice(saleDoc);
-    else showAlert(`تم حفظ الفاتورة (${invoiceNo}) بنجاح!`, "success");
+    renderPurchasesPage();
+    showAlert("تم تسجيل فاتورة المشتريات وتحديث المخزون بنجاح.", "success");
   } catch (e) {
-    showAlert("خطأ أثناء حفظ الفاتورة: " + e.message, "error");
+    showAlert("خطأ أثناء حفظ المشتريات: " + e.message, "error");
   }
 };
 
-window.printSalesInvoice = (sale) => {
-  const invSet = profile?.invoiceSettings || {};
-  const paperWidth = invSet.paperSize === "57mm" ? "54mm" : (invSet.paperSize === "A4" ? "190mm" : "76mm");
-  const shopName = invSet.shopName || profile?.shopName || "NexPOS PRO";
-  const printArea = $("printArea");
-  printArea.classList.remove("hidden");
-
-  const rows = (sale.items||[]).map(i => `
-    <tr>
-      <td>${escapeHTML(i.name)}</td>
-      <td>${i.qty}</td>
-      <td>${money(i.price)}</td>
-      <td>${money(Math.max(0, (Number(i.price)||0)*(Number(i.qty)||0) - (Number(i.discount)||0)))}</td>
-    </tr>
-  `).join("");
-
-  printArea.innerHTML = `
-    <div style="width:${paperWidth}; padding:8px; font-family:'Cairo',sans-serif; direction:rtl; color:#000; background:#fff; margin:auto;">
-      <div style="text-align:center; border-bottom:1px dashed #000; padding-bottom:6px; margin-bottom:6px;">
-        <h3 style="margin:0; font-size:16px;">${escapeHTML(shopName)}</h3>
-        ${invSet.taxNumber ? `<div style="font-size:10px;">الرقم الضريبي: ${escapeHTML(invSet.taxNumber)}</div>` : ""}
-        ${invSet.address ? `<div style="font-size:10px;">${escapeHTML(invSet.address)}</div>` : ""}
-        <div style="font-size:11px; margin-top:3px;">فاتورة مبيعات: <b>${escapeHTML(sale.invoiceNo || "")}</b></div>
-        <div style="font-size:10px;">${new Date(Number(sale.createdAt)).toLocaleString('ar-EG')}</div>
-      </div>
-      <div style="font-size:11px; margin-bottom:4px;">
-        العميل: <b>${escapeHTML(sale.customerName || "نقدي")}</b> | الدفع: <b>${sale.paymentType === "credit" ? "آجل" : "نقدي"}</b>
-      </div>
-      <table class="receipt-item-table">
-        <thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-      <div class="receipt-totals" style="font-size:12px;">
-        ${Number(sale.addition)>0 ? `<div>إضافات: <b>+${money(sale.addition)} ج</b></div>` : ""}
-        ${Number(sale.discount)>0 ? `<div>خصم: <b>-${money(sale.discount)} ج</b></div>` : ""}
-        <div style="font-size:15px; margin-top:4px;">الصافي المطلوب: <b>${money(sale.total)} ج</b></div>
-      </div>
-      <div style="text-align:center; font-size:11px; margin-top:8px;">شكراً لتعاملكم معنا!</div>
-    </div>
-  `;
-  setTimeout(() => { window.print(); printArea.classList.add("hidden"); }, 120);
-};
-
-/* ============ إدارة المنتجات ============ */
-window.saveProduct = async () => {
-  const name = $("pName").value.trim();
-  const barcode = $("pBarcode").value.trim() || ("622" + Math.floor(100000000 + Math.random() * 900000000));
-  const cost = Math.max(0, Number($("pCost").value) || 0);
-  const price = Math.max(0, Number($("pPrice").value) || 0);
-  const qty = Math.max(0, Number($("pQty").value) || 0);
-
-  if(!name || price <= 0) return showAlert("يرجى إدخال اسم المنتج وسعر البيع الصحيح.", "warning");
-
-  await setDoc(doc(col("products")), { name, barcode, cost, price, qty, createdAt: Date.now() });
-  $("pName").value = ""; $("pBarcode").value = ""; $("pCost").value = "0"; $("pPrice").value = "0"; $("pQty").value = "10";
-  await loadBusiness();
-  showAlert("تم حفظ المنتج في المخزن.", "success");
-};
-
-window.editProduct = async (id) => {
-  const p = products.find(x => x.id === id);
-  if(!p) return;
-  const { value: form } = await Swal.fire({
-    title: `✏️ تعديل: ${escapeHTML(p.name)}`,
-    html: `
-      <div style="text-align:right; font-size:12px;">
-        <label>اسم المنتج:</label><input id="epName" value="${escapeHTML(p.name)}" style="width:100%; padding:7px; background:#0f172a; color:white; border:1px solid #334155; border-radius:6px; margin-bottom:6px;">
-        <label>الباركود:</label><input id="epBarcode" value="${escapeHTML(p.barcode||"")}" style="width:100%; padding:7px; background:#0f172a; color:white; border:1px solid #334155; border-radius:6px; margin-bottom:6px;">
-        <label>سعر الشراء:</label><input id="epCost" type="number" value="${Number(p.cost)||0}" style="width:100%; padding:7px; background:#0f172a; color:white; border:1px solid #334155; border-radius:6px; margin-bottom:6px;">
-        <label>سعر البيع:</label><input id="epPrice" type="number" value="${Number(p.price)||0}" style="width:100%; padding:7px; background:#0f172a; color:white; border:1px solid #334155; border-radius:6px; margin-bottom:6px;">
-        <label>الكمية:</label><input id="epQty" type="number" value="${Number(p.qty)||0}" style="width:100%; padding:7px; background:#0f172a; color:white; border:1px solid #334155; border-radius:6px;">
-      </div>
-    `,
-    showCancelButton: true, confirmButtonText: 'حفظ', cancelButtonText: 'إلغاء', background: '#1e293b', color: '#f8fafc',
-    preConfirm: () => ({
-      name: document.getElementById("epName").value.trim(),
-      barcode: document.getElementById("epBarcode").value.trim(),
-      cost: Math.max(0, Number(document.getElementById("epCost").value)||0),
-      price: Math.max(0, Number(document.getElementById("epPrice").value)||0),
-      qty: Math.max(0, Number(document.getElementById("epQty").value)||0)
-    })
-  });
-  if(!form || !form.name) return;
-  await updateDoc(docRef("products", id), form);
-  await loadBusiness();
-  showAlert("تم التحديث.", "success");
-};
-
-window.deleteProduct = async (id) => {
-  if(!await customConfirm("حذف هذا المنتج نهائياً؟")) return;
-  await deleteDoc(docRef("products", id));
-  await loadBusiness();
-};
-
-function renderProducts(){
-  const tbody = $("productsTable");
-  if(!tbody) return;
-  tbody.innerHTML = products.map(p => `
-    <tr>
-      <td><b>${escapeHTML(p.name)}</b></td>
-      <td style="font-family:monospace; direction:ltr;">${escapeHTML(p.barcode || "—")}</td>
-      <td>${money(p.cost)} ج</td>
-      <td><b>${money(p.price)} ج</b></td>
-      <td><span class="tag ${(Number(p.qty)||0) < 5 ? '' : 'good'}">${Number(p.qty)||0}</span></td>
-      <td>
-        <button class="rowbtn" style="background:#0284c7;" onclick="printProductBarcode('${p.id}')" title="طباعة باركود">🏷️</button>
-        <button class="rowbtn secondary" onclick="editProduct('${p.id}')" title="تعديل">✏️</button>
-        <button class="rowbtn red" onclick="deleteProduct('${p.id}')" title="حذف">🗑</button>
-      </td>
-    </tr>
-  `).join("") || `<tr><td colspan="6" style="text-align:center;">لا توجد منتجات مضافة بعد</td></tr>`;
-}
-
-/* ============ فواتير المشتريات ============ */
-function renderPurchasesPage(){
-  const sel = $("purProductId");
-  if(sel){
-    sel.innerHTML = products.map(p => `<option value="${p.id}">${escapeHTML(p.name)} (المتاح: ${p.qty})</option>`).join("") || `<option value="">أضف منتجات أولاً</option>`;
-    onPurchaseProductChange();
-  }
+function renderPurchasesTable() {
   const tbody = $("purchasesTable");
-  if(!tbody) return;
-  tbody.innerHTML = purchases.map(p => `
+  if (!tbody) return;
+  const sorted = [...purchases].sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
+  tbody.innerHTML = sorted.map(p => `
     <tr>
-      <td><b>${escapeHTML(p.invoiceNo || p.id.slice(0,6))}</b></td>
+      <td><b>${escapeHTML(p.invoiceNumber || p.id.slice(0, 6))}</b></td>
       <td>${escapeHTML(p.productName || "")}</td>
       <td>${p.qty}</td>
       <td>${money(p.unitCost)} ج</td>
       <td><b>${money(p.total)} ج</b></td>
       <td>${escapeHTML(p.supplier || "—")}</td>
-      <td>${p.paymentType === "cash" ? "نقدي" : "آجل"}</td>
-      <td>${new Date(Number(p.createdAt)).toLocaleDateString('ar-EG')}</td>
+      <td><span class="tag ${p.paymentType === 'cash' ? 'good' : ''}">${p.paymentType === 'cash' ? 'نقدي' : 'آجل'}</span></td>
+      <td style="font-size:11px; color:var(--text-muted);">${new Date(Number(p.createdAt) || 0).toLocaleString("ar-EG")}</td>
     </tr>
-  `).join("") || `<tr><td colspan="8" style="text-align:center;">لا توجد فواتير مشتريات</td></tr>`;
+  `).join("") || '<tr><td colspan="8" style="text-align:center; padding:18px;">لا توجد فواتير مشتريات مسجلة</td></tr>';
 }
 
-window.onPurchaseProductChange = () => {
-  const pid = $("purProductId")?.value;
-  const p = products.find(x => x.id === pid);
-  if(p && $("purUnitCost")) $("purUnitCost").value = Number(p.cost) || 0;
-};
-
-window.savePurchaseInvoice = async () => {
-  const pid = $("purProductId")?.value;
-  const prod = products.find(x => x.id === pid);
-  const qty = Math.max(1, Number($("purQty")?.value) || 1);
-  const unitCost = Math.max(0, Number($("purUnitCost")?.value) || 0);
-  const supplier = $("purSupplier")?.value.trim() || "";
-  const paymentType = $("purPaymentType")?.value || "cash";
-
-  if(!prod) return showAlert("اختر صنفاً من المخزن.", "warning");
-  const total = Number((qty * unitCost).toFixed(2));
-  const now = Date.now();
-  const invoiceNo = "PUR-" + String(now).slice(-6);
-
-  await setDoc(doc(col("purchases")), { invoiceNo, productId: prod.id, productName: prod.name, qty, unitCost, total, supplier, paymentType, createdAt: now });
-  await updateDoc(docRef("products", prod.id), { qty: (Number(prod.qty)||0) + qty, cost: unitCost });
-
-  if(paymentType === "cash" && total > 0){
-    await setDoc(doc(col("treasury")), { type: "out", amount: total, note: `فاتورة مشتريات ${invoiceNo} (${prod.name})`, createdAt: now });
-  }
-
-  $("purQty").value = "1"; $("purSupplier").value = "";
-  await loadBusiness();
-  showAlert("تم تسجيل المشتريات وتحديث المخزون.", "success");
-};
-
-/* ============ مرتجع المبيعات ============ */
-function renderReturnsPage(){
+/* =========================================================================
+   ================= نظام مرتجع المبيعات (Sales Returns) =================
+   ========================================================================= */
+window.renderReturnsPage = () => {
   const saleSel = $("retSaleSelect");
-  if(saleSel){
-    saleSel.innerHTML = sales.map(s => `<option value="${s.id}">${escapeHTML(s.invoiceNo || s.id.slice(0,6))} - ${escapeHTML(s.customerName || "نقدي")} (${money(s.total)} ج)</option>`).join("") || `<option value="">لا توجد فواتير بيع</option>`;
-    onReturnSaleChange();
+  if (saleSel) {
+    const sortedSales = [...sales].sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
+    saleSel.innerHTML = `<option value="">-- اختر فاتورة بيع --</option>` +
+      sortedSales.map(s => `<option value="${s.id}">${escapeHTML(s.invoiceNumber || s.id.slice(0, 6))} — ${money(s.total)} ج (${new Date(Number(s.createdAt) || 0).toLocaleDateString("ar-EG")})</option>`).join("");
   }
-  const tbody = $("returnsTable");
-  if(!tbody) return;
-  tbody.innerHTML = returnsList.map(r => `
-    <tr>
-      <td><b>${escapeHTML(r.returnNo || r.id.slice(0,6))}</b></td>
-      <td>${escapeHTML(r.saleInvoiceNo || "")}</td>
-      <td>${escapeHTML(r.productName || "")}</td>
-      <td>${r.qty}</td>
-      <td><b>${money(r.refundAmount)} ج</b></td>
-      <td>${escapeHTML(r.reason || "—")}</td>
-      <td>${new Date(Number(r.createdAt)).toLocaleDateString('ar-EG')}</td>
-    </tr>
-  `).join("") || `<tr><td colspan="7" style="text-align:center;">لا توجد مرتجعات مسجلة</td></tr>`;
-}
+  onReturnSaleChange();
+  renderReturnsTable();
+};
 
 window.onReturnSaleChange = () => {
-  const sid = $("retSaleSelect")?.value;
-  const sale = sales.find(x => x.id === sid);
+  const saleId = $("retSaleSelect")?.value;
   const itemSel = $("retItemSelect");
-  if(!itemSel) return;
-  if(!sale || !(sale.items||[]).length){
-    itemSel.innerHTML = `<option value="">لا توجد أصناف</option>`;
+  if (!itemSel) return;
+  const sale = sales.find(s => s.id === saleId);
+  const items = Array.isArray(sale?.items) ? sale.items : [];
+  if (!items.length) {
+    itemSel.innerHTML = `<option value="">-- لا توجد أصناف في الفاتورة --</option>`;
     return;
   }
-  itemSel.innerHTML = sale.items.map((it, idx) => `<option value="${idx}">${escapeHTML(it.name)} (الكمية: ${it.qty} — السعر: ${money(it.price)})</option>`).join("");
+  itemSel.innerHTML = items.map((it, idx) => `<option value="${idx}">${escapeHTML(it.name)} (المباع: ${it.qty} | السعر: ${money(it.price)} ج)</option>`).join("");
 };
 
 window.processSalesReturn = async () => {
-  const sid = $("retSaleSelect")?.value;
-  const sale = sales.find(x => x.id === sid);
+  const saleId = $("retSaleSelect")?.value;
   const itemIdx = Number($("retItemSelect")?.value);
-  const qty = Math.max(1, Number($("retQty")?.value) || 1);
-  const reason = $("retReason")?.value.trim() || "";
+  const retQty = Number($("retQty")?.value);
+  const reason = ($("retReason")?.value || "").trim();
 
-  if(!sale || !sale.items?.[itemIdx]) return showAlert("اختر الفاتورة والصنف أولاً.", "warning");
-  const item = sale.items[itemIdx];
-  if(qty > Number(item.qty)) return showAlert(`الكمية المباعة في الفاتورة هي ${item.qty} فقط.`, "warning");
+  if (!saleId || Number.isNaN(itemIdx)) return showAlert("يرجى اختيار الفاتورة والصنف.", "warning");
+  if (!Number.isFinite(retQty) || retQty <= 0) return showAlert("أدخل كمية مرتجعة صحيحة.", "warning");
 
-  const refundAmount = Number((qty * (Number(item.price)||0)).toFixed(2));
+  const sale = sales.find(s => s.id === saleId);
+  const item = sale?.items?.[itemIdx];
+  if (!sale || !item) return showAlert("الصنف غير موجود بالفاتورة.", "error");
+  if (retQty > Number(item.qty)) return showAlert(`الكمية المرتجعة (${retQty}) أكبر من المباعة (${item.qty}).`, "warning");
+
+  const unitPrice = Number(item.price) || 0;
+  const refundAmount = retQty * unitPrice;
   const now = Date.now();
-  const returnNo = "RET-" + String(now).slice(-6);
+  const retNum = "RET-" + String(now).slice(-6);
 
-  await setDoc(doc(col("returns")), { returnNo, saleId: sale.id, saleInvoiceNo: sale.invoiceNo || "", productId: item.id, productName: item.name, qty, refundAmount, reason, createdAt: now });
-
-  const prod = products.find(p => p.id === item.id);
-  if(prod) await updateDoc(docRef("products", prod.id), { qty: (Number(prod.qty)||0) + qty });
-
-  await setDoc(doc(col("treasury")), { type: "out", amount: refundAmount, note: `مرتجع مبيعات ${returnNo} (${item.name})`, createdAt: now });
-
-  $("retQty").value = "1"; $("retReason").value = "";
-  await loadBusiness();
-  showAlert("تم تنفيذ المرتجع وإرجاع الكمية للمخزن.", "success");
-};
-
-/* ============ الخزينة ============ */
-window.addTreasuryTransaction = async () => {
-  const type = $("tType").value;
-  const amount = Number($("tAmount").value);
-  const note = $("tNote").value.trim();
-  if(!Number.isFinite(amount) || amount <= 0) return showAlert("أدخل مبلغاً صحيحاً.", "warning");
-  await setDoc(doc(col("treasury")), { type, amount, note: note || (type === "in" ? "إيداع نقدي" : "سحب نقدي"), createdAt: Date.now() });
-  $("tAmount").value = ""; $("tNote").value = "";
-  await loadBusiness();
-  showAlert("تم تسجيل الحركة في الخزينة.", "success");
-};
-
-window.deleteTreasuryItem = async (id) => {
-  if(!await customConfirm("حذف هذه الحركة من الخزينة؟")) return;
-  await deleteDoc(docRef("treasury", id));
-  await loadBusiness();
-};
-
-window.clearTreasuryData = async () => {
-  if(!await customConfirm("هل أنت متأكد من مسح جميع حركات الخزينة وتصفير الرصيد؟")) return;
-  for(const t of treasury){ await deleteDoc(docRef("treasury", t.id)); }
-  await loadBusiness();
-  showAlert("تم مسح حركات الخزينة.", "success");
-};
-
-function renderTreasury(){
-  if($("treasuryBalanceDisplay")) $("treasuryBalanceDisplay").textContent = money(getTreasuryBalance()) + " ج";
-  const tbody = $("treasuryTable");
-  if(!tbody) return;
-  tbody.innerHTML = treasury.map(t => `
-    <tr>
-      <td><span class="tag ${t.type === 'in' ? 'good' : ''}" style="${t.type === 'out' ? 'background:rgba(239,68,68,0.15);color:#f87171;border-color:rgba(239,68,68,0.3);' : ''}">${t.type === 'in' ? 'وارد (+)' : 'صادر (-)'}</span></td>
-      <td><b>${money(t.amount)} ج</b></td>
-      <td>${escapeHTML(t.note || "")}</td>
-      <td>${new Date(Number(t.createdAt)).toLocaleString('ar-EG')}</td>
-      <td><button class="rowbtn red" onclick="deleteTreasuryItem('${t.id}')">حذف</button></td>
-    </tr>
-  `).join("") || `<tr><td colspan="5" style="text-align:center;">لا توجد حركات مسجلة</td></tr>`;
-}
-
-/* ============ سجل الفواتير والمصروفات والتقارير ============ */
-function renderSales(){
-  const tbody = $("salesTable");
-  if(!tbody) return;
-  tbody.innerHTML = sales.map(s => `
-    <tr>
-      <td><b>${escapeHTML(s.invoiceNo || s.id.slice(0,6))}</b></td>
-      <td>${s.paymentType === 'credit' ? '<span class="tag">آجل</span>' : '<span class="tag good">نقدي</span>'} — ${escapeHTML(s.customerName || "عميل")}</td>
-      <td>${new Date(Number(s.createdAt)).toLocaleString('ar-EG')}</td>
-      <td><b>${money(s.total)} ج</b></td>
-      <td><button class="rowbtn dark" onclick='printSalesInvoice(${JSON.stringify(s).replace(/'/g,"&#39;")})'>🖨️ طباعة</button></td>
-    </tr>
-  `).join("") || `<tr><td colspan="5" style="text-align:center;">لا توجد فواتير مبيعات</td></tr>`;
-}
-
-window.addExpense = async () => {
-  const name = $("expenseName").value.trim();
-  const amount = Number($("expenseAmount").value);
-  if(!name || !Number.isFinite(amount) || amount <= 0) return showAlert("أدخل بيان المصروف والمبلغ.", "warning");
-  const now = Date.now();
-  await setDoc(doc(col("expenses")), { name, amount, createdAt: now });
-  await setDoc(doc(col("treasury")), { type: "out", amount, note: `مصروف: ${name}`, createdAt: now });
-  $("expenseName").value = ""; $("expenseAmount").value = "";
-  await loadBusiness();
-  showAlert("تم تسجيل المصروف.", "success");
-};
-
-window.deleteExpense = async (id) => {
-  if(!await customConfirm("حذف هذا المصروف؟")) return;
-  await deleteDoc(docRef("expenses", id));
-  await loadBusiness();
-};
-
-function renderExpenses(){
-  const tbody = $("expensesTable");
-  if(!tbody) return;
-  tbody.innerHTML = expenses.map(e => `
-    <tr>
-      <td><b>${escapeHTML(e.name)}</b></td>
-      <td><b>${money(e.amount)} ج</b></td>
-      <td>${new Date(Number(e.createdAt)).toLocaleDateString('ar-EG')}</td>
-      <td><button class="rowbtn red" onclick="deleteExpense('${e.id}')">حذف</button></td>
-    </tr>
-  `).join("") || `<tr><td colspan="4" style="text-align:center;">لا توجد مصروفات</td></tr>`;
-}
-
-function renderReports(){
-  const totalSales = sales.reduce((s, x) => s + (Number(x.total)||0), 0);
-  const totalReturns = returnsList.reduce((s, x) => s + (Number(x.refundAmount)||0), 0);
-  const netSales = Math.max(0, totalSales - totalReturns);
-  const cogs = sales.reduce((s, x) => s + (Number(x.totalCost)||0), 0);
-  const totalExpenses = expenses.reduce((s, x) => s + (Number(x.amount)||0), 0);
-  const netProfit = netSales - cogs - totalExpenses;
-
-  if($("reportRevenue")) $("reportRevenue").textContent = money(netSales) + " ج";
-  if($("reportCogs")) $("reportCogs").textContent = money(cogs) + " ج";
-  if($("reportExpenses")) $("reportExpenses").textContent = money(totalExpenses) + " ج";
-  if($("reportNet")) $("reportNet").textContent = money(netProfit) + " ج";
-
-  const lowTbody = $("lowStockTable");
-  if(lowTbody){
-    const lows = products.filter(p => (Number(p.qty)||0) < 5);
-    lowTbody.innerHTML = lows.map(p => `<tr><td><b>${escapeHTML(p.name)}</b></td><td style="font-family:monospace; direction:ltr;">${escapeHTML(p.barcode||"—")}</td><td>${money(p.price)} ج</td><td><span class="tag">${Number(p.qty)||0}</span></td></tr>`).join("") || `<tr><td colspan="4" style="text-align:center;">المخزون ممتاز — لا توجد نواقص</td></tr>`;
-  }
-}
-
-/* ============ تصميم الفاتورة والإعدادات وتصدير Excel ============ */
-let selectedInvoiceDocType = "sales";
-window.selectDocType = (type, el) => {
-  selectedInvoiceDocType = type;
-  document.querySelectorAll(".doc-type-btn").forEach(b => b.classList.remove("active"));
-  if(el) el.classList.add("active");
-  updateInvoicePreview();
-};
-
-window.loadInvoiceSettings = () => {
-  const s = profile?.invoiceSettings || {};
-  if($("invPaperSize")) $("invPaperSize").value = s.paperSize || "80mm";
-  if($("invShopName")) $("invShopName").value = s.shopName || profile?.shopName || "";
-  if($("invTaxNumber")) $("invTaxNumber").value = s.taxNumber || "";
-  if($("invAddress")) $("invAddress").value = s.address || "";
-  updateInvoicePreview();
-};
-
-window.updateInvoicePreview = () => {
-  const box = $("invoicePreviewContainer");
-  if(!box) return;
-  const size = $("invPaperSize")?.value || "80mm";
-  const shop = $("invShopName")?.value || "اسم المحل";
-  const tax = $("invTaxNumber")?.value || "";
-  const addr = $("invAddress")?.value || "";
-  const titles = { sales: "فاتورة مبيعات", purchases: "فاتورة مشتريات", sales_return: "فاتورة مرتجع مبيعات", receipt: "سند قبض نقدية", payment: "سند صرف نقدية" };
-
-  box.style.width = size === "57mm" ? "57mm" : (size === "A4" ? "100%" : "80mm");
-  box.innerHTML = `
-    <div style="text-align:center; border-bottom:1px dashed #000; padding-bottom:6px; margin-bottom:6px;">
-      <h3 style="margin:0; font-size:15px;">${escapeHTML(shop)}</h3>
-      ${tax ? `<div style="font-size:10px;">الرقم الضريبي: ${escapeHTML(tax)}</div>` : ""}
-      ${addr ? `<div style="font-size:10px;">${escapeHTML(addr)}</div>` : ""}
-      <div style="font-weight:bold; margin-top:4px; font-size:12px;">${titles[selectedInvoiceDocType] || "فاتورة"}</div>
-    </div>
-    <table class="receipt-item-table">
-      <thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead>
-      <tbody>
-        <tr><td>صنف تجريبي 1</td><td>2</td><td>100.00</td><td>200.00</td></tr>
-        <tr><td>صنف تجريبي 2</td><td>1</td><td>150.00</td><td>150.00</td></tr>
-      </tbody>
-    </table>
-    <div class="receipt-totals" style="font-size:12px;">
-      <div>الإجمالي المطلوب: <b>350.00 جنيه</b></div>
-    </div>
-    <div style="text-align:center; font-size:10px; margin-top:10px;">شكراً لتعاملكم معنا!</div>
-  `;
-};
-
-window.saveInvoiceSettings = async () => {
-  const invoiceSettings = {
-    paperSize: $("invPaperSize")?.value || "80mm",
-    shopName: $("invShopName")?.value.trim() || "",
-    taxNumber: $("invTaxNumber")?.value.trim() || "",
-    address: $("invAddress")?.value.trim() || ""
-  };
-  await setDoc(doc(db, "users", currentUser.uid), { invoiceSettings }, { merge: true });
-  profile.invoiceSettings = invoiceSettings;
-  localStorage.setItem('nexpos_profile', JSON.stringify(profile));
-  showAlert("تم حفظ إعدادات تصميم الفاتورة.", "success");
-};
-
-window.updateShopNameSetting = async () => {
-  const name = $("settingsShopName")?.value.trim();
-  if(!name) return showAlert("أدخل اسم المحل.", "warning");
-  await updateDoc(doc(db, "users", currentUser.uid), { shopName: name });
-  profile.shopName = name;
-  localStorage.setItem('nexpos_profile', JSON.stringify(profile));
-  $("shopTitle").textContent = name;
-  showAlert("تم تحديث اسم المحل.", "success");
-};
-
-window.updateCustomerEmailSetting = async () => {
-  const newEmail = $("settingsEmail")?.value.trim();
-  if(!newEmail) return showAlert("أدخل البريد الإلكتروني الجديد.", "warning");
   try {
-    await updateEmail(auth.currentUser, newEmail);
-    await updateDoc(doc(db, "users", currentUser.uid), { email: newEmail });
-    profile.email = newEmail;
-    localStorage.setItem('nexpos_profile', JSON.stringify(profile));
-    showAlert("تم تحديث البريد الإلكتروني بنجاح.", "success");
+    await runTransaction(db, async (tx) => {
+      if (item.productId) {
+        const pRef = docRef("products", item.productId);
+        const pSnap = await tx.get(pRef);
+        if (pSnap.exists()) {
+          tx.update(pRef, { qty: (Number(pSnap.data().qty) || 0) + retQty });
+        }
+      }
+
+      const retRef = doc(col("returns"));
+      tx.set(retRef, {
+        returnNumber: retNum,
+        saleId: sale.id,
+        saleInvoice: sale.invoiceNumber || sale.id.slice(0, 6),
+        productId: item.productId || "",
+        productName: item.name,
+        qty: retQty,
+        refundAmount,
+        reason: reason || "مرتجع مبيعات",
+        createdAt: now
+      });
+
+      if (refundAmount > 0 && sale.paymentType !== "credit") {
+        const tRef = doc(col("treasury"));
+        tx.set(tRef, {
+          type: "out",
+          amount: refundAmount,
+          note: `مرتجع فاتورة ${sale.invoiceNumber || sale.id.slice(0, 6)} - ${item.name} (${retQty})`,
+          createdAt: now
+        });
+      }
+    });
+
+    $("retQty").value = "1";
+    $("retReason").value = "";
+    await loadBusiness();
+    renderReturnsPage();
+    showAlert(`تم تنفيذ المرتجع وإرجاع (${retQty}) قطعة للمخزون واسترداد ${money(refundAmount)} ج.`, "success");
   } catch (e) {
-    showAlert("تعذر تحديث البريد (قد يتطلب تسجيل الدخول مجدداً أولاً): " + e.message, "error");
+    showAlert("خطأ أثناء تنفيذ المرتجع: " + e.message, "error");
   }
 };
 
-window.exportDataToExcel = () => {
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(products.map(p => ({ "المنتج": p.name, "الباركود": p.barcode, "الشراء": p.cost, "البيع": p.price, "الكمية": p.qty }))), "المنتجات");
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sales.map(s => ({ "رقم الفاتورة": s.invoiceNo, "العميل": s.customerName, "الدفع": s.paymentType, "الإجمالي": s.total, "التاريخ": new Date(Number(s.createdAt)).toLocaleString('ar-EG') }))), "المبيعات");
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(expenses.map(e => ({ "البيان": e.name, "المبلغ": e.amount, "التاريخ": new Date(Number(e.createdAt)).toLocaleDateString('ar-EG') }))), "المصروفات");
-  XLSX.writeFile(wb, `NexPOS_${profile?.shopName || "Backup"}.xlsx`);
+function renderReturnsTable() {
+  const tbody = $("returnsTable");
+  if (!tbody) return;
+  const sorted = [...returnsList].sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
+  tbody.innerHTML = sorted.map(r => `
+    <tr>
+      <td><b>${escapeHTML(r.returnNumber || r.id.slice(0, 6))}</b></td>
+      <td>${escapeHTML(r.saleInvoice || "")}</td>
+      <td>${escapeHTML(r.productName || "")}</td>
+      <td>${r.qty}</td>
+      <td><b style="color:var(--danger);">${money(r.refundAmount)} ج</b></td>
+      <td>${escapeHTML(r.reason || "—")}</td>
+      <td style="font-size:11px; color:var(--text-muted);">${new Date(Number(r.createdAt) || 0).toLocaleString("ar-EG")}</td>
+    </tr>
+  `).join("") || '<tr><td colspan="7" style="text-align:center; padding:18px;">لا توجد مرتجعات مسجلة</td></tr>';
+}
+
+/* ========================================================================= */
+
+window.searchProducts=e=>{const q=$("saleSearch").value.trim().toLowerCase(),box=$("searchResults");if(!q){box.innerHTML="";return;}if(e.key==="Enter"){const m=products.find(p=>p.barcode&&p.barcode.toLowerCase()===q);if(m){selectProductForSale(m);addToCart();box.innerHTML="";return;}}const matches=products.filter(p=>p.name.toLowerCase().includes(q)||(p.barcode&&p.barcode.toLowerCase().includes(q))).slice(0,8);box.innerHTML=matches.map(p=>`<button type="button" class="result" onclick="selectProductForSaleById('${p.id}')"><b>${escapeHTML(p.name)}</b> <span class="muted">(${p.qty})</span> — <b>${money(p.price)} ج</b></button>`).join("")||`<div class="result muted">لا نتائج</div>`;};
+window.handleBarcodeScan=e=>{if(e.key==="Enter"){e.preventDefault();const q=$("saleSearch").value.trim().toLowerCase();if(!q)return;const m=products.find(p=>p.barcode&&p.barcode.toLowerCase()===q);if(m){selectProductForSale(m);addToCart();$("searchResults").innerHTML="";}else{const f=products.find(p=>p.name.toLowerCase().includes(q));if(f){selectProductForSale(f);addToCart();$("searchResults").innerHTML="";}}}};
+window.selectProductForSaleById=id=>{const p=products.find(x=>x.id===id);if(p)selectProductForSale(p);};
+function selectProductForSale(p){selectedProduct=p;$("saleSearch").value=p.name;$("salePrice").value=p.price;$("saleQty").value=1;$("searchResults").innerHTML="";if($("inquiryTooltip"))$("inquiryTooltip").innerHTML=`سعر الشراء<span class="cost-val">${money(p.cost||0)} ج</span>`;}
+
+window.addToCart=()=>{
+ if(!selectedProduct){const q=$("saleSearch").value.trim().toLowerCase();if(q)selectedProduct=products.find(p=>p.name.toLowerCase().includes(q)||(p.barcode&&p.barcode.toLowerCase().includes(q)));}
+ if(!selectedProduct)return showAlert("اختر منتجاً.","warning");
+ const qty=Number($("saleQty").value)||1,price=Number($("salePrice").value)||Number(selectedProduct.price);
+ if(qty<=0||price<0)return showAlert("بيانات صحيحة.","warning");
+ if(qty>Number(selectedProduct.qty))return showAlert("الكمية غير متوفرة.","warning");
+ const ex=cart.find(c=>c.productId===selectedProduct.id);
+ if(ex){if(ex.qty+qty>Number(selectedProduct.qty))return showAlert("تجاوز المخزون.","warning");ex.qty+=qty;ex.price=price;}
+ else cart.push({productId:selectedProduct.id,name:selectedProduct.name,price,cost:Number(selectedProduct.cost)||0,qty,itemDiscount:0});
+ selectedProduct=null;$("saleSearch").value="";$("salePrice").value="";$("saleQty").value=1;
+ if($("inquiryTooltip"))$("inquiryTooltip").innerHTML=`سعر الشراء<span class="cost-val">—</span>`;
+ renderCart();$("saleSearch").focus();
 };
 
-/* ============ اختصارات لوحة المفاتيح لشاشة المبيعات ============ */
-document.addEventListener("keydown", (e) => {
-  if($("customerPanel")?.classList.contains("hidden")) return;
-  const activeTab = getActivePosTab();
-  if(!activeTab || activeTab.type !== "sales") return;
+window.updateCartQty=(i,delta)=>{if(!cart[i])return;const nq=cart[i].qty+delta;if(nq<=0){removeFromCart(i);return;}const p=products.find(x=>x.id===cart[i].productId);if(p && nq>Number(p.qty))return showAlert("تجاوز المخزون.","warning");cart[i].qty=nq;renderCart();};
+window.updateCartItemDiscount=(i,val)=>{if(!cart[i])return;const d=Number(val)||0;cart[i].itemDiscount=d>=0?d:0;renderCart();};
+window.removeFromCart=i=>{cart.splice(i,1);renderCart();};
 
-  if(e.key === "F1"){
-    e.preventDefault();
-    salesField(activeTab, "saleSearch")?.focus();
-  } else if(e.key === "F2"){
-    e.preventDefault();
-    completeSale(false);
-  } else if(e.key === "F4"){
-    e.preventDefault();
-    showPaymentModal();
-  } else if(e.key === "F9"){
-    e.preventDefault();
-    saveHold();
+function renderCart(){
+ const tbody=$("cartTable");
+ if(!cart.length){
+   tbody.innerHTML='<tr><td colspan="8" class="empty-cart-msg" style="font-size:14px; padding:24px; text-align:center;">🛒 السلة فارغة - ابدأ بإضافة أصناف</td></tr>';
+   $("cartTotalDisplay").textContent="0.00";
+   if($("cartItemsSummary")) $("cartItemsSummary").textContent = "الأصناف: 0 | القطع: 0";
+   return;
+ }
+ let sub=0, totalPieces=0;
+ tbody.innerHTML=cart.map((c,i)=>{
+   const gross=c.qty*c.price, disc=Number(c.itemDiscount)||0, net=Math.max(0,gross-disc);
+   sub+=net;
+   totalPieces += Number(c.qty) || 0;
+   return `<tr><td>${i+1}</td><td><b>${escapeHTML(c.name)}</b></td><td><div class="qty-control-group"><button class="qty-btn" onclick="updateCartQty(${i},-1)">-</button><span>${c.qty}</span><button class="qty-btn" onclick="updateCartQty(${i},1)">+</button></div></td><td>${money(c.price)}</td><td>${money(gross)}</td><td><input type="number" min="0" value="${disc}" style="width:62px;padding:2px;font-size:11px;margin:0;" oninput="updateCartItemDiscount(${i},this.value)"></td><td><b>${money(net)}</b></td><td><button class="rowbtn red" onclick="removeFromCart(${i})">✕</button></td></tr>`;
+ }).join("");
+ const add=Number($("saleAddition").value)||0, pct=Number($("saleDiscountPct").value)||0, flat=Number($("saleDiscount").value)||0;
+ const netTotal=Math.max(0,(sub+add)-(sub*(pct/100)+flat));
+ $("cartTotalDisplay").textContent=money(netTotal);
+ if($("cartItemsSummary")) $("cartItemsSummary").textContent = `الأصناف: ${cart.length} | القطع: ${totalPieces}`;
+}
+
+window.showPaymentModal=()=>{
+  const sub=cart.reduce((s,c)=>s+Math.max(0,(c.qty*c.price)-(Number(c.itemDiscount)||0)),0);
+  const add=Number($("saleAddition").value)||0, pct=Number($("saleDiscountPct").value)||0, flat=Number($("saleDiscount").value)||0;
+  const total=Math.max(0,(sub+add)-(sub*(pct/100)+flat));
+  if(total<=0)return showAlert("السلة فارغة.","warning");
+  Swal.fire({title:'سداد الفاتورة',html:`<p style="font-size:18px;color:var(--success);font-weight:bold;">المطلوب: ${money(total)} ج</p><label>المدفوع:</label><input id="swalPaidInput" type="number" style="text-align:center;font-size:18px;" value="${total}">`,showCancelButton:true,confirmButtonText:'تأكيد',cancelButtonText:'إلغاء',background:'#1e293b',color:'#f8fafc',preConfirm:()=>{const paid=Number(document.getElementById('swalPaidInput').value);if(isNaN(paid)||paid<0){Swal.showValidationMessage('أدخل مبلغاً صحيحاً');return false;}return paid;}}).then(r=>{if(r.isConfirmed){const paid=r.value;if(paid<total)showAlert("المبلغ أقل من المطلوب.","warning");else showAlert(`تم! الباقي: ${money(paid-total)} ج`,"success");completeSale(false);}});
+};
+
+window.saveHold=()=>{
+  if(!cart.length)return showAlert("السلة فارغة.","warning");
+  const held=JSON.parse(localStorage.getItem('nexpos_held_'+currentUser.uid)||'[]');
+  held.push({id:Date.now(),cart:[...cart],addition:Number($("saleAddition").value)||0,discountPct:Number($("saleDiscountPct").value)||0,discount:Number($("saleDiscount").value)||0,notes:$("saleNotes").value||""});
+  localStorage.setItem('nexpos_held_'+currentUser.uid,JSON.stringify(held));
+  cart=[];$("saleAddition").value="0";$("saleDiscountPct").value="0";$("saleDiscount").value="0";$("saleNotes").value="";renderCart();updateHeldBadge();showAlert("تم التعليق.","success");
+};
+
+window.openHeldList=()=>{
+  const held=JSON.parse(localStorage.getItem('nexpos_held_'+currentUser.uid)||'[]');
+  if(!held.length)return showAlert("لا توجد فواتير معلقة.","info");
+  const listHTML=held.map((h,i)=>{const t=h.cart.reduce((s,c)=>s+(c.qty*c.price),0);return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--border-color);font-size:12px;"><div><b>#${i+1}</b> (${h.cart.length} أصناف) — <b>${money(t)} ج</b><br><span style="color:var(--text-muted);font-size:10px;">${new Date(h.id).toLocaleTimeString('ar-EG')}</span></div><div style="display:flex;gap:4px;"><button class="rowbtn green" onclick="restoreHold(${i})">استرجاع</button><button class="rowbtn red" onclick="deleteHold(${i})">حذف</button></div></div>`;}).join("");
+  Swal.fire({title:'الفواتير المعلقة',html:`<div style="max-height:300px;overflow-y:auto;">${listHTML}</div>`,showConfirmButton:false,showCloseButton:true,background:'#1e293b',color:'#f8fafc',width:400});
+};
+
+window.restoreHold=i=>{const held=JSON.parse(localStorage.getItem('nexpos_held_'+currentUser.uid)||'[]');const h=held[i];if(!h)return;if(cart.length>0 && !window.customConfirm("استبدال السلة الحالية؟"))return;cart=h.cart||[];$("saleAddition").value=h.addition||0;$("saleDiscountPct").value=h.discountPct||0;$("saleDiscount").value=h.discount||0;$("saleNotes").value=h.notes||"";held.splice(i,1);localStorage.setItem('nexpos_held_'+currentUser.uid,JSON.stringify(held));Swal.close();renderCart();updateHeldBadge();};
+window.deleteHold=i=>{const held=JSON.parse(localStorage.getItem('nexpos_held_'+currentUser.uid)||'[]');held.splice(i,1);localStorage.setItem('nexpos_held_'+currentUser.uid,JSON.stringify(held));Swal.close();updateHeldBadge();openHeldList();};
+
+window.completeSale = async (shouldPrint) => {
+  if (!cart.length) return showAlert("السلة فارغة.", "warning");
+
+  const paymentType = $("salePaymentType")?.value || "cash";
+  const custName = ($("creditCustomerName")?.value || "").trim();
+  const custPhone = ($("creditCustomerPhone")?.value || "").trim();
+
+  if (paymentType === "credit" && !custName) {
+    return showAlert("يرجى إدخال اسم العميل للبيع الآجل.", "warning");
   }
+
+  let sub = 0, cogs = 0;
+  cart.forEach(c => {
+    const g = c.qty * c.price;
+    sub += Math.max(0, g - (Number(c.itemDiscount) || 0));
+    cogs += c.qty * (Number(c.cost) || 0);
+  });
+  const add = Number($("saleAddition").value) || 0;
+  const pct = Number($("saleDiscountPct").value) || 0;
+  const flat = Number($("saleDiscount").value) || 0;
+  const total = Math.max(0, (sub + add) - (sub * (pct / 100) + flat));
+  const notes = ($("saleNotes").value || "").trim();
+  const invNum = "INV-" + String(Date.now()).slice(-6);
+  const now = Date.now();
+  const itemsToSave = [...cart];
+
+  const saleObj = {
+    invoiceNumber: invNum,
+    items: itemsToSave,
+    subtotal: sub,
+    addition: add,
+    discountPct: pct,
+    discount: flat,
+    total,
+    cogs,
+    notes,
+    paymentType,
+    customerName: custName,
+    customerPhone: custPhone,
+    createdAt: now
+  };
+
+  try {
+    if (navigator.onLine) {
+      await runTransaction(db, async (tx) => {
+        for (const c of itemsToSave) {
+          const pRef = docRef("products", c.productId);
+          const snap = await tx.get(pRef);
+          if (!snap.exists()) throw new Error("منتج غير موجود");
+          const cur = Number(snap.data().qty) || 0;
+          if (cur < c.qty) throw new Error("كمية غير كافية لـ " + c.name);
+          tx.update(pRef, { qty: cur - c.qty });
+        }
+        tx.set(doc(col("sales")), saleObj);
+        if (total > 0 && paymentType === "cash") {
+          tx.set(doc(col("treasury")), { type: "in", amount: total, note: "فاتورة مبيعات رقم " + invNum, createdAt: now });
+        }
+      });
+
+      if (paymentType === "credit" && total > 0) {
+        const dateStr = new Date(now).toLocaleString("ar-EG");
+        const itemsDesc = itemsToSave.map(x => `${x.name} ×${x.qty}`).join("، ");
+        await setDoc(doc(col("receivables")), {
+          name: custName,
+          phone: custPhone,
+          totalDebt: total,
+          paidAmount: 0,
+          balance: total,
+          note: notes || `فاتورة بيع آجلة ${invNum} (${itemsDesc})`,
+          updatedAt: dateStr,
+          createdAt: now,
+          history: [{ type: "add", amount: total, note: `فاتورة مبيعات آجلة ${invNum}`, date: dateStr }]
+        });
+      }
+    } else {
+      for (const c of itemsToSave) {
+        const p = products.find(x => x.id === c.productId);
+        if (p) p.qty = Math.max(0, Number(p.qty) - c.qty);
+      }
+      sales.push({ id: "local_" + now, ...saleObj });
+      if (total > 0 && paymentType === "cash") {
+        treasury.push({ id: "local_t_" + now, type: "in", amount: total, note: "فاتورة مبيعات رقم " + invNum, createdAt: now });
+      }
+      const pRef = doc(col("sales"));
+      setDoc(pRef, saleObj).catch(() => {});
+      itemsToSave.forEach(c => {
+        const p = products.find(x => x.id === c.productId);
+        if (p) updateDoc(docRef("products", c.productId), { qty: p.qty }).catch(() => {});
+      });
+      if (total > 0 && paymentType === "cash") {
+        setDoc(doc(col("treasury")), { type: "in", amount: total, note: "فاتورة مبيعات رقم " + invNum, createdAt: now }).catch(() => {});
+      }
+    }
+
+    cart = [];
+    $("saleAddition").value = "0";
+    $("saleDiscountPct").value = "0";
+    $("saleDiscount").value = "0";
+    $("saleNotes").value = "";
+    if ($("creditCustomerName")) $("creditCustomerName").value = "";
+    if ($("creditCustomerPhone")) $("creditCustomerPhone").value = "";
+    if ($("salePaymentType")) $("salePaymentType").value = "cash";
+    toggleCreditCustomerBox();
+
+    renderCart();
+    renderDashboard();
+    renderProducts();
+    renderSales();
+    renderTreasury();
+
+    if (shouldPrint) {
+      printSaleInvoice(saleObj);
+    }
+    showAlert(paymentType === "credit" ? `تم تسجيل البيع الآجل على (${custName}) وترحيله للمستحقات.` : "تم إتمام البيع بنجاح.", "success");
+    if (navigator.onLine) await loadBusiness();
+  } catch (e) {
+    showAlert("تعذر: " + e.message, "error");
+  }
+};
+
+window.printSaleInvoice = s => {
+ const pa = $("printArea"); pa.classList.remove("hidden");
+ const invSettings = profile?.invoiceSettings || { shopName: profile?.shopName || "المحل", taxNumber: "", address: "", paperSize: "80mm" };
+ const widthStyle = invSettings.paperSize === "57mm" ? "57mm" : invSettings.paperSize === "A4" ? "210mm" : "80mm";
+ const rows = (s.items||[]).map(i=>`<tr><td>${escapeHTML(i.name)}</td><td>${i.qty}</td><td>${money(i.price)}</td><td>${money(i.qty*i.price-(Number(i.itemDiscount)||0))}</td></tr>`).join("");
+ pa.innerHTML = `<div style="width:${widthStyle};margin:auto;font-family:'Cairo',sans-serif;direction:rtl;font-size:12px;color:#000;background:#fff;padding:5px;"><div style="text-align:center;"><div style="font-weight:bold;font-size:16px;">${escapeHTML(invSettings.shopName)}</div>${invSettings.taxNumber?`<div style="font-size:10px;">ضريبي: ${escapeHTML(invSettings.taxNumber)}</div>`:""}<div style="font-size:11px;margin-top:4px;">رقم: <b>${escapeHTML(s.invoiceNumber||"")}</b> | ${new Date(Number(s.createdAt)||0).toLocaleString('ar-EG')}</div>${s.paymentType === 'credit' ? `<div style="font-size:11px;margin-top:3px;"><b>آجل — العميل:</b> ${escapeHTML(s.customerName || "")} ${s.customerPhone ? `(${escapeHTML(s.customerPhone)})` : ""}</div>` : ""}</div><table class="receipt-item-table"><thead><tr><th>الصنف</th><th>كمية</th><th>سعر</th><th>إجمالي</th></tr></thead><tbody>${rows}</tbody></table><div class="receipt-totals"><div style="display:flex;justify-content:space-between;"><span>المجموع:</span><span>${money(s.subtotal)} ج</span></div>${s.addition>0?`<div style="display:flex;justify-content:space-between;"><span>إضافة:</span><span>+${money(s.addition)} ج</span></div>`:""}${s.discountPct>0?`<div style="display:flex;justify-content:space-between;"><span>خصم %:</span><span>${s.discountPct}%</span></div>`:""}${s.discount>0?`<div style="display:flex;justify-content:space-between;"><span>خصم فكة:</span><span>-${money(s.discount)} ج</span></div>`:""}<div style="display:flex;justify-content:space-between;font-weight:bold;font-size:14px;margin-top:4px;"><span>الإجمالي:</span><span>${money(s.total)} ج</span></div></div>${s.notes?`<div style="font-size:10px;margin-top:5px;">ملاحظات: ${escapeHTML(s.notes)}</div>`:""}${invSettings.address?`<div style="text-align:center;font-size:10px;margin-top:8px;">${escapeHTML(invSettings.address)}</div>`:""}<div style="text-align:center;font-size:10px;margin-top:5px;">شكراً لتعاملكم معنا</div></div>`;
+ setTimeout(() => { window.print(); setTimeout(() => { pa.classList.add("hidden"); pa.innerHTML = ""; }, 1000); }, 100);
+};
+window.reprintSaleById = id => { const s = sales.find(x=>x.id===id); if(s) printSaleInvoice(s); };
+function renderSales(){
+  $("salesTable").innerHTML = [...sales].sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0)).map(s=>{
+    const typeLabel = s.paymentType === "credit" ? `<span class="tag">آجل - ${escapeHTML(s.customerName || "")}</span>` : `<span class="tag good">نقدي</span>`;
+    return `<tr><td><b>${escapeHTML(s.invoiceNumber||s.id.slice(0,6))}</b></td><td>${typeLabel}</td><td>${new Date(Number(s.createdAt)||0).toLocaleString('ar-EG')}</td><td><b>${money(s.total)} ج</b></td><td><button class="rowbtn secondary" onclick="reprintSaleById('${s.id}')">🖨️</button></td></tr>`;
+  }).join("") || '<tr><td colspan="5">لا توجد</td></tr>';
+}
+
+window.addExpense=async()=>{const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value);if(!name||!Number.isFinite(amount)||amount<=0)return showAlert("أدخل بيانات صحيحة.","warning");const now=Date.now();try{await setDoc(doc(col("expenses")),{name,amount,createdAt:now});await setDoc(doc(col("treasury")),{type:"out",amount,note:"مصروف: "+name,createdAt:now});$("expenseName").value="";$("expenseAmount").value="";await loadBusiness();showAlert("تم التسجيل.","success");}catch(e){showAlert(e.message,"error");}};
+window.deleteExpense=async id=>{if(!await window.customConfirm("حذف المصروف؟"))return;try{await deleteDoc(docRef("expenses",id));await loadBusiness();showAlert("تم الحذف.","success");}catch(e){showAlert(e.message,"error");}};
+function renderExpenses(){$("expensesTable").innerHTML=[...expenses].sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0)).map(e=>`<tr><td><b>${escapeHTML(e.name)}</b></td><td>${money(e.amount)} ج</td><td>${new Date(Number(e.createdAt)||0).toLocaleDateString('ar-EG')}</td><td><button class="rowbtn red" onclick="deleteExpense('${e.id}')">حذف</button></td></tr>`).join("")||'<tr><td colspan="4">لا يوجد</td></tr>';}
+
+function renderReports(){const rev=sales.reduce((s,x)=>s+(Number(x.total)||0),0),cogs=sales.reduce((s,x)=>s+(Number(x.cogs)||0),0),exp=expenses.reduce((s,x)=>s+(Number(x.amount)||0),0),net=(rev-cogs)-exp;$("reportRevenue").textContent=money(rev)+" ج";$("reportCogs").textContent=money(cogs)+" ج";$("reportExpenses").textContent=money(exp)+" ج";$("reportNet").textContent=money(net)+" ج";$("lowStockTable").innerHTML=products.filter(p=>Number(p.qty)<5).map(p=>`<tr><td><b>${escapeHTML(p.name)}</b></td><td>${escapeHTML(p.barcode||"-")}</td><td>${money(p.price)} ج</td><td><span class="tag">${p.qty}</span></td></tr>`).join("")||'<tr><td colspan="4">لا توجد نواقص</td></tr>';}
+
+window.addTreasuryTransaction=async()=>{const type=$("tType").value,amount=Number($("tAmount").value),note=$("tNote").value.trim();if(!Number.isFinite(amount)||amount<=0)return showAlert("مبلغ صحيح.","warning");try{await setDoc(doc(col("treasury")),{type,amount,note:note||(type==="in"?"إيداع نقدي":"سحب نقدي"),createdAt:Date.now()});$("tAmount").value="";$("tNote").value="";await loadBusiness();showAlert("تم التسجيل.","success");}catch(e){showAlert(e.message,"error");}};
+window.deleteTreasuryTransaction=async id=>{if(!await window.customConfirm("حذف الحركة؟"))return;try{await deleteDoc(docRef("treasury",id));await loadBusiness();showAlert("تم الحذف.","success");}catch(e){showAlert(e.message,"error");}};
+window.clearTreasuryData=async()=>{if(!await window.customConfirm("مسح جميع حركات الخزينة؟"))return;try{for(const t of treasury){await deleteDoc(docRef("treasury",t.id));}await loadBusiness();showAlert("تم المسح.","success");}catch(e){showAlert(e.message,"error");}};
+function renderTreasury(){const bal=treasury.reduce((s,t)=>s+(t.type==="in"?Number(t.amount)||0:-(Number(t.amount)||0)),0);$("treasuryBalanceDisplay").textContent=money(bal)+" ج";$("treasuryTable").innerHTML=[...treasury].sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0)).map(t=>`<tr><td><span class="tag ${t.type==="in"?"good":""}">${t.type==="in"?"وارد (+)":"صادر (-)"}</span></td><td><b>${money(t.amount)} ج</b></td><td>${escapeHTML(t.note||"-")}</td><td>${new Date(Number(t.createdAt)||0).toLocaleDateString('ar-EG')}</td><td><button class="rowbtn red" onclick="deleteTreasuryTransaction('${t.id}')">حذف</button></td></tr>`).join("")||'<tr><td colspan="5">لا توجد حركات</td></tr>';}
+
+window.updateShopNameSetting=async()=>{const n=$("settingsShopName").value.trim();if(!n)return showAlert("أدخل اسماً.","warning");try{await updateDoc(doc(db,"users",currentUser.uid),{shopName:n});profile.shopName=n;localStorage.setItem('nexpos_profile',JSON.stringify(profile));$("shopTitle").textContent=n;if($("salesShopBadge")) $("salesShopBadge").textContent=n;if($("bcShopBadge")) $("bcShopBadge").textContent=n;showAlert("تم التحديث.","success");}catch(e){showAlert(e.message,"error");}};
+window.updateCustomerEmailSetting=async()=>{const ne=$("settingsEmail").value.trim();if(!ne||ne===currentUser.email)return showAlert("أدخل بريداً جديداً.","warning");const pw=await customPrompt("أدخل كلمة المرور الحالية:", 'password');if(!pw)return;try{const cr=EmailAuthProvider.credential(currentUser.email,pw);await reauthenticateWithCredential(currentUser,cr);await updateEmail(currentUser,ne);await updateDoc(doc(db,"users",currentUser.uid),{email:ne});profile.email=ne;localStorage.setItem('nexpos_profile',JSON.stringify(profile));showAlert("تم التغيير.","success");}catch(e){showAlert(e.message,"error");}};
+
+window.exportDataToExcel=()=>{const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(products.map(p=>({الاسم:p.name,باركود:p.barcode||"",سعر_الشراء:p.cost||0,سعر_البيع:p.price||0,الكمية:p.qty||0}))),"المنتجات");XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(sales.map(s=>({رقم_الفاتورة:s.invoiceNumber||"",النوع:s.paymentType==="credit"?"آجل":"نقدي",العميل:s.customerName||"",الإجمالي:s.total||0,التاريخ:new Date(Number(s.createdAt)||0).toLocaleString('ar-EG')}))),"المبيعات");XLSX.writeFile(wb,"NexPOS_Report.xlsx");};
+
+document.addEventListener("keydown",e=>{
+ if(activeSystem!=="sales")return;
+ if($("salesPage")?.classList.contains("hidden"))return;
+ if(e.key==="F1"){e.preventDefault();$("saleSearch")?.focus();}
+ else if(e.key==="F2"){e.preventDefault();completeSale(false);}
+ else if(e.key==="F4"){e.preventDefault();showPaymentModal();}
+ else if(e.key==="F9"){e.preventDefault();saveHold();}
 });
 </script>
 </body>
